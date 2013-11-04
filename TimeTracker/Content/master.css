@@ -1,0 +1,450 @@
+﻿html, body, pre
+{
+	font-family:"Arial", "Helvetica", "Verdana", "Sans-Serif";
+	font-size: 12pt;
+	color: #000000;
+    background:url(images/bg_gradient.gif) repeat-x #3ca8ee;
+}
+
+.frame {    
+	margin-right:auto;
+	margin-left:0px;
+    width:100%;
+    border:0px solid #c8ccd1;
+}
+
+h1
+{
+	font-family:"Arial", "Helvetica", "Verdana", "Sans-Serif";
+	font-size:14pt;
+	font-weight:bold;
+	color:#205FA2;
+	text-align:center;
+	vertical-align:middle;
+	letter-spacing:0.05cm;
+	padding:3px 3px 3px 3px;
+}
+
+h2
+{
+	font-family:"Arial", "Helvetica", "Verdana", "Sans-Serif";
+	font-size:14pt;
+	font-weight:bold;
+	color:#0088cc;
+	text-align:center;
+	vertical-align:middle;
+	letter-spacing:0.05cm;
+	padding:3px 3px 3px 3px;
+}
+
+.validation
+{
+    color: #ff0000;
+}
+
+.hidden
+{
+    visibility:hidden;
+}
+
+.smallText
+{
+    color: #0088cc;
+    font-size: 10pt;
+    font-family:"Arial","Helvetica", "Verdana",  "Sans-Serif";
+}
+
+.border
+{
+	border:solid 1px #c8ccd1;
+}
+
+.textBox
+{
+    width:200px;
+    font-size: 12pt; 
+    font-family: "Helvetica", "Verdana", "Arial", "Sans-Serif";
+}
+
+.textBox1
+{
+    width:200px;
+    font-size: 12pt; 
+    font-family: "Helvetica", "Verdana", "Arial", "Sans-Serif";
+}
+
+.dropDownList
+{
+    font-size:12pt;
+    font-family: "Helvetica", "Verdana", "Arial", "Sans-Serif";
+	color:#0088cc;
+	border:1px solid #c8ccd1;
+}
+
+.dropDownList1
+{
+    width:200px;
+    font-size:12pt;
+    font-family: "Helvetica", "Verdana", "Arial", "Sans-Serif";
+	border:1px solid #c8ccd1;
+}
+
+.radioButton
+{
+    font-size:11pt;
+    font-family: "Helvetica", "Verdana", "Arial", "Sans-Serif";
+	color:#0088cc;
+	padding: 1px 1px 1px 1px;
+	margin: 1px 1px 1px 1px;
+}
+
+.button
+{
+    border: 1px solid;
+    border-color: #96d1f8;
+    background: #0088cc;
+    padding: 3px 3px 3px 3px;
+    color: white;
+    font-weight:bold;
+    font-size: 10pt;
+    font-family:"Arial","Helvetica", "Verdana",  "Sans-Serif";
+    text-decoration: none;
+    text-align:center;
+    vertical-align: middle;
+    min-width:120px;
+    cursor:pointer;
+    letter-spacing:0.05cm;
+}
+.buttongreen
+{
+    border: 1px solid;
+    border-color: #11D95A;
+    background: #15E661;
+    padding: 3px 3px 3px 3px;
+    color: white;
+    font-weight:bold;
+    font-size: 10pt;
+    font-family:"Arial","Helvetica", "Verdana",  "Sans-Serif";
+    text-decoration: none;
+    text-align:center;
+    vertical-align: middle;
+    min-width:100px;
+    cursor:pointer;
+    letter-spacing:0.05cm;
+}
+.buttonred
+{
+    border: 1px solid;
+    border-color: #E82323;
+    background: #ED1F1F;
+    padding: 3px 3px 3px 3px;
+    color: white;
+    font-weight:bold;
+    font-size: 10pt;
+    font-family:"Arial","Helvetica", "Verdana",  "Sans-Serif";
+    text-decoration: none;
+    text-align:center;
+    vertical-align: middle;
+    min-width:100px;
+    cursor:pointer;
+    letter-spacing:0.05cm;
+}
+
+.buttonalert
+{
+    border: 1px solid;
+    border-color: #FF6399;
+    background: #FF6399;
+    padding: 3px 3px 3px 3px;
+    color: white;
+    font-weight:bold;
+    font-size: 10pt;
+    font-family:"Arial","Helvetica", "Verdana",  "Sans-Serif";
+    text-decoration: none;
+    text-align:center;
+    vertical-align: middle;
+    min-width:120px;
+    cursor:pointer;
+    letter-spacing:0.05cm;
+}
+
+.buttonalert2
+{
+    border: 1px solid;
+    border-color: #E0FF72;
+    background: #E0FF72;
+    padding: 3px 3px 3px 3px;
+    color: black;
+    font-weight:bold;
+    font-size: 10pt;
+    font-family:"Arial","Helvetica", "Verdana",  "Sans-Serif";
+    text-decoration: none;
+    text-align:center;
+    vertical-align: middle;
+    min-width:120px;
+    cursor:pointer;
+    letter-spacing:0.05cm;
+}
+
+.linkButton
+{
+    color: #0088cc;
+    font-size: 10pt;
+    font-family:"Arial","Helvetica", "Verdana",  "Sans-Serif";
+    text-decoration: none;
+    margin:10px 8px 10px 10px;
+}
+
+.loading {
+    position:fixed;
+    text-align:center;
+    height:100%;
+    width:100%;
+    top:0;
+    right:0;
+    left:0;
+    z-index: 9999999;
+    opacity: 0.7;
+    background: #000000;
+}
+
+/********* Grid ***************/
+.gridView { 
+    width: 100%; 
+    background-color: #ffffff; 
+    margin: 5px 0 10px 0; 
+    border: 1px solid #c8ccd1; 
+    border-collapse:collapse; 
+}
+.gridView td { 
+    padding: 4px 4px 4px 4px; 
+    border: 1px solid #c8ccd1; 
+    color: #000000; 
+}
+.gridView th { 
+    padding: 4px 4px 4px 4px; 
+    color: #2e6e9e; 
+    background-color: #e5f2fc; 
+    border-left: 1px solid #c8ccd1; 
+    
+}
+/*
+.gridView .alt { background: #fcfcfc url(grd_alt.png) repeat-x top; }
+.gridView .pgr { background: #424242 url(grd_pgr.png) repeat-x top; }
+.gridView .pgr table { margin: 5px 0; }
+.gridView .pgr td { 
+    border-width: 0; 
+    padding: 0 6px; 
+    border-left: solid 1px #666; 
+    font-weight: bold; 
+    color: #fff; 
+    line-height: 12px; 
+ }   
+.gridView .pgr a { color: #666; text-decoration: none; }
+.gridView .pgr a:hover { color: #000; text-decoration: none; }
+*/
+
+/********** End Grid **********/
+
+
+/******************** Modal ************************/
+.modalHeader
+{
+    border: 1px solid #4297d7;
+    background: #5c9ccc url(themes/redmond/images/ui-bg_gloss-wave_55_5c9ccc_500x100.png) 50% 50% repeat-x;
+    color: #ffffff; font-weight: bold;
+    font-size: 12pt; 
+    font-family: "Helvetica", "Verdana", "Arial", "Sans-Serif";
+	padding:5px 5px 5px 5px;
+	margin:5px 5px 0px 5px;
+	letter-spacing:0.05cm;
+}
+
+.modal
+{
+    min-height:200px;
+    font-size: 12pt; 
+    font-family: "Helvetica", "Verdana", "Arial", "Sans-Serif";
+    border:solid 1px #c8ccd1;
+	padding:5px 5px 5px 5px;
+	margin:0px 5px 5px 5px;
+    background-color:#ffffff;
+}
+
+.modalLeft
+{
+    min-height:300px;
+    height:350px;
+    font-size: 12pt; 
+    font-family: "Helvetica", "Verdana", "Arial", "Sans-Serif";
+    border:solid 1px #c8ccd1;
+	padding:5px 5px 5px 5px;
+	margin:0px 5px 2px 5px;
+    background-color:#ffffff;
+}
+.modalRight
+{
+    min-height:300px;
+    height:350px;
+    font-size: 12pt; 
+    font-family: "Helvetica", "Verdana", "Arial", "Sans-Serif";
+    border:solid 1px #FF4F6C;
+	padding:5px 5px 5px 5px;
+	margin:0px 5px 2px 5px;
+    background-color:#ffffff;
+}
+.modalBottom
+{
+    min-height:200px;
+    font-size: 12pt; 
+    font-family: "Helvetica", "Verdana", "Arial", "Sans-Serif";
+    border:solid 1px #DEFF4C;
+	padding:5px 5px 5px 5px;
+	margin:0px 5px 0px 5px;
+    background-color:#ffffff;
+}
+
+.modalBackground 
+{
+    background-color:gray;
+    opacity:0.7;
+}
+/********************* End Modal ************************/
+
+/********************Alert Modal ************************/
+
+.modalAlertHeader
+{
+    border: 1px solid #FF4F6C;
+    background: #FF4766 url(themes/redmond/images/ui-rg_gloss-wave_500x100.png) 50% 50% repeat-x;
+    color: #ffffff; font-weight: bold;
+    font-size: 12pt; 
+    font-family: "Helvetica", "Verdana", "Arial", "Sans-Serif";
+	padding:5px 5px 5px 5px;
+	margin:5px 5px 0px 5px;
+	letter-spacing:0.05cm;
+}
+
+.modalAlert
+{
+    min-height:50px;
+    max-width:280px;
+    font-size: 12pt; 
+    font-family: "Helvetica", "Verdana", "Arial", "Sans-Serif";
+    border:solid 1px #FF4F6C;
+	padding:5px 5px 5px 5px;
+	margin:0px 5px 5px 5px;
+    background-color:#ffffff;
+}
+
+.modalAlertHeader2 {
+    border: 1px solid #DEFF4C;
+    background: #DFFF91 url(themes/redmond/images/ui-yg_gloss-wave_500x100.png) 50% 50% repeat-x;
+    color: #000000; font-weight: bold;
+    font-size: 12pt; 
+    font-family: "Helvetica", "Verdana", "Arial", "Sans-Serif";
+	padding:5px 5px 5px 5px;
+	margin:5px 5px 0px 5px;
+	letter-spacing:0.05cm;
+}
+
+.modalAlert2
+{
+    min-height:50px;
+    max-width:280px;
+    font-size: 12pt; 
+    font-family: "Helvetica", "Verdana", "Arial", "Sans-Serif";
+    border:solid 1px #DEFF4C;
+	padding:5px 5px 5px 5px;
+	margin:0px 5px 5px 5px;
+    background-color:#ffffff;
+}
+
+
+.modalAlertBackground 
+{
+    background-color:gray;
+    opacity:0.7;
+}
+/********************* End Modal ************************/
+
+/******************** Option Modal Listing ************************/
+.listContent
+{
+    font:normal normal 12pt "Arial","Helvetica", "Verdana",  "Sans-Serif";
+	color:#0088cc;
+}
+
+.listHeader
+{
+    display:block;
+    margin:10px 0px 10px 0px;
+    font:normal bold 12pt "Arial","Helvetica", "Verdana",  "Sans-Serif";
+	color:#0088cc;
+	letter-spacing:0.05cm;
+}
+
+/*.li {padding:20px 0px 20px 0px;}*/
+.li { text-align:left; list-style-type:decimal; list-style-position:inside; color:#0088cc; padding:0px 0px 10px 0px;}
+.li a:link, div#accountList li a:link {text-decoration:none; color:#0088cc;}
+.li a:visited, div#accountList li a:visited {text-decoration:none; color:#0088cc;}
+.li a:hover, div#accountList li a:hover {text-decoration:none; color:Red;}
+/******************** End Option Modal Listing ************************/
+
+/******************** Top Navigation ************************/
+.navlist
+{
+    width:1090px;
+	float: left;
+}
+
+.navlistli
+{
+    width:125px;
+    padding:5px 5px 5px 5px;
+    float:left;
+    margin:0px 20px 0px 0px;
+    display:block;
+    /*background:url(images/round_top_left.gif) top left no-repeat;*/
+}
+
+.navlistspan
+{
+    display:block;
+    margin-right:auto;
+    margin-left:auto;
+    text-align:center;
+    /*background:url(images/round_top_right.gif) top right no-repeat;*/
+}
+
+.navlistli a
+{
+    font-size:12pt;
+    font-weight:bold;
+    text-decoration:none;
+    letter-spacing:0.05cm;
+}
+
+.navlistli a:link {color:#FFFFFF;}
+.navlistli a:visited {color:#FFFFFF;}
+.navlistli a:hover {color:#FFFFFF;}
+
+/*table*/
+.table {
+    padding:5px;
+    border-spacing:5px;
+}
+
+#footer {
+    position:absolute;
+    bottom:0;
+    width:100%;
+    height:50px;
+    background:#3F6D6D;
+}
+#container {
+    height:100%;
+}
+/********************* End top navigation ***************************/
+
+

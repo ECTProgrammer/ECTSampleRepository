@@ -1,0 +1,75 @@
+﻿<%@ Master Language="C#" AutoEventWireup="true" CodeBehind="Site.master.cs" Inherits="TimeTracker.SiteMaster" %>
+
+<!DOCTYPE html>
+<html lang="en">
+<head runat="server">
+    <meta charset="utf-8" />
+    <title><%: Page.Title %> - Everett Charles Technologies</title>
+    <link href="Content/master.css" rel="stylesheet" type="text/css" />
+    <link href="~/logo.ico" rel="shortcut icon" type="image/x-icon" />
+    <script src="Scripts/jquery-1.8.2.js" type="text/javascript"></script>
+    <asp:ContentPlaceHolder runat="server" ID="HeadContent" />
+</head>
+<body>
+ <div id="container">
+    <form runat="server">
+
+    <ajaxToolKit:ToolkitScriptManager ID="ToolkitScriptManager1" runat="server"></ajaxToolKit:ToolkitScriptManager>
+        <div class="frame">
+            <table style="padding:0; border-spacing:0; width:100%" border="0">
+                <tr><td style="width:100px; height:40px;"><img src="Images/ect_logo.gif" /></td>
+                    <td><h1><asp:Label ID="subHeader" runat="server"></asp:Label></h1></td></tr>
+            </table>
+            <div style="height:28px;margin:30px 0px 0px 0px;">
+                <asp:Panel ID="navlist" runat="server" CssClass="navlist">
+                    <asp:Panel ID="Dashboard" runat="server" CssClass="navlistli" BackColor="#000793">
+                        <span class="navlistspan">
+                            <asp:HyperLink ID="hyperlinkDashboard" runat="server" NavigateUrl="~/Dashboard.aspx" Text="Dashboard" ToolTip="Dashboard"></asp:HyperLink>
+                        </span>
+                    </asp:Panel>
+                    <asp:Panel ID="JobTrack" runat="server" CssClass="navlistli" BackColor="#000793">
+                        <span class="navlistspan">
+                            <asp:HyperLink ID="hyperlinkJobTrack" runat="server" NavigateUrl="~/JobTrack.aspx" Text="Job Track" ToolTip="Job Track"></asp:HyperLink>
+                        </span>
+                    </asp:Panel>
+                    <asp:Panel ID="Setup" runat="server" CssClass="navlistli" BackColor="#000793">
+                        <span class="navlistspan">
+                            <asp:HyperLink ID="hyperlinkDefault" runat="server" NavigateUrl="~/Default.aspx" Text="Setup" ToolTip="Job Track"></asp:HyperLink>
+                        </span>
+                    </asp:Panel>
+                    <asp:Panel ID="Settings" runat="server" CssClass="navlistli" BackColor="#000793">
+                        <span class="navlistspan">
+                            <asp:HyperLink ID="hyperlinkContact" runat="server" NavigateUrl="~/Contact.aspx" Text="Settings" ToolTip="Job Track"></asp:HyperLink>
+                        </span>
+                    </asp:Panel>
+                    <asp:Panel ID="Report" runat="server" CssClass="navlistli" BackColor="#000793">
+                        <span class="navlistspan">
+                            <asp:HyperLink ID="hyperlinkAbout" runat="server" NavigateUrl="~/About.aspx" Text="Report" ToolTip="Job Track"></asp:HyperLink>
+                        </span>
+                    </asp:Panel>
+                </asp:Panel>
+
+            </div>
+        </div>
+        <div style="border-top:solid 1px #dedede; padding:0px 0px 0px 0px;"></div>
+        <div class="frame">
+            <div style="text-align:right;height:20px;margin:5px 0px 5px 0px;">
+                <asp:Label ID="labelUserName" runat="server" CssClass="smallText"></asp:Label>
+                <asp:LinkButton ID="linkBtnLogout" runat="server" Text="Log Out" CssClass="linkButton" OnClick="linkBtnLogoutClick"></asp:LinkButton>
+            </div>
+            <div>
+                <ul>
+            <asp:Repeater ID="RepError" runat="server">
+                <ItemTemplate>
+                    <li><asp:Label ID="labelRepError" runat="server" Font-Bold="true" Font-Size="Smaller" ForeColor="Red" Text='<%#Container.DataItem %>'></asp:Label></li>
+                </ItemTemplate>
+            </asp:Repeater>
+                    </ul>
+            </div>
+            <asp:ContentPlaceHolder runat="server" ID="FeaturedContent" />
+            <asp:ContentPlaceHolder runat="server" ID="MainContent" />
+        </div>
+    </form>
+    </div>
+</body>
+</html>

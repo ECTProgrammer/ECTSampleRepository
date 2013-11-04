@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+ <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <edmx:Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <!-- Diagram content (shape and connector positions) -->
+    <edmx:Diagrams>
+      <Diagram DiagramId="eb3c73b641d24d5d9cfc00c539bd97f8" Name="Diagram1">
+        <EntityTypeShape EntityType="TimeTrackerModel.T_Department" Width="1.5" PointX="0.75" PointY="0.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="TimeTrackerModel.T_JobTracker" Width="1.5" PointX="2.75" PointY="0.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="TimeTrackerModel.T_JobType" Width="1.5" PointX="4.75" PointY="0.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="TimeTrackerModel.T_Position" Width="1.5" PointX="4.625" PointY="3.625" IsExpanded="true" />
+        <EntityTypeShape EntityType="TimeTrackerModel.T_User" Width="1.5" PointX="0.875" PointY="3.625" IsExpanded="true" />
+        <EntityTypeShape EntityType="TimeTrackerModel.T_Time" Width="1.5" PointX="6.5" PointY="1" />
+        <EntityTypeShape EntityType="TimeTrackerModel.T_Module" Width="1.5" PointX="9" PointY="1.125" />
+        <EntityTypeShape EntityType="TimeTrackerModel.T_PositionModuleAccess" Width="1.5" PointX="8" PointY="3.75" />
+      </Diagram>
+    </edmx:Diagrams>
+  </edmx:Designer>
+</edmx:Edmx>

@@ -1,0 +1,398 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+  <!-- EF Runtime content -->
+  <edmx:Runtime>
+    <!-- SSDL content -->
+    <edmx:StorageModels>
+    <Schema Namespace="TimeTrackerModel.Store" Alias="Self" Provider="System.Data.SqlClient" ProviderManifestToken="2008" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+        <EntityContainer Name="TimeTrackerModelStoreContainer">
+          <EntitySet Name="Department" EntityType="TimeTrackerModel.Store.Department" store:Type="Tables" Schema="dbo" />
+          <EntitySet Name="JobTracker" EntityType="TimeTrackerModel.Store.JobTracker" store:Type="Tables" Schema="dbo" />
+          <EntitySet Name="JobType" EntityType="TimeTrackerModel.Store.JobType" store:Type="Tables" Schema="dbo" />
+          <EntitySet Name="Module" EntityType="TimeTrackerModel.Store.Module" store:Type="Tables" Schema="dbo" />
+          <EntitySet Name="Position" EntityType="TimeTrackerModel.Store.Position" store:Type="Tables" Schema="dbo" />
+          <EntitySet Name="PositionModuleAccess" EntityType="TimeTrackerModel.Store.PositionModuleAccess" store:Type="Tables" Schema="dbo" />
+          <EntitySet Name="Time" EntityType="TimeTrackerModel.Store.Time" store:Type="Tables" Schema="dbo" />
+          <EntitySet Name="Users" EntityType="TimeTrackerModel.Store.Users" store:Type="Tables" Schema="dbo" />
+        </EntityContainer>
+        <EntityType Name="Department">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" Nullable="false" StoreGeneratedPattern="Identity" />
+          <Property Name="Description" Type="varchar" MaxLength="80" />
+          <Property Name="CreateDate" Type="datetime" />
+          <Property Name="LastUpdateDate" Type="datetime" />
+          <Property Name="CreatedBy" Type="int" />
+          <Property Name="LastUpdatedBy" Type="int" />
+        </EntityType>
+        <EntityType Name="JobTracker">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" Nullable="false" StoreGeneratedPattern="Identity" />
+          <Property Name="StartTime" Type="datetime" />
+          <Property Name="EndTime" Type="datetime" />
+          <Property Name="Description" Type="varchar" MaxLength="150" />
+          <Property Name="JobTypeId" Type="int" />
+          <Property Name="JobIdNumber" Type="varchar" MaxLength="80" />
+          <Property Name="Remarks" Type="varchar(max)" />
+          <Property Name="ApprovedBy" Type="int" />
+          <Property Name="CreateDate" Type="datetime" />
+          <Property Name="LastUpdateDate" Type="datetime" />
+          <Property Name="CreatedBy" Type="int" />
+          <Property Name="LastUpdatedBy" Type="int" />
+          <Property Name="Status" Type="varchar" MaxLength="30" />
+          <Property Name="SupervisorRemarks" Type="varchar(max)" />
+          <Property Name="UserId" Type="int" />
+          <Property Name="ActionRequest" Type="varchar" MaxLength="30" />
+          <Property Name="ScheduleDate" Type="datetime" />
+        </EntityType>
+        <EntityType Name="JobType">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" Nullable="false" StoreGeneratedPattern="Identity" />
+          <Property Name="Description" Type="varchar" MaxLength="150" />
+          <Property Name="DepartmentId" Type="int" />
+          <Property Name="CreatedBy" Type="int" />
+          <Property Name="LastUpdatedBy" Type="int" />
+          <Property Name="CreateDate" Type="datetime" />
+          <Property Name="LastUpdateDate" Type="datetime" />
+          <Property Name="RequiredJobId" Type="bit" />
+        </EntityType>
+        <EntityType Name="Module">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" Nullable="false" StoreGeneratedPattern="Identity" />
+          <Property Name="Module" Type="varchar" Nullable="false" MaxLength="50" />
+          <Property Name="Description" Type="varchar" MaxLength="80" />
+          <Property Name="ModuleType" Type="varchar" MaxLength="50" />
+          <Property Name="ArrangementOrder" Type="int" />
+        </EntityType>
+        <EntityType Name="Position">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" Nullable="false" StoreGeneratedPattern="Identity" />
+          <Property Name="Description" Type="varchar" MaxLength="100" />
+          <Property Name="Rank" Type="int" />
+          <Property Name="CreateDate" Type="datetime" />
+          <Property Name="LastUpdateDate" Type="datetime" />
+          <Property Name="CreatedBy" Type="int" />
+          <Property Name="LastUpdatedBy" Type="int" />
+        </EntityType>
+        <EntityType Name="PositionModuleAccess">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" Nullable="false" StoreGeneratedPattern="Identity" />
+          <Property Name="PositionId" Type="int" Nullable="false" />
+          <Property Name="ModuleId" Type="int" Nullable="false" />
+          <Property Name="CanView" Type="bit" />
+          <Property Name="CanAdd" Type="bit" />
+          <Property Name="CanUpdate" Type="bit" />
+          <Property Name="CanDelete" Type="bit" />
+        </EntityType>
+        <EntityType Name="Time">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" Nullable="false" StoreGeneratedPattern="Identity" />
+          <Property Name="Description" Type="varchar" Nullable="false" MaxLength="12" />
+          <Property Name="24hrConversion" Type="varchar" Nullable="false" MaxLength="12" />
+          <Property Name="Position" Type="int" Nullable="false" />
+        </EntityType>
+        <EntityType Name="Users">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" Nullable="false" StoreGeneratedPattern="Identity" />
+          <Property Name="Firstname" Type="varchar" MaxLength="50" />
+          <Property Name="Lastname" Type="varchar" MaxLength="50" />
+          <Property Name="PositionId" Type="int" />
+          <Property Name="DepartmentId" Type="int" />
+          <Property Name="Username" Type="varchar" Nullable="false" MaxLength="20" />
+          <Property Name="Password" Type="varchar" MaxLength="20" />
+          <Property Name="Email" Type="varchar" MaxLength="80" />
+          <Property Name="Phone" Type="varchar" MaxLength="20" />
+          <Property Name="Fax" Type="varchar" MaxLength="20" />
+          <Property Name="Mobile" Type="varchar" MaxLength="20" />
+          <Property Name="CreateDate" Type="datetime" />
+          <Property Name="LastUpdateDate" Type="datetime" />
+          <Property Name="CreatedBy" Type="int" />
+          <Property Name="LastUpdatedBy" Type="int" />
+          <Property Name="Status" Type="varchar" MaxLength="30" />
+        </EntityType>
+      </Schema></edmx:StorageModels>
+    <!-- CSDL content -->
+    <edmx:ConceptualModels>
+      <Schema Namespace="TimeTrackerModel" Alias="Self" p1:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:p1="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+        <EntityContainer Name="TimeTrackerEntities" p1:LazyLoadingEnabled="true">
+          <EntitySet Name="T_Departments" EntityType="TimeTrackerModel.T_Department" />
+          <EntitySet Name="T_JobTrackers" EntityType="TimeTrackerModel.T_JobTracker" />
+          <EntitySet Name="T_JobTypes" EntityType="TimeTrackerModel.T_JobType" />
+          <EntitySet Name="T_Positions" EntityType="TimeTrackerModel.T_Position" />
+          <EntitySet Name="T_Users" EntityType="TimeTrackerModel.T_User" />
+          <EntitySet Name="T_Times" EntityType="TimeTrackerModel.T_Time" />
+          <EntitySet Name="T_Modules" EntityType="TimeTrackerModel.T_Module" />
+          <EntitySet Name="T_PositionModuleAccesses" EntityType="TimeTrackerModel.T_PositionModuleAccess" />
+        </EntityContainer>
+        <EntityType Name="T_Department">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" p1:StoreGeneratedPattern="Identity" />
+          <Property Name="Description" Type="String" MaxLength="80" Unicode="false" FixedLength="false" />
+          <Property Name="CreateDate" Type="DateTime" Precision="3" />
+          <Property Name="LastUpdateDate" Type="DateTime" Precision="3" />
+          <Property Name="CreatedBy" Type="Int32" />
+          <Property Name="LastUpdatedBy" Type="Int32" />
+        </EntityType>
+        <EntityType Name="T_JobTracker">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" p1:StoreGeneratedPattern="Identity" />
+          <Property Name="StartTime" Type="DateTime" Precision="3" />
+          <Property Name="EndTime" Type="DateTime" Precision="3" />
+          <Property Name="Description" Type="String" MaxLength="150" Unicode="false" FixedLength="false" />
+          <Property Name="JobTypeId" Type="Int32" />
+          <Property Name="JobIdNumber" Type="String" MaxLength="80" Unicode="false" FixedLength="false" />
+          <Property Name="Remarks" Type="String" MaxLength="Max" Unicode="false" FixedLength="false" />
+          <Property Name="ApprovedBy" Type="Int32" />
+          <Property Name="CreateDate" Type="DateTime" Precision="3" />
+          <Property Name="LastUpdateDate" Type="DateTime" Precision="3" />
+          <Property Name="CreatedBy" Type="Int32" />
+          <Property Name="LastUpdatedBy" Type="Int32" />
+          <Property Name="Status" Type="String" MaxLength="30" Unicode="false" FixedLength="false" />
+          <Property Name="SupervisorRemarks" Type="String" MaxLength="Max" Unicode="false" FixedLength="false" />
+          <Property Type="Int32" Name="UserId" />
+          <Property Type="String" Name="ActionRequest" MaxLength="30" FixedLength="false" Unicode="false" />
+          <Property Type="DateTime" Name="ScheduleDate" Precision="3" />
+        </EntityType>
+        <EntityType Name="T_JobType">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" p1:StoreGeneratedPattern="Identity" />
+          <Property Name="Description" Type="String" MaxLength="150" Unicode="false" FixedLength="false" />
+          <Property Name="DepartmentId" Type="Int32" />
+          <Property Name="CreatedBy" Type="Int32" />
+          <Property Name="LastUpdatedBy" Type="Int32" />
+          <Property Name="CreateDate" Type="DateTime" Precision="3" />
+          <Property Name="LastUpdateDate" Type="DateTime" Precision="3" />
+          <Property Type="Boolean" Name="RequiredJobId" />
+        </EntityType>
+        <EntityType Name="T_Position">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" p1:StoreGeneratedPattern="Identity" />
+          <Property Name="Description" Type="String" MaxLength="100" Unicode="false" FixedLength="false" />
+          <Property Name="Rank" Type="Int32" />
+          <Property Name="CreateDate" Type="DateTime" Precision="3" />
+          <Property Name="LastUpdateDate" Type="DateTime" Precision="3" />
+          <Property Name="CreatedBy" Type="Int32" />
+          <Property Name="LastUpdatedBy" Type="Int32" />
+        </EntityType>
+        <EntityType Name="T_User">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" p1:StoreGeneratedPattern="Identity" />
+          <Property Name="Firstname" Type="String" MaxLength="50" Unicode="false" FixedLength="false" />
+          <Property Name="Lastname" Type="String" MaxLength="50" Unicode="false" FixedLength="false" />
+          <Property Name="PositionId" Type="Int32" />
+          <Property Name="DepartmentId" Type="Int32" />
+          <Property Name="Username" Type="String" Nullable="false" MaxLength="20" Unicode="false" FixedLength="false" />
+          <Property Name="Password" Type="String" MaxLength="20" Unicode="false" FixedLength="false" />
+          <Property Name="Email" Type="String" MaxLength="80" Unicode="false" FixedLength="false" />
+          <Property Name="Phone" Type="String" MaxLength="20" Unicode="false" FixedLength="false" />
+          <Property Name="Fax" Type="String" MaxLength="20" Unicode="false" FixedLength="false" />
+          <Property Name="Mobile" Type="String" MaxLength="20" Unicode="false" FixedLength="false" />
+          <Property Name="CreateDate" Type="DateTime" Precision="3" />
+          <Property Name="LastUpdateDate" Type="DateTime" Precision="3" />
+          <Property Name="CreatedBy" Type="Int32" />
+          <Property Name="LastUpdatedBy" Type="Int32" />
+          <Property Name="Status" Type="String" MaxLength="30" Unicode="false" FixedLength="false" />
+        </EntityType>
+        <EntityType Name="T_Time">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Type="Int32" Name="Id" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Type="String" Name="Description" Nullable="false" MaxLength="12" FixedLength="false" Unicode="false" />
+          <Property Type="String" Name="C24hrConversion" Nullable="false" MaxLength="12" FixedLength="false" Unicode="false" />
+          <Property Type="Int32" Name="Position" Nullable="false" />
+        </EntityType>
+        <EntityType Name="T_Module">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Type="Int32" Name="Id" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Type="String" Name="Module1" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Type="String" Name="Description" MaxLength="80" FixedLength="false" Unicode="false" />
+          <Property Type="String" Name="ModuleType" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Type="Int32" Name="ArrangementOrder" />
+        </EntityType>
+        <EntityType Name="T_PositionModuleAccess">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Type="Int32" Name="Id" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Type="Int32" Name="PositionId" Nullable="false" />
+          <Property Type="Int32" Name="ModuleId" Nullable="false" />
+          <Property Type="Boolean" Name="CanView" />
+          <Property Type="Boolean" Name="CanAdd" />
+          <Property Type="Boolean" Name="CanUpdate" />
+          <Property Type="Boolean" Name="CanDelete" />
+        </EntityType>
+      </Schema>
+    </edmx:ConceptualModels>
+    <!-- C-S mapping content -->
+    <edmx:Mappings>
+      <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
+        <EntityContainerMapping StorageEntityContainer="TimeTrackerModelStoreContainer" CdmEntityContainer="TimeTrackerEntities">
+          <EntitySetMapping Name="T_Departments">
+            <EntityTypeMapping TypeName="TimeTrackerModel.T_Department">
+              <MappingFragment StoreEntitySet="Department">
+                <ScalarProperty Name="Id" ColumnName="Id" />
+                <ScalarProperty Name="Description" ColumnName="Description" />
+                <ScalarProperty Name="CreateDate" ColumnName="CreateDate" />
+                <ScalarProperty Name="LastUpdateDate" ColumnName="LastUpdateDate" />
+                <ScalarProperty Name="CreatedBy" ColumnName="CreatedBy" />
+                <ScalarProperty Name="LastUpdatedBy" ColumnName="LastUpdatedBy" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="T_JobTrackers">
+            <EntityTypeMapping TypeName="TimeTrackerModel.T_JobTracker">
+              <MappingFragment StoreEntitySet="JobTracker">
+                <ScalarProperty Name="ScheduleDate" ColumnName="ScheduleDate" />
+                <ScalarProperty Name="ActionRequest" ColumnName="ActionRequest" />
+                <ScalarProperty Name="UserId" ColumnName="UserId" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+                <ScalarProperty Name="StartTime" ColumnName="StartTime" />
+                <ScalarProperty Name="EndTime" ColumnName="EndTime" />
+                <ScalarProperty Name="Description" ColumnName="Description" />
+                <ScalarProperty Name="JobTypeId" ColumnName="JobTypeId" />
+                <ScalarProperty Name="JobIdNumber" ColumnName="JobIdNumber" />
+                <ScalarProperty Name="Remarks" ColumnName="Remarks" />
+                <ScalarProperty Name="ApprovedBy" ColumnName="ApprovedBy" />
+                <ScalarProperty Name="CreateDate" ColumnName="CreateDate" />
+                <ScalarProperty Name="LastUpdateDate" ColumnName="LastUpdateDate" />
+                <ScalarProperty Name="CreatedBy" ColumnName="CreatedBy" />
+                <ScalarProperty Name="LastUpdatedBy" ColumnName="LastUpdatedBy" />
+                <ScalarProperty Name="Status" ColumnName="Status" />
+                <ScalarProperty Name="SupervisorRemarks" ColumnName="SupervisorRemarks" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="T_JobTypes">
+            <EntityTypeMapping TypeName="TimeTrackerModel.T_JobType">
+              <MappingFragment StoreEntitySet="JobType">
+                <ScalarProperty Name="RequiredJobId" ColumnName="RequiredJobId" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+                <ScalarProperty Name="Description" ColumnName="Description" />
+                <ScalarProperty Name="DepartmentId" ColumnName="DepartmentId" />
+                <ScalarProperty Name="CreatedBy" ColumnName="CreatedBy" />
+                <ScalarProperty Name="LastUpdatedBy" ColumnName="LastUpdatedBy" />
+                <ScalarProperty Name="CreateDate" ColumnName="CreateDate" />
+                <ScalarProperty Name="LastUpdateDate" ColumnName="LastUpdateDate" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="T_Positions">
+            <EntityTypeMapping TypeName="TimeTrackerModel.T_Position">
+              <MappingFragment StoreEntitySet="Position">
+                <ScalarProperty Name="Id" ColumnName="Id" />
+                <ScalarProperty Name="Description" ColumnName="Description" />
+                <ScalarProperty Name="Rank" ColumnName="Rank" />
+                <ScalarProperty Name="CreateDate" ColumnName="CreateDate" />
+                <ScalarProperty Name="LastUpdateDate" ColumnName="LastUpdateDate" />
+                <ScalarProperty Name="CreatedBy" ColumnName="CreatedBy" />
+                <ScalarProperty Name="LastUpdatedBy" ColumnName="LastUpdatedBy" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="T_Users">
+            <EntityTypeMapping TypeName="TimeTrackerModel.T_User">
+              <MappingFragment StoreEntitySet="Users">
+                <ScalarProperty Name="Id" ColumnName="Id" />
+                <ScalarProperty Name="Firstname" ColumnName="Firstname" />
+                <ScalarProperty Name="Lastname" ColumnName="Lastname" />
+                <ScalarProperty Name="PositionId" ColumnName="PositionId" />
+                <ScalarProperty Name="DepartmentId" ColumnName="DepartmentId" />
+                <ScalarProperty Name="Username" ColumnName="Username" />
+                <ScalarProperty Name="Password" ColumnName="Password" />
+                <ScalarProperty Name="Email" ColumnName="Email" />
+                <ScalarProperty Name="Phone" ColumnName="Phone" />
+                <ScalarProperty Name="Fax" ColumnName="Fax" />
+                <ScalarProperty Name="Mobile" ColumnName="Mobile" />
+                <ScalarProperty Name="CreateDate" ColumnName="CreateDate" />
+                <ScalarProperty Name="LastUpdateDate" ColumnName="LastUpdateDate" />
+                <ScalarProperty Name="CreatedBy" ColumnName="CreatedBy" />
+                <ScalarProperty Name="LastUpdatedBy" ColumnName="LastUpdatedBy" />
+                <ScalarProperty Name="Status" ColumnName="Status" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="T_Times">
+            <EntityTypeMapping TypeName="TimeTrackerModel.T_Time">
+              <MappingFragment StoreEntitySet="Time">
+                <ScalarProperty Name="Position" ColumnName="Position" />
+                <ScalarProperty Name="C24hrConversion" ColumnName="24hrConversion" />
+                <ScalarProperty Name="Description" ColumnName="Description" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="T_Modules">
+            <EntityTypeMapping TypeName="TimeTrackerModel.T_Module">
+              <MappingFragment StoreEntitySet="Module">
+                <ScalarProperty Name="ArrangementOrder" ColumnName="ArrangementOrder" />
+                <ScalarProperty Name="ModuleType" ColumnName="ModuleType" />
+                <ScalarProperty Name="Description" ColumnName="Description" />
+                <ScalarProperty Name="Module1" ColumnName="Module" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="T_PositionModuleAccesses">
+            <EntityTypeMapping TypeName="TimeTrackerModel.T_PositionModuleAccess">
+              <MappingFragment StoreEntitySet="PositionModuleAccess">
+                <ScalarProperty Name="CanDelete" ColumnName="CanDelete" />
+                <ScalarProperty Name="CanUpdate" ColumnName="CanUpdate" />
+                <ScalarProperty Name="CanAdd" ColumnName="CanAdd" />
+                <ScalarProperty Name="CanView" ColumnName="CanView" />
+                <ScalarProperty Name="ModuleId" ColumnName="ModuleId" />
+                <ScalarProperty Name="PositionId" ColumnName="PositionId" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+        </EntityContainerMapping>
+      </Mapping>
+    </edmx:Mappings>
+  </edmx:Runtime>
+  <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <Connection>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="MetadataArtifactProcessing" Value="EmbedInOutputAssembly" />
+      </DesignerInfoPropertySet>
+    </Connection>
+    <Options>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="ValidateOnBuild" Value="true" />
+        <DesignerProperty Name="EnablePluralization" Value="True" />
+        <DesignerProperty Name="IncludeForeignKeysInModel" Value="True" />
+        <DesignerProperty Name="CodeGenerationStrategy" Value="None" />
+      </DesignerInfoPropertySet>
+    </Options>
+    <!-- Diagram content (shape and connector positions) -->
+    <Diagrams></Diagrams>
+  </Designer>
+</edmx:Edmx>
