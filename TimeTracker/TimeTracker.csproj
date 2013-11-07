@@ -272,6 +272,11 @@
     <Content Include="Default.aspx" />
     <Content Include="favicon.ico" />
     <Content Include="Global.asax" />
+    <Content Include="Setup.aspx" />
+    <Content Include="SetupDepartment.aspx" />
+    <Content Include="SetupJobType.aspx" />
+    <Content Include="SetupModuleAccess.aspx" />
+    <Content Include="SetupUser.aspx" />
     <Content Include="ViewSwitcher.ascx" />
     <Content Include="Web.config">
       <SubType>Designer</SubType>
@@ -380,15 +385,53 @@
     <Compile Include="Login.aspx.designer.cs">
       <DependentUpon>Login.aspx</DependentUpon>
     </Compile>
+    <Compile Include="Model\Analysis.cs" />
     <Compile Include="Model\Converter.cs" />
     <Compile Include="Model\Department.cs" />
     <Compile Include="Model\JobTracker.cs" />
     <Compile Include="Model\JobType.cs" />
-    <Compile Include="Model\Position.cs" />
-    <Compile Include="Model\PositionModuleAccess.cs" />
+    <Compile Include="Model\Module.cs" />
+    <Compile Include="Model\RoleDepartmentAccess.cs" />
+    <Compile Include="Model\Roles.cs" />
+    <Compile Include="Model\RolesModuleAccess.cs" />
     <Compile Include="Model\Time.cs" />
     <Compile Include="Model\User.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Setup.aspx.cs">
+      <DependentUpon>Setup.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Setup.aspx.designer.cs">
+      <DependentUpon>Setup.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="SetupDepartment.aspx.cs">
+      <DependentUpon>SetupDepartment.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="SetupDepartment.aspx.designer.cs">
+      <DependentUpon>SetupDepartment.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="SetupJobType.aspx.cs">
+      <DependentUpon>SetupJobType.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="SetupJobType.aspx.designer.cs">
+      <DependentUpon>SetupJobType.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="SetupModuleAccess.aspx.cs">
+      <DependentUpon>SetupModuleAccess.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="SetupModuleAccess.aspx.designer.cs">
+      <DependentUpon>SetupModuleAccess.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="SetupUser.aspx.cs">
+      <DependentUpon>SetupUser.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="SetupUser.aspx.designer.cs">
+      <DependentUpon>SetupUser.aspx</DependentUpon>
+    </Compile>
     <Compile Include="Site.Master.cs">
       <DependentUpon>Site.Master</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
@@ -430,10 +473,13 @@
     <Compile Include="T_Module.cs">
       <DependentUpon>TimeTrackerModel.tt</DependentUpon>
     </Compile>
-    <Compile Include="T_Position.cs">
+    <Compile Include="T_Role.cs">
       <DependentUpon>TimeTrackerModel.tt</DependentUpon>
     </Compile>
-    <Compile Include="T_PositionModuleAccess.cs">
+    <Compile Include="T_RoleDepartmentAccess.cs">
+      <DependentUpon>TimeTrackerModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="T_RolesModuleAccess.cs">
       <DependentUpon>TimeTrackerModel.tt</DependentUpon>
     </Compile>
     <Compile Include="T_Time.cs">

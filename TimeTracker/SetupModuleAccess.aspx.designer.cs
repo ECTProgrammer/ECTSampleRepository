@@ -10,177 +10,186 @@
 namespace TimeTracker {
     
     
-    public partial class SiteMaster {
+    public partial class SetupModuleAccess {
         
         /// <summary>
-        /// HeadContent control.
+        /// UpdatePanelMain control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.ContentPlaceHolder HeadContent;
+        protected global::System.Web.UI.UpdatePanel UpdatePanelMain;
         
         /// <summary>
-        /// ToolkitScriptManager1 control.
+        /// UpdateProgress1 control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::AjaxControlToolkit.ToolkitScriptManager ToolkitScriptManager1;
+        protected global::System.Web.UI.UpdateProgress UpdateProgress1;
         
         /// <summary>
-        /// subHeader control.
+        /// panelHeader control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.Label subHeader;
+        protected global::System.Web.UI.WebControls.Panel panelHeader;
         
         /// <summary>
-        /// navlist control.
+        /// panelContent control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.Panel navlist;
+        protected global::System.Web.UI.WebControls.Panel panelContent;
         
         /// <summary>
-        /// Dashboard control.
+        /// labelAccessDenied control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.Panel Dashboard;
+        protected global::System.Web.UI.WebControls.Label labelAccessDenied;
         
         /// <summary>
-        /// hyperlinkDashboard control.
+        /// panelAccessOK control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.HyperLink hyperlinkDashboard;
+        protected global::System.Web.UI.WebControls.Panel panelAccessOK;
         
         /// <summary>
-        /// JobTrack control.
+        /// linkBtnAdd control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.Panel JobTrack;
+        protected global::System.Web.UI.WebControls.LinkButton linkBtnAdd;
         
         /// <summary>
-        /// hyperlinkJobTrack control.
+        /// gridViewRoles control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.HyperLink hyperlinkJobTrack;
+        protected global::System.Web.UI.WebControls.GridView gridViewRoles;
         
         /// <summary>
-        /// Setup control.
+        /// UpdatePanel1 control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.Panel Setup;
+        protected global::System.Web.UI.UpdatePanel UpdatePanel1;
         
         /// <summary>
-        /// hyperlinkDefault control.
+        /// modalUpdateProgress control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.HyperLink hyperlinkDefault;
+        protected global::System.Web.UI.UpdateProgress modalUpdateProgress;
         
         /// <summary>
-        /// Settings control.
+        /// panelModal control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.Panel Settings;
+        protected global::System.Web.UI.WebControls.Panel panelModal;
         
         /// <summary>
-        /// hyperlinkContact control.
+        /// panelModalHeader control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.HyperLink hyperlinkContact;
+        protected global::System.Web.UI.WebControls.Panel panelModalHeader;
         
         /// <summary>
-        /// Report control.
+        /// panelModalContent control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.Panel Report;
+        protected global::System.Web.UI.WebControls.Panel panelModalContent;
         
         /// <summary>
-        /// hyperlinkAbout control.
+        /// modalDropDownRoles control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.HyperLink hyperlinkAbout;
+        protected global::System.Web.UI.WebControls.DropDownList modalDropDownRoles;
         
         /// <summary>
-        /// linkBtnUserName control.
+        /// modalChkboxAll control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.LinkButton linkBtnUserName;
+        protected global::System.Web.UI.WebControls.CheckBox modalChkboxAll;
         
         /// <summary>
-        /// linkBtnLogout control.
+        /// gridViewModuleAccess control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.LinkButton linkBtnLogout;
+        protected global::System.Web.UI.WebControls.GridView gridViewModuleAccess;
         
         /// <summary>
-        /// RepError control.
+        /// modalBtnSubmit control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.Repeater RepError;
+        protected global::System.Web.UI.WebControls.Button modalBtnSubmit;
         
         /// <summary>
-        /// FeaturedContent control.
+        /// modalBtnCancel control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.ContentPlaceHolder FeaturedContent;
+        protected global::System.Web.UI.WebControls.Button modalBtnCancel;
         
         /// <summary>
-        /// MainContent control.
+        /// btnHidden control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.ContentPlaceHolder MainContent;
+        protected global::System.Web.UI.WebControls.Button btnHidden;
+        
+        /// <summary>
+        /// programmaticModalPopup control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::AjaxControlToolkit.ModalPopupExtender programmaticModalPopup;
     }
 }

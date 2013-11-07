@@ -12,14 +12,14 @@ namespace TimeTracker
     using System;
     using System.Collections.Generic;
     
-    public partial class T_PositionModuleAccess
+    public partial class T_RolesModuleAccess
     {
         public int Id { get; set; }
-        public int PositionId { get; set; }
         public int ModuleId { get; set; }
         public Nullable<bool> CanView { get; set; }
         public Nullable<bool> CanAdd { get; set; }
         public Nullable<bool> CanUpdate { get; set; }
         public Nullable<bool> CanDelete { get; set; }
+        public int RoleId { get; set; }
     }
 }

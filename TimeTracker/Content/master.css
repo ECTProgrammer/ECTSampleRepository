@@ -385,7 +385,7 @@ h2
 }
 
 /*.li {padding:20px 0px 20px 0px;}*/
-.li { text-align:left; list-style-type:decimal; list-style-position:inside; color:#0088cc; padding:0px 0px 10px 0px;}
+.li { text-align:left; list-style-type:square; list-style-position:inside; color:#0088cc; padding:0px 0px 10px 0px;}
 .li a:link, div#accountList li a:link {text-decoration:none; color:#0088cc;}
 .li a:visited, div#accountList li a:visited {text-decoration:none; color:#0088cc;}
 .li a:hover, div#accountList li a:hover {text-decoration:none; color:Red;}

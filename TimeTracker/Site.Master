@@ -34,7 +34,7 @@
                     </asp:Panel>
                     <asp:Panel ID="Setup" runat="server" CssClass="navlistli" BackColor="#000793">
                         <span class="navlistspan">
-                            <asp:HyperLink ID="hyperlinkDefault" runat="server" NavigateUrl="~/Default.aspx" Text="Setup" ToolTip="Job Track"></asp:HyperLink>
+                            <asp:HyperLink ID="hyperlinkDefault" runat="server" NavigateUrl="~/Setup.aspx" Text="Setup" ToolTip="Job Track"></asp:HyperLink>
                         </span>
                     </asp:Panel>
                     <asp:Panel ID="Settings" runat="server" CssClass="navlistli" BackColor="#000793">
@@ -54,7 +54,7 @@
         <div style="border-top:solid 1px #dedede; padding:0px 0px 0px 0px;"></div>
         <div class="frame">
             <div style="text-align:right;height:20px;margin:5px 0px 5px 0px;">
-                <asp:Label ID="labelUserName" runat="server" CssClass="smallText"></asp:Label>
+                <asp:LinkButton ID="linkBtnUserName" runat="server" CssClass="linkButton"></asp:LinkButton>
                 <asp:LinkButton ID="linkBtnLogout" runat="server" Text="Log Out" CssClass="linkButton" OnClick="linkBtnLogoutClick"></asp:LinkButton>
             </div>
             <div>

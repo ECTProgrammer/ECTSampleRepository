@@ -21,11 +21,13 @@
         <asp:Label ID="labelAccessDenied" runat="server" Text="You do not have access rights to this page. Please contact your administrator if you need access. Thank you." Visible="false" CssClass="validation"></asp:Label>
         <asp:Panel ID="panelAccessOK" runat="server">
             <div style="text-align:right">Select Date : <asp:TextBox ID="txtBoxDate"  runat="server" AutoPostBack="true" OnTextChanged="txtBoxDate_TextChanged"></asp:TextBox></div>
-            <table style="width:100%">
+            <table style="width:100%;">
                 <tr><td style="text-align:center"><h2><asp:Label ID="labelDay" runat="server"></asp:Label></h2></td></tr>
             </table>
             <ajaxToolKit:CalendarExtender ID="calendarExtenderDate" runat="server" TargetControlID="txtBoxDate" Format="dd MMM yyyy"></ajaxToolKit:CalendarExtender>
-        <asp:LinkButton ID="linkBtnAddJobTrack" runat="server" CausesValidation="false" Text="Add Job" CssClass="linkButton" Font-Bold="true" OnClick="linkBtnAddJobTrack_Click"></asp:LinkButton>    
+            <table style="width:100%;">
+                <tr><td><asp:LinkButton ID="linkBtnAddJobTrack" runat="server" CausesValidation="false" Text="Add Job" CssClass="linkButton" Font-Bold="true" OnClick="linkBtnAddJobTrack_Click"></asp:LinkButton> 
+                </td><td style="text-align:right"><asp:Label ID="LabelTotalHours" ForeColor="#ff0000" Font-Size="12px" runat="server" Font-Bold="true"></asp:Label></td></tr></table>   
             <div style="margin:10px 10px 10px 10px">
             <asp:GridView ID="gridJobTrack" runat="server" AutoGenerateColumns="false" CssClass="gridView" GridLines="None" OnRowCommand="gridViewJobTrack_Command" ShowHeaderWhenEmpty="true">
                 <EmptyDataRowStyle/>
@@ -47,7 +49,6 @@
             </div>
         </asp:Panel>
       </asp:Panel>
-
 
     <%--Modal--%>
      <asp:UpdatePanel ID="UpdatePanel1" runat="server">
@@ -81,46 +82,42 @@
                         <tr><td>Remarks</td><td>:</td><td></td></tr>
                         <tr><td colspan="3"><asp:TextBox ID="modalTxtBoxRemarks" runat="server" TextMode="MultiLine" Rows="5" Width="100%"></asp:TextBox></td></tr>
                         <tr><td colspan="3" style="text-align:center">
-                            <asp:Button ID="modalBtnDelete" runat="server" CssClass="button" OnClientClick="if(!confirm('Are you sure you want to delete this?')) return false;" CausesValidation="true" Text="Delete" />
+                            <asp:Button ID="modalBtnDelete" runat="server" CssClass="button" OnClientClick="if(!confirm('Are you sure you want to delete this?')) return false;" CausesValidation="true" Text="Delete" OnCommand="modalBtnDelete_Command" />
                             <asp:Button ID="modalBtnSubmit" runat="server" CssClass="button" CausesValidation="true" Text="Submit" OnCommand="modalBtnSubmit_Command" />
                             <asp:Button ID="modalBtnCancel" runat="server" CssClass="button" CausesValidation="false" Text="Cancel" />
                             </td></tr>
                     </table>
                 </asp:Panel>
 
-                
+        <%--Alert Modal--%>
                 <asp:UpdatePanel ID="UpdatePanelAlert" runat="server" >
-        <ContentTemplate>
-            
-            <asp:Panel ID="panelAlertModal" runat="server" style="display:none">
-                <asp:Panel ID="panelAlertHeader" runat="server" CssClass="modalAlertHeader"><asp:Label ID="labelAlertHeader" runat="server"></asp:Label></asp:Panel>
-                <asp:Panel ID="panelAlertContent" runat="server" CssClass="modalAlert">
-                    <table>
-                        <tr><td style="text-wrap:normal"><asp:Label ID="labelAlertMessage" runat="server"></asp:Label></td></tr>
-                        <tr><td style="text-align:center"><asp:Button ID="alertModalBtnOK" runat="server" CssClass="buttonalert" Text="OK" /></td></tr>
-                    </table>
-                </asp:Panel>
-            </asp:Panel>
+                    <ContentTemplate>
+                        <asp:Panel ID="panelAlertModal" runat="server" style="display:none">
+                            <asp:Panel ID="panelAlertHeader" runat="server" CssClass="modalAlertHeader"><asp:Label ID="labelAlertHeader" runat="server"></asp:Label></asp:Panel>
+                            <asp:Panel ID="panelAlertContent" runat="server" CssClass="modalAlert">
+                                <table>
+                                    <tr><td style="text-wrap:normal"><asp:Label ID="labelAlertMessage" runat="server"></asp:Label></td></tr>
+                                    <tr><td style="text-align:center"><asp:Button ID="alertModalBtnOK" runat="server" CssClass="buttonalert" Text="OK" /></td></tr>
+                                </table>
+                            </asp:Panel>
+                        </asp:Panel>
 
-            <asp:Button ID="btnalertHidden" runat="server" style="display:none" />
-            <ajaxToolKit:ModalPopupExtender runat="server" ID="programmaticAlertModalPopup"
-                BehaviorID ="programmaticModalPopupBehaviorid"
-                TargetControlID="btnalertHidden"
-                PopupControlID="panelAlertModal"
-                BackgroundCssClass="modalAlertBackground"
-                CancelControlID="alertModalBtnOK"
-                DropShadow="false"
-
-                RepositionMode="RepositionOnWindowResizeAndScroll" >    
-            </ajaxToolKit:ModalPopupExtender> 
-        </ContentTemplate>
-        </asp:UpdatePanel>
+                        <asp:Button ID="btnalertHidden" runat="server" style="display:none" />
+                        <ajaxToolKit:ModalPopupExtender runat="server" ID="programmaticAlertModalPopup"
+                            BehaviorID ="programmaticModalPopupBehaviorid"
+                            TargetControlID="btnalertHidden"
+                            PopupControlID="panelAlertModal"
+                            BackgroundCssClass="modalAlertBackground"
+                            CancelControlID="alertModalBtnOK"
+                            DropShadow="false"
+                            RepositionMode="RepositionOnWindowResizeAndScroll" >    
+                        </ajaxToolKit:ModalPopupExtender> 
+                    </ContentTemplate>
+                </asp:UpdatePanel>
 
             </asp:Panel>
 
-
-            <asp:Button ID="btnHidden" runat="server" style="display:none"/>
-            
+            <asp:Button ID="btnHidden" runat="server" style="display:none"/>          
             <ajaxToolKit:ModalPopupExtender runat="server" ID="programmaticModalPopup"
                 BehaviorID ="programmaticModalPopupBehavior"
                 TargetControlID="btnHidden"
@@ -130,10 +127,35 @@
                 DropShadow="false"
                 PopupDragHandleControlID="panelModalHeader"
                 RepositionMode="RepositionOnWindowResize" >    
-            </ajaxToolKit:ModalPopupExtender> 
-            
+            </ajaxToolKit:ModalPopupExtender>      
         </ContentTemplate>
     </asp:UpdatePanel>
-                      </ContentTemplate>
+
+           <asp:UpdatePanel ID="UpdatePanelAlert2" runat="server" >
+                    <ContentTemplate>
+                        <asp:Panel ID="panelAlertModal2" runat="server" style="display:none">
+                            <asp:Panel ID="panelAlertHeader2" runat="server" CssClass="modalAlertHeader"><asp:Label ID="labelAlertHeader2" runat="server"></asp:Label></asp:Panel>
+                            <asp:Panel ID="panelAlertContent2" runat="server" CssClass="modalAlert">
+                                <table>
+                                    <tr><td style="text-wrap:normal"><asp:Label ID="labelAlertMessage2" runat="server"></asp:Label></td></tr>
+                                    <tr><td style="text-align:center"><asp:Button ID="alertModalBtnOK2" runat="server" CssClass="buttonalert" Text="OK" /></td></tr>
+                                </table>
+                            </asp:Panel>
+                        </asp:Panel>
+
+                        <asp:Button ID="btnalertHidden2" runat="server" style="display:none" />
+                        <ajaxToolKit:ModalPopupExtender runat="server" ID="programmaticAlertModalPopup2"
+                            BehaviorID ="programmaticModalPopupBehavior2"
+                            TargetControlID="btnalertHidden2"
+                            PopupControlID="panelAlertModal2"
+                            BackgroundCssClass="modalAlertBackground"
+                            CancelControlID="alertModalBtnOK2"
+                            DropShadow="false"
+                            RepositionMode="RepositionOnWindowResizeAndScroll" >    
+                        </ajaxToolKit:ModalPopupExtender> 
+                    </ContentTemplate>
+            </asp:UpdatePanel>
+
+        </ContentTemplate>
     </asp:UpdatePanel>
 </asp:Content>

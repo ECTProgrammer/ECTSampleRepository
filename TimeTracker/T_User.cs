@@ -17,7 +17,6 @@ namespace TimeTracker
         public int Id { get; set; }
         public string Firstname { get; set; }
         public string Lastname { get; set; }
-        public Nullable<int> PositionId { get; set; }
         public Nullable<int> DepartmentId { get; set; }
         public string Username { get; set; }
         public string Password { get; set; }
@@ -30,5 +29,6 @@ namespace TimeTracker
         public Nullable<int> CreatedBy { get; set; }
         public Nullable<int> LastUpdatedBy { get; set; }
         public string Status { get; set; }
+        public Nullable<int> RoleId { get; set; }
     }
 }

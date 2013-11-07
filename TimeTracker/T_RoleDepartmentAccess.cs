@@ -12,14 +12,10 @@ namespace TimeTracker
     using System;
     using System.Collections.Generic;
     
-    public partial class T_Position
+    public partial class T_RoleDepartmentAccess
     {
         public int Id { get; set; }
-        public string Description { get; set; }
-        public Nullable<int> Rank { get; set; }
-        public Nullable<System.DateTime> CreateDate { get; set; }
-        public Nullable<System.DateTime> LastUpdateDate { get; set; }
-        public Nullable<int> CreatedBy { get; set; }
-        public Nullable<int> LastUpdatedBy { get; set; }
+        public int RoleId { get; set; }
+        public int DepartmentId { get; set; }
     }
 }

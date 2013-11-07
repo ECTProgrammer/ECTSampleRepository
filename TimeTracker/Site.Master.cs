@@ -71,18 +71,22 @@ namespace TimeTracker
             string selectedTab = "";
             if (HttpContext.Current.Session["UserId"] == null || HttpContext.Current.Session["UserId"].ToString() == "0")
             {
-                labelUserName.Visible = false;
+                linkBtnUserName.Visible = false;
             }
             else 
             {
                 User user = new User();
                 user = user.GetUser(Convert.ToInt32(HttpContext.Current.Session["UserId"]));
-                labelUserName.Text = "Welcome " + user.Firstname + " " + user.Lastname;
-                labelUserName.Text += " | ";
-                labelUserName.Visible = true;
+                linkBtnUserName.Text = "Welcome " + user.Firstname + " " + user.Lastname;
+                linkBtnUserName.Text += " | ";
+                linkBtnUserName.Visible = true;
 
                 InitializeRepError();
             }
+            Setup.Visible = hasAccess("Setup");
+            Settings.Visible = hasAccess("Settings");
+            Report.Visible = hasAccess("Report");
+           
 
             if (HttpContext.Current.Session["selectedTab"] != null) 
             {
@@ -123,6 +127,19 @@ namespace TimeTracker
 
             RepError.DataSource = openjobs;
             RepError.DataBind();
+        }
+
+        protected bool hasAccess(string modulename) 
+        {
+            bool result = false;
+            User user = new User();
+            user = user.GetUser(Convert.ToInt32(HttpContext.Current.Session["UserId"]));   
+            Module module = new Module();
+            var list = module.GetModuleList(Convert.ToInt32(user.RoleId),modulename);
+            RolesModuleAccess moduleAccess = new RolesModuleAccess();
+            if (list.Count > 0)
+                result = true;
+            return result;
         }
 
     }

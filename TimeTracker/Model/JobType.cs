@@ -22,7 +22,8 @@ namespace TimeTracker.Model
                             LastUpdatedBy = j.LastUpdatedBy,
                             CreateDate = j.CreateDate,
                             LastUpdateDate = j.LastUpdateDate,
-                            RequiredJobId = j.RequiredJobId
+                            RequiredJobId = j.RequiredJobId,
+                            ComputeTime = j.ComputeTime
                         }).FirstOrDefault();
 
             db.Dispose();
@@ -46,7 +47,31 @@ namespace TimeTracker.Model
                             LastUpdatedBy = j.LastUpdatedBy,
                             CreateDate = j.CreateDate,
                             LastUpdateDate = j.LastUpdateDate,
-                            RequiredJobId = j.RequiredJobId
+                            RequiredJobId = j.RequiredJobId,
+                            ComputeTime = j.ComputeTime
+                        }).ToList();
+
+            db.Dispose();
+
+            return data;
+        }
+
+        public List<JobType> GetJobTypeList()
+        {
+            TimeTrackerEntities db = new TimeTrackerEntities();
+
+            var data = (from j in db.T_JobTypes
+                        select new JobType()
+                        {
+                            Id = j.Id,
+                            Description = j.Description,
+                            DepartmentId = j.DepartmentId,
+                            CreatedBy = j.CreatedBy,
+                            LastUpdatedBy = j.LastUpdatedBy,
+                            CreateDate = j.CreateDate,
+                            LastUpdateDate = j.LastUpdateDate,
+                            RequiredJobId = j.RequiredJobId,
+                            ComputeTime = j.ComputeTime
                         }).ToList();
 
             db.Dispose();
@@ -117,6 +142,7 @@ namespace TimeTracker.Model
             t_jobtype.CreatedBy = jobtype.CreatedBy;
             t_jobtype.LastUpdatedBy = jobtype.LastUpdatedBy;
             t_jobtype.RequiredJobId = jobtype.RequiredJobId;
+            t_jobtype.ComputeTime = jobtype.ComputeTime;
 
             return t_jobtype;
         }
@@ -130,6 +156,7 @@ namespace TimeTracker.Model
             t_jobtype.CreatedBy = jobtype.CreatedBy;
             t_jobtype.LastUpdatedBy = jobtype.LastUpdatedBy;
             t_jobtype.RequiredJobId = jobtype.RequiredJobId;
+            t_jobtype.ComputeTime = jobtype.ComputeTime;
         }
 
     }

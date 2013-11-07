@@ -12,16 +12,15 @@ namespace TimeTracker
     using System;
     using System.Collections.Generic;
     
-    public partial class T_JobType
+    public partial class T_Role
     {
         public int Id { get; set; }
         public string Description { get; set; }
-        public Nullable<int> DepartmentId { get; set; }
-        public Nullable<int> CreatedBy { get; set; }
-        public Nullable<int> LastUpdatedBy { get; set; }
+        public Nullable<int> Rank { get; set; }
         public Nullable<System.DateTime> CreateDate { get; set; }
         public Nullable<System.DateTime> LastUpdateDate { get; set; }
-        public Nullable<bool> RequiredJobId { get; set; }
-        public Nullable<bool> ComputeTime { get; set; }
+        public Nullable<int> CreatedBy { get; set; }
+        public Nullable<int> LastUpdatedBy { get; set; }
+        public Nullable<bool> IsSupervisor { get; set; }
     }
 }

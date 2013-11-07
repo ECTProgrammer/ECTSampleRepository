@@ -24,7 +24,7 @@ namespace TimeTracker
             if (user != null)
             {
                 Session["UserId"] = user.Id;
-                Session["PositionId"] = user.PositionId;
+                Session["RoleId"] = user.RoleId;
                 Session["DepartmentId"] = user.DepartmentId;
                 labelError.Visible = false;
                 //Server.Transfer("Default.aspx", false);

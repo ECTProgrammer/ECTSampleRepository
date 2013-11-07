@@ -10,8 +10,9 @@
           <EntitySet Name="JobTracker" EntityType="TimeTrackerModel.Store.JobTracker" store:Type="Tables" Schema="dbo" />
           <EntitySet Name="JobType" EntityType="TimeTrackerModel.Store.JobType" store:Type="Tables" Schema="dbo" />
           <EntitySet Name="Module" EntityType="TimeTrackerModel.Store.Module" store:Type="Tables" Schema="dbo" />
-          <EntitySet Name="Position" EntityType="TimeTrackerModel.Store.Position" store:Type="Tables" Schema="dbo" />
-          <EntitySet Name="PositionModuleAccess" EntityType="TimeTrackerModel.Store.PositionModuleAccess" store:Type="Tables" Schema="dbo" />
+          <EntitySet Name="RoleDepartmentAccess" EntityType="TimeTrackerModel.Store.RoleDepartmentAccess" store:Type="Tables" Schema="dbo" />
+          <EntitySet Name="Roles" EntityType="TimeTrackerModel.Store.Roles" store:Type="Tables" Schema="dbo" />
+          <EntitySet Name="RolesModuleAccess" EntityType="TimeTrackerModel.Store.RolesModuleAccess" store:Type="Tables" Schema="dbo" />
           <EntitySet Name="Time" EntityType="TimeTrackerModel.Store.Time" store:Type="Tables" Schema="dbo" />
           <EntitySet Name="Users" EntityType="TimeTrackerModel.Store.Users" store:Type="Tables" Schema="dbo" />
         </EntityContainer>
@@ -60,6 +61,7 @@
           <Property Name="CreateDate" Type="datetime" />
           <Property Name="LastUpdateDate" Type="datetime" />
           <Property Name="RequiredJobId" Type="bit" />
+          <Property Name="ComputeTime" Type="bit" />
         </EntityType>
         <EntityType Name="Module">
           <Key>
@@ -71,7 +73,15 @@
           <Property Name="ModuleType" Type="varchar" MaxLength="50" />
           <Property Name="ArrangementOrder" Type="int" />
         </EntityType>
-        <EntityType Name="Position">
+        <EntityType Name="RoleDepartmentAccess">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" Nullable="false" StoreGeneratedPattern="Identity" />
+          <Property Name="RoleId" Type="int" Nullable="false" />
+          <Property Name="DepartmentId" Type="int" Nullable="false" />
+        </EntityType>
+        <EntityType Name="Roles">
           <Key>
             <PropertyRef Name="Id" />
           </Key>
@@ -82,13 +92,14 @@
           <Property Name="LastUpdateDate" Type="datetime" />
           <Property Name="CreatedBy" Type="int" />
           <Property Name="LastUpdatedBy" Type="int" />
+          <Property Name="IsSupervisor" Type="bit" />
         </EntityType>
-        <EntityType Name="PositionModuleAccess">
+        <EntityType Name="RolesModuleAccess">
           <Key>
             <PropertyRef Name="Id" />
           </Key>
           <Property Name="Id" Type="int" Nullable="false" StoreGeneratedPattern="Identity" />
-          <Property Name="PositionId" Type="int" Nullable="false" />
+          <Property Name="RoleId" Type="int" Nullable="false" />
           <Property Name="ModuleId" Type="int" Nullable="false" />
           <Property Name="CanView" Type="bit" />
           <Property Name="CanAdd" Type="bit" />
@@ -111,7 +122,7 @@
           <Property Name="Id" Type="int" Nullable="false" StoreGeneratedPattern="Identity" />
           <Property Name="Firstname" Type="varchar" MaxLength="50" />
           <Property Name="Lastname" Type="varchar" MaxLength="50" />
-          <Property Name="PositionId" Type="int" />
+          <Property Name="RoleId" Type="int" />
           <Property Name="DepartmentId" Type="int" />
           <Property Name="Username" Type="varchar" Nullable="false" MaxLength="20" />
           <Property Name="Password" Type="varchar" MaxLength="20" />
@@ -133,11 +144,12 @@
           <EntitySet Name="T_Departments" EntityType="TimeTrackerModel.T_Department" />
           <EntitySet Name="T_JobTrackers" EntityType="TimeTrackerModel.T_JobTracker" />
           <EntitySet Name="T_JobTypes" EntityType="TimeTrackerModel.T_JobType" />
-          <EntitySet Name="T_Positions" EntityType="TimeTrackerModel.T_Position" />
           <EntitySet Name="T_Users" EntityType="TimeTrackerModel.T_User" />
           <EntitySet Name="T_Times" EntityType="TimeTrackerModel.T_Time" />
           <EntitySet Name="T_Modules" EntityType="TimeTrackerModel.T_Module" />
-          <EntitySet Name="T_PositionModuleAccesses" EntityType="TimeTrackerModel.T_PositionModuleAccess" />
+          <EntitySet Name="T_Roles" EntityType="TimeTrackerModel.T_Role" />
+          <EntitySet Name="T_RolesModuleAccess" EntityType="TimeTrackerModel.T_RolesModuleAccess" />
+          <EntitySet Name="T_RoleDepartmentAccess" EntityType="TimeTrackerModel.T_RoleDepartmentAccess" />
         </EntityContainer>
         <EntityType Name="T_Department">
           <Key>
@@ -184,18 +196,7 @@
           <Property Name="CreateDate" Type="DateTime" Precision="3" />
           <Property Name="LastUpdateDate" Type="DateTime" Precision="3" />
           <Property Type="Boolean" Name="RequiredJobId" />
-        </EntityType>
-        <EntityType Name="T_Position">
-          <Key>
-            <PropertyRef Name="Id" />
-          </Key>
-          <Property Name="Id" Type="Int32" Nullable="false" p1:StoreGeneratedPattern="Identity" />
-          <Property Name="Description" Type="String" MaxLength="100" Unicode="false" FixedLength="false" />
-          <Property Name="Rank" Type="Int32" />
-          <Property Name="CreateDate" Type="DateTime" Precision="3" />
-          <Property Name="LastUpdateDate" Type="DateTime" Precision="3" />
-          <Property Name="CreatedBy" Type="Int32" />
-          <Property Name="LastUpdatedBy" Type="Int32" />
+          <Property Type="Boolean" Name="ComputeTime" />
         </EntityType>
         <EntityType Name="T_User">
           <Key>
@@ -204,7 +205,6 @@
           <Property Name="Id" Type="Int32" Nullable="false" p1:StoreGeneratedPattern="Identity" />
           <Property Name="Firstname" Type="String" MaxLength="50" Unicode="false" FixedLength="false" />
           <Property Name="Lastname" Type="String" MaxLength="50" Unicode="false" FixedLength="false" />
-          <Property Name="PositionId" Type="Int32" />
           <Property Name="DepartmentId" Type="Int32" />
           <Property Name="Username" Type="String" Nullable="false" MaxLength="20" Unicode="false" FixedLength="false" />
           <Property Name="Password" Type="String" MaxLength="20" Unicode="false" FixedLength="false" />
@@ -217,6 +217,7 @@
           <Property Name="CreatedBy" Type="Int32" />
           <Property Name="LastUpdatedBy" Type="Int32" />
           <Property Name="Status" Type="String" MaxLength="30" Unicode="false" FixedLength="false" />
+          <Property Type="Int32" Name="RoleId" />
         </EntityType>
         <EntityType Name="T_Time">
           <Key>
@@ -237,17 +238,38 @@
           <Property Type="String" Name="ModuleType" MaxLength="50" FixedLength="false" Unicode="false" />
           <Property Type="Int32" Name="ArrangementOrder" />
         </EntityType>
-        <EntityType Name="T_PositionModuleAccess">
+        <EntityType Name="T_Role">
           <Key>
             <PropertyRef Name="Id" />
           </Key>
           <Property Type="Int32" Name="Id" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Type="Int32" Name="PositionId" Nullable="false" />
+          <Property Type="String" Name="Description" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Type="Int32" Name="Rank" />
+          <Property Type="DateTime" Name="CreateDate" Precision="3" />
+          <Property Type="DateTime" Name="LastUpdateDate" Precision="3" />
+          <Property Type="Int32" Name="CreatedBy" />
+          <Property Type="Int32" Name="LastUpdatedBy" />
+          <Property Type="Boolean" Name="IsSupervisor" />
+        </EntityType>
+        <EntityType Name="T_RolesModuleAccess">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Type="Int32" Name="Id" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
           <Property Type="Int32" Name="ModuleId" Nullable="false" />
           <Property Type="Boolean" Name="CanView" />
           <Property Type="Boolean" Name="CanAdd" />
           <Property Type="Boolean" Name="CanUpdate" />
           <Property Type="Boolean" Name="CanDelete" />
+          <Property Type="Int32" Name="RoleId" Nullable="false" />
+        </EntityType>
+        <EntityType Name="T_RoleDepartmentAccess">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Type="Int32" Name="Id" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Type="Int32" Name="RoleId" Nullable="false" />
+          <Property Type="Int32" Name="DepartmentId" Nullable="false" />
         </EntityType>
       </Schema>
     </edmx:ConceptualModels>
@@ -293,6 +315,7 @@
           <EntitySetMapping Name="T_JobTypes">
             <EntityTypeMapping TypeName="TimeTrackerModel.T_JobType">
               <MappingFragment StoreEntitySet="JobType">
+                <ScalarProperty Name="ComputeTime" ColumnName="ComputeTime" />
                 <ScalarProperty Name="RequiredJobId" ColumnName="RequiredJobId" />
                 <ScalarProperty Name="Id" ColumnName="Id" />
                 <ScalarProperty Name="Description" ColumnName="Description" />
@@ -304,26 +327,13 @@
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
-          <EntitySetMapping Name="T_Positions">
-            <EntityTypeMapping TypeName="TimeTrackerModel.T_Position">
-              <MappingFragment StoreEntitySet="Position">
-                <ScalarProperty Name="Id" ColumnName="Id" />
-                <ScalarProperty Name="Description" ColumnName="Description" />
-                <ScalarProperty Name="Rank" ColumnName="Rank" />
-                <ScalarProperty Name="CreateDate" ColumnName="CreateDate" />
-                <ScalarProperty Name="LastUpdateDate" ColumnName="LastUpdateDate" />
-                <ScalarProperty Name="CreatedBy" ColumnName="CreatedBy" />
-                <ScalarProperty Name="LastUpdatedBy" ColumnName="LastUpdatedBy" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
           <EntitySetMapping Name="T_Users">
             <EntityTypeMapping TypeName="TimeTrackerModel.T_User">
               <MappingFragment StoreEntitySet="Users">
+                <ScalarProperty Name="RoleId" ColumnName="RoleId" />
                 <ScalarProperty Name="Id" ColumnName="Id" />
                 <ScalarProperty Name="Firstname" ColumnName="Firstname" />
                 <ScalarProperty Name="Lastname" ColumnName="Lastname" />
-                <ScalarProperty Name="PositionId" ColumnName="PositionId" />
                 <ScalarProperty Name="DepartmentId" ColumnName="DepartmentId" />
                 <ScalarProperty Name="Username" ColumnName="Username" />
                 <ScalarProperty Name="Password" ColumnName="Password" />
@@ -360,15 +370,38 @@
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
-          <EntitySetMapping Name="T_PositionModuleAccesses">
-            <EntityTypeMapping TypeName="TimeTrackerModel.T_PositionModuleAccess">
-              <MappingFragment StoreEntitySet="PositionModuleAccess">
+          <EntitySetMapping Name="T_Roles">
+            <EntityTypeMapping TypeName="TimeTrackerModel.T_Role">
+              <MappingFragment StoreEntitySet="Roles">
+                <ScalarProperty Name="IsSupervisor" ColumnName="IsSupervisor" />
+                <ScalarProperty Name="LastUpdatedBy" ColumnName="LastUpdatedBy" />
+                <ScalarProperty Name="CreatedBy" ColumnName="CreatedBy" />
+                <ScalarProperty Name="LastUpdateDate" ColumnName="LastUpdateDate" />
+                <ScalarProperty Name="CreateDate" ColumnName="CreateDate" />
+                <ScalarProperty Name="Rank" ColumnName="Rank" />
+                <ScalarProperty Name="Description" ColumnName="Description" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="T_RolesModuleAccess">
+            <EntityTypeMapping TypeName="TimeTrackerModel.T_RolesModuleAccess">
+              <MappingFragment StoreEntitySet="RolesModuleAccess">
+                <ScalarProperty Name="RoleId" ColumnName="RoleId" />
                 <ScalarProperty Name="CanDelete" ColumnName="CanDelete" />
                 <ScalarProperty Name="CanUpdate" ColumnName="CanUpdate" />
                 <ScalarProperty Name="CanAdd" ColumnName="CanAdd" />
                 <ScalarProperty Name="CanView" ColumnName="CanView" />
                 <ScalarProperty Name="ModuleId" ColumnName="ModuleId" />
-                <ScalarProperty Name="PositionId" ColumnName="PositionId" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="T_RoleDepartmentAccess">
+            <EntityTypeMapping TypeName="TimeTrackerModel.T_RoleDepartmentAccess">
+              <MappingFragment StoreEntitySet="RoleDepartmentAccess">
+                <ScalarProperty Name="DepartmentId" ColumnName="DepartmentId" />
+                <ScalarProperty Name="RoleId" ColumnName="RoleId" />
                 <ScalarProperty Name="Id" ColumnName="Id" />
               </MappingFragment>
             </EntityTypeMapping>

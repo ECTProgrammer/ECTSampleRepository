@@ -27,7 +27,7 @@ namespace TimeTracker.Model
                             Fax = u.Fax,
                             Email = u.Email,
                             DepartmentId = u.DepartmentId,
-                            PositionId = u.PositionId,
+                            RoleId = u.RoleId,
                             CreateDate = u.CreateDate,
                             CreatedBy = u.CreatedBy,
                             LastUpdateDate = u.LastUpdateDate,
@@ -60,7 +60,7 @@ namespace TimeTracker.Model
                             Fax = u.Fax,
                             Email = u.Email,
                             DepartmentId = u.DepartmentId,
-                            PositionId = u.PositionId,
+                            RoleId = u.RoleId,
                             CreateDate = u.CreateDate,
                             CreatedBy = u.CreatedBy,
                             LastUpdateDate = u.LastUpdateDate,
@@ -79,10 +79,10 @@ namespace TimeTracker.Model
             TimeTrackerEntities db = new TimeTrackerEntities();
 
             var data = (from u in db.T_Users
-                        join p in db.T_Positions
-                        on u.PositionId equals p.Id
+                        join p in db.T_Roles
+                        on u.RoleId equals p.Id
                         where u.DepartmentId == departmentId
-                        && p.Rank == 1
+                        && p.IsSupervisor == true
                         select new User()
                         {
                             Id = u.Id,
@@ -95,7 +95,7 @@ namespace TimeTracker.Model
                             Fax = u.Fax,
                             Email = u.Email,
                             DepartmentId = u.DepartmentId,
-                            PositionId = u.PositionId,
+                            RoleId = u.RoleId,
                             CreateDate = u.CreateDate,
                             CreatedBy = u.CreatedBy,
                             LastUpdateDate = u.LastUpdateDate,
@@ -108,6 +108,7 @@ namespace TimeTracker.Model
 
             return data;
         }
+
 
         public void Insert(User user)
         {
@@ -167,7 +168,7 @@ namespace TimeTracker.Model
             T_User t_user = new T_User();
             t_user.Firstname = user.Firstname;
             t_user.Lastname = user.Lastname;
-            t_user.PositionId = user.PositionId;
+            t_user.RoleId = user.RoleId;
             t_user.DepartmentId = user.DepartmentId;
             t_user.Username = user.Username;
             t_user.Password = user.Password;
@@ -188,7 +189,7 @@ namespace TimeTracker.Model
         {
             t_user.Firstname = user.Firstname;
             t_user.Lastname = user.Lastname;
-            t_user.PositionId = user.PositionId;
+            t_user.RoleId = user.RoleId;
             t_user.DepartmentId = user.DepartmentId;
             t_user.Username = user.Username;
             t_user.Password = user.Password;

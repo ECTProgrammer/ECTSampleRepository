@@ -103,6 +103,15 @@ namespace TimeTracker {
         protected global::System.Web.UI.WebControls.LinkButton linkBtnAddJobTrack;
         
         /// <summary>
+        /// LabelTotalHours control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Label LabelTotalHours;
+        
+        /// <summary>
         /// gridJobTrack control.
         /// </summary>
         /// <remarks>
@@ -380,5 +389,86 @@ namespace TimeTracker {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::AjaxControlToolkit.ModalPopupExtender programmaticModalPopup;
+        
+        /// <summary>
+        /// UpdatePanelAlert2 control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.UpdatePanel UpdatePanelAlert2;
+        
+        /// <summary>
+        /// panelAlertModal2 control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Panel panelAlertModal2;
+        
+        /// <summary>
+        /// panelAlertHeader2 control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Panel panelAlertHeader2;
+        
+        /// <summary>
+        /// labelAlertHeader2 control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Label labelAlertHeader2;
+        
+        /// <summary>
+        /// panelAlertContent2 control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Panel panelAlertContent2;
+        
+        /// <summary>
+        /// labelAlertMessage2 control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Label labelAlertMessage2;
+        
+        /// <summary>
+        /// alertModalBtnOK2 control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Button alertModalBtnOK2;
+        
+        /// <summary>
+        /// btnalertHidden2 control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Button btnalertHidden2;
+        
+        /// <summary>
+        /// programmaticAlertModalPopup2 control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::AjaxControlToolkit.ModalPopupExtender programmaticAlertModalPopup2;
     }
 }

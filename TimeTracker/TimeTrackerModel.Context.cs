@@ -28,10 +28,11 @@ namespace TimeTracker
         public DbSet<T_Department> T_Departments { get; set; }
         public DbSet<T_JobTracker> T_JobTrackers { get; set; }
         public DbSet<T_JobType> T_JobTypes { get; set; }
-        public DbSet<T_Position> T_Positions { get; set; }
         public DbSet<T_User> T_Users { get; set; }
         public DbSet<T_Time> T_Times { get; set; }
         public DbSet<T_Module> T_Modules { get; set; }
-        public DbSet<T_PositionModuleAccess> T_PositionModuleAccesses { get; set; }
+        public DbSet<T_Role> T_Roles { get; set; }
+        public DbSet<T_RolesModuleAccess> T_RolesModuleAccess { get; set; }
+        public DbSet<T_RoleDepartmentAccess> T_RoleDepartmentAccess { get; set; }
     }
 }
