@@ -58,7 +58,7 @@ namespace TimeTracker
             JobTracker jobtracker = new JobTracker();
             DateTime selectedDate = DateTime.Parse(txtBoxDate.Text);
 
-            if (jobtracker.HasUnclosedJobs(Convert.ToInt32(Session["UserId"]), selectedDate))
+            if (jobtracker.HasUnclosedJobs(Convert.ToInt32(Session["UserId"])))
             {
                 panelAlertHeader2.CssClass = "modalAlertHeader";
                 alertModalBtnOK2.CssClass = "buttonalert";
@@ -128,6 +128,19 @@ namespace TimeTracker
                     modalLabelSupervisor.Visible = true;
                     modalLabelSupColon.Visible = true;
                     modalDropDownSupervisor.Visible = true;
+                }
+                else if (date.CompareTo(DateTime.Today) < 0) 
+                {
+                    InitializeModalSupervisor();
+                    modalLabelSupervisor.Visible = true;
+                    modalLabelSupColon.Visible = true;
+                    modalDropDownSupervisor.Visible = true;
+                }
+                else
+                {
+                    modalLabelSupervisor.Visible = false;
+                    modalLabelSupColon.Visible = false;
+                    modalDropDownSupervisor.Visible = false;
                 }
                 if (datalist[i].JobIdNumber != null && datalist[i].JobIdNumber.Trim() != "") 
                 {

@@ -122,8 +122,26 @@ namespace TimeTracker
             modalDropDownRoles.DataBind();
 
         }
+
+        protected void SetCheckBoxStatus(bool value)
+        {
+            for (int i = 0; i < gridViewModuleAccess.Rows.Count; i++)
+            {
+                CheckBox cbAdd = (CheckBox)gridViewModuleAccess.Rows[i].FindControl("chkBoxAdd");
+                CheckBox cbView = (CheckBox)gridViewModuleAccess.Rows[i].FindControl("chkBoxView");
+                CheckBox cbUpdate = (CheckBox)gridViewModuleAccess.Rows[i].FindControl("chkBoxUpdate");
+                CheckBox cbDelete = (CheckBox)gridViewModuleAccess.Rows[i].FindControl("chkBoxDelete");
+
+                cbAdd.Enabled = value;
+                cbView.Enabled = value;
+                cbUpdate.Enabled = value;
+                cbDelete.Enabled = value;
+            }
+            modalChkboxAll.Enabled = value;
+        }
         #endregion
 
+        #region COMMAND
         protected void linkBtnAdd_Command(object sender, CommandEventArgs e) 
         {
             GetMyAccessRights();
@@ -205,22 +223,7 @@ namespace TimeTracker
             this.programmaticModalPopup.Show();
         }
 
-        protected void SetCheckBoxStatus(bool value) 
-        {
-            for (int i = 0; i < gridViewModuleAccess.Rows.Count; i++)
-            {
-                CheckBox cbAdd = (CheckBox)gridViewModuleAccess.Rows[i].FindControl("chkBoxAdd");
-                CheckBox cbView = (CheckBox)gridViewModuleAccess.Rows[i].FindControl("chkBoxView");
-                CheckBox cbUpdate = (CheckBox)gridViewModuleAccess.Rows[i].FindControl("chkBoxUpdate");
-                CheckBox cbDelete = (CheckBox)gridViewModuleAccess.Rows[i].FindControl("chkBoxDelete");
-
-                cbAdd.Enabled = value;
-                cbView.Enabled = value;
-                cbUpdate.Enabled = value;
-                cbDelete.Enabled = value;
-            }
-            modalChkboxAll.Enabled = value;
-        }
+        #endregion
 
         #region OTHERS
 

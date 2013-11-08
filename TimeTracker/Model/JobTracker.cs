@@ -87,7 +87,7 @@ namespace TimeTracker.Model
                 double time = Convert.ToDateTime(data.EndTime).Subtract(Convert.ToDateTime(data.StartTime)).TotalMinutes;
                 double hr = Math.Truncate(time / 60);
                 double min = time % 60;
-                data.totalhours = hr == 0 && min == 0 ? "0 min" : (hr > 0 ? hr > 1 ? hr + " hrs" : hr + " hr" : "") + (hr > 0 ? ", " : "") + (min > 0 ? min > 1 ? min + " mins" : min + " min" : "");
+                data.totalhours = hr == 0 && min == 0 ? "0 min" : (hr > 0 ? hr > 1 ? hr + " hrs" : hr + " hr" : "") + (hr > 0 && min > 0 ? ", " : "") + (min > 0 ? min > 1 ? min + " mins" : min + " min" : "");
             }
 
             return data;
@@ -206,7 +206,7 @@ namespace TimeTracker.Model
                     double time = Convert.ToDateTime(j.EndTime).Subtract(Convert.ToDateTime(j.StartTime)).TotalMinutes;
                     double hr = Math.Truncate(time / 60);
                     double min = time % 60;
-                    j.totalhours = hr == 0 && min == 0 ? "0 min" : (hr > 0 ? hr > 1 ? hr + " hrs" : hr + " hr" : "") + (hr > 0 ? ", " : "") + (min > 0 ? min > 1 ? min + " mins" : min + " min" : "");
+                    j.totalhours = hr == 0 && min == 0 ? "0 min" : (hr > 0 ? hr > 1 ? hr + " hrs" : hr + " hr" : "") + (hr > 0 && min > 0 ? ", " : "") + (min > 0 ? min > 1 ? min + " mins" : min + " min" : "");
                 }
 
             }
@@ -294,7 +294,7 @@ namespace TimeTracker.Model
             }
             double hr = Math.Truncate(totalTime / 60);
             double min = totalTime % 60;
-            string result = hr == 0 && min == 0 ? "0 min" : (hr > 0 ? hr > 1 ? hr + " hrs" : hr + " hr" : "") + (hr > 0 ? ", " : "") + (min > 0 ? min > 1 ? min + " mins" : min + " min" : "");
+            string result = hr == 0 && min == 0 ? "0 min" : (hr > 0 ? hr > 1 ? hr + " hrs" : hr + " hr" : "") + (hr > 0 && min > 0 ? ", " : "") + (min > 0 ? min > 1 ? min + " mins" : min + " min" : "");
             return result;
         }
 
@@ -338,6 +338,7 @@ namespace TimeTracker.Model
                     }).ToList();
 
             db.Dispose();
+
             double totalTime = 0;
             foreach (JobTracker j in data)
             {
@@ -345,8 +346,126 @@ namespace TimeTracker.Model
             }
             double hr = Math.Truncate(totalTime / 60);
             double min = totalTime % 60;
-            string result = hr == 0 && min == 0 ? "0 min" : (hr > 0 ? hr > 1 ? hr + " hrs" : hr + " hr" : "") + (hr > 0 ? ", " : "") + (min > 0 ? min > 1 ? min + " mins" : min + " min" : "");
+            string result = hr == 0 && min == 0 ? "0 min" : (hr > 0 ? hr > 1 ? hr + " hrs" : hr + " hr" : "") + (hr > 0 && min > 0 ? ", " : "") + (min > 0 ? min > 1 ? min + " mins" : min + " min" : "");
             return result;
+        }
+
+        public int GetTotalUnclosedJobs(int jobtypeid, int userid, DateTime startdate, DateTime enddate, string jobstatus, int departmentid)
+        {
+            TimeTrackerEntities db = new TimeTrackerEntities();
+
+            var data = (from j in db.T_JobTrackers
+                    join t in db.T_JobTypes
+                    on j.JobTypeId equals t.Id
+                    join u in db.T_Users
+                    on j.UserId equals u.Id
+                    where j.ScheduleDate >= startdate
+                    && j.ScheduleDate <= enddate
+                    && j.JobTypeId == jobtypeid
+                    && j.Status == jobstatus
+                    && u.DepartmentId == departmentid
+                    && j.UserId == userid
+                    select new JobTracker()
+                    {
+                        Id = j.Id,
+                        UserId = j.UserId,
+                        StartTime = j.StartTime,
+                        EndTime = j.EndTime,
+                        Description = j.Description,
+                        JobTypeId = j.JobTypeId,
+                        JobIdNumber = j.JobIdNumber,
+                        Remarks = j.Remarks,
+                        ApprovedBy = j.ApprovedBy,
+                        CreateDate = j.CreateDate,
+                        LastUpdateDate = j.LastUpdateDate,
+                        CreatedBy = j.CreatedBy,
+                        LastUpdatedBy = j.LastUpdatedBy,
+                        Status = j.Status,
+                        SupervisorRemarks = j.SupervisorRemarks,
+                        ActionRequest = j.ActionRequest,
+                        ScheduleDate = j.ScheduleDate,
+
+                    }).ToList();
+
+            db.Dispose();
+
+            return data.Count;
+        }
+
+        public int GetTotalUnclosedJobs(int jobtypeid, DateTime startdate, DateTime enddate, string jobstatus, int departmentid = 0)
+        {
+            TimeTrackerEntities db = new TimeTrackerEntities();
+
+            List<JobTracker> data = new List<JobTracker>();
+            if (departmentid > 0)
+            {
+                data = (from j in db.T_JobTrackers
+                        join t in db.T_JobTypes
+                        on j.JobTypeId equals t.Id
+                        join u in db.T_Users
+                        on j.UserId equals u.Id
+                        where j.ScheduleDate >= startdate
+                        && j.ScheduleDate <= enddate
+                        && j.JobTypeId == jobtypeid
+                        && j.Status == jobstatus
+                        && u.DepartmentId == departmentid
+                        select new JobTracker()
+                        {
+                            Id = j.Id,
+                            UserId = j.UserId,
+                            StartTime = j.StartTime,
+                            EndTime = j.EndTime,
+                            Description = j.Description,
+                            JobTypeId = j.JobTypeId,
+                            JobIdNumber = j.JobIdNumber,
+                            Remarks = j.Remarks,
+                            ApprovedBy = j.ApprovedBy,
+                            CreateDate = j.CreateDate,
+                            LastUpdateDate = j.LastUpdateDate,
+                            CreatedBy = j.CreatedBy,
+                            LastUpdatedBy = j.LastUpdatedBy,
+                            Status = j.Status,
+                            SupervisorRemarks = j.SupervisorRemarks,
+                            ActionRequest = j.ActionRequest,
+                            ScheduleDate = j.ScheduleDate,
+
+                        }).ToList();
+            }
+            else
+            {
+                data = (from j in db.T_JobTrackers
+                        join t in db.T_JobTypes
+                        on j.JobTypeId equals t.Id
+                        where j.ScheduleDate >= startdate
+                        && j.ScheduleDate <= enddate
+                        && j.JobTypeId == jobtypeid
+                        && j.Status == jobstatus
+                        select new JobTracker()
+                        {
+                            Id = j.Id,
+                            UserId = j.UserId,
+                            StartTime = j.StartTime,
+                            EndTime = j.EndTime,
+                            Description = j.Description,
+                            JobTypeId = j.JobTypeId,
+                            JobIdNumber = j.JobIdNumber,
+                            Remarks = j.Remarks,
+                            ApprovedBy = j.ApprovedBy,
+                            CreateDate = j.CreateDate,
+                            LastUpdateDate = j.LastUpdateDate,
+                            CreatedBy = j.CreatedBy,
+                            LastUpdatedBy = j.LastUpdatedBy,
+                            Status = j.Status,
+                            SupervisorRemarks = j.SupervisorRemarks,
+                            ActionRequest = j.ActionRequest,
+                            ScheduleDate = j.ScheduleDate,
+
+                        }).ToList();
+            }
+
+            db.Dispose();
+
+            return data.Count;
         }
 
         public List<JobTracker> GetJobTrackerList(int userid,DateTime selecteddate)
@@ -423,7 +542,7 @@ namespace TimeTracker.Model
                     double time = Convert.ToDateTime(j.EndTime).Subtract(Convert.ToDateTime(j.StartTime)).TotalMinutes;
                     double hr = Math.Truncate(time / 60);
                     double min = time % 60;
-                    j.totalhours = hr == 0 && min == 0 ? "0 min" : (hr > 0 ? hr > 1 ? hr + " hrs" : hr + " hr" : "") + (hr > 0 ? ", " : "") + (min > 0 ? min > 1 ? min + " mins" : min + " min" : "");
+                    j.totalhours = hr == 0 && min == 0 ? "0 min" : (hr > 0 ? hr > 1 ? hr + " hrs" : hr + " hr" : "") + (hr > 0 && min > 0 ? ", " : "") + (min > 0 ? min > 1 ? min + " mins" : min + " min" : "");
                 }
 
             }
@@ -473,7 +592,7 @@ namespace TimeTracker.Model
             }
             double hr = Math.Truncate(totalTime / 60);
             double min = totalTime % 60;
-            string result = hr == 0 && min == 0 ? "0 min" : (hr > 0 ? hr > 1 ? hr + " hrs" : hr + " hr" : "") + (hr > 0 ? ", " : "") + (min > 0 ? min > 1 ? min + " mins" : min + " min" : "");
+            string result = hr == 0 && min == 0 ? "0 min" : (hr > 0 ? hr > 1 ? hr + " hrs" : hr + " hr" : "") + (hr > 0 && min > 0 ? ", " : "") + (min > 0 ? min > 1 ? min + " mins" : min + " min" : "");
             totalmin = totalTime;
             return result;
         }
@@ -552,7 +671,7 @@ namespace TimeTracker.Model
                     double time = Convert.ToDateTime(j.EndTime).Subtract(Convert.ToDateTime(j.StartTime)).TotalMinutes;
                     double hr = Math.Truncate(time / 60);
                     double min = time % 60;
-                    j.totalhours = hr == 0 && min == 0 ? "0 min" : (hr > 0 ? hr > 1 ? hr + " hrs" : hr + " hr" : "") + (hr > 0 ? ", " : "") + (min > 0 ? min > 1 ? min + " mins" : min + " min" : "");
+                    j.totalhours = hr == 0 && min == 0 ? "0 min" : (hr > 0 ? hr > 1 ? hr + " hrs" : hr + " hr" : "") + (hr > 0 && min > 0 ? ", " : "") + (min > 0 ? min > 1 ? min + " mins" : min + " min" : "");
                 }
 
             }
@@ -635,7 +754,7 @@ namespace TimeTracker.Model
                     double time = Convert.ToDateTime(j.EndTime).Subtract(Convert.ToDateTime(j.StartTime)).TotalMinutes;
                     double hr = Math.Truncate(time / 60);
                     double min = time % 60;
-                    j.totalhours = hr == 0 && min == 0 ? "0 min" : (hr > 0 ? hr > 1 ? hr + " hrs" : hr + " hr" : "") + (hr > 0 ? ", " : "") + (min > 0 ? min > 1 ? min + " mins" : min + " min" : "");
+                    j.totalhours = hr == 0 && min == 0 ? "0 min" : (hr > 0 ? hr > 1 ? hr + " hrs" : hr + " hr" : "") + (hr > 0 && min > 0 ? ", " : "") + (min > 0 ? min > 1 ? min + " mins" : min + " min" : "");
                 }
 
             }
@@ -719,7 +838,7 @@ namespace TimeTracker.Model
                     double time = Convert.ToDateTime(j.EndTime).Subtract(Convert.ToDateTime(j.StartTime)).TotalMinutes;
                     double hr = Math.Truncate(time / 60);
                     double min = time % 60;
-                    j.totalhours = hr == 0 && min == 0 ? "0 min" : (hr > 0 ? hr > 1 ? hr + " hrs" : hr + " hr" : "") + (hr > 0 ? ", " : "") + (min > 0 ? min > 1 ? min + " mins" : min + " min" : "");
+                    j.totalhours = hr == 0 && min == 0 ? "0 min" : (hr > 0 ? hr > 1 ? hr + " hrs" : hr + " hr" : "") + (hr > 0 && min > 0 ? ", " : "") + (min > 0 ? min > 1 ? min + " mins" : min + " min" : "");
                 }
 
             }
@@ -796,14 +915,6 @@ namespace TimeTracker.Model
                             }
                         }
                     }
-                }
-
-                if (j.EndTime != null)
-                {
-                    double time = Convert.ToDateTime(j.EndTime).Subtract(Convert.ToDateTime(j.StartTime)).TotalMinutes;
-                    double hr = Math.Truncate(time / 60);
-                    double min = time % 60;
-                    j.totalhours = hr == 0 && min == 0 ? "0 min" : (hr > 0 ? hr > 1 ? hr + " hrs" : hr + " hr" : "") + (hr > 0 ? ", " : "") + (min > 0 ? min > 1 ? min + " mins" : min + " min" : "");
                 }
 
             }
@@ -887,7 +998,7 @@ namespace TimeTracker.Model
                     double time = Convert.ToDateTime(j.EndTime).Subtract(Convert.ToDateTime(j.StartTime)).TotalMinutes;
                     double hr = Math.Truncate(time / 60);
                     double min = time % 60;
-                    j.totalhours = hr == 0 && min == 0 ? "0 min" : (hr > 0 ? hr > 1 ? hr + " hrs" : hr + " hr" : "") + (hr > 0 ? ", " : "") + (min > 0 ? min > 1 ? min + " mins" : min + " min" : "");
+                    j.totalhours = hr == 0 && min == 0 ? "0 min" : (hr > 0 ? hr > 1 ? hr + " hrs" : hr + " hr" : "") + (hr > 0 && min > 0 ? ", " : "") + (min > 0 ? min > 1 ? min + " mins" : min + " min" : "");
                 }
 
             }
@@ -1020,7 +1131,7 @@ namespace TimeTracker.Model
             t_jobtracker.ActionRequest = jobtracker.ActionRequest;
         }
 
-        public bool HasUnclosedJobs(int userid, DateTime selecteddate) 
+        public bool HasUnclosedJobs(int userid) 
         {
             bool result = true;
             TimeTrackerEntities db = new TimeTrackerEntities();
@@ -1032,7 +1143,6 @@ namespace TimeTracker.Model
                         on j.UserId equals u.Id
                         where j.ApprovedBy == userid
                         && j.Status == "Pending"
-                        && j.ScheduleDate == selecteddate
                         select new JobTracker()
                         {
                             Id = j.Id,

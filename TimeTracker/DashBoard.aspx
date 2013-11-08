@@ -134,7 +134,7 @@
                                    <asp:BoundField HeaderText="Total Work Time" DataField="totalworktime" />
                                    <asp:BoundField HeaderText="Waiting for Approval" DataField="totalforapproval" />
                                    <asp:BoundField HeaderText="Total Rejected Time" DataField="totalrejectedtime" />
-                                   <asp:BoundField HeaderText="Total Unclosed Job(Time)" DataField="totalunclosedjobs" />
+                                   <asp:BoundField HeaderText="Total Unclosed Job" DataField="totalunclosedjobs" />
                                </Columns>
                            </asp:GridView>
                        </asp:Panel>
