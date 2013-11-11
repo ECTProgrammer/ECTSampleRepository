@@ -228,6 +228,7 @@ namespace TimeTracker
                 DateTime selectedDate = DateTime.Parse(txtBoxDate.Text);
                 int userid = Convert.ToInt32(Session["UserId"]);
                 JobTracker jobTracker = new JobTracker();
+                JobTrackerHistory jtHist = new JobTrackerHistory();
                 DateTime startTime = DateTime.Parse(selectedDate.Year + "-" + selectedDate.Month + "-" + selectedDate.Day + " " + modalDropDownStartTime.SelectedValue + ":00");
                 DateTime endTime = DateTime.Parse(selectedDate.Year + "-" + selectedDate.Month + "-" + selectedDate.Day + " " + modalDropDownEndTime.SelectedValue + ":00");
                 jobTracker.StartTime = startTime;
@@ -265,6 +266,7 @@ namespace TimeTracker
                     jobTracker.CreatedBy = userid;
                     jobTracker.ActionRequest = "Add";
                     jobTracker.Insert(jobTracker);
+                    jobTracker = jobTracker.GetJobTracker(Convert.ToInt32(jobTracker.CreatedBy), Convert.ToInt32(jobTracker.LastUpdatedBy), Convert.ToDateTime(jobTracker.CreateDate), Convert.ToDateTime(jobTracker.LastUpdateDate),Convert.ToInt32(jobTracker.JobTypeId), jobTracker.ActionRequest, jobTracker.Status);
                 }
                 else 
                 {
@@ -272,6 +274,8 @@ namespace TimeTracker
                     jobTracker.ActionRequest = "Update";
                     jobTracker.Update(jobTracker);
                 }
+                jtHist = jtHist.ConvertToHistory(jobTracker);
+                jtHist.Insert(jtHist);
                 InitializeWorkingHours();
                 InitializeGrid();
             }
@@ -283,10 +287,13 @@ namespace TimeTracker
             DateTime selectedDate = DateTime.Parse(txtBoxDate.Text);
             int userid = Convert.ToInt32(Session["UserId"]);
             JobTracker jobTracker = new JobTracker();
+            JobTrackerHistory jtHist = new JobTrackerHistory();
             jobTracker.Id = Convert.ToInt32(e.CommandArgument);
             jobTracker = jobTracker.GetJobTracker(jobTracker.Id);
             if (selectedDate.CompareTo(DateTime.Today) == 0 || jobTracker.Status == "Rejected")
             {
+                jobTracker.Status = "Approved";
+                jtHist = jtHist.ConvertToHistory(jobTracker);
                 jobTracker.Delete(jobTracker.Id);
             }
             else 
@@ -296,7 +303,9 @@ namespace TimeTracker
                 jobTracker.LastUpdateDate = DateTime.Now;
                 jobTracker.LastUpdatedBy = userid;
                 jobTracker.Update(jobTracker);
+                jtHist = jtHist.ConvertToHistory(jobTracker);
             }
+            jtHist.Insert(jtHist);
             InitializeWorkingHours();
             InitializeGrid();
         }

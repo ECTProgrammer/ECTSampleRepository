@@ -93,6 +93,89 @@ namespace TimeTracker.Model
             return data;
         }
 
+        public JobTracker GetJobTracker(int createdby,int lastupdatedby,DateTime createdate,DateTime lastupdatedate,int jobtypeid,string actionrequest,string status)
+        {
+            TimeTrackerEntities db = new TimeTrackerEntities();
+
+            var data = (from j in db.T_JobTrackers
+                        join s in db.T_JobTypes
+                        on j.JobTypeId equals s.Id
+                        join u in db.T_Users
+                        on j.UserId equals u.Id
+                        where j.CreatedBy == createdby
+                        && j.LastUpdatedBy == lastupdatedby
+                        && j.CreateDate == createdate
+                        && j.LastUpdateDate == lastupdatedate
+                        && j.JobTypeId == jobtypeid
+                        && j.ActionRequest == actionrequest
+                        && j.Status == status
+                        select new JobTracker()
+                        {
+                            Id = j.Id,
+                            UserId = j.UserId,
+                            StartTime = j.StartTime,
+                            EndTime = j.EndTime,
+                            Description = j.Description,
+                            JobTypeId = j.JobTypeId,
+                            JobIdNumber = j.JobIdNumber,
+                            jobtype = s.Description,
+                            Remarks = j.Remarks,
+                            ApprovedBy = j.ApprovedBy,
+                            CreateDate = j.CreateDate,
+                            LastUpdateDate = j.LastUpdateDate,
+                            CreatedBy = j.CreatedBy,
+                            LastUpdatedBy = j.LastUpdatedBy,
+                            Status = j.Status,
+                            SupervisorRemarks = j.SupervisorRemarks,
+                            ActionRequest = j.ActionRequest,
+                            ScheduleDate = j.ScheduleDate,
+                            fullname = u.Firstname + " " + u.Lastname
+                        }).FirstOrDefault();
+
+            db.Dispose();
+
+
+            if (data.JobIdNumber != null)
+            {
+
+                using (SqlConnection con = new SqlConnection(ConfigurationManager.ConnectionStrings["CAPHWConnection"].ToString()))
+                {
+                    SqlCommand cmd = new SqlCommand("Select CO_Name,SO.SO_PCBdesc from Company CO, Sales_Order SO where SO.CO_ID = CO.CO_ID and SO.SO_Num = '" + data.JobIdNumber.Trim() + "'", con);
+                    con.Open();
+                    SqlDataReader reader = cmd.ExecuteReader();
+                    while (reader.Read())
+                    {
+                        data.customer = reader["CO_Name"].ToString();
+                        data.pcbdesc = reader["SO_PCBdesc"].ToString();
+                    }
+                }
+                if (data.customer == null || data.customer == "")
+                {
+                    using (SqlConnection con = new SqlConnection(ConfigurationManager.ConnectionStrings["CAPSWConnection"].ToString()))
+                    {
+                        SqlCommand cmd = new SqlCommand("Select CO_Name,SO.SO_PCBdesc from Company CO, Sales_Order SO where SO.CO_ID = CO.CO_ID and SO.SO_Num = '" + data.JobIdNumber.Trim() + "'", con);
+                        con.Open();
+                        SqlDataReader reader = cmd.ExecuteReader();
+                        while (reader.Read())
+                        {
+                            data.customer = reader["CO_Name"].ToString();
+                            data.pcbdesc = reader["SO_PCBdesc"].ToString();
+                        }
+                    }
+                }
+            }
+
+            if (data.EndTime != null)
+            {
+                double time = Convert.ToDateTime(data.EndTime).Subtract(Convert.ToDateTime(data.StartTime)).TotalMinutes;
+                double hr = Math.Truncate(time / 60);
+                double min = time % 60;
+                data.totalhours = hr == 0 && min == 0 ? "0 min" : (hr > 0 ? hr > 1 ? hr + " hrs" : hr + " hr" : "") + (hr > 0 && min > 0 ? ", " : "") + (min > 0 ? min > 1 ? min + " mins" : min + " min" : "");
+            }
+
+            return data;
+        }
+
         public JobTracker GetNextUsedTime(int userid,DateTime starttime, DateTime selecteddate)
         {
             TimeTrackerEntities db = new TimeTrackerEntities();

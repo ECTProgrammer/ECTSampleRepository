@@ -92,6 +92,7 @@ namespace TimeTracker
             int userid = Convert.ToInt32(Session["UserId"]);
             int index = Convert.ToInt32(e.CommandArgument);
             JobTracker jobtracker = new JobTracker();
+            JobTrackerHistory jtHist = new JobTrackerHistory();
             var data = jobtracker.GetRequestNeededApproval(userid);
             data[index].LastUpdateDate = DateTime.Now;
             data[index].LastUpdatedBy = userid;
@@ -99,13 +100,17 @@ namespace TimeTracker
             {
                 if (data[index].ActionRequest == "Delete")
                 {
+                    data[index].Status = "Approved";
+                    jtHist = jtHist.ConvertToHistory(data[index]);
                     jobtracker.Delete(data[index].Id);
                 }
                 else
                 {
                     data[index].Status = "Approved";
                     jobtracker.Update(data[index]);
+                    jtHist = jtHist.ConvertToHistory(data[index]);
                 }
+                jtHist.Insert(jtHist);
                 InitializeGridViewLeftPanel1();
                 InitializeGridViewLeftPanel2();
                 InitializeGridViewLeftPanel3();
@@ -123,6 +128,7 @@ namespace TimeTracker
         protected void modalBtnConfirm_Command(object sender, CommandEventArgs e) 
         {
             JobTracker jobtracker = new JobTracker();
+            JobTrackerHistory jtHist = new JobTrackerHistory();
             int id = Convert.ToInt32(e.CommandArgument);
             int userid = Convert.ToInt32(Session["UserId"]);
             jobtracker = jobtracker.GetJobTracker(id);
@@ -131,6 +137,10 @@ namespace TimeTracker
             jobtracker.SupervisorRemarks = modalTxtBoxRemarks.Text;
             jobtracker.Status = "Rejected";
             jobtracker.Update(jobtracker);
+
+            jtHist = jtHist.ConvertToHistory(jobtracker);
+            jtHist.Insert(jtHist);
+
             InitializeGridViewLeftPanel1();
             InitializeGridViewLeftPanel2();
             InitializeGridViewLeftPanel3();

@@ -34,5 +34,6 @@ namespace TimeTracker
         public DbSet<T_Role> T_Roles { get; set; }
         public DbSet<T_RolesModuleAccess> T_RolesModuleAccess { get; set; }
         public DbSet<T_RoleDepartmentAccess> T_RoleDepartmentAccess { get; set; }
+        public DbSet<T_JobTrackerHistory> T_JobTrackerHistory { get; set; }
     }
 }

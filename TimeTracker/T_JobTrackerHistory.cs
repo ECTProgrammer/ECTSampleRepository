@@ -12,24 +12,25 @@ namespace TimeTracker
     using System;
     using System.Collections.Generic;
     
-    public partial class T_User
+    public partial class T_JobTrackerHistory
     {
         public int Id { get; set; }
-        public string Firstname { get; set; }
-        public string Lastname { get; set; }
-        public Nullable<int> DepartmentId { get; set; }
-        public string Username { get; set; }
-        public string Password { get; set; }
-        public string Email { get; set; }
-        public string Phone { get; set; }
-        public string Fax { get; set; }
-        public string Mobile { get; set; }
+        public int JobTrackerId { get; set; }
+        public Nullable<System.DateTime> StartTime { get; set; }
+        public Nullable<System.DateTime> EndTime { get; set; }
+        public string Description { get; set; }
+        public Nullable<int> JobTypeId { get; set; }
+        public string Remarks { get; set; }
+        public Nullable<int> ApprovedBy { get; set; }
         public Nullable<System.DateTime> CreateDate { get; set; }
         public Nullable<System.DateTime> LastUpdateDate { get; set; }
         public Nullable<int> CreatedBy { get; set; }
         public Nullable<int> LastUpdatedBy { get; set; }
         public string Status { get; set; }
-        public Nullable<int> RoleId { get; set; }
-        public Nullable<int> EmployeeNumber { get; set; }
+        public string SupervisorRemarks { get; set; }
+        public Nullable<int> UserId { get; set; }
+        public string Action { get; set; }
+        public Nullable<System.DateTime> ScheduleDate { get; set; }
+        public string JobIdNumber { get; set; }
     }
 }

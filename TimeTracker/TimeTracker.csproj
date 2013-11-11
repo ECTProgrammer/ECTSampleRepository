@@ -389,6 +389,7 @@
     <Compile Include="Model\Converter.cs" />
     <Compile Include="Model\Department.cs" />
     <Compile Include="Model\JobTracker.cs" />
+    <Compile Include="Model\JobTrackerHistory.cs" />
     <Compile Include="Model\JobType.cs" />
     <Compile Include="Model\Module.cs" />
     <Compile Include="Model\RoleDepartmentAccess.cs" />
@@ -465,6 +466,9 @@
       <DependentUpon>TimeTrackerModel.tt</DependentUpon>
     </Compile>
     <Compile Include="T_JobTracker.cs">
+      <DependentUpon>TimeTrackerModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="T_JobTrackerHistory.cs">
       <DependentUpon>TimeTrackerModel.tt</DependentUpon>
     </Compile>
     <Compile Include="T_JobType.cs">

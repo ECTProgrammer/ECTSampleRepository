@@ -14,6 +14,7 @@
         <EntityTypeShape EntityType="TimeTrackerModel.T_Role" Width="1.5" PointX="2.875" PointY="5.75" />
         <EntityTypeShape EntityType="TimeTrackerModel.T_RolesModuleAccess" Width="1.5" PointX="5.375" PointY="4.375" />
         <EntityTypeShape EntityType="TimeTrackerModel.T_RoleDepartmentAccess" Width="1.5" PointX="7.5" PointY="3.75" />
+        <EntityTypeShape EntityType="TimeTrackerModel.T_JobTrackerHistory" Width="1.5" PointX="9.75" PointY="4.125" />
       </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>
