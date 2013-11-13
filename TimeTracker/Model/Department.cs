@@ -11,7 +11,7 @@ namespace TimeTracker.Model
         {
             TimeTrackerEntities db = new TimeTrackerEntities();
 
-            var data = (from d in db.T_Departments
+            var data = (from d in db.T_Department
                         where d.Id == departmentid
                         select new Department()
                         {
@@ -32,7 +32,7 @@ namespace TimeTracker.Model
         {
             TimeTrackerEntities db = new TimeTrackerEntities();
 
-            var data = (from d in db.T_Departments
+            var data = (from d in db.T_Department
                         select new Department()
                         {
                             Id = d.Id,
@@ -56,7 +56,7 @@ namespace TimeTracker.Model
             {
                 try
                 {
-                    db.T_Departments.Add(t_department);
+                    db.T_Department.Add(t_department);
                     db.SaveChanges();
                 }
                 catch (Exception ex)
@@ -73,8 +73,8 @@ namespace TimeTracker.Model
                 try
                 {
                     T_Department t_department = new T_Department();
-                    t_department = db.T_Departments.FirstOrDefault(d => d.Id == id);
-                    db.T_Departments.Remove(t_department);
+                    t_department = db.T_Department.FirstOrDefault(d => d.Id == id);
+                    db.T_Department.Remove(t_department);
                     db.SaveChanges();
                 }
                 catch (Exception ex)
@@ -90,7 +90,7 @@ namespace TimeTracker.Model
             {
                 try
                 {
-                    T_Department t_department = db.T_Departments.FirstOrDefault(d => d.Id == department.Id);
+                    T_Department t_department = db.T_Department.FirstOrDefault(d => d.Id == department.Id);
                     UpdateParse(t_department, department);
                     db.SaveChanges();
                 }

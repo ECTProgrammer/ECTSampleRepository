@@ -25,15 +25,17 @@ namespace TimeTracker
             throw new UnintentionalCodeFirstException();
         }
     
-        public DbSet<T_Department> T_Departments { get; set; }
-        public DbSet<T_JobTracker> T_JobTrackers { get; set; }
-        public DbSet<T_JobType> T_JobTypes { get; set; }
-        public DbSet<T_User> T_Users { get; set; }
-        public DbSet<T_Time> T_Times { get; set; }
-        public DbSet<T_Module> T_Modules { get; set; }
-        public DbSet<T_Role> T_Roles { get; set; }
-        public DbSet<T_RolesModuleAccess> T_RolesModuleAccess { get; set; }
-        public DbSet<T_RoleDepartmentAccess> T_RoleDepartmentAccess { get; set; }
+        public DbSet<T_Department> T_Department { get; set; }
+        public DbSet<T_JobTracker> T_JobTracker { get; set; }
         public DbSet<T_JobTrackerHistory> T_JobTrackerHistory { get; set; }
+        public DbSet<T_JobType> T_JobType { get; set; }
+        public DbSet<T_Modules> T_Modules { get; set; }
+        public DbSet<T_RoleDepartmentAccess> T_RoleDepartmentAccess { get; set; }
+        public DbSet<T_Roles> T_Roles { get; set; }
+        public DbSet<T_RolesModuleAccess> T_RolesModuleAccess { get; set; }
+        public DbSet<T_RolesSupervisor> T_RolesSupervisor { get; set; }
+        public DbSet<T_SupervisorMapping> T_SupervisorMapping { get; set; }
+        public DbSet<T_Time> T_Time { get; set; }
+        public DbSet<T_Users> T_Users { get; set; }
     }
 }

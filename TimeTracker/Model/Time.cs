@@ -11,7 +11,7 @@ namespace TimeTracker.Model
         {
             TimeTrackerEntities db = new TimeTrackerEntities();
 
-            var data = (from t in db.T_Times
+            var data = (from t in db.T_Time
                         where t.Id == timeid
                         select new Time() {
                         Id = t.Id,
@@ -29,7 +29,7 @@ namespace TimeTracker.Model
         {
             TimeTrackerEntities db = new TimeTrackerEntities();
 
-            var data = (from t in db.T_Times
+            var data = (from t in db.T_Time
                         where t.C24hrConversion == c24hrval
                         select new Time()
                         {
@@ -49,7 +49,7 @@ namespace TimeTracker.Model
             string c24hrval = (time.Hour > 9 ? time.Hour.ToString() : "0"+time.Hour) + ":" + (time.Minute > 9 ? time.Minute.ToString() : "0"+time.Minute);
             TimeTrackerEntities db = new TimeTrackerEntities();
 
-            var data = (from t in db.T_Times
+            var data = (from t in db.T_Time
                         where t.C24hrConversion == c24hrval
                         select new Time()
                         {
@@ -68,7 +68,7 @@ namespace TimeTracker.Model
         {
             TimeTrackerEntities db = new TimeTrackerEntities();
 
-            var data = (from t in db.T_Times
+            var data = (from t in db.T_Time
                         where t.Position == timepos
                         select new Time()
                         {
@@ -87,7 +87,7 @@ namespace TimeTracker.Model
         {
             TimeTrackerEntities db = new TimeTrackerEntities();
 
-            var data = (from t in db.T_Times
+            var data = (from t in db.T_Time
                         orderby t.Position ascending
                         select new Time()
                         {
@@ -105,7 +105,7 @@ namespace TimeTracker.Model
         {
             TimeTrackerEntities db = new TimeTrackerEntities();
 
-            var data = (from t in db.T_Times
+            var data = (from t in db.T_Time
                         where t.Position <= timepos
                         orderby t.Position ascending
                         select new Time()
@@ -132,7 +132,7 @@ namespace TimeTracker.Model
             if (timepos <= time.Position)
                 timepos = time.Position + 1;
 
-            var data = (from t in db.T_Times
+            var data = (from t in db.T_Time
                         where t.Position > time.Position
                         && t.Position <= timepos
                         orderby t.Position ascending

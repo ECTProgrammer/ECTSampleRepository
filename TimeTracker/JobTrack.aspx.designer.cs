@@ -166,6 +166,15 @@ namespace TimeTracker {
         protected global::System.Web.UI.WebControls.Panel panelModalContent;
         
         /// <summary>
+        /// modalLabelHWSW control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Label modalLabelHWSW;
+        
+        /// <summary>
         /// modalLabelError control.
         /// </summary>
         /// <remarks>
@@ -218,6 +227,15 @@ namespace TimeTracker {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.TextBox modalTxtBoxJobId;
+        
+        /// <summary>
+        /// modalDropDownJobStatus control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.DropDownList modalDropDownJobStatus;
         
         /// <summary>
         /// modallabelBoxJobDescription control.

@@ -12,12 +12,19 @@ namespace TimeTracker
     using System;
     using System.Collections.Generic;
     
-    public partial class T_Module
+    public partial class T_Modules
     {
+        public T_Modules()
+        {
+            this.M_RolesModuleAccesses = new HashSet<T_RolesModuleAccess>();
+        }
+    
         public int Id { get; set; }
-        public string Module1 { get; set; }
         public string Description { get; set; }
         public string ModuleType { get; set; }
         public Nullable<int> ArrangementOrder { get; set; }
+        public string Filename { get; set; }
+    
+        public virtual ICollection<T_RolesModuleAccess> M_RolesModuleAccesses { get; set; }
     }
 }

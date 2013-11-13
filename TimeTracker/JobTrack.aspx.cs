@@ -71,6 +71,7 @@ namespace TimeTracker
                 InitializeModalJobType();
                 InitializeModalStartTime();
                 InitializeModalEndTime();
+                InitializeModalJobStatus();
 
                 modalBtnSubmit.CommandArgument = "Add";
                 if (selectedDate.CompareTo(DateTime.Today) < 0)
@@ -93,6 +94,8 @@ namespace TimeTracker
                 modallabelBoxJobDescription.Text = "";
                 modallabelCustomer.Text = "";
                 modalTxtBoxJobId.Text = "";
+                modalLabelHWSW.Text = "";
+                modalLabelHWSW.ToolTip = "";
                 modalTxtBoxJobId.Enabled = false;
                 Page.Validate();
 
@@ -118,6 +121,8 @@ namespace TimeTracker
                 modalBtnDelete.CommandArgument = datalist[i].Id.ToString();
                 InitializeModalJobType(datalist[i].JobTypeId.ToString());
                 InitializeModalStartTime(datalist[i].StartTime.ToString());
+                InitializeModalJobStatus(datalist[i].JobStatus.Trim());
+
                 string endtime = "";
                 if (datalist[i].EndTime != null)
                     endtime = datalist[i].EndTime.ToString();
@@ -144,11 +149,14 @@ namespace TimeTracker
                 }
                 if (datalist[i].JobIdNumber != null && datalist[i].JobIdNumber.Trim() != "") 
                 {
+                    
                     modalTxtBoxJobId.Text = datalist[i].JobIdNumber;
                     JobTracker jobTracker = new JobTracker();
                     jobTracker = jobTracker.GetCustomer(modalTxtBoxJobId.Text.Trim());
                     modallabelBoxJobDescription.Text = jobTracker.pcbdesc;
                     modallabelCustomer.Text = jobTracker.customer;
+                    modalLabelHWSW.Text = jobTracker.HWNo;
+                    modalLabelHWSW.ToolTip = jobTracker.SWNo;
                 }
 
                 modalTxtBoxRemarks.Text = datalist[i].Remarks.Trim();
@@ -243,6 +251,10 @@ namespace TimeTracker
                 jobTracker.LastUpdateDate = DateTime.Now;
                 jobTracker.LastUpdatedBy = userid;
                 jobTracker.UserId = userid;
+                jobTracker.HWNo = modalLabelHWSW.Text;
+                jobTracker.SWNo = modalLabelHWSW.ToolTip;
+                if (jobTracker.JobIdNumber.Trim() != "")
+                    jobTracker.JobStatus = modalDropDownJobStatus.SelectedItem.Value;
                 if (selectedDate.CompareTo(DateTime.Today) == 0)
                     if (modalDropDownEndTime.SelectedItem.Text != "Select End Time")
                         jobTracker.Status = "Approved";
@@ -266,7 +278,7 @@ namespace TimeTracker
                     jobTracker.CreatedBy = userid;
                     jobTracker.ActionRequest = "Add";
                     jobTracker.Insert(jobTracker);
-                    jobTracker = jobTracker.GetJobTracker(Convert.ToInt32(jobTracker.CreatedBy), Convert.ToInt32(jobTracker.LastUpdatedBy), Convert.ToDateTime(jobTracker.CreateDate), Convert.ToDateTime(jobTracker.LastUpdateDate),Convert.ToInt32(jobTracker.JobTypeId), jobTracker.ActionRequest, jobTracker.Status);
+                    jobTracker = jobTracker.GetJobTracker(Convert.ToInt32(jobTracker.CreatedBy), Convert.ToInt32(jobTracker.LastUpdatedBy), Convert.ToDateTime(jobTracker.StartTime), Convert.ToInt32(jobTracker.JobTypeId), jobTracker.ActionRequest, jobTracker.Status);
                 }
                 else 
                 {
@@ -274,6 +286,7 @@ namespace TimeTracker
                     jobTracker.ActionRequest = "Update";
                     jobTracker.Update(jobTracker);
                 }
+                //jobTracker.CreateDate = DateTime.Now;
                 jtHist = jtHist.ConvertToHistory(jobTracker);
                 jtHist.Insert(jtHist);
                 InitializeWorkingHours();
@@ -290,15 +303,17 @@ namespace TimeTracker
             JobTrackerHistory jtHist = new JobTrackerHistory();
             jobTracker.Id = Convert.ToInt32(e.CommandArgument);
             jobTracker = jobTracker.GetJobTracker(jobTracker.Id);
+            jobTracker.ActionRequest = "Delete";
             if (selectedDate.CompareTo(DateTime.Today) == 0 || jobTracker.Status == "Rejected")
             {
                 jobTracker.Status = "Approved";
+                jobTracker.LastUpdateDate = DateTime.Now;
+                jobTracker.LastUpdatedBy = userid;
                 jtHist = jtHist.ConvertToHistory(jobTracker);
                 jobTracker.Delete(jobTracker.Id);
             }
             else 
             {
-                jobTracker.ActionRequest = "Delete";
                 jobTracker.Status = "For Approval";
                 jobTracker.LastUpdateDate = DateTime.Now;
                 jobTracker.LastUpdatedBy = userid;
@@ -318,6 +333,7 @@ namespace TimeTracker
             if (jobType != null) 
             {
                 modalTxtBoxJobId.Enabled = Convert.ToBoolean(jobType.RequiredJobId);
+                modalDropDownJobStatus.Enabled = Convert.ToBoolean(jobType.RequiredJobId);
             }
             if (modalTxtBoxJobId.Enabled == false) 
             {
@@ -325,6 +341,7 @@ namespace TimeTracker
                 modallabelBoxJobDescription.Text = "";
                 modalTxtBoxJobId.Text = "";
                 modalLabelError.Visible = false;
+                InitializeModalJobStatus();
             }
             this.programmaticModalPopup.Show();
 
@@ -388,13 +405,16 @@ namespace TimeTracker
             if (modalTxtBoxJobId.Text.Trim() != "")
             {
                 JobTracker jobTracker = new JobTracker();
-                jobTracker = jobTracker.GetCustomer(modalTxtBoxJobId.Text.Trim());
+                //jobTracker = jobTracker.GetCustomer(modalTxtBoxJobId.Text.Trim());
+                jobTracker = jobTracker.GenerateHWAndSW(modalTxtBoxJobId.Text.Trim());
                 if (jobTracker.customer == null || jobTracker.customer == "")
                 {
                     modalLabelError.Text = "Job Id not found in CAP.";
                     modalLabelError.Visible = true;
                     modallabelBoxJobDescription.Text = "";
                     modallabelCustomer.Text = "";
+                    modalLabelHWSW.Text = "";
+                    modalLabelHWSW.ToolTip = "";
                 }
                 else 
                 {
@@ -402,16 +422,19 @@ namespace TimeTracker
                     modalLabelError.Visible = false;
                     modallabelBoxJobDescription.Text = jobTracker.pcbdesc;
                     modallabelCustomer.Text =  jobTracker.customer;
+                    modalLabelHWSW.Text = jobTracker.HWNo.Trim();
+                    modalLabelHWSW.ToolTip = jobTracker.SWNo.Trim();
                 }
             }
             else 
             {
                 modallabelBoxJobDescription.Text = "";
                 modallabelCustomer.Text = "";
+                modalLabelHWSW.Text = "";
+                modalLabelHWSW.ToolTip = "";
             }
             this.programmaticModalPopup.Show();
         }
-
         #endregion
 
         #region INITIALIZED
@@ -601,6 +624,7 @@ namespace TimeTracker
                 endtime = time.GetEndTimeList(modalDropDownStartTime.SelectedItem.Value,time.Position);
                 time.Description = "Select End Time";
                 time.C24hrConversion = "00";
+                time.Position = 0;
                 endtime.Insert(0, time);
             }
             else
@@ -631,12 +655,14 @@ namespace TimeTracker
 
         private void InitializeModalSupervisor(string value = "") 
         {
-            int departmentId = Convert.ToInt32(Session["DepartmentId"]);
-            User user = new User();
-            var supervisors = user.GetSupervisors(departmentId);
+            RolesSupervisor roleSupervisor = new RolesSupervisor();
+            //int departmentId = Convert.ToInt32(Session["DepartmentId"]);
+            //User user = new User();
+            //var supervisors = user.GetSupervisors(departmentId);
+            var supervisors = roleSupervisor.GetSupervisors(Convert.ToInt32(Session["RoleId"]),Convert.ToInt32(Session["UserId"]));
             modalDropDownSupervisor.DataSource = supervisors;
-            modalDropDownSupervisor.DataTextField = "fullname";
-            modalDropDownSupervisor.DataValueField = "Id";
+            modalDropDownSupervisor.DataTextField = "supervisorname";
+            modalDropDownSupervisor.DataValueField = "supervisorid";
             modalDropDownSupervisor.DataBind();
 
             if (value.Trim() != "") 
@@ -652,10 +678,49 @@ namespace TimeTracker
             }
         }
 
+        private void InitializeModalJobStatus(string value = "") 
+        {
+            if (value == null)
+                value = "";
+            foreach (ListItem i in modalDropDownJobStatus.Items) 
+            {
+                if (i.Value.Trim().Equals(value.Trim(), StringComparison.OrdinalIgnoreCase))
+                {
+                    i.Selected = true;
+                }
+                else
+                    i.Selected = false;
+            }
+        }
         #endregion
         #endregion
 
         #region OTHERS
+
+        //protected void gridViewJobTrack_RowCreated(object sender, GridViewRowEventArgs e) //OnRowCreated
+        //{
+        //    if (e.Row.RowType == DataControlRowType.Header) 
+        //    {
+        //        GridViewRow gvr = new GridViewRow(0, 0, DataControlRowType.Header, DataControlRowState.Normal);
+        //        TableHeaderCell thc = new TableHeaderCell();
+        //        thc.ColumnSpan = 2;
+        //        thc.Text = "Header 1";
+        //        gvr.Cells.Add(thc);
+
+        //        thc = new TableHeaderCell();
+        //        thc.ColumnSpan = 3;
+        //        thc.Text = "Header 3";
+        //        gvr.Cells.Add(thc);
+
+        //        thc = new TableHeaderCell();
+        //        thc.ColumnSpan = 4;
+        //        thc.Text = "Header 2";
+        //        gvr.Cells.Add(thc);
+
+        //        gridJobTrack.Controls[0].Controls.AddAt(0, gvr);
+        //    }
+        //}
+
         protected override void Render(System.Web.UI.HtmlTextWriter writer)
         {
             foreach (GridViewRow row in gridJobTrack.Rows)
@@ -725,6 +790,7 @@ namespace TimeTracker
                 }
             }
         }
+
         #endregion
     }
 }

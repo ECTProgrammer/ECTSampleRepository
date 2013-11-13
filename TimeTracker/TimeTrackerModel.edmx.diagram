@@ -5,16 +5,34 @@
     <!-- Diagram content (shape and connector positions) -->
     <edmx:Diagrams>
       <Diagram DiagramId="eb3c73b641d24d5d9cfc00c539bd97f8" Name="Diagram1">
-        <EntityTypeShape EntityType="TimeTrackerModel.T_Department" Width="1.5" PointX="0.75" PointY="0.75" IsExpanded="true" />
-        <EntityTypeShape EntityType="TimeTrackerModel.T_JobTracker" Width="1.5" PointX="2.75" PointY="0.75" IsExpanded="true" />
-        <EntityTypeShape EntityType="TimeTrackerModel.T_JobType" Width="1.5" PointX="4.75" PointY="0.75" IsExpanded="true" />
-        <EntityTypeShape EntityType="TimeTrackerModel.T_User" Width="1.5" PointX="0.875" PointY="3.625" IsExpanded="true" />
-        <EntityTypeShape EntityType="TimeTrackerModel.T_Time" Width="1.5" PointX="6.5" PointY="1" />
-        <EntityTypeShape EntityType="TimeTrackerModel.T_Module" Width="1.5" PointX="9" PointY="1.125" />
-        <EntityTypeShape EntityType="TimeTrackerModel.T_Role" Width="1.5" PointX="2.875" PointY="5.75" />
-        <EntityTypeShape EntityType="TimeTrackerModel.T_RolesModuleAccess" Width="1.5" PointX="5.375" PointY="4.375" />
-        <EntityTypeShape EntityType="TimeTrackerModel.T_RoleDepartmentAccess" Width="1.5" PointX="7.5" PointY="3.75" />
-        <EntityTypeShape EntityType="TimeTrackerModel.T_JobTrackerHistory" Width="1.5" PointX="9.75" PointY="4.125" />
+        <EntityTypeShape EntityType="TimeTrackerModel.T_Department" Width="1.5" PointX="10.25" PointY="11" />
+        <EntityTypeShape EntityType="TimeTrackerModel.T_JobTracker" Width="1.5" PointX="12.625" PointY="8.75" />
+        <EntityTypeShape EntityType="TimeTrackerModel.T_JobTrackerHistory" Width="1.5" PointX="0.625" PointY="3.25" />
+        <EntityTypeShape EntityType="TimeTrackerModel.T_JobType" Width="1.5" PointX="3.125" PointY="4.75" />
+        <EntityTypeShape EntityType="TimeTrackerModel.T_Modules" Width="1.5" PointX="5.25" PointY="6.125" />
+        <EntityTypeShape EntityType="TimeTrackerModel.T_RoleDepartmentAccess" Width="1.5" PointX="7.25" PointY="3.625" />
+        <EntityTypeShape EntityType="TimeTrackerModel.T_Roles" Width="1.5" PointX="9.5" PointY="6.5" />
+        <EntityTypeShape EntityType="TimeTrackerModel.T_RolesModuleAccess" Width="1.5" PointX="12.625" PointY="3.875" />
+        <EntityTypeShape EntityType="TimeTrackerModel.T_RolesSupervisor" Width="1.5" PointX="14.75" PointY="6.875" />
+        <EntityTypeShape EntityType="TimeTrackerModel.T_SupervisorMapping" Width="1.5" PointX="1.125" PointY="10.125" />
+        <EntityTypeShape EntityType="TimeTrackerModel.T_Time" Width="1.5" PointX="3.5" PointY="8.875" />
+        <EntityTypeShape EntityType="TimeTrackerModel.T_Users" Width="1.5" PointX="6.625" PointY="9.375" />
+        <AssociationConnector Association="TimeTrackerModel.Fk_JobType_DepartmentId" />
+        <AssociationConnector Association="TimeTrackerModel.Fk_RoleDepartmentAccess_DepartmentId" />
+        <AssociationConnector Association="TimeTrackerModel.fk_Users_DepartmentId" />
+        <AssociationConnector Association="TimeTrackerModel.Fk_JobTracker_ApprovedBy" />
+        <AssociationConnector Association="TimeTrackerModel.Fk_JobTracker_JobTypeId" />
+        <AssociationConnector Association="TimeTrackerModel.Fk_JobTracker_UserId" />
+        <AssociationConnector Association="TimeTrackerModel.Fk_JobTrackerHistory_JobTrackerId" />
+        <AssociationConnector Association="TimeTrackerModel.Fk_JobTrackerHistory_ApprovedBy" />
+        <AssociationConnector Association="TimeTrackerModel.Fk_JobTrackerHistory_JobTypeId" />
+        <AssociationConnector Association="TimeTrackerModel.Fk_JobTrackerHistory_UserId" />
+        <AssociationConnector Association="TimeTrackerModel.Fk_RolesModuleAccess_ModuleId" />
+        <AssociationConnector Association="TimeTrackerModel.Fk_RoleDepartmentAccess_RoleId" />
+        <AssociationConnector Association="TimeTrackerModel.Fk_RolesModuleAccess_RoleId" />
+        <AssociationConnector Association="TimeTrackerModel.fk_Users_RoleId" />
+        <AssociationConnector Association="TimeTrackerModel.Fk_SupervisorMapping_SupervisorId" />
+        <AssociationConnector Association="TimeTrackerModel.Fk_SupervisorMapping_UserId" />
       </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>

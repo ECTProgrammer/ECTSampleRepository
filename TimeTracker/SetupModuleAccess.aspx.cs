@@ -42,11 +42,10 @@ namespace TimeTracker
 
             var roleList = role.GetRolesWithModuleAccess();
 
-            Converter model = new Converter();
+            //Converter model = new Converter();
+            //DataTable table = model.ConvertToDataTable(roleList);
 
-            DataTable table = model.ConvertToDataTable(roleList);
-
-            gridViewRoles.DataSource = table;
+            gridViewRoles.DataSource = roleList;
             gridViewRoles.DataBind();
         }
 

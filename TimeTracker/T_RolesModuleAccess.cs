@@ -15,11 +15,14 @@ namespace TimeTracker
     public partial class T_RolesModuleAccess
     {
         public int Id { get; set; }
+        public int RoleId { get; set; }
         public int ModuleId { get; set; }
         public Nullable<bool> CanView { get; set; }
         public Nullable<bool> CanAdd { get; set; }
         public Nullable<bool> CanUpdate { get; set; }
         public Nullable<bool> CanDelete { get; set; }
-        public int RoleId { get; set; }
+    
+        public virtual T_Modules M_Module { get; set; }
+        public virtual T_Roles M_Role { get; set; }
     }
 }

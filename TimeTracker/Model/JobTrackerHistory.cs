@@ -89,6 +89,9 @@ namespace TimeTracker.Model
             data.UserId = jtHist.UserId;
             data.ScheduleDate = jtHist.ScheduleDate;
             data.Action = jtHist.Action;
+            data.JobStatus = jtHist.JobStatus;
+            data.HWNo = jtHist.HWNo;
+            data.SWNo = jtHist.SWNo;
         }
 
         private void UpdateParse(T_JobTrackerHistory t_jthist, JobTrackerHistory jthist)
@@ -108,6 +111,9 @@ namespace TimeTracker.Model
             t_jthist.UserId = jthist.UserId;
             t_jthist.ScheduleDate = jthist.ScheduleDate;
             t_jthist.Action = jthist.Action;
+            t_jthist.JobStatus = jthist.JobStatus;
+            t_jthist.HWNo = jthist.HWNo;
+            t_jthist.SWNo = jthist.SWNo;
         }
 
         public JobTrackerHistory ConvertToHistory(JobTracker jobtracker) 
@@ -130,6 +136,9 @@ namespace TimeTracker.Model
             jthist.UserId = jobtracker.UserId;
             jthist.ScheduleDate = jobtracker.ScheduleDate;
             jthist.Action = jobtracker.ActionRequest;
+            jthist.JobStatus = jobtracker.JobStatus;
+            jthist.HWNo = jobtracker.HWNo;
+            jthist.SWNo = jobtracker.SWNo;
 
             return jthist;
         }

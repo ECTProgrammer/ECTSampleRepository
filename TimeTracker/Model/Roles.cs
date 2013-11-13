@@ -5,7 +5,7 @@ using System.Web;
 
 namespace TimeTracker.Model
 {
-    public class Roles : T_Role
+    public class Roles : T_Roles
     {
         public Roles GetRole(int rolesid)
         {
@@ -58,8 +58,7 @@ namespace TimeTracker.Model
             TimeTrackerEntities db = new TimeTrackerEntities();
 
             var data = (from d in db.T_Roles
-                        join m in db.T_RolesModuleAccess
-                        on d.Id equals m.RoleId
+                        where d.M_RolesModuleAccesses.Count > 0
                         select new Roles()
                         {
                             Id = d.Id,
@@ -82,8 +81,7 @@ namespace TimeTracker.Model
             TimeTrackerEntities db = new TimeTrackerEntities();
 
             var data = (from d in db.T_Roles
-                        join m in db.T_RolesModuleAccess
-                        on d.Id equals m.RoleId
+                        where d.M_RolesModuleAccesses.Count > 0
                         orderby d.Id
                         select new Roles()
                         {
@@ -116,9 +114,72 @@ namespace TimeTracker.Model
             return list;
         }
 
+        public List<Roles> GetRolesWithSupervisors() 
+        {
+            TimeTrackerEntities db = new TimeTrackerEntities();
+
+            var data = (from r in db.T_Roles
+                        join s in db.T_RolesSupervisor
+                        on r.Id equals s.RoleId
+                        select new Roles()
+                        {
+                            Id = r.Id,
+                            Description = r.Description,
+                            Rank = r.Rank,
+                            CreateDate = r.CreateDate,
+                            LastUpdateDate = r.LastUpdateDate,
+                            CreatedBy = r.CreatedBy,
+                            LastUpdatedBy = r.LastUpdatedBy,
+                            IsSupervisor = r.IsSupervisor
+                        }).Distinct().ToList();
+
+            db.Dispose();
+
+            return data;
+        }
+
+        public List<Roles> GetRolesWithoutSupervisor()
+        {
+            TimeTrackerEntities db = new TimeTrackerEntities();
+
+            var data = (from r in db.T_Roles
+                        join s in db.T_RolesSupervisor
+                        on r.Id equals s.RoleId
+                        orderby r.Id
+                        select new Roles()
+                        {
+                            Id = r.Id,
+                            Description = r.Description,
+                            Rank = r.Rank,
+                            CreateDate = r.CreateDate,
+                            LastUpdateDate = r.LastUpdateDate,
+                            CreatedBy = r.CreatedBy,
+                            LastUpdatedBy = r.LastUpdatedBy,
+                            IsSupervisor = r.IsSupervisor
+                        }).Distinct().ToList();
+
+            db.Dispose();
+
+            var list = GetRoleList();
+
+            for (int i = 0; i < data.Count; i++)
+            {
+                for (int j = 0; j < list.Count; j++)
+                {
+                    if (data[i].Id == list[j].Id)
+                    {
+                        list.RemoveAt(j);
+                        break;
+                    }
+                }
+            }
+
+            return list;
+        }
+
         public void Insert(Roles role)
         {
-            T_Role t_role = InsertParse(role);
+            T_Roles t_role = InsertParse(role);
 
             using (TimeTrackerEntities db = new TimeTrackerEntities())
             {
@@ -140,7 +201,7 @@ namespace TimeTracker.Model
             {
                 try
                 {
-                    T_Role t_role = new T_Role();
+                    T_Roles t_role = new T_Roles();
                     t_role = db.T_Roles.FirstOrDefault(p => p.Id == id);
                     db.T_Roles.Remove(t_role);
                     db.SaveChanges();
@@ -158,7 +219,7 @@ namespace TimeTracker.Model
             {
                 try
                 {
-                    T_Role t_role = db.T_Roles.FirstOrDefault(p => p.Id == role.Id);
+                    T_Roles t_role = db.T_Roles.FirstOrDefault(p => p.Id == role.Id);
                     UpdateParse(t_role, role);
                     db.SaveChanges();
                 }
@@ -169,9 +230,9 @@ namespace TimeTracker.Model
             }
         }
 
-        private T_Role InsertParse(Roles role)
+        private T_Roles InsertParse(Roles role)
         {
-            T_Role t_role = new T_Role();
+            T_Roles t_role = new T_Roles();
             t_role.Description = role.Description;
             t_role.Rank = role.Rank;
             t_role.CreateDate = role.CreateDate;
@@ -182,7 +243,7 @@ namespace TimeTracker.Model
             return t_role;
         }
 
-        private void UpdateParse(T_Role t_role, Roles role)
+        private void UpdateParse(T_Roles t_role, Roles role)
         {
             t_role.Description = role.Description;
             t_role.Rank = role.Rank;

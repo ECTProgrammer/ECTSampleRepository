@@ -11,7 +11,7 @@ namespace TimeTracker.Model
         {
             TimeTrackerEntities db = new TimeTrackerEntities();
 
-            var data = (from j in db.T_JobTypes
+            var data = (from j in db.T_JobType
                         where j.Id == jobtypeid
                         select new JobType()
                         {
@@ -35,7 +35,7 @@ namespace TimeTracker.Model
         {
             TimeTrackerEntities db = new TimeTrackerEntities();
 
-            var data = (from j in db.T_JobTypes
+            var data = (from j in db.T_JobType
                         where j.DepartmentId == 1
                         || j.DepartmentId == departmentid
                         select new JobType()
@@ -60,7 +60,7 @@ namespace TimeTracker.Model
         {
             TimeTrackerEntities db = new TimeTrackerEntities();
 
-            var data = (from j in db.T_JobTypes
+            var data = (from j in db.T_JobType
                         select new JobType()
                         {
                             Id = j.Id,
@@ -87,7 +87,7 @@ namespace TimeTracker.Model
             {
                 try
                 {
-                    db.T_JobTypes.Add(t_jobtype);
+                    db.T_JobType.Add(t_jobtype);
                     db.SaveChanges();
                 }
                 catch (Exception ex)
@@ -104,8 +104,8 @@ namespace TimeTracker.Model
                 try
                 {
                     T_JobType t_jobtype = new T_JobType();
-                    t_jobtype = db.T_JobTypes.FirstOrDefault(j => j.Id == id);
-                    db.T_JobTypes.Remove(t_jobtype);
+                    t_jobtype = db.T_JobType.FirstOrDefault(j => j.Id == id);
+                    db.T_JobType.Remove(t_jobtype);
                     db.SaveChanges();
                 }
                 catch (Exception ex)
@@ -121,7 +121,7 @@ namespace TimeTracker.Model
             {
                 try
                 {
-                    T_JobType t_jobtype = db.T_JobTypes.FirstOrDefault(d => d.Id == jobtype.Id);
+                    T_JobType t_jobtype = db.T_JobType.FirstOrDefault(d => d.Id == jobtype.Id);
                     UpdateParse(t_jobtype, jobtype);
                     db.SaveChanges();
                 }

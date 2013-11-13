@@ -5,9 +5,11 @@ using System.Web;
 
 namespace TimeTracker.Model
 {
-    public class User : T_User
+    public class User : T_Users
     {
         public string fullname { get; set; }
+        public string department { get; set; }
+        public string role { get; set; }
 
         public User GetUser(int userid)
         {
@@ -22,7 +24,7 @@ namespace TimeTracker.Model
                             Password = u.Password,
                             Firstname = u.Firstname,
                             Lastname = u.Lastname,
-                            Phone = u.Password,
+                            Phone = u.Phone,
                             Mobile = u.Mobile,
                             Fax = u.Fax,
                             Email = u.Email,
@@ -33,7 +35,45 @@ namespace TimeTracker.Model
                             LastUpdateDate = u.LastUpdateDate,
                             LastUpdatedBy = u.LastUpdatedBy,
                             Status = u.Status,
-                            fullname = u.Firstname+" "+u.Lastname
+                            fullname = u.Firstname+" "+u.Lastname,
+                            role = u.M_Role.Description,
+                            department = u.M_Department.Description,
+                            EmployeeNumber = u.EmployeeNumber
+                        }).FirstOrDefault();
+
+            db.Dispose();
+
+            return data;
+        }
+
+        public User GetUser(string username)
+        {
+            TimeTrackerEntities db = new TimeTrackerEntities();
+
+            var data = (from u in db.T_Users
+                        where u.Username.Equals(username, StringComparison.OrdinalIgnoreCase)
+                        select new User()
+                        {
+                            Id = u.Id,
+                            Username = u.Username,
+                            Password = u.Password,
+                            Firstname = u.Firstname,
+                            Lastname = u.Lastname,
+                            Phone = u.Phone,
+                            Mobile = u.Mobile,
+                            Fax = u.Fax,
+                            Email = u.Email,
+                            DepartmentId = u.DepartmentId,
+                            RoleId = u.RoleId,
+                            CreateDate = u.CreateDate,
+                            CreatedBy = u.CreatedBy,
+                            LastUpdateDate = u.LastUpdateDate,
+                            LastUpdatedBy = u.LastUpdatedBy,
+                            Status = u.Status,
+                            fullname = u.Firstname + " " + u.Lastname,
+                            role = u.M_Role.Description,
+                            department = u.M_Department.Description,
+                            EmployeeNumber = u.EmployeeNumber
                         }).FirstOrDefault();
 
             db.Dispose();
@@ -55,7 +95,7 @@ namespace TimeTracker.Model
                             Password = u.Password,
                             Firstname = u.Firstname,
                             Lastname = u.Lastname,
-                            Phone = u.Password,
+                            Phone = u.Phone,
                             Mobile = u.Mobile,
                             Fax = u.Fax,
                             Email = u.Email,
@@ -66,7 +106,10 @@ namespace TimeTracker.Model
                             LastUpdateDate = u.LastUpdateDate,
                             LastUpdatedBy = u.LastUpdatedBy,
                             Status = u.Status,
-                            fullname = u.Firstname + " " + u.Lastname
+                            fullname = u.Firstname + " " + u.Lastname,
+                            role = u.M_Role.Description,
+                            department = u.M_Department.Description,
+                            EmployeeNumber = u.EmployeeNumber
                         }).FirstOrDefault();
 
             db.Dispose();
@@ -74,15 +117,12 @@ namespace TimeTracker.Model
             return  data;
         }
 
-        public List<User> GetSupervisors(int departmentId,int userid = 0) 
+        public List<User> GetUserList()
         {
             TimeTrackerEntities db = new TimeTrackerEntities();
 
             var data = (from u in db.T_Users
-                        join p in db.T_Roles
-                        on u.RoleId equals p.Id
-                        where u.DepartmentId == departmentId
-                        && p.IsSupervisor == true
+                        orderby u.Firstname
                         select new User()
                         {
                             Id = u.Id,
@@ -90,7 +130,7 @@ namespace TimeTracker.Model
                             Password = u.Password,
                             Firstname = u.Firstname,
                             Lastname = u.Lastname,
-                            Phone = u.Password,
+                            Phone = u.Phone,
                             Mobile = u.Mobile,
                             Fax = u.Fax,
                             Email = u.Email,
@@ -101,7 +141,46 @@ namespace TimeTracker.Model
                             LastUpdateDate = u.LastUpdateDate,
                             LastUpdatedBy = u.LastUpdatedBy,
                             Status = u.Status,
-                            fullname = u.Firstname + " " + u.Lastname
+                            fullname = u.Firstname + " " + u.Lastname,
+                            role = u.M_Role.Description,
+                            department = u.M_Department.Description,
+                            EmployeeNumber = u.EmployeeNumber
+                        }).ToList();
+
+            db.Dispose();
+
+            return data;
+        }
+
+        public List<User> GetSupervisors(int departmentId,int userid = 0) 
+        {
+            TimeTrackerEntities db = new TimeTrackerEntities();
+
+            var data = (from u in db.T_Users
+                        where u.DepartmentId == departmentId
+                        && u.M_Role.IsSupervisor == true
+                        select new User()
+                        {
+                            Id = u.Id,
+                            Username = u.Username,
+                            Password = u.Password,
+                            Firstname = u.Firstname,
+                            Lastname = u.Lastname,
+                            Phone = u.Phone,
+                            Mobile = u.Mobile,
+                            Fax = u.Fax,
+                            Email = u.Email,
+                            DepartmentId = u.DepartmentId,
+                            RoleId = u.RoleId,
+                            CreateDate = u.CreateDate,
+                            CreatedBy = u.CreatedBy,
+                            LastUpdateDate = u.LastUpdateDate,
+                            LastUpdatedBy = u.LastUpdatedBy,
+                            Status = u.Status,
+                            fullname = u.Firstname + " " + u.Lastname,
+                            role = u.M_Role.Description,
+                            department = u.M_Department.Description,
+                            EmployeeNumber = u.EmployeeNumber
                         }).ToList();
 
             db.Dispose();
@@ -112,7 +191,7 @@ namespace TimeTracker.Model
 
         public void Insert(User user)
         {
-            T_User t_user = InsertParse(user);
+            T_Users t_user = InsertParse(user);
 
             using (TimeTrackerEntities db = new TimeTrackerEntities())
             {
@@ -134,7 +213,7 @@ namespace TimeTracker.Model
             {
                 try
                 {
-                    T_User t_user = new T_User();
+                    T_Users t_user = new T_Users();
                     t_user = db.T_Users.FirstOrDefault(u => u.Id == id);
                     db.T_Users.Remove(t_user);
                     db.SaveChanges();
@@ -152,7 +231,7 @@ namespace TimeTracker.Model
             {
                 try
                 {
-                    T_User t_user = db.T_Users.FirstOrDefault(u => u.Id == user.Id);
+                    T_Users t_user = db.T_Users.FirstOrDefault(u => u.Id == user.Id);
                     UpdateParse(t_user, user);
                     db.SaveChanges();
                 }
@@ -163,9 +242,9 @@ namespace TimeTracker.Model
             }
         }
 
-        private T_User InsertParse(User user)
+        private T_Users InsertParse(User user)
         {
-            T_User t_user = new T_User();
+            T_Users t_user = new T_Users();
             t_user.Firstname = user.Firstname;
             t_user.Lastname = user.Lastname;
             t_user.RoleId = user.RoleId;
@@ -181,11 +260,12 @@ namespace TimeTracker.Model
             t_user.LastUpdateDate = user.LastUpdateDate;
             t_user.CreatedBy = user.CreatedBy;
             t_user.LastUpdatedBy = user.LastUpdatedBy;
+            t_user.EmployeeNumber = user.EmployeeNumber;
 
             return t_user;
         }
 
-        private void UpdateParse(T_User t_user, User user)
+        private void UpdateParse(T_Users t_user, User user)
         {
             t_user.Firstname = user.Firstname;
             t_user.Lastname = user.Lastname;
@@ -200,6 +280,7 @@ namespace TimeTracker.Model
             t_user.Status = user.Status;
             t_user.LastUpdateDate = user.LastUpdateDate;
             t_user.LastUpdatedBy = user.LastUpdatedBy;
+            t_user.EmployeeNumber = user.EmployeeNumber;
         }
     }
 }

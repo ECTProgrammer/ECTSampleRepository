@@ -237,6 +237,7 @@
     <Content Include="Images\orderedList7.png" />
     <Content Include="Images\orderedList8.png" />
     <Content Include="Images\orderedList9.png" />
+    <Content Include="Job Overview.aspx" />
     <Content Include="JobTrack.aspx" />
     <Content Include="Login.aspx" />
     <Content Include="logo.ico" />
@@ -276,6 +277,7 @@
     <Content Include="SetupDepartment.aspx" />
     <Content Include="SetupJobType.aspx" />
     <Content Include="SetupModuleAccess.aspx" />
+    <Content Include="SetupRoleSupervisors.aspx" />
     <Content Include="SetupUser.aspx" />
     <Content Include="ViewSwitcher.ascx" />
     <Content Include="Web.config">
@@ -371,6 +373,13 @@
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
+    <Compile Include="Job Overview.aspx.cs">
+      <DependentUpon>Job Overview.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Job Overview.aspx.designer.cs">
+      <DependentUpon>Job Overview.aspx</DependentUpon>
+    </Compile>
     <Compile Include="JobTrack.aspx.cs">
       <DependentUpon>JobTrack.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
@@ -395,6 +404,8 @@
     <Compile Include="Model\RoleDepartmentAccess.cs" />
     <Compile Include="Model\Roles.cs" />
     <Compile Include="Model\RolesModuleAccess.cs" />
+    <Compile Include="Model\RolesSupervisor.cs" />
+    <Compile Include="Model\SupervisorMapping.cs" />
     <Compile Include="Model\Time.cs" />
     <Compile Include="Model\User.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -425,6 +436,13 @@
     </Compile>
     <Compile Include="SetupModuleAccess.aspx.designer.cs">
       <DependentUpon>SetupModuleAccess.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="SetupRoleSupervisors.aspx.cs">
+      <DependentUpon>SetupRoleSupervisors.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="SetupRoleSupervisors.aspx.designer.cs">
+      <DependentUpon>SetupRoleSupervisors.aspx</DependentUpon>
     </Compile>
     <Compile Include="SetupUser.aspx.cs">
       <DependentUpon>SetupUser.aspx</DependentUpon>
@@ -474,22 +492,28 @@
     <Compile Include="T_JobType.cs">
       <DependentUpon>TimeTrackerModel.tt</DependentUpon>
     </Compile>
-    <Compile Include="T_Module.cs">
-      <DependentUpon>TimeTrackerModel.tt</DependentUpon>
-    </Compile>
-    <Compile Include="T_Role.cs">
+    <Compile Include="T_Modules.cs">
       <DependentUpon>TimeTrackerModel.tt</DependentUpon>
     </Compile>
     <Compile Include="T_RoleDepartmentAccess.cs">
       <DependentUpon>TimeTrackerModel.tt</DependentUpon>
     </Compile>
+    <Compile Include="T_Roles.cs">
+      <DependentUpon>TimeTrackerModel.tt</DependentUpon>
+    </Compile>
     <Compile Include="T_RolesModuleAccess.cs">
+      <DependentUpon>TimeTrackerModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="T_RolesSupervisor.cs">
+      <DependentUpon>TimeTrackerModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="T_SupervisorMapping.cs">
       <DependentUpon>TimeTrackerModel.tt</DependentUpon>
     </Compile>
     <Compile Include="T_Time.cs">
       <DependentUpon>TimeTrackerModel.tt</DependentUpon>
     </Compile>
-    <Compile Include="T_User.cs">
+    <Compile Include="T_Users.cs">
       <DependentUpon>TimeTrackerModel.tt</DependentUpon>
     </Compile>
     <Compile Include="ViewSwitcher.ascx.cs">

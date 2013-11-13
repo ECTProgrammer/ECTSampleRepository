@@ -10,12 +10,74 @@
           <EntitySet Name="JobTracker" EntityType="TimeTrackerModel.Store.JobTracker" store:Type="Tables" Schema="dbo" />
           <EntitySet Name="JobTrackerHistory" EntityType="TimeTrackerModel.Store.JobTrackerHistory" store:Type="Tables" Schema="dbo" />
           <EntitySet Name="JobType" EntityType="TimeTrackerModel.Store.JobType" store:Type="Tables" Schema="dbo" />
-          <EntitySet Name="Module" EntityType="TimeTrackerModel.Store.Module" store:Type="Tables" Schema="dbo" />
+          <EntitySet Name="Modules" EntityType="TimeTrackerModel.Store.Modules" store:Type="Tables" Schema="dbo" />
           <EntitySet Name="RoleDepartmentAccess" EntityType="TimeTrackerModel.Store.RoleDepartmentAccess" store:Type="Tables" Schema="dbo" />
           <EntitySet Name="Roles" EntityType="TimeTrackerModel.Store.Roles" store:Type="Tables" Schema="dbo" />
           <EntitySet Name="RolesModuleAccess" EntityType="TimeTrackerModel.Store.RolesModuleAccess" store:Type="Tables" Schema="dbo" />
+          <EntitySet Name="RolesSupervisor" EntityType="TimeTrackerModel.Store.RolesSupervisor" store:Type="Tables" Schema="dbo" />
+          <EntitySet Name="SupervisorMapping" EntityType="TimeTrackerModel.Store.SupervisorMapping" store:Type="Tables" Schema="dbo" />
           <EntitySet Name="Time" EntityType="TimeTrackerModel.Store.Time" store:Type="Tables" Schema="dbo" />
           <EntitySet Name="Users" EntityType="TimeTrackerModel.Store.Users" store:Type="Tables" Schema="dbo" />
+          <AssociationSet Name="Fk_JobTracker_ApprovedBy" Association="TimeTrackerModel.Store.Fk_JobTracker_ApprovedBy">
+            <End Role="Users" EntitySet="Users" />
+            <End Role="JobTracker" EntitySet="JobTracker" />
+          </AssociationSet>
+          <AssociationSet Name="Fk_JobTracker_JobTypeId" Association="TimeTrackerModel.Store.Fk_JobTracker_JobTypeId">
+            <End Role="JobType" EntitySet="JobType" />
+            <End Role="JobTracker" EntitySet="JobTracker" />
+          </AssociationSet>
+          <AssociationSet Name="Fk_JobTracker_UserId" Association="TimeTrackerModel.Store.Fk_JobTracker_UserId">
+            <End Role="Users" EntitySet="Users" />
+            <End Role="JobTracker" EntitySet="JobTracker" />
+          </AssociationSet>
+          <AssociationSet Name="Fk_JobTrackerHistory_ApprovedBy" Association="TimeTrackerModel.Store.Fk_JobTrackerHistory_ApprovedBy">
+            <End Role="Users" EntitySet="Users" />
+            <End Role="JobTrackerHistory" EntitySet="JobTrackerHistory" />
+          </AssociationSet>
+          <AssociationSet Name="Fk_JobTrackerHistory_JobTypeId" Association="TimeTrackerModel.Store.Fk_JobTrackerHistory_JobTypeId">
+            <End Role="JobType" EntitySet="JobType" />
+            <End Role="JobTrackerHistory" EntitySet="JobTrackerHistory" />
+          </AssociationSet>
+          <AssociationSet Name="Fk_JobTrackerHistory_UserId" Association="TimeTrackerModel.Store.Fk_JobTrackerHistory_UserId">
+            <End Role="Users" EntitySet="Users" />
+            <End Role="JobTrackerHistory" EntitySet="JobTrackerHistory" />
+          </AssociationSet>
+          <AssociationSet Name="Fk_JobType_DepartmentId" Association="TimeTrackerModel.Store.Fk_JobType_DepartmentId">
+            <End Role="Department" EntitySet="Department" />
+            <End Role="JobType" EntitySet="JobType" />
+          </AssociationSet>
+          <AssociationSet Name="Fk_RoleDepartmentAccess_DepartmentId" Association="TimeTrackerModel.Store.Fk_RoleDepartmentAccess_DepartmentId">
+            <End Role="Department" EntitySet="Department" />
+            <End Role="RoleDepartmentAccess" EntitySet="RoleDepartmentAccess" />
+          </AssociationSet>
+          <AssociationSet Name="Fk_RoleDepartmentAccess_RoleId" Association="TimeTrackerModel.Store.Fk_RoleDepartmentAccess_RoleId">
+            <End Role="Roles" EntitySet="Roles" />
+            <End Role="RoleDepartmentAccess" EntitySet="RoleDepartmentAccess" />
+          </AssociationSet>
+          <AssociationSet Name="Fk_RolesModuleAccess_ModuleId" Association="TimeTrackerModel.Store.Fk_RolesModuleAccess_ModuleId">
+            <End Role="Modules" EntitySet="Modules" />
+            <End Role="RolesModuleAccess" EntitySet="RolesModuleAccess" />
+          </AssociationSet>
+          <AssociationSet Name="Fk_RolesModuleAccess_RoleId" Association="TimeTrackerModel.Store.Fk_RolesModuleAccess_RoleId">
+            <End Role="Roles" EntitySet="Roles" />
+            <End Role="RolesModuleAccess" EntitySet="RolesModuleAccess" />
+          </AssociationSet>
+          <AssociationSet Name="Fk_SupervisorMapping_SupervisorId" Association="TimeTrackerModel.Store.Fk_SupervisorMapping_SupervisorId">
+            <End Role="Users" EntitySet="Users" />
+            <End Role="SupervisorMapping" EntitySet="SupervisorMapping" />
+          </AssociationSet>
+          <AssociationSet Name="Fk_SupervisorMapping_UserId" Association="TimeTrackerModel.Store.Fk_SupervisorMapping_UserId">
+            <End Role="Users" EntitySet="Users" />
+            <End Role="SupervisorMapping" EntitySet="SupervisorMapping" />
+          </AssociationSet>
+          <AssociationSet Name="fk_Users_DepartmentId" Association="TimeTrackerModel.Store.fk_Users_DepartmentId">
+            <End Role="Department" EntitySet="Department" />
+            <End Role="Users" EntitySet="Users" />
+          </AssociationSet>
+          <AssociationSet Name="fk_Users_RoleId" Association="TimeTrackerModel.Store.fk_Users_RoleId">
+            <End Role="Roles" EntitySet="Roles" />
+            <End Role="Users" EntitySet="Users" />
+          </AssociationSet>
         </EntityContainer>
         <EntityType Name="Department">
           <Key>
@@ -49,6 +111,9 @@
           <Property Name="UserId" Type="int" />
           <Property Name="ActionRequest" Type="varchar" MaxLength="30" />
           <Property Name="ScheduleDate" Type="datetime" />
+          <Property Name="SWNo" Type="varchar" MaxLength="80" />
+          <Property Name="HWNo" Type="varchar" MaxLength="80" />
+          <Property Name="JobStatus" Type="varchar" MaxLength="30" />
         </EntityType>
         <EntityType Name="JobTrackerHistory">
           <Key>
@@ -72,6 +137,9 @@
           <Property Name="Action" Type="varchar" MaxLength="30" />
           <Property Name="ScheduleDate" Type="datetime" />
           <Property Name="JobIdNumber" Type="varchar" MaxLength="80" />
+          <Property Name="SWNo" Type="varchar" MaxLength="80" />
+          <Property Name="HWNo" Type="varchar" MaxLength="80" />
+          <Property Name="JobStatus" Type="varchar" MaxLength="30" />
         </EntityType>
         <EntityType Name="JobType">
           <Key>
@@ -87,12 +155,12 @@
           <Property Name="RequiredJobId" Type="bit" />
           <Property Name="ComputeTime" Type="bit" />
         </EntityType>
-        <EntityType Name="Module">
+        <EntityType Name="Modules">
           <Key>
             <PropertyRef Name="Id" />
           </Key>
           <Property Name="Id" Type="int" Nullable="false" StoreGeneratedPattern="Identity" />
-          <Property Name="Module" Type="varchar" Nullable="false" MaxLength="50" />
+          <Property Name="Filename" Type="varchar" Nullable="false" MaxLength="50" />
           <Property Name="Description" Type="varchar" MaxLength="80" />
           <Property Name="ModuleType" Type="varchar" MaxLength="50" />
           <Property Name="ArrangementOrder" Type="int" />
@@ -130,6 +198,22 @@
           <Property Name="CanUpdate" Type="bit" />
           <Property Name="CanDelete" Type="bit" />
         </EntityType>
+        <EntityType Name="RolesSupervisor">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" Nullable="false" StoreGeneratedPattern="Identity" />
+          <Property Name="RoleId" Type="int" Nullable="false" />
+          <Property Name="SupervisorRoleId" Type="int" Nullable="false" />
+        </EntityType>
+        <EntityType Name="SupervisorMapping">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" Nullable="false" StoreGeneratedPattern="Identity" />
+          <Property Name="UserId" Type="int" Nullable="false" />
+          <Property Name="SupervisorId" Type="int" Nullable="false" />
+        </EntityType>
         <EntityType Name="Time">
           <Key>
             <PropertyRef Name="Id" />
@@ -149,7 +233,6 @@
           <Property Name="RoleId" Type="int" />
           <Property Name="DepartmentId" Type="int" />
           <Property Name="Username" Type="varchar" Nullable="false" MaxLength="20" />
-          <Property Name="Password" Type="varchar" MaxLength="20" />
           <Property Name="Email" Type="varchar" MaxLength="80" />
           <Property Name="Phone" Type="varchar" MaxLength="20" />
           <Property Name="Fax" Type="varchar" MaxLength="20" />
@@ -160,143 +243,311 @@
           <Property Name="LastUpdatedBy" Type="int" />
           <Property Name="Status" Type="varchar" MaxLength="30" />
           <Property Name="EmployeeNumber" Type="int" />
+          <Property Name="Password" Type="varchar" MaxLength="20" />
         </EntityType>
+        <Association Name="Fk_JobTracker_ApprovedBy">
+          <End Role="Users" Type="TimeTrackerModel.Store.Users" Multiplicity="0..1" />
+          <End Role="JobTracker" Type="TimeTrackerModel.Store.JobTracker" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Users">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="JobTracker">
+              <PropertyRef Name="ApprovedBy" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="Fk_JobTracker_JobTypeId">
+          <End Role="JobType" Type="TimeTrackerModel.Store.JobType" Multiplicity="0..1" />
+          <End Role="JobTracker" Type="TimeTrackerModel.Store.JobTracker" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="JobType">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="JobTracker">
+              <PropertyRef Name="JobTypeId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="Fk_JobTracker_UserId">
+          <End Role="Users" Type="TimeTrackerModel.Store.Users" Multiplicity="0..1" />
+          <End Role="JobTracker" Type="TimeTrackerModel.Store.JobTracker" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Users">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="JobTracker">
+              <PropertyRef Name="UserId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="Fk_JobTrackerHistory_ApprovedBy">
+          <End Role="Users" Type="TimeTrackerModel.Store.Users" Multiplicity="0..1" />
+          <End Role="JobTrackerHistory" Type="TimeTrackerModel.Store.JobTrackerHistory" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Users">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="JobTrackerHistory">
+              <PropertyRef Name="ApprovedBy" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="Fk_JobTrackerHistory_JobTypeId">
+          <End Role="JobType" Type="TimeTrackerModel.Store.JobType" Multiplicity="0..1" />
+          <End Role="JobTrackerHistory" Type="TimeTrackerModel.Store.JobTrackerHistory" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="JobType">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="JobTrackerHistory">
+              <PropertyRef Name="JobTypeId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="Fk_JobTrackerHistory_UserId">
+          <End Role="Users" Type="TimeTrackerModel.Store.Users" Multiplicity="0..1" />
+          <End Role="JobTrackerHistory" Type="TimeTrackerModel.Store.JobTrackerHistory" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Users">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="JobTrackerHistory">
+              <PropertyRef Name="UserId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="Fk_JobType_DepartmentId">
+          <End Role="Department" Type="TimeTrackerModel.Store.Department" Multiplicity="0..1" />
+          <End Role="JobType" Type="TimeTrackerModel.Store.JobType" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Department">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="JobType">
+              <PropertyRef Name="DepartmentId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="Fk_RoleDepartmentAccess_DepartmentId">
+          <End Role="Department" Type="TimeTrackerModel.Store.Department" Multiplicity="1" />
+          <End Role="RoleDepartmentAccess" Type="TimeTrackerModel.Store.RoleDepartmentAccess" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Department">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="RoleDepartmentAccess">
+              <PropertyRef Name="DepartmentId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="Fk_RoleDepartmentAccess_RoleId">
+          <End Role="Roles" Type="TimeTrackerModel.Store.Roles" Multiplicity="1" />
+          <End Role="RoleDepartmentAccess" Type="TimeTrackerModel.Store.RoleDepartmentAccess" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Roles">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="RoleDepartmentAccess">
+              <PropertyRef Name="RoleId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="Fk_RolesModuleAccess_ModuleId">
+          <End Role="Modules" Type="TimeTrackerModel.Store.Modules" Multiplicity="1" />
+          <End Role="RolesModuleAccess" Type="TimeTrackerModel.Store.RolesModuleAccess" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Modules">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="RolesModuleAccess">
+              <PropertyRef Name="ModuleId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="Fk_RolesModuleAccess_RoleId">
+          <End Role="Roles" Type="TimeTrackerModel.Store.Roles" Multiplicity="1" />
+          <End Role="RolesModuleAccess" Type="TimeTrackerModel.Store.RolesModuleAccess" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Roles">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="RolesModuleAccess">
+              <PropertyRef Name="RoleId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="Fk_SupervisorMapping_SupervisorId">
+          <End Role="Users" Type="TimeTrackerModel.Store.Users" Multiplicity="1" />
+          <End Role="SupervisorMapping" Type="TimeTrackerModel.Store.SupervisorMapping" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Users">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="SupervisorMapping">
+              <PropertyRef Name="SupervisorId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="Fk_SupervisorMapping_UserId">
+          <End Role="Users" Type="TimeTrackerModel.Store.Users" Multiplicity="1" />
+          <End Role="SupervisorMapping" Type="TimeTrackerModel.Store.SupervisorMapping" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Users">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="SupervisorMapping">
+              <PropertyRef Name="UserId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="fk_Users_DepartmentId">
+          <End Role="Department" Type="TimeTrackerModel.Store.Department" Multiplicity="0..1" />
+          <End Role="Users" Type="TimeTrackerModel.Store.Users" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Department">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Users">
+              <PropertyRef Name="DepartmentId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="fk_Users_RoleId">
+          <End Role="Roles" Type="TimeTrackerModel.Store.Roles" Multiplicity="0..1" />
+          <End Role="Users" Type="TimeTrackerModel.Store.Users" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Roles">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Users">
+              <PropertyRef Name="RoleId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
       </Schema></edmx:StorageModels>
     <!-- CSDL content -->
     <edmx:ConceptualModels>
       <Schema Namespace="TimeTrackerModel" Alias="Self" p1:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:p1="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
         <EntityContainer Name="TimeTrackerEntities" p1:LazyLoadingEnabled="true">
-          <EntitySet Name="T_Departments" EntityType="TimeTrackerModel.T_Department" />
-          <EntitySet Name="T_JobTrackers" EntityType="TimeTrackerModel.T_JobTracker" />
-          <EntitySet Name="T_JobTypes" EntityType="TimeTrackerModel.T_JobType" />
-          <EntitySet Name="T_Users" EntityType="TimeTrackerModel.T_User" />
-          <EntitySet Name="T_Times" EntityType="TimeTrackerModel.T_Time" />
-          <EntitySet Name="T_Modules" EntityType="TimeTrackerModel.T_Module" />
-          <EntitySet Name="T_Roles" EntityType="TimeTrackerModel.T_Role" />
-          <EntitySet Name="T_RolesModuleAccess" EntityType="TimeTrackerModel.T_RolesModuleAccess" />
-          <EntitySet Name="T_RoleDepartmentAccess" EntityType="TimeTrackerModel.T_RoleDepartmentAccess" />
+          <EntitySet Name="T_Department" EntityType="TimeTrackerModel.T_Department" />
+          <EntitySet Name="T_JobTracker" EntityType="TimeTrackerModel.T_JobTracker" />
           <EntitySet Name="T_JobTrackerHistory" EntityType="TimeTrackerModel.T_JobTrackerHistory" />
+          <EntitySet Name="T_JobType" EntityType="TimeTrackerModel.T_JobType" />
+          <EntitySet Name="T_Modules" EntityType="TimeTrackerModel.T_Modules" />
+          <EntitySet Name="T_RoleDepartmentAccess" EntityType="TimeTrackerModel.T_RoleDepartmentAccess" />
+          <EntitySet Name="T_Roles" EntityType="TimeTrackerModel.T_Roles" />
+          <EntitySet Name="T_RolesModuleAccess" EntityType="TimeTrackerModel.T_RolesModuleAccess" />
+          <EntitySet Name="T_RolesSupervisor" EntityType="TimeTrackerModel.T_RolesSupervisor" />
+          <EntitySet Name="T_SupervisorMapping" EntityType="TimeTrackerModel.T_SupervisorMapping" />
+          <EntitySet Name="T_Time" EntityType="TimeTrackerModel.T_Time" />
+          <EntitySet Name="T_Users" EntityType="TimeTrackerModel.T_Users" />
+          <AssociationSet Name="Fk_JobType_DepartmentId" Association="TimeTrackerModel.Fk_JobType_DepartmentId">
+            <End Role="Department" EntitySet="T_Department" />
+            <End Role="JobType" EntitySet="T_JobType" />
+          </AssociationSet>
+          <AssociationSet Name="Fk_RoleDepartmentAccess_DepartmentId" Association="TimeTrackerModel.Fk_RoleDepartmentAccess_DepartmentId">
+            <End Role="Department" EntitySet="T_Department" />
+            <End Role="RoleDepartmentAccess" EntitySet="T_RoleDepartmentAccess" />
+          </AssociationSet>
+          <AssociationSet Name="fk_Users_DepartmentId" Association="TimeTrackerModel.fk_Users_DepartmentId">
+            <End Role="Department" EntitySet="T_Department" />
+            <End Role="User" EntitySet="T_Users" />
+          </AssociationSet>
+          <AssociationSet Name="Fk_JobTracker_ApprovedBy" Association="TimeTrackerModel.Fk_JobTracker_ApprovedBy">
+            <End Role="User" EntitySet="T_Users" />
+            <End Role="JobTracker" EntitySet="T_JobTracker" />
+          </AssociationSet>
+          <AssociationSet Name="Fk_JobTracker_JobTypeId" Association="TimeTrackerModel.Fk_JobTracker_JobTypeId">
+            <End Role="JobType" EntitySet="T_JobType" />
+            <End Role="JobTracker" EntitySet="T_JobTracker" />
+          </AssociationSet>
+          <AssociationSet Name="Fk_JobTracker_UserId" Association="TimeTrackerModel.Fk_JobTracker_UserId">
+            <End Role="User" EntitySet="T_Users" />
+            <End Role="JobTracker" EntitySet="T_JobTracker" />
+          </AssociationSet>
+          <AssociationSet Name="Fk_JobTrackerHistory_JobTrackerId" Association="TimeTrackerModel.Fk_JobTrackerHistory_JobTrackerId">
+            <End Role="JobTracker" EntitySet="T_JobTracker" />
+            <End Role="JobTrackerHistory" EntitySet="T_JobTrackerHistory" />
+          </AssociationSet>
+          <AssociationSet Name="Fk_JobTrackerHistory_ApprovedBy" Association="TimeTrackerModel.Fk_JobTrackerHistory_ApprovedBy">
+            <End Role="User" EntitySet="T_Users" />
+            <End Role="JobTrackerHistory" EntitySet="T_JobTrackerHistory" />
+          </AssociationSet>
+          <AssociationSet Name="Fk_JobTrackerHistory_JobTypeId" Association="TimeTrackerModel.Fk_JobTrackerHistory_JobTypeId">
+            <End Role="JobType" EntitySet="T_JobType" />
+            <End Role="JobTrackerHistory" EntitySet="T_JobTrackerHistory" />
+          </AssociationSet>
+          <AssociationSet Name="Fk_JobTrackerHistory_UserId" Association="TimeTrackerModel.Fk_JobTrackerHistory_UserId">
+            <End Role="User" EntitySet="T_Users" />
+            <End Role="JobTrackerHistory" EntitySet="T_JobTrackerHistory" />
+          </AssociationSet>
+          <AssociationSet Name="Fk_RolesModuleAccess_ModuleId" Association="TimeTrackerModel.Fk_RolesModuleAccess_ModuleId">
+            <End Role="Module" EntitySet="T_Modules" />
+            <End Role="RolesModuleAccess" EntitySet="T_RolesModuleAccess" />
+          </AssociationSet>
+          <AssociationSet Name="Fk_RoleDepartmentAccess_RoleId" Association="TimeTrackerModel.Fk_RoleDepartmentAccess_RoleId">
+            <End Role="Role" EntitySet="T_Roles" />
+            <End Role="RoleDepartmentAccess" EntitySet="T_RoleDepartmentAccess" />
+          </AssociationSet>
+          <AssociationSet Name="Fk_RolesModuleAccess_RoleId" Association="TimeTrackerModel.Fk_RolesModuleAccess_RoleId">
+            <End Role="Role" EntitySet="T_Roles" />
+            <End Role="RolesModuleAccess" EntitySet="T_RolesModuleAccess" />
+          </AssociationSet>
+          <AssociationSet Name="fk_Users_RoleId" Association="TimeTrackerModel.fk_Users_RoleId">
+            <End Role="Role" EntitySet="T_Roles" />
+            <End Role="User" EntitySet="T_Users" />
+          </AssociationSet>
+          <AssociationSet Name="Fk_SupervisorMapping_SupervisorId" Association="TimeTrackerModel.Fk_SupervisorMapping_SupervisorId">
+            <End Role="User" EntitySet="T_Users" />
+            <End Role="SupervisorMapping" EntitySet="T_SupervisorMapping" />
+          </AssociationSet>
+          <AssociationSet Name="Fk_SupervisorMapping_UserId" Association="TimeTrackerModel.Fk_SupervisorMapping_UserId">
+            <End Role="User" EntitySet="T_Users" />
+            <End Role="SupervisorMapping" EntitySet="T_SupervisorMapping" />
+          </AssociationSet>
         </EntityContainer>
         <EntityType Name="T_Department">
           <Key>
             <PropertyRef Name="Id" />
           </Key>
-          <Property Name="Id" Type="Int32" Nullable="false" p1:StoreGeneratedPattern="Identity" />
-          <Property Name="Description" Type="String" MaxLength="80" Unicode="false" FixedLength="false" />
-          <Property Name="CreateDate" Type="DateTime" Precision="3" />
-          <Property Name="LastUpdateDate" Type="DateTime" Precision="3" />
-          <Property Name="CreatedBy" Type="Int32" />
-          <Property Name="LastUpdatedBy" Type="Int32" />
+          <Property Type="Int32" Name="Id" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Type="String" Name="Description" MaxLength="80" FixedLength="false" Unicode="false" />
+          <Property Type="DateTime" Name="CreateDate" Precision="3" />
+          <Property Type="DateTime" Name="LastUpdateDate" Precision="3" />
+          <Property Type="Int32" Name="CreatedBy" />
+          <Property Type="Int32" Name="LastUpdatedBy" />
+          <NavigationProperty Name="M_obTypes" Relationship="TimeTrackerModel.Fk_JobType_DepartmentId" FromRole="Department" ToRole="JobType" />
+          <NavigationProperty Name="M_RoleDepartmentAccesses" Relationship="TimeTrackerModel.Fk_RoleDepartmentAccess_DepartmentId" FromRole="Department" ToRole="RoleDepartmentAccess" />
+          <NavigationProperty Name="M_Users" Relationship="TimeTrackerModel.fk_Users_DepartmentId" FromRole="Department" ToRole="User" />
         </EntityType>
         <EntityType Name="T_JobTracker">
           <Key>
             <PropertyRef Name="Id" />
           </Key>
-          <Property Name="Id" Type="Int32" Nullable="false" p1:StoreGeneratedPattern="Identity" />
-          <Property Name="StartTime" Type="DateTime" Precision="3" />
-          <Property Name="EndTime" Type="DateTime" Precision="3" />
-          <Property Name="Description" Type="String" MaxLength="150" Unicode="false" FixedLength="false" />
-          <Property Name="JobTypeId" Type="Int32" />
-          <Property Name="JobIdNumber" Type="String" MaxLength="80" Unicode="false" FixedLength="false" />
-          <Property Name="Remarks" Type="String" MaxLength="Max" Unicode="false" FixedLength="false" />
-          <Property Name="ApprovedBy" Type="Int32" />
-          <Property Name="CreateDate" Type="DateTime" Precision="3" />
-          <Property Name="LastUpdateDate" Type="DateTime" Precision="3" />
-          <Property Name="CreatedBy" Type="Int32" />
-          <Property Name="LastUpdatedBy" Type="Int32" />
-          <Property Name="Status" Type="String" MaxLength="30" Unicode="false" FixedLength="false" />
-          <Property Name="SupervisorRemarks" Type="String" MaxLength="Max" Unicode="false" FixedLength="false" />
-          <Property Type="Int32" Name="UserId" />
-          <Property Type="String" Name="ActionRequest" MaxLength="30" FixedLength="false" Unicode="false" />
-          <Property Type="DateTime" Name="ScheduleDate" Precision="3" />
-        </EntityType>
-        <EntityType Name="T_JobType">
-          <Key>
-            <PropertyRef Name="Id" />
-          </Key>
-          <Property Name="Id" Type="Int32" Nullable="false" p1:StoreGeneratedPattern="Identity" />
-          <Property Name="Description" Type="String" MaxLength="150" Unicode="false" FixedLength="false" />
-          <Property Name="DepartmentId" Type="Int32" />
-          <Property Name="CreatedBy" Type="Int32" />
-          <Property Name="LastUpdatedBy" Type="Int32" />
-          <Property Name="CreateDate" Type="DateTime" Precision="3" />
-          <Property Name="LastUpdateDate" Type="DateTime" Precision="3" />
-          <Property Type="Boolean" Name="RequiredJobId" />
-          <Property Type="Boolean" Name="ComputeTime" />
-        </EntityType>
-        <EntityType Name="T_User">
-          <Key>
-            <PropertyRef Name="Id" />
-          </Key>
-          <Property Name="Id" Type="Int32" Nullable="false" p1:StoreGeneratedPattern="Identity" />
-          <Property Name="Firstname" Type="String" MaxLength="50" Unicode="false" FixedLength="false" />
-          <Property Name="Lastname" Type="String" MaxLength="50" Unicode="false" FixedLength="false" />
-          <Property Name="DepartmentId" Type="Int32" />
-          <Property Name="Username" Type="String" Nullable="false" MaxLength="20" Unicode="false" FixedLength="false" />
-          <Property Name="Password" Type="String" MaxLength="20" Unicode="false" FixedLength="false" />
-          <Property Name="Email" Type="String" MaxLength="80" Unicode="false" FixedLength="false" />
-          <Property Name="Phone" Type="String" MaxLength="20" Unicode="false" FixedLength="false" />
-          <Property Name="Fax" Type="String" MaxLength="20" Unicode="false" FixedLength="false" />
-          <Property Name="Mobile" Type="String" MaxLength="20" Unicode="false" FixedLength="false" />
-          <Property Name="CreateDate" Type="DateTime" Precision="3" />
-          <Property Name="LastUpdateDate" Type="DateTime" Precision="3" />
-          <Property Name="CreatedBy" Type="Int32" />
-          <Property Name="LastUpdatedBy" Type="Int32" />
-          <Property Name="Status" Type="String" MaxLength="30" Unicode="false" FixedLength="false" />
-          <Property Type="Int32" Name="RoleId" />
-          <Property Type="Int32" Name="EmployeeNumber" />
-        </EntityType>
-        <EntityType Name="T_Time">
-          <Key>
-            <PropertyRef Name="Id" />
-          </Key>
           <Property Type="Int32" Name="Id" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Type="String" Name="Description" Nullable="false" MaxLength="12" FixedLength="false" Unicode="false" />
-          <Property Type="String" Name="C24hrConversion" Nullable="false" MaxLength="12" FixedLength="false" Unicode="false" />
-          <Property Type="Int32" Name="Position" Nullable="false" />
-        </EntityType>
-        <EntityType Name="T_Module">
-          <Key>
-            <PropertyRef Name="Id" />
-          </Key>
-          <Property Type="Int32" Name="Id" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Type="String" Name="Module1" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
-          <Property Type="String" Name="Description" MaxLength="80" FixedLength="false" Unicode="false" />
-          <Property Type="String" Name="ModuleType" MaxLength="50" FixedLength="false" Unicode="false" />
-          <Property Type="Int32" Name="ArrangementOrder" />
-        </EntityType>
-        <EntityType Name="T_Role">
-          <Key>
-            <PropertyRef Name="Id" />
-          </Key>
-          <Property Type="Int32" Name="Id" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Type="String" Name="Description" MaxLength="100" FixedLength="false" Unicode="false" />
-          <Property Type="Int32" Name="Rank" />
+          <Property Type="DateTime" Name="StartTime" Precision="3" />
+          <Property Type="DateTime" Name="EndTime" Precision="3" />
+          <Property Type="String" Name="Description" MaxLength="150" FixedLength="false" Unicode="false" />
+          <Property Type="Int32" Name="JobTypeId" />
+          <Property Type="String" Name="JobIdNumber" MaxLength="80" FixedLength="false" Unicode="false" />
+          <Property Type="String" Name="Remarks" MaxLength="Max" FixedLength="false" Unicode="false" />
+          <Property Type="Int32" Name="ApprovedBy" />
           <Property Type="DateTime" Name="CreateDate" Precision="3" />
           <Property Type="DateTime" Name="LastUpdateDate" Precision="3" />
           <Property Type="Int32" Name="CreatedBy" />
           <Property Type="Int32" Name="LastUpdatedBy" />
-          <Property Type="Boolean" Name="IsSupervisor" />
-        </EntityType>
-        <EntityType Name="T_RolesModuleAccess">
-          <Key>
-            <PropertyRef Name="Id" />
-          </Key>
-          <Property Type="Int32" Name="Id" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Type="Int32" Name="ModuleId" Nullable="false" />
-          <Property Type="Boolean" Name="CanView" />
-          <Property Type="Boolean" Name="CanAdd" />
-          <Property Type="Boolean" Name="CanUpdate" />
-          <Property Type="Boolean" Name="CanDelete" />
-          <Property Type="Int32" Name="RoleId" Nullable="false" />
-        </EntityType>
-        <EntityType Name="T_RoleDepartmentAccess">
-          <Key>
-            <PropertyRef Name="Id" />
-          </Key>
-          <Property Type="Int32" Name="Id" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Type="Int32" Name="RoleId" Nullable="false" />
-          <Property Type="Int32" Name="DepartmentId" Nullable="false" />
+          <Property Type="String" Name="Status" MaxLength="30" FixedLength="false" Unicode="false" />
+          <Property Type="String" Name="SupervisorRemarks" MaxLength="Max" FixedLength="false" Unicode="false" />
+          <Property Type="Int32" Name="UserId" />
+          <Property Type="String" Name="ActionRequest" MaxLength="30" FixedLength="false" Unicode="false" />
+          <Property Type="DateTime" Name="ScheduleDate" Precision="3" />
+          <NavigationProperty Name="M_Supervisor" Relationship="TimeTrackerModel.Fk_JobTracker_ApprovedBy" FromRole="JobTracker" ToRole="User" />
+          <NavigationProperty Name="M_JobType" Relationship="TimeTrackerModel.Fk_JobTracker_JobTypeId" FromRole="JobTracker" ToRole="JobType" />
+          <NavigationProperty Name="M_User" Relationship="TimeTrackerModel.Fk_JobTracker_UserId" FromRole="JobTracker" ToRole="User" />
+          <Property Type="String" Name="SWNo" MaxLength="80" FixedLength="false" Unicode="false" />
+          <Property Type="String" Name="HWNo" MaxLength="80" FixedLength="false" Unicode="false" />
+          <Property Type="String" Name="JobStatus" MaxLength="30" FixedLength="false" Unicode="false" />
         </EntityType>
         <EntityType Name="T_JobTrackerHistory">
           <Key>
@@ -320,139 +571,370 @@
           <Property Type="String" Name="Action" MaxLength="30" FixedLength="false" Unicode="false" />
           <Property Type="DateTime" Name="ScheduleDate" Precision="3" />
           <Property Type="String" Name="JobIdNumber" MaxLength="80" FixedLength="false" Unicode="false" />
+          <NavigationProperty Name="M_Supervisor" Relationship="TimeTrackerModel.Fk_JobTrackerHistory_ApprovedBy" FromRole="JobTrackerHistory" ToRole="User" />
+          <NavigationProperty Name="M_JobType" Relationship="TimeTrackerModel.Fk_JobTrackerHistory_JobTypeId" FromRole="JobTrackerHistory" ToRole="JobType" />
+          <NavigationProperty Name="M_User" Relationship="TimeTrackerModel.Fk_JobTrackerHistory_UserId" FromRole="JobTrackerHistory" ToRole="User" />
+          <Property Type="String" Name="SWNo" MaxLength="80" FixedLength="false" Unicode="false" />
+          <Property Type="String" Name="HWNo" MaxLength="80" FixedLength="false" Unicode="false" />
+          <Property Type="String" Name="JobStatus" MaxLength="30" FixedLength="false" Unicode="false" />
         </EntityType>
+        <EntityType Name="T_JobType">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Type="Int32" Name="Id" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Type="String" Name="Description" MaxLength="150" FixedLength="false" Unicode="false" />
+          <Property Type="Int32" Name="DepartmentId" />
+          <Property Type="Int32" Name="CreatedBy" />
+          <Property Type="Int32" Name="LastUpdatedBy" />
+          <Property Type="DateTime" Name="CreateDate" Precision="3" />
+          <Property Type="DateTime" Name="LastUpdateDate" Precision="3" />
+          <Property Type="Boolean" Name="RequiredJobId" />
+          <Property Type="Boolean" Name="ComputeTime" />
+          <NavigationProperty Name="M_Department" Relationship="TimeTrackerModel.Fk_JobType_DepartmentId" FromRole="JobType" ToRole="Department" />
+          <NavigationProperty Name="M_JobTrackers" Relationship="TimeTrackerModel.Fk_JobTracker_JobTypeId" FromRole="JobType" ToRole="JobTracker" />
+          <NavigationProperty Name="M_JobTrackerHistories" Relationship="TimeTrackerModel.Fk_JobTrackerHistory_JobTypeId" FromRole="JobType" ToRole="JobTrackerHistory" />
+        </EntityType>
+        <EntityType Name="T_Modules">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Type="Int32" Name="Id" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Type="String" Name="Description" MaxLength="80" FixedLength="false" Unicode="false" />
+          <Property Type="String" Name="ModuleType" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Type="Int32" Name="ArrangementOrder" />
+          <NavigationProperty Name="M_RolesModuleAccesses" Relationship="TimeTrackerModel.Fk_RolesModuleAccess_ModuleId" FromRole="Module" ToRole="RolesModuleAccess" />
+          <Property Type="String" Name="Filename" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
+        </EntityType>
+        <EntityType Name="T_RoleDepartmentAccess">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Type="Int32" Name="Id" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Type="Int32" Name="RoleId" Nullable="false" />
+          <Property Type="Int32" Name="DepartmentId" Nullable="false" />
+          <NavigationProperty Name="M_Department" Relationship="TimeTrackerModel.Fk_RoleDepartmentAccess_DepartmentId" FromRole="RoleDepartmentAccess" ToRole="Department" />
+          <NavigationProperty Name="M_Role" Relationship="TimeTrackerModel.Fk_RoleDepartmentAccess_RoleId" FromRole="RoleDepartmentAccess" ToRole="Role" />
+        </EntityType>
+        <EntityType Name="T_Roles">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Type="Int32" Name="Id" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Type="String" Name="Description" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Type="Int32" Name="Rank" />
+          <Property Type="DateTime" Name="CreateDate" Precision="3" />
+          <Property Type="DateTime" Name="LastUpdateDate" Precision="3" />
+          <Property Type="Int32" Name="CreatedBy" />
+          <Property Type="Int32" Name="LastUpdatedBy" />
+          <Property Type="Boolean" Name="IsSupervisor" />
+          <NavigationProperty Name="M_RoleDepartmentAccesses" Relationship="TimeTrackerModel.Fk_RoleDepartmentAccess_RoleId" FromRole="Role" ToRole="RoleDepartmentAccess" />
+          <NavigationProperty Name="M_RolesModuleAccesses" Relationship="TimeTrackerModel.Fk_RolesModuleAccess_RoleId" FromRole="Role" ToRole="RolesModuleAccess" />
+          <NavigationProperty Name="M_Users" Relationship="TimeTrackerModel.fk_Users_RoleId" FromRole="Role" ToRole="User" />
+        </EntityType>
+        <EntityType Name="T_RolesModuleAccess">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Type="Int32" Name="Id" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Type="Int32" Name="RoleId" Nullable="false" />
+          <Property Type="Int32" Name="ModuleId" Nullable="false" />
+          <Property Type="Boolean" Name="CanView" />
+          <Property Type="Boolean" Name="CanAdd" />
+          <Property Type="Boolean" Name="CanUpdate" />
+          <Property Type="Boolean" Name="CanDelete" />
+          <NavigationProperty Name="M_Module" Relationship="TimeTrackerModel.Fk_RolesModuleAccess_ModuleId" FromRole="RolesModuleAccess" ToRole="Module" />
+          <NavigationProperty Name="M_Role" Relationship="TimeTrackerModel.Fk_RolesModuleAccess_RoleId" FromRole="RolesModuleAccess" ToRole="Role" />
+        </EntityType>
+        <EntityType Name="T_RolesSupervisor">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Type="Int32" Name="Id" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Type="Int32" Name="RoleId" Nullable="false" />
+          <Property Type="Int32" Name="SupervisorRoleId" Nullable="false" />
+        </EntityType>
+        <EntityType Name="T_SupervisorMapping">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Type="Int32" Name="Id" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Type="Int32" Name="UserId" Nullable="false" />
+          <Property Type="Int32" Name="SupervisorId" Nullable="false" />
+          <NavigationProperty Name="M_Supervisor" Relationship="TimeTrackerModel.Fk_SupervisorMapping_SupervisorId" FromRole="SupervisorMapping" ToRole="User" />
+          <NavigationProperty Name="M_User" Relationship="TimeTrackerModel.Fk_SupervisorMapping_UserId" FromRole="SupervisorMapping" ToRole="User" />
+        </EntityType>
+        <EntityType Name="T_Time">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Type="Int32" Name="Id" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Type="String" Name="Description" Nullable="false" MaxLength="12" FixedLength="false" Unicode="false" />
+          <Property Type="String" Name="C24hrConversion" Nullable="false" MaxLength="12" FixedLength="false" Unicode="false" />
+          <Property Type="Int32" Name="Position" Nullable="false" />
+        </EntityType>
+        <EntityType Name="T_Users">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Type="Int32" Name="Id" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Type="String" Name="Firstname" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Type="String" Name="Lastname" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Type="Int32" Name="RoleId" />
+          <Property Type="Int32" Name="DepartmentId" />
+          <Property Type="String" Name="Username" Nullable="false" MaxLength="20" FixedLength="false" Unicode="false" />
+          <Property Type="String" Name="Email" MaxLength="80" FixedLength="false" Unicode="false" />
+          <Property Type="String" Name="Phone" MaxLength="20" FixedLength="false" Unicode="false" />
+          <Property Type="String" Name="Fax" MaxLength="20" FixedLength="false" Unicode="false" />
+          <Property Type="String" Name="Mobile" MaxLength="20" FixedLength="false" Unicode="false" />
+          <Property Type="DateTime" Name="CreateDate" Precision="3" />
+          <Property Type="DateTime" Name="LastUpdateDate" Precision="3" />
+          <Property Type="Int32" Name="CreatedBy" />
+          <Property Type="Int32" Name="LastUpdatedBy" />
+          <Property Type="String" Name="Status" MaxLength="30" FixedLength="false" Unicode="false" />
+          <Property Type="Int32" Name="EmployeeNumber" />
+          <Property Type="String" Name="Password" MaxLength="20" FixedLength="false" Unicode="false" />
+          <NavigationProperty Name="M_Department" Relationship="TimeTrackerModel.fk_Users_DepartmentId" FromRole="User" ToRole="Department" />
+          <NavigationProperty Name="M_JobTrackersSupervisor" Relationship="TimeTrackerModel.Fk_JobTracker_ApprovedBy" FromRole="User" ToRole="JobTracker" />
+          <NavigationProperty Name="M_JobTrackersUsers" Relationship="TimeTrackerModel.Fk_JobTracker_UserId" FromRole="User" ToRole="JobTracker" />
+          <NavigationProperty Name="M_JobTrackerHistoriesSup" Relationship="TimeTrackerModel.Fk_JobTrackerHistory_ApprovedBy" FromRole="User" ToRole="JobTrackerHistory" />
+          <NavigationProperty Name="M_JobTrackerHistoriesUsers" Relationship="TimeTrackerModel.Fk_JobTrackerHistory_UserId" FromRole="User" ToRole="JobTrackerHistory" />
+          <NavigationProperty Name="M_Role" Relationship="TimeTrackerModel.fk_Users_RoleId" FromRole="User" ToRole="Role" />
+          <NavigationProperty Name="M_SupervisorMappingSupervisors" Relationship="TimeTrackerModel.Fk_SupervisorMapping_SupervisorId" FromRole="User" ToRole="SupervisorMapping" />
+          <NavigationProperty Name="M_SupervisorMappingUsers" Relationship="TimeTrackerModel.Fk_SupervisorMapping_UserId" FromRole="User" ToRole="SupervisorMapping" />
+        </EntityType>
+        <Association Name="Fk_JobType_DepartmentId">
+          <End Type="TimeTrackerModel.T_Department" Role="Department" Multiplicity="0..1" />
+          <End Type="TimeTrackerModel.T_JobType" Role="JobType" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Department">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="JobType">
+              <PropertyRef Name="DepartmentId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="Fk_RoleDepartmentAccess_DepartmentId">
+          <End Type="TimeTrackerModel.T_Department" Role="Department" Multiplicity="1" />
+          <End Type="TimeTrackerModel.T_RoleDepartmentAccess" Role="RoleDepartmentAccess" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Department">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="RoleDepartmentAccess">
+              <PropertyRef Name="DepartmentId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="fk_Users_DepartmentId">
+          <End Type="TimeTrackerModel.T_Department" Role="Department" Multiplicity="0..1" />
+          <End Type="TimeTrackerModel.T_Users" Role="User" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Department">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="User">
+              <PropertyRef Name="DepartmentId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="Fk_JobTracker_ApprovedBy">
+          <End Type="TimeTrackerModel.T_Users" Role="User" Multiplicity="0..1" />
+          <End Type="TimeTrackerModel.T_JobTracker" Role="JobTracker" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="User">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="JobTracker">
+              <PropertyRef Name="ApprovedBy" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="Fk_JobTracker_JobTypeId">
+          <End Type="TimeTrackerModel.T_JobType" Role="JobType" Multiplicity="0..1" />
+          <End Type="TimeTrackerModel.T_JobTracker" Role="JobTracker" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="JobType">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="JobTracker">
+              <PropertyRef Name="JobTypeId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="Fk_JobTracker_UserId">
+          <End Type="TimeTrackerModel.T_Users" Role="User" Multiplicity="0..1" />
+          <End Type="TimeTrackerModel.T_JobTracker" Role="JobTracker" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="User">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="JobTracker">
+              <PropertyRef Name="UserId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="Fk_JobTrackerHistory_JobTrackerId">
+          <End Type="TimeTrackerModel.T_JobTracker" Role="JobTracker" Multiplicity="1" />
+          <End Type="TimeTrackerModel.T_JobTrackerHistory" Role="JobTrackerHistory" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="JobTracker">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="JobTrackerHistory">
+              <PropertyRef Name="JobTrackerId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="Fk_JobTrackerHistory_ApprovedBy">
+          <End Type="TimeTrackerModel.T_Users" Role="User" Multiplicity="0..1" />
+          <End Type="TimeTrackerModel.T_JobTrackerHistory" Role="JobTrackerHistory" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="User">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="JobTrackerHistory">
+              <PropertyRef Name="ApprovedBy" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="Fk_JobTrackerHistory_JobTypeId">
+          <End Type="TimeTrackerModel.T_JobType" Role="JobType" Multiplicity="0..1" />
+          <End Type="TimeTrackerModel.T_JobTrackerHistory" Role="JobTrackerHistory" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="JobType">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="JobTrackerHistory">
+              <PropertyRef Name="JobTypeId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="Fk_JobTrackerHistory_UserId">
+          <End Type="TimeTrackerModel.T_Users" Role="User" Multiplicity="0..1" />
+          <End Type="TimeTrackerModel.T_JobTrackerHistory" Role="JobTrackerHistory" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="User">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="JobTrackerHistory">
+              <PropertyRef Name="UserId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="Fk_RolesModuleAccess_ModuleId">
+          <End Type="TimeTrackerModel.T_Modules" Role="Module" Multiplicity="1" />
+          <End Type="TimeTrackerModel.T_RolesModuleAccess" Role="RolesModuleAccess" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Module">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="RolesModuleAccess">
+              <PropertyRef Name="ModuleId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="Fk_RoleDepartmentAccess_RoleId">
+          <End Type="TimeTrackerModel.T_Roles" Role="Role" Multiplicity="1" />
+          <End Type="TimeTrackerModel.T_RoleDepartmentAccess" Role="RoleDepartmentAccess" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Role">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="RoleDepartmentAccess">
+              <PropertyRef Name="RoleId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="Fk_RolesModuleAccess_RoleId">
+          <End Type="TimeTrackerModel.T_Roles" Role="Role" Multiplicity="1" />
+          <End Type="TimeTrackerModel.T_RolesModuleAccess" Role="RolesModuleAccess" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Role">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="RolesModuleAccess">
+              <PropertyRef Name="RoleId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="fk_Users_RoleId">
+          <End Type="TimeTrackerModel.T_Roles" Role="Role" Multiplicity="0..1" />
+          <End Type="TimeTrackerModel.T_Users" Role="User" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Role">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="User">
+              <PropertyRef Name="RoleId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="Fk_SupervisorMapping_SupervisorId">
+          <End Type="TimeTrackerModel.T_Users" Role="User" Multiplicity="1" />
+          <End Type="TimeTrackerModel.T_SupervisorMapping" Role="SupervisorMapping" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="User">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="SupervisorMapping">
+              <PropertyRef Name="SupervisorId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="Fk_SupervisorMapping_UserId">
+          <End Type="TimeTrackerModel.T_Users" Role="User" Multiplicity="1" />
+          <End Type="TimeTrackerModel.T_SupervisorMapping" Role="SupervisorMapping" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="User">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="SupervisorMapping">
+              <PropertyRef Name="UserId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
       </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
     <edmx:Mappings>
       <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
         <EntityContainerMapping StorageEntityContainer="TimeTrackerModelStoreContainer" CdmEntityContainer="TimeTrackerEntities">
-          <EntitySetMapping Name="T_Departments">
+          <EntitySetMapping Name="T_Department">
             <EntityTypeMapping TypeName="TimeTrackerModel.T_Department">
               <MappingFragment StoreEntitySet="Department">
-                <ScalarProperty Name="Id" ColumnName="Id" />
-                <ScalarProperty Name="Description" ColumnName="Description" />
-                <ScalarProperty Name="CreateDate" ColumnName="CreateDate" />
-                <ScalarProperty Name="LastUpdateDate" ColumnName="LastUpdateDate" />
-                <ScalarProperty Name="CreatedBy" ColumnName="CreatedBy" />
                 <ScalarProperty Name="LastUpdatedBy" ColumnName="LastUpdatedBy" />
+                <ScalarProperty Name="CreatedBy" ColumnName="CreatedBy" />
+                <ScalarProperty Name="LastUpdateDate" ColumnName="LastUpdateDate" />
+                <ScalarProperty Name="CreateDate" ColumnName="CreateDate" />
+                <ScalarProperty Name="Description" ColumnName="Description" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
-          <EntitySetMapping Name="T_JobTrackers">
+          <EntitySetMapping Name="T_JobTracker">
             <EntityTypeMapping TypeName="TimeTrackerModel.T_JobTracker">
               <MappingFragment StoreEntitySet="JobTracker">
+                <ScalarProperty Name="JobStatus" ColumnName="JobStatus" />
+                <ScalarProperty Name="HWNo" ColumnName="HWNo" />
+                <ScalarProperty Name="SWNo" ColumnName="SWNo" />
                 <ScalarProperty Name="ScheduleDate" ColumnName="ScheduleDate" />
                 <ScalarProperty Name="ActionRequest" ColumnName="ActionRequest" />
                 <ScalarProperty Name="UserId" ColumnName="UserId" />
-                <ScalarProperty Name="Id" ColumnName="Id" />
-                <ScalarProperty Name="StartTime" ColumnName="StartTime" />
-                <ScalarProperty Name="EndTime" ColumnName="EndTime" />
-                <ScalarProperty Name="Description" ColumnName="Description" />
-                <ScalarProperty Name="JobTypeId" ColumnName="JobTypeId" />
-                <ScalarProperty Name="JobIdNumber" ColumnName="JobIdNumber" />
-                <ScalarProperty Name="Remarks" ColumnName="Remarks" />
-                <ScalarProperty Name="ApprovedBy" ColumnName="ApprovedBy" />
-                <ScalarProperty Name="CreateDate" ColumnName="CreateDate" />
-                <ScalarProperty Name="LastUpdateDate" ColumnName="LastUpdateDate" />
-                <ScalarProperty Name="CreatedBy" ColumnName="CreatedBy" />
-                <ScalarProperty Name="LastUpdatedBy" ColumnName="LastUpdatedBy" />
-                <ScalarProperty Name="Status" ColumnName="Status" />
                 <ScalarProperty Name="SupervisorRemarks" ColumnName="SupervisorRemarks" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
-          <EntitySetMapping Name="T_JobTypes">
-            <EntityTypeMapping TypeName="TimeTrackerModel.T_JobType">
-              <MappingFragment StoreEntitySet="JobType">
-                <ScalarProperty Name="ComputeTime" ColumnName="ComputeTime" />
-                <ScalarProperty Name="RequiredJobId" ColumnName="RequiredJobId" />
-                <ScalarProperty Name="Id" ColumnName="Id" />
-                <ScalarProperty Name="Description" ColumnName="Description" />
-                <ScalarProperty Name="DepartmentId" ColumnName="DepartmentId" />
-                <ScalarProperty Name="CreatedBy" ColumnName="CreatedBy" />
-                <ScalarProperty Name="LastUpdatedBy" ColumnName="LastUpdatedBy" />
-                <ScalarProperty Name="CreateDate" ColumnName="CreateDate" />
-                <ScalarProperty Name="LastUpdateDate" ColumnName="LastUpdateDate" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
-          <EntitySetMapping Name="T_Users">
-            <EntityTypeMapping TypeName="TimeTrackerModel.T_User">
-              <MappingFragment StoreEntitySet="Users">
-                <ScalarProperty Name="EmployeeNumber" ColumnName="EmployeeNumber" />
-                <ScalarProperty Name="RoleId" ColumnName="RoleId" />
-                <ScalarProperty Name="Id" ColumnName="Id" />
-                <ScalarProperty Name="Firstname" ColumnName="Firstname" />
-                <ScalarProperty Name="Lastname" ColumnName="Lastname" />
-                <ScalarProperty Name="DepartmentId" ColumnName="DepartmentId" />
-                <ScalarProperty Name="Username" ColumnName="Username" />
-                <ScalarProperty Name="Password" ColumnName="Password" />
-                <ScalarProperty Name="Email" ColumnName="Email" />
-                <ScalarProperty Name="Phone" ColumnName="Phone" />
-                <ScalarProperty Name="Fax" ColumnName="Fax" />
-                <ScalarProperty Name="Mobile" ColumnName="Mobile" />
-                <ScalarProperty Name="CreateDate" ColumnName="CreateDate" />
-                <ScalarProperty Name="LastUpdateDate" ColumnName="LastUpdateDate" />
-                <ScalarProperty Name="CreatedBy" ColumnName="CreatedBy" />
-                <ScalarProperty Name="LastUpdatedBy" ColumnName="LastUpdatedBy" />
                 <ScalarProperty Name="Status" ColumnName="Status" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
-          <EntitySetMapping Name="T_Times">
-            <EntityTypeMapping TypeName="TimeTrackerModel.T_Time">
-              <MappingFragment StoreEntitySet="Time">
-                <ScalarProperty Name="Position" ColumnName="Position" />
-                <ScalarProperty Name="C24hrConversion" ColumnName="24hrConversion" />
-                <ScalarProperty Name="Description" ColumnName="Description" />
-                <ScalarProperty Name="Id" ColumnName="Id" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
-          <EntitySetMapping Name="T_Modules">
-            <EntityTypeMapping TypeName="TimeTrackerModel.T_Module">
-              <MappingFragment StoreEntitySet="Module">
-                <ScalarProperty Name="ArrangementOrder" ColumnName="ArrangementOrder" />
-                <ScalarProperty Name="ModuleType" ColumnName="ModuleType" />
-                <ScalarProperty Name="Description" ColumnName="Description" />
-                <ScalarProperty Name="Module1" ColumnName="Module" />
-                <ScalarProperty Name="Id" ColumnName="Id" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
-          <EntitySetMapping Name="T_Roles">
-            <EntityTypeMapping TypeName="TimeTrackerModel.T_Role">
-              <MappingFragment StoreEntitySet="Roles">
-                <ScalarProperty Name="IsSupervisor" ColumnName="IsSupervisor" />
                 <ScalarProperty Name="LastUpdatedBy" ColumnName="LastUpdatedBy" />
                 <ScalarProperty Name="CreatedBy" ColumnName="CreatedBy" />
                 <ScalarProperty Name="LastUpdateDate" ColumnName="LastUpdateDate" />
                 <ScalarProperty Name="CreateDate" ColumnName="CreateDate" />
-                <ScalarProperty Name="Rank" ColumnName="Rank" />
+                <ScalarProperty Name="ApprovedBy" ColumnName="ApprovedBy" />
+                <ScalarProperty Name="Remarks" ColumnName="Remarks" />
+                <ScalarProperty Name="JobIdNumber" ColumnName="JobIdNumber" />
+                <ScalarProperty Name="JobTypeId" ColumnName="JobTypeId" />
                 <ScalarProperty Name="Description" ColumnName="Description" />
-                <ScalarProperty Name="Id" ColumnName="Id" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
-          <EntitySetMapping Name="T_RolesModuleAccess">
-            <EntityTypeMapping TypeName="TimeTrackerModel.T_RolesModuleAccess">
-              <MappingFragment StoreEntitySet="RolesModuleAccess">
-                <ScalarProperty Name="RoleId" ColumnName="RoleId" />
-                <ScalarProperty Name="CanDelete" ColumnName="CanDelete" />
-                <ScalarProperty Name="CanUpdate" ColumnName="CanUpdate" />
-                <ScalarProperty Name="CanAdd" ColumnName="CanAdd" />
-                <ScalarProperty Name="CanView" ColumnName="CanView" />
-                <ScalarProperty Name="ModuleId" ColumnName="ModuleId" />
-                <ScalarProperty Name="Id" ColumnName="Id" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
-          <EntitySetMapping Name="T_RoleDepartmentAccess">
-            <EntityTypeMapping TypeName="TimeTrackerModel.T_RoleDepartmentAccess">
-              <MappingFragment StoreEntitySet="RoleDepartmentAccess">
-                <ScalarProperty Name="DepartmentId" ColumnName="DepartmentId" />
-                <ScalarProperty Name="RoleId" ColumnName="RoleId" />
+                <ScalarProperty Name="EndTime" ColumnName="EndTime" />
+                <ScalarProperty Name="StartTime" ColumnName="StartTime" />
                 <ScalarProperty Name="Id" ColumnName="Id" />
               </MappingFragment>
             </EntityTypeMapping>
@@ -460,6 +942,9 @@
           <EntitySetMapping Name="T_JobTrackerHistory">
             <EntityTypeMapping TypeName="TimeTrackerModel.T_JobTrackerHistory">
               <MappingFragment StoreEntitySet="JobTrackerHistory">
+                <ScalarProperty Name="JobStatus" ColumnName="JobStatus" />
+                <ScalarProperty Name="HWNo" ColumnName="HWNo" />
+                <ScalarProperty Name="SWNo" ColumnName="SWNo" />
                 <ScalarProperty Name="JobIdNumber" ColumnName="JobIdNumber" />
                 <ScalarProperty Name="ScheduleDate" ColumnName="ScheduleDate" />
                 <ScalarProperty Name="Action" ColumnName="Action" />
@@ -477,6 +962,119 @@
                 <ScalarProperty Name="EndTime" ColumnName="EndTime" />
                 <ScalarProperty Name="StartTime" ColumnName="StartTime" />
                 <ScalarProperty Name="JobTrackerId" ColumnName="JobTrackerId" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="T_JobType">
+            <EntityTypeMapping TypeName="TimeTrackerModel.T_JobType">
+              <MappingFragment StoreEntitySet="JobType">
+                <ScalarProperty Name="ComputeTime" ColumnName="ComputeTime" />
+                <ScalarProperty Name="RequiredJobId" ColumnName="RequiredJobId" />
+                <ScalarProperty Name="LastUpdateDate" ColumnName="LastUpdateDate" />
+                <ScalarProperty Name="CreateDate" ColumnName="CreateDate" />
+                <ScalarProperty Name="LastUpdatedBy" ColumnName="LastUpdatedBy" />
+                <ScalarProperty Name="CreatedBy" ColumnName="CreatedBy" />
+                <ScalarProperty Name="DepartmentId" ColumnName="DepartmentId" />
+                <ScalarProperty Name="Description" ColumnName="Description" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="T_Modules">
+            <EntityTypeMapping TypeName="TimeTrackerModel.T_Modules">
+              <MappingFragment StoreEntitySet="Modules">
+                <ScalarProperty Name="Filename" ColumnName="Filename" />
+                <ScalarProperty Name="ArrangementOrder" ColumnName="ArrangementOrder" />
+                <ScalarProperty Name="ModuleType" ColumnName="ModuleType" />
+                <ScalarProperty Name="Description" ColumnName="Description" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="T_RoleDepartmentAccess">
+            <EntityTypeMapping TypeName="TimeTrackerModel.T_RoleDepartmentAccess">
+              <MappingFragment StoreEntitySet="RoleDepartmentAccess">
+                <ScalarProperty Name="DepartmentId" ColumnName="DepartmentId" />
+                <ScalarProperty Name="RoleId" ColumnName="RoleId" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="T_Roles">
+            <EntityTypeMapping TypeName="TimeTrackerModel.T_Roles">
+              <MappingFragment StoreEntitySet="Roles">
+                <ScalarProperty Name="IsSupervisor" ColumnName="IsSupervisor" />
+                <ScalarProperty Name="LastUpdatedBy" ColumnName="LastUpdatedBy" />
+                <ScalarProperty Name="CreatedBy" ColumnName="CreatedBy" />
+                <ScalarProperty Name="LastUpdateDate" ColumnName="LastUpdateDate" />
+                <ScalarProperty Name="CreateDate" ColumnName="CreateDate" />
+                <ScalarProperty Name="Rank" ColumnName="Rank" />
+                <ScalarProperty Name="Description" ColumnName="Description" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="T_RolesModuleAccess">
+            <EntityTypeMapping TypeName="TimeTrackerModel.T_RolesModuleAccess">
+              <MappingFragment StoreEntitySet="RolesModuleAccess">
+                <ScalarProperty Name="CanDelete" ColumnName="CanDelete" />
+                <ScalarProperty Name="CanUpdate" ColumnName="CanUpdate" />
+                <ScalarProperty Name="CanAdd" ColumnName="CanAdd" />
+                <ScalarProperty Name="CanView" ColumnName="CanView" />
+                <ScalarProperty Name="ModuleId" ColumnName="ModuleId" />
+                <ScalarProperty Name="RoleId" ColumnName="RoleId" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="T_RolesSupervisor">
+            <EntityTypeMapping TypeName="TimeTrackerModel.T_RolesSupervisor">
+              <MappingFragment StoreEntitySet="RolesSupervisor">
+                <ScalarProperty Name="SupervisorRoleId" ColumnName="SupervisorRoleId" />
+                <ScalarProperty Name="RoleId" ColumnName="RoleId" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="T_SupervisorMapping">
+            <EntityTypeMapping TypeName="TimeTrackerModel.T_SupervisorMapping">
+              <MappingFragment StoreEntitySet="SupervisorMapping">
+                <ScalarProperty Name="SupervisorId" ColumnName="SupervisorId" />
+                <ScalarProperty Name="UserId" ColumnName="UserId" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="T_Time">
+            <EntityTypeMapping TypeName="TimeTrackerModel.T_Time">
+              <MappingFragment StoreEntitySet="Time">
+                <ScalarProperty Name="Position" ColumnName="Position" />
+                <ScalarProperty Name="C24hrConversion" ColumnName="24hrConversion" />
+                <ScalarProperty Name="Description" ColumnName="Description" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="T_Users">
+            <EntityTypeMapping TypeName="TimeTrackerModel.T_Users">
+              <MappingFragment StoreEntitySet="Users">
+                <ScalarProperty Name="Password" ColumnName="Password" />
+                <ScalarProperty Name="EmployeeNumber" ColumnName="EmployeeNumber" />
+                <ScalarProperty Name="Status" ColumnName="Status" />
+                <ScalarProperty Name="LastUpdatedBy" ColumnName="LastUpdatedBy" />
+                <ScalarProperty Name="CreatedBy" ColumnName="CreatedBy" />
+                <ScalarProperty Name="LastUpdateDate" ColumnName="LastUpdateDate" />
+                <ScalarProperty Name="CreateDate" ColumnName="CreateDate" />
+                <ScalarProperty Name="Mobile" ColumnName="Mobile" />
+                <ScalarProperty Name="Fax" ColumnName="Fax" />
+                <ScalarProperty Name="Phone" ColumnName="Phone" />
+                <ScalarProperty Name="Email" ColumnName="Email" />
+                <ScalarProperty Name="Username" ColumnName="Username" />
+                <ScalarProperty Name="DepartmentId" ColumnName="DepartmentId" />
+                <ScalarProperty Name="RoleId" ColumnName="RoleId" />
+                <ScalarProperty Name="Lastname" ColumnName="Lastname" />
+                <ScalarProperty Name="Firstname" ColumnName="Firstname" />
                 <ScalarProperty Name="Id" ColumnName="Id" />
               </MappingFragment>
             </EntityTypeMapping>

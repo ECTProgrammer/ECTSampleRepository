@@ -12,15 +12,13 @@ namespace TimeTracker
     using System;
     using System.Collections.Generic;
     
-    public partial class T_Role
+    public partial class T_SupervisorMapping
     {
         public int Id { get; set; }
-        public string Description { get; set; }
-        public Nullable<int> Rank { get; set; }
-        public Nullable<System.DateTime> CreateDate { get; set; }
-        public Nullable<System.DateTime> LastUpdateDate { get; set; }
-        public Nullable<int> CreatedBy { get; set; }
-        public Nullable<int> LastUpdatedBy { get; set; }
-        public Nullable<bool> IsSupervisor { get; set; }
+        public int UserId { get; set; }
+        public int SupervisorId { get; set; }
+    
+        public virtual T_Users M_Supervisor { get; set; }
+        public virtual T_Users M_User { get; set; }
     }
 }

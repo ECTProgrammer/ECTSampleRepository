@@ -5,7 +5,7 @@ using System.Web;
 
 namespace TimeTracker.Model
 {
-    public class Module:T_Module
+    public class Module:T_Modules
     {
         public Module GetModule(int moduleid)
         {
@@ -16,7 +16,7 @@ namespace TimeTracker.Model
                         select new Module()
                         {
                             Id = m.Id,
-                            Module1 = m.Module1,
+                            Filename = m.Filename,
                             Description = m.Description,
                             ModuleType = m.ModuleType,
                             ArrangementOrder = m.ArrangementOrder
@@ -27,16 +27,16 @@ namespace TimeTracker.Model
             return data;
         }
 
-        public Module GetModule(string modulename)
+        public Module GetModule(string filename)
         {
             TimeTrackerEntities db = new TimeTrackerEntities();
 
             var data = (from m in db.T_Modules
-                        where m.Module1 == modulename
+                        where m.Filename == filename
                         select new Module()
                         {
                             Id = m.Id,
-                            Module1 = m.Module1,
+                            Filename = m.Filename,
                             Description = m.Description,
                             ModuleType = m.ModuleType,
                             ArrangementOrder = m.ArrangementOrder
@@ -57,7 +57,7 @@ namespace TimeTracker.Model
                         select new Module()
                         {
                             Id = m.Id,
-                            Module1 = m.Module1,
+                            Filename = m.Filename,
                             Description = m.Description,
                             ModuleType = m.ModuleType,
                             ArrangementOrder = m.ArrangementOrder
@@ -77,7 +77,7 @@ namespace TimeTracker.Model
                         select new Module()
                         {
                             Id = m.Id,
-                            Module1 = m.Module1,
+                            Filename = m.Filename,
                             Description = m.Description,
                             ModuleType = m.ModuleType,
                             ArrangementOrder = m.ArrangementOrder
@@ -101,7 +101,7 @@ namespace TimeTracker.Model
                         select new Module()
                         {
                             Id = m.Id,
-                            Module1 = m.Module1,
+                            Filename = m.Filename,
                             Description = m.Description,
                             ModuleType = m.ModuleType,
                             ArrangementOrder = m.ArrangementOrder

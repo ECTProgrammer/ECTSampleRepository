@@ -32,5 +32,12 @@ namespace TimeTracker
         public string Action { get; set; }
         public Nullable<System.DateTime> ScheduleDate { get; set; }
         public string JobIdNumber { get; set; }
+        public string SWNo { get; set; }
+        public string HWNo { get; set; }
+        public string JobStatus { get; set; }
+    
+        public virtual T_Users M_Supervisor { get; set; }
+        public virtual T_JobType M_JobType { get; set; }
+        public virtual T_Users M_User { get; set; }
     }
 }

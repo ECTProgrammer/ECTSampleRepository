@@ -255,13 +255,13 @@ namespace TimeTracker
 
         protected bool isSupervisor() 
         {
-            int userid = Convert.ToInt32(Session["UserId"]);
-            User user = new User();
-            user = user.GetUser(userid);
+            int roleId = Convert.ToInt32(Session["RoleID"]);
             Roles role = new Roles();
-            role = role.GetRole(Convert.ToInt32(user.RoleId));
+            role = role.GetRole(roleId);
 
-            if (role.IsSupervisor == true)
+            RolesSupervisor rs = new RolesSupervisor();
+            var data = rs.GetSubordinates(roleId);
+            if (data.Count > 0)
                 return true;
             else
                 return false;

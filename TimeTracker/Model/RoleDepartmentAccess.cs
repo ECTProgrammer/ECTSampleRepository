@@ -13,8 +13,6 @@ namespace TimeTracker.Model
             TimeTrackerEntities db = new TimeTrackerEntities();
 
             var data = (from p in db.T_RoleDepartmentAccess
-                        join d in db.T_Departments
-                        on p.DepartmentId equals d.Id
                         select new RoleDepartmentAccess()
                         {
                             Id = p.Id,
@@ -32,15 +30,13 @@ namespace TimeTracker.Model
             TimeTrackerEntities db = new TimeTrackerEntities();
 
             var data = (from p in db.T_RoleDepartmentAccess
-                        join d in db.T_Departments
-                        on p.DepartmentId equals d.Id
                         where p.RoleId == roleid
                         select new RoleDepartmentAccess()
                         {
                             Id = p.Id,
                             RoleId = p.RoleId,
                             DepartmentId = p.DepartmentId,
-                            department = d.Description
+                            department = p.M_Department.Description
                         }).ToList();
 
             db.Dispose();

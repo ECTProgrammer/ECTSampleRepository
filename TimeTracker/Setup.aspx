@@ -12,7 +12,7 @@
                     <asp:Repeater ID="repeaterSetup" runat="server" Visible="true">
                         <ItemTemplate>
                             <li class="li">
-                                <asp:LinkButton ID="lnkBtnSetup" runat="server" Text='<%#Eval("Description") %>' CommandArgument='<%#Eval("Module1")%>' OnCommand="lnkBtnSetup_Command">
+                                <asp:LinkButton ID="lnkBtnSetup" runat="server" Text='<%#Eval("Description") %>' CommandArgument='<%#Eval("Filename")%>' OnCommand="lnkBtnSetup_Command">
                                 </asp:LinkButton>
                             </li>
                         </ItemTemplate>

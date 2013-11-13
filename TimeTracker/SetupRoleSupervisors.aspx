@@ -1,4 +1,4 @@
-﻿<%@ Page Title="Module Access" Language="C#" MasterPageFile="~/Site.Master" AutoEventWireup="true" CodeBehind="SetupModuleAccess.aspx.cs" Inherits="TimeTracker.SetupModuleAccess" %>
+﻿<%@ Page Title="Role Supervisors" Language="C#" MasterPageFile="~/Site.Master" AutoEventWireup="true" CodeBehind="SetupRoleSupervisors.aspx.cs" Inherits="TimeTracker.SetupRoleSupervisors" %>
 <asp:Content ID="Content1" ContentPlaceHolderID="HeadContent" runat="server">
 </asp:Content>
 <asp:Content ID="Content2" ContentPlaceHolderID="FeaturedContent" runat="server">
@@ -13,7 +13,7 @@
                     </div>
                 </ProgressTemplate>
             </asp:UpdateProgress>
-            <asp:Panel ID="panelHeader" runat="server" CssClass="modalHeader">Role</asp:Panel>
+           <asp:Panel ID="panelHeader" runat="server" CssClass="modalHeader">Role</asp:Panel>
             <asp:Panel ID="panelContent" runat="server" CssClass="modal">
                 <asp:Label ID="labelAccessDenied" runat="server" Text="You do not have access rights to this page. Please contact your administrator if you need access. Thank you." Visible="false" CssClass="validation"></asp:Label>
                 <asp:Panel ID="panelAccessOK" runat="server">
@@ -30,7 +30,7 @@
                                     <asp:Label ID="labelRoleId" runat="server" Text='<%#Eval("Id") %>' Visible="false"></asp:Label>
                                 </ItemTemplate>
                             </asp:TemplateField>
-                            <asp:BoundField HeaderText="Role" DataField="Description" DataFormatString="{0:t}" ReadOnly="true"></asp:BoundField>
+                            <asp:BoundField HeaderText="Role" DataField="Description" ReadOnly="true"></asp:BoundField>
                         </Columns>
                     </asp:GridView>
                     </div>
@@ -38,7 +38,7 @@
             </asp:Panel>
        </ContentTemplate>
     </asp:UpdatePanel>
-  
+
     <%--Modal--%>
     <asp:UpdatePanel ID="UpdatePanel1" runat="server">
         <Triggers>
@@ -53,35 +53,20 @@
                 </ProgressTemplate>
             </asp:UpdateProgress>
             <asp:Panel Id="panelModal" runat="server" style="display:none">
-                <asp:Panel ID="panelModalHeader" runat="server" CssClass="modalHeader">Setup Modal Access</asp:Panel>
+                <asp:Panel ID="panelModalHeader" runat="server" CssClass="modalHeader">Setup Supervisor</asp:Panel>
                 <asp:Panel ID="panelModalContent" runat="server" CssClass="modal">
                 <table style="padding:10px; border-collapse:separate;border-spacing:10px; width:100%">
                     <tr><td>Role</td><td>:</td><td><asp:DropDownList ID="modalDropDownRoles" runat="server"></asp:DropDownList></td></tr>
                     <tr><td colspan="3"><asp:CheckBox ID="modalChkboxAll" runat="server" Text=" Select All" AutoPostBack="true" OnCheckedChanged="modalChkboxAll_Changed" /></td></tr>
                     <tr>
-                        <td colspan="3"><asp:Panel runat="server" ScrollBars="Auto" style="max-height:350px">
-                            <asp:GridView ID="gridViewModuleAccess" runat="server" AutoGenerateColumns="false" CssClass="gridView" GridLines="None" ShowHeaderWhenEmpty="true">
+                        <td colspan="3"><asp:Panel ID="Panel1" runat="server" ScrollBars="Auto" style="max-height:350px">
+                            <asp:GridView ID="gridViewModal" runat="server" AutoGenerateColumns="false" CssClass="gridView" GridLines="None" ShowHeaderWhenEmpty="true">
                                 <Columns>
-                                    <asp:BoundField HeaderText="Module" DataField="Description" />
-                                    <asp:TemplateField HeaderText="View">
+                                    <asp:BoundField HeaderText="Role" DataField="Description" />
+                                    <asp:TemplateField HeaderText="Supervisor">
                                         <ItemTemplate>
-                                            <asp:CheckBox ID="chkboxView" runat="server" />
-                                            <asp:Label ID="modalLabelModuleId" runat="server" Visible="false" Text='<%#Eval("Id")%>' ToolTip="ToolTip"></asp:Label>
-                                        </ItemTemplate>
-                                    </asp:TemplateField>
-                                    <asp:TemplateField HeaderText="Add">
-                                        <ItemTemplate>
-                                            <asp:CheckBox ID="chkboxAdd" runat="server" />
-                                        </ItemTemplate>
-                                    </asp:TemplateField>
-                                    <asp:TemplateField HeaderText="Update">
-                                        <ItemTemplate>
-                                            <asp:CheckBox ID="chkboxUpdate" runat="server" />
-                                        </ItemTemplate>
-                                    </asp:TemplateField>
-                                    <asp:TemplateField HeaderText="Delete">
-                                        <ItemTemplate>
-                                            <asp:CheckBox ID="chkboxDelete" runat="server" />
+                                            <asp:CheckBox ID="chkboxSupervisor" runat="server" />
+                                            <asp:Label ID="modalLabelRoleId" runat="server" Visible="false" Text='<%#Eval("Id")%>' ToolTip="ToolTip"></asp:Label>
                                         </ItemTemplate>
                                     </asp:TemplateField>
                                 </Columns>

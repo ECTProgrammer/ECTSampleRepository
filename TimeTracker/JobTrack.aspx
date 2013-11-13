@@ -40,6 +40,7 @@
                     <asp:BoundField HeaderText="End Time" DataField="EndTime" DataFormatString="{0:t}" ReadOnly="true"></asp:BoundField>
                     <asp:BoundField HeaderText="Description of Work" DataField="jobtype" ReadOnly="true"></asp:BoundField>
                     <asp:BoundField HeaderText="JobId" DataField="JobIdNumber" ReadOnly="true"></asp:BoundField>
+                    <asp:BoundField HeaderText="Job Status" DataField="JobStatus" ReadOnly="true"></asp:BoundField>
                     <asp:BoundField HeaderText="Customer" DataField="customer" ReadOnly="false"></asp:BoundField>
                     <asp:BoundField HeaderText="Number of Hours" DataField="totalhours" ReadOnly="false"></asp:BoundField>
                     <asp:BoundField HeaderText="Remarks" DataField="Remarks"></asp:BoundField>
@@ -68,6 +69,7 @@
             <asp:Panel Id="panelModal" runat="server" style="display:none">
                 <asp:Panel ID="panelModalHeader" runat="server" CssClass="modalHeader">Job Tracker</asp:Panel>
                 <asp:Panel ID="panelModalContent" runat="server" CssClass="modal">
+                    <asp:Label ID ="modalLabelHWSW" runat="server" Visible="false"></asp:Label>
                     <table style="padding:3px;border-spacing:10px;" border="0">
                         <tr><td colspan="3"><asp:Label ID="modalLabelError" runat="server" Visible="false" CssClass="validation"></asp:Label></td></tr>
                         <tr><td><asp:Label ID="modalLabelSupervisor" runat="server" Text="Supervisor" Visible="false"></asp:Label></td><td><asp:Label ID="modalLabelSupColon" runat="server" Text=":" Visible="false"></asp:Label></td>
@@ -75,6 +77,11 @@
                         </tr>
                         <tr><td>Description of Work</td><td>:</td><td><asp:DropDownList ID="modalDropDownJobType" runat="server" AutoPostBack="true" CssClass="dropDownList1" OnSelectedIndexChanged="modalDropDownJobType_IndexChanged"></asp:DropDownList></td></tr>
                         <tr><td>Job Id</td><td>:</td><td><asp:TextBox ID="modalTxtBoxJobId" runat="server" Enabled="false" AutoPostBack="true" OnTextChanged="modalTxtBoxJobId_TextChanged"></asp:TextBox></td></tr>
+                        <tr><td>Job Status</td><td>:</td><td><asp:DropDownList ID="modalDropDownJobStatus" Enabled="false" runat="server">
+                            <asp:ListItem Text="In Progress" Value="In Progress"></asp:ListItem>
+                            <asp:ListItem Text="On Hold" Value="On Hold"></asp:ListItem>
+                            <asp:ListItem Text="Completed" Value="Completed"></asp:ListItem>
+                            </asp:DropDownList></td></tr>
                         <tr><td>Job Description</td><td>:</td><td><asp:Label ID="modallabelBoxJobDescription" runat="server"></asp:Label></td></tr>
                         <tr><td>Customer</td><td>:</td><td><asp:Label ID="modallabelCustomer" runat="server"></asp:Label></td></tr>
                         <tr><td>Start Time</td><td>:</td><td><asp:DropDownList ID="modalDropDownStartTime" runat="server" AutoPostBack="true" OnSelectedIndexChanged="modalDropDownStartTime_IndexChanged"></asp:DropDownList></td></tr>

@@ -14,6 +14,12 @@ namespace TimeTracker
     
     public partial class T_JobType
     {
+        public T_JobType()
+        {
+            this.M_JobTrackers = new HashSet<T_JobTracker>();
+            this.M_JobTrackerHistories = new HashSet<T_JobTrackerHistory>();
+        }
+    
         public int Id { get; set; }
         public string Description { get; set; }
         public Nullable<int> DepartmentId { get; set; }
@@ -23,5 +29,9 @@ namespace TimeTracker
         public Nullable<System.DateTime> LastUpdateDate { get; set; }
         public Nullable<bool> RequiredJobId { get; set; }
         public Nullable<bool> ComputeTime { get; set; }
+    
+        public virtual T_Department M_Department { get; set; }
+        public virtual ICollection<T_JobTracker> M_JobTrackers { get; set; }
+        public virtual ICollection<T_JobTrackerHistory> M_JobTrackerHistories { get; set; }
     }
 }

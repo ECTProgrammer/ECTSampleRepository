@@ -12,24 +12,26 @@ namespace TimeTracker
     using System;
     using System.Collections.Generic;
     
-    public partial class T_User
+    public partial class T_Roles
     {
+        public T_Roles()
+        {
+            this.M_RoleDepartmentAccesses = new HashSet<T_RoleDepartmentAccess>();
+            this.M_RolesModuleAccesses = new HashSet<T_RolesModuleAccess>();
+            this.M_Users = new HashSet<T_Users>();
+        }
+    
         public int Id { get; set; }
-        public string Firstname { get; set; }
-        public string Lastname { get; set; }
-        public Nullable<int> DepartmentId { get; set; }
-        public string Username { get; set; }
-        public string Password { get; set; }
-        public string Email { get; set; }
-        public string Phone { get; set; }
-        public string Fax { get; set; }
-        public string Mobile { get; set; }
+        public string Description { get; set; }
+        public Nullable<int> Rank { get; set; }
         public Nullable<System.DateTime> CreateDate { get; set; }
         public Nullable<System.DateTime> LastUpdateDate { get; set; }
         public Nullable<int> CreatedBy { get; set; }
         public Nullable<int> LastUpdatedBy { get; set; }
-        public string Status { get; set; }
-        public Nullable<int> RoleId { get; set; }
-        public Nullable<int> EmployeeNumber { get; set; }
+        public Nullable<bool> IsSupervisor { get; set; }
+    
+        public virtual ICollection<T_RoleDepartmentAccess> M_RoleDepartmentAccesses { get; set; }
+        public virtual ICollection<T_RolesModuleAccess> M_RolesModuleAccesses { get; set; }
+        public virtual ICollection<T_Users> M_Users { get; set; }
     }
 }

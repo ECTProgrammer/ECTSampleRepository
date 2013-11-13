@@ -20,11 +20,7 @@ namespace TimeTracker.Model
         {
             TimeTrackerEntities db = new TimeTrackerEntities();
 
-            var data = (from j in db.T_JobTrackers
-                        join s in db.T_JobTypes
-                        on j.JobTypeId equals s.Id
-                        join u in db.T_Users
-                        on j.UserId equals u.Id
+            var data = (from j in db.T_JobTracker
                         where j.Id == jobtrackerid
                         select new JobTracker()
                         {
@@ -35,7 +31,7 @@ namespace TimeTracker.Model
                             Description = j.Description,
                             JobTypeId = j.JobTypeId,
                             JobIdNumber = j.JobIdNumber,
-                            jobtype = s.Description,
+                            jobtype = j.M_JobType.Description,
                             Remarks = j.Remarks,
                             ApprovedBy = j.ApprovedBy,
                             CreateDate = j.CreateDate,
@@ -46,40 +42,17 @@ namespace TimeTracker.Model
                             SupervisorRemarks = j.SupervisorRemarks,
                             ActionRequest = j.ActionRequest,
                             ScheduleDate = j.ScheduleDate,
-                            fullname = u.Firstname + " " + u.Lastname
+                            SWNo = j.SWNo,
+                            HWNo = j.HWNo,
+                            JobStatus = j.JobStatus,
+                            fullname = j.M_User.Firstname + " " + j.M_User.Lastname
                         }).FirstOrDefault();
 
             db.Dispose();
 
-
-            if (data.JobIdNumber != null)
+            if (data.JobIdNumber != null && data.JobIdNumber != "")
             {
-
-                using (SqlConnection con = new SqlConnection(ConfigurationManager.ConnectionStrings["CAPHWConnection"].ToString()))
-                {
-                    SqlCommand cmd = new SqlCommand("Select CO_Name,SO.SO_PCBdesc from Company CO, Sales_Order SO where SO.CO_ID = CO.CO_ID and SO.SO_Num = '" + data.JobIdNumber.Trim() + "'", con);
-                    con.Open();
-                    SqlDataReader reader = cmd.ExecuteReader();
-                    while (reader.Read())
-                    {
-                        data.customer = reader["CO_Name"].ToString();
-                        data.pcbdesc = reader["SO_PCBdesc"].ToString();
-                    }
-                }
-                if (data.customer == null || data.customer == "")
-                {
-                    using (SqlConnection con = new SqlConnection(ConfigurationManager.ConnectionStrings["CAPSWConnection"].ToString()))
-                    {
-                        SqlCommand cmd = new SqlCommand("Select CO_Name,SO.SO_PCBdesc from Company CO, Sales_Order SO where SO.CO_ID = CO.CO_ID and SO.SO_Num = '" + data.JobIdNumber.Trim() + "'", con);
-                        con.Open();
-                        SqlDataReader reader = cmd.ExecuteReader();
-                        while (reader.Read())
-                        {
-                            data.customer = reader["CO_Name"].ToString();
-                            data.pcbdesc = reader["SO_PCBdesc"].ToString();
-                        }
-                    }
-                }
+                GetCustomer(data);
             }
 
             if (data.EndTime != null)
@@ -93,19 +66,14 @@ namespace TimeTracker.Model
             return data;
         }
 
-        public JobTracker GetJobTracker(int createdby,int lastupdatedby,DateTime createdate,DateTime lastupdatedate,int jobtypeid,string actionrequest,string status)
+        public JobTracker GetJobTracker(int createdby,int lastupdatedby,DateTime starttime,int jobtypeid,string actionrequest,string status)
         {
             TimeTrackerEntities db = new TimeTrackerEntities();
 
-            var data = (from j in db.T_JobTrackers
-                        join s in db.T_JobTypes
-                        on j.JobTypeId equals s.Id
-                        join u in db.T_Users
-                        on j.UserId equals u.Id
+            var data = (from j in db.T_JobTracker
                         where j.CreatedBy == createdby
                         && j.LastUpdatedBy == lastupdatedby
-                        && j.CreateDate == createdate
-                        && j.LastUpdateDate == lastupdatedate
+                        && j.StartTime == starttime
                         && j.JobTypeId == jobtypeid
                         && j.ActionRequest == actionrequest
                         && j.Status == status
@@ -118,7 +86,7 @@ namespace TimeTracker.Model
                             Description = j.Description,
                             JobTypeId = j.JobTypeId,
                             JobIdNumber = j.JobIdNumber,
-                            jobtype = s.Description,
+                            jobtype = j.M_JobType.Description,
                             Remarks = j.Remarks,
                             ApprovedBy = j.ApprovedBy,
                             CreateDate = j.CreateDate,
@@ -129,40 +97,18 @@ namespace TimeTracker.Model
                             SupervisorRemarks = j.SupervisorRemarks,
                             ActionRequest = j.ActionRequest,
                             ScheduleDate = j.ScheduleDate,
-                            fullname = u.Firstname + " " + u.Lastname
+                            SWNo = j.SWNo,
+                            HWNo = j.HWNo,
+                            JobStatus = j.JobStatus,
+                            fullname = j.M_User.Firstname + " " + j.M_User.Lastname
                         }).FirstOrDefault();
 
             db.Dispose();
 
 
-            if (data.JobIdNumber != null)
+            if (data.JobIdNumber != null && data.JobIdNumber != "")
             {
-
-                using (SqlConnection con = new SqlConnection(ConfigurationManager.ConnectionStrings["CAPHWConnection"].ToString()))
-                {
-                    SqlCommand cmd = new SqlCommand("Select CO_Name,SO.SO_PCBdesc from Company CO, Sales_Order SO where SO.CO_ID = CO.CO_ID and SO.SO_Num = '" + data.JobIdNumber.Trim() + "'", con);
-                    con.Open();
-                    SqlDataReader reader = cmd.ExecuteReader();
-                    while (reader.Read())
-                    {
-                        data.customer = reader["CO_Name"].ToString();
-                        data.pcbdesc = reader["SO_PCBdesc"].ToString();
-                    }
-                }
-                if (data.customer == null || data.customer == "")
-                {
-                    using (SqlConnection con = new SqlConnection(ConfigurationManager.ConnectionStrings["CAPSWConnection"].ToString()))
-                    {
-                        SqlCommand cmd = new SqlCommand("Select CO_Name,SO.SO_PCBdesc from Company CO, Sales_Order SO where SO.CO_ID = CO.CO_ID and SO.SO_Num = '" + data.JobIdNumber.Trim() + "'", con);
-                        con.Open();
-                        SqlDataReader reader = cmd.ExecuteReader();
-                        while (reader.Read())
-                        {
-                            data.customer = reader["CO_Name"].ToString();
-                            data.pcbdesc = reader["SO_PCBdesc"].ToString();
-                        }
-                    }
-                }
+                GetCustomer(data);
             }
 
             if (data.EndTime != null)
@@ -180,11 +126,7 @@ namespace TimeTracker.Model
         {
             TimeTrackerEntities db = new TimeTrackerEntities();
 
-            var data = (from j in db.T_JobTrackers
-                        join s in db.T_JobTypes
-                        on j.JobTypeId equals s.Id
-                        join u in db.T_Users
-                        on j.UserId equals u.Id
+            var data = (from j in db.T_JobTracker
                         where j.UserId == userid
                         && j.ScheduleDate == selecteddate
                         && j.StartTime > starttime
@@ -198,7 +140,7 @@ namespace TimeTracker.Model
                             Description = j.Description,
                             JobTypeId = j.JobTypeId,
                             JobIdNumber = j.JobIdNumber,
-                            jobtype = s.Description,
+                            jobtype = j.M_JobType.Description,
                             Remarks = j.Remarks,
                             ApprovedBy = j.ApprovedBy,
                             CreateDate = j.CreateDate,
@@ -209,7 +151,10 @@ namespace TimeTracker.Model
                             SupervisorRemarks = j.SupervisorRemarks,
                             ActionRequest = j.ActionRequest,
                             ScheduleDate = j.ScheduleDate,
-                            fullname = u.Firstname + " " + u.Lastname
+                            SWNo = j.SWNo,
+                            HWNo = j.HWNo,
+                            JobStatus = j.JobStatus,
+                            fullname = j.M_User.Firstname + " " + j.M_User.Lastname
                         }).FirstOrDefault();
 
             db.Dispose();
@@ -221,11 +166,7 @@ namespace TimeTracker.Model
         {
             TimeTrackerEntities db = new TimeTrackerEntities();
 
-            var data = (from j in db.T_JobTrackers
-                        join s in db.T_JobTypes
-                        on j.JobTypeId equals s.Id
-                        join u in db.T_Users
-                        on j.UserId equals u.Id
+            var data = (from j in db.T_JobTracker
                         where j.UserId == userid
                         select new JobTracker() 
                         {
@@ -236,7 +177,7 @@ namespace TimeTracker.Model
                             Description = j.Description,
                             JobTypeId = j.JobTypeId,
                             JobIdNumber = j.JobIdNumber,
-                            jobtype = s.Description,
+                            jobtype = j.M_JobType.Description,
                             Remarks = j.Remarks,
                             ApprovedBy = j.ApprovedBy,
                             CreateDate = j.CreateDate,
@@ -247,41 +188,19 @@ namespace TimeTracker.Model
                             SupervisorRemarks = j.SupervisorRemarks,
                             ActionRequest = j.ActionRequest,
                             ScheduleDate = j.ScheduleDate,
-                            fullname = u.Firstname+" "+u.Lastname
+                            SWNo = j.SWNo,
+                            HWNo = j.HWNo,
+                            JobStatus = j.JobStatus,
+                            fullname = j.M_User.Firstname + " " + j.M_User.Lastname
                         }).ToList();
 
             db.Dispose();
 
             foreach (JobTracker j in data)
             {
-                if (j.JobIdNumber != null)
+                if (j.JobIdNumber != null && j.JobIdNumber != "")
                 {
-
-                    using (SqlConnection con = new SqlConnection(ConfigurationManager.ConnectionStrings["CAPHWConnection"].ToString()))
-                    {
-                        SqlCommand cmd = new SqlCommand("Select CO_Name,SO.SO_PCBdesc from Company CO, Sales_Order SO where SO.CO_ID = CO.CO_ID and SO.SO_Num = '"+j.JobIdNumber.Trim()+"'", con);
-                        con.Open();
-                        SqlDataReader reader = cmd.ExecuteReader();
-                        while (reader.Read())
-                        {
-                            j.customer = reader["CO_Name"].ToString();
-                            j.pcbdesc = reader["SO_PCBdesc"].ToString();
-                        }
-                    }
-                    if (j.customer == null || j.customer == "") 
-                    {
-                        using (SqlConnection con = new SqlConnection(ConfigurationManager.ConnectionStrings["CAPSWConnection"].ToString()))
-                        {
-                            SqlCommand cmd = new SqlCommand("Select CO_Name,SO.SO_PCBdesc from Company CO, Sales_Order SO where SO.CO_ID = CO.CO_ID and SO.SO_Num = '" + j.JobIdNumber.Trim() + "'", con);
-                            con.Open();
-                            SqlDataReader reader = cmd.ExecuteReader();
-                            while (reader.Read())
-                            {
-                                j.customer = reader["CO_Name"].ToString();
-                                j.pcbdesc = reader["SO_PCBdesc"].ToString();
-                            }
-                        }
-                    }
+                    GetCustomer(j);
                 }
 
                 if (j.EndTime != null)
@@ -305,16 +224,12 @@ namespace TimeTracker.Model
             List<JobTracker> data = new List<JobTracker>();
             if (departmentid > 0)
             {
-                data = (from j in db.T_JobTrackers
-                        join t in db.T_JobTypes
-                        on j.JobTypeId equals t.Id
-                        join u in db.T_Users
-                        on j.UserId equals u.Id
+                data = (from j in db.T_JobTracker
                         where j.ScheduleDate >= startdate
                         && j.ScheduleDate <= enddate
                         && j.JobTypeId == jobtypeid
                         && j.Status == jobstatus
-                        && u.DepartmentId == departmentid
+                        && j.M_User.DepartmentId == departmentid
                         select new JobTracker()
                         {
                             Id = j.Id,
@@ -334,14 +249,14 @@ namespace TimeTracker.Model
                             SupervisorRemarks = j.SupervisorRemarks,
                             ActionRequest = j.ActionRequest,
                             ScheduleDate = j.ScheduleDate,
-
+                            JobStatus = j.JobStatus,
+                            SWNo = j.SWNo,
+                            HWNo = j.HWNo
                         }).ToList();
             }
             else 
             {
-                data = (from j in db.T_JobTrackers
-                        join t in db.T_JobTypes
-                        on j.JobTypeId equals t.Id
+                data = (from j in db.T_JobTracker
                         where j.ScheduleDate >= startdate
                         && j.ScheduleDate <= enddate
                         && j.JobTypeId == jobtypeid
@@ -365,7 +280,9 @@ namespace TimeTracker.Model
                             SupervisorRemarks = j.SupervisorRemarks,
                             ActionRequest = j.ActionRequest,
                             ScheduleDate = j.ScheduleDate,
-
+                            JobStatus = j.JobStatus,
+                            SWNo = j.SWNo,
+                            HWNo = j.HWNo
                         }).ToList();
             }
 
@@ -387,16 +304,12 @@ namespace TimeTracker.Model
 
             List<JobTracker> data = new List<JobTracker>();
 
-            data = (from j in db.T_JobTrackers
-                    join t in db.T_JobTypes
-                    on j.JobTypeId equals t.Id
-                    join u in db.T_Users
-                    on j.UserId equals u.Id
+            data = (from j in db.T_JobTracker
                     where j.ScheduleDate >= startdate
                     && j.ScheduleDate <= enddate
                     && j.JobTypeId == jobtypeid
                     && j.Status == jobstatus
-                    && u.DepartmentId == departmentid
+                    && j.M_User.DepartmentId == departmentid
                     && j.UserId == userid
                     select new JobTracker()
                     {
@@ -417,7 +330,9 @@ namespace TimeTracker.Model
                         SupervisorRemarks = j.SupervisorRemarks,
                         ActionRequest = j.ActionRequest,
                         ScheduleDate = j.ScheduleDate,
-
+                        JobStatus = j.JobStatus,
+                        SWNo = j.SWNo,
+                        HWNo = j.HWNo
                     }).ToList();
 
             db.Dispose();
@@ -437,16 +352,12 @@ namespace TimeTracker.Model
         {
             TimeTrackerEntities db = new TimeTrackerEntities();
 
-            var data = (from j in db.T_JobTrackers
-                    join t in db.T_JobTypes
-                    on j.JobTypeId equals t.Id
-                    join u in db.T_Users
-                    on j.UserId equals u.Id
+            var data = (from j in db.T_JobTracker
                     where j.ScheduleDate >= startdate
                     && j.ScheduleDate <= enddate
                     && j.JobTypeId == jobtypeid
                     && j.Status == jobstatus
-                    && u.DepartmentId == departmentid
+                    && j.M_User.DepartmentId == departmentid
                     && j.UserId == userid
                     select new JobTracker()
                     {
@@ -467,7 +378,9 @@ namespace TimeTracker.Model
                         SupervisorRemarks = j.SupervisorRemarks,
                         ActionRequest = j.ActionRequest,
                         ScheduleDate = j.ScheduleDate,
-
+                        JobStatus = j.JobStatus,
+                        SWNo = j.SWNo,
+                        HWNo = j.HWNo
                     }).ToList();
 
             db.Dispose();
@@ -482,16 +395,12 @@ namespace TimeTracker.Model
             List<JobTracker> data = new List<JobTracker>();
             if (departmentid > 0)
             {
-                data = (from j in db.T_JobTrackers
-                        join t in db.T_JobTypes
-                        on j.JobTypeId equals t.Id
-                        join u in db.T_Users
-                        on j.UserId equals u.Id
+                data = (from j in db.T_JobTracker
                         where j.ScheduleDate >= startdate
                         && j.ScheduleDate <= enddate
                         && j.JobTypeId == jobtypeid
                         && j.Status == jobstatus
-                        && u.DepartmentId == departmentid
+                        && j.M_User.DepartmentId == departmentid
                         select new JobTracker()
                         {
                             Id = j.Id,
@@ -511,14 +420,14 @@ namespace TimeTracker.Model
                             SupervisorRemarks = j.SupervisorRemarks,
                             ActionRequest = j.ActionRequest,
                             ScheduleDate = j.ScheduleDate,
-
+                            JobStatus = j.JobStatus,
+                            SWNo = j.SWNo,
+                            HWNo = j.HWNo
                         }).ToList();
             }
             else
             {
-                data = (from j in db.T_JobTrackers
-                        join t in db.T_JobTypes
-                        on j.JobTypeId equals t.Id
+                data = (from j in db.T_JobTracker
                         where j.ScheduleDate >= startdate
                         && j.ScheduleDate <= enddate
                         && j.JobTypeId == jobtypeid
@@ -542,7 +451,9 @@ namespace TimeTracker.Model
                             SupervisorRemarks = j.SupervisorRemarks,
                             ActionRequest = j.ActionRequest,
                             ScheduleDate = j.ScheduleDate,
-
+                            JobStatus = j.JobStatus,
+                            SWNo = j.SWNo,
+                            HWNo = j.HWNo
                         }).ToList();
             }
 
@@ -555,11 +466,7 @@ namespace TimeTracker.Model
         {
             TimeTrackerEntities db = new TimeTrackerEntities();
 
-            var data = (from j in db.T_JobTrackers
-                        join s in db.T_JobTypes
-                        on j.JobTypeId equals s.Id
-                        join u in db.T_Users
-                        on j.UserId equals u.Id
+            var data = (from j in db.T_JobTracker
                         where j.UserId == userid
                         && j.ScheduleDate == selecteddate
                         orderby j.StartTime ascending
@@ -572,7 +479,7 @@ namespace TimeTracker.Model
                             Description = j.Description,
                             JobTypeId = j.JobTypeId,
                             JobIdNumber = j.JobIdNumber,
-                            jobtype = s.Description,
+                            jobtype = j.M_JobType.Description,
                             Remarks = j.Remarks,
                             ApprovedBy = j.ApprovedBy,
                             CreateDate = j.CreateDate,
@@ -583,41 +490,19 @@ namespace TimeTracker.Model
                             SupervisorRemarks = j.SupervisorRemarks,
                             ActionRequest = j.ActionRequest,
                             ScheduleDate = j.ScheduleDate,
-                            fullname = u.Firstname + " " + u.Lastname
+                            JobStatus = j.JobStatus,
+                            SWNo = j.SWNo,
+                            HWNo = j.HWNo,
+                            fullname = j.M_User.Firstname + " " + j.M_User.Lastname
                         }).ToList();
 
             db.Dispose();
 
             foreach (JobTracker j in data)
             {
-                if (j.JobIdNumber != null)
+                if (j.JobIdNumber != null && j.JobIdNumber != "")
                 {
-
-                    using (SqlConnection con = new SqlConnection(ConfigurationManager.ConnectionStrings["CAPHWConnection"].ToString()))
-                    {
-                        SqlCommand cmd = new SqlCommand("Select CO_Name,SO.SO_PCBdesc from Company CO, Sales_Order SO where SO.CO_ID = CO.CO_ID and SO.SO_Num = '" + j.JobIdNumber.Trim() + "'", con);
-                        con.Open();
-                        SqlDataReader reader = cmd.ExecuteReader();
-                        while (reader.Read())
-                        {
-                            j.customer = reader["CO_Name"].ToString();
-                            j.pcbdesc = reader["SO_PCBdesc"].ToString();
-                        }
-                    }
-                    if (j.customer == null || j.customer == "")
-                    {
-                        using (SqlConnection con = new SqlConnection(ConfigurationManager.ConnectionStrings["CAPSWConnection"].ToString()))
-                        {
-                            SqlCommand cmd = new SqlCommand("Select CO_Name,SO.SO_PCBdesc from Company CO, Sales_Order SO where SO.CO_ID = CO.CO_ID and SO.SO_Num = '" + j.JobIdNumber.Trim() + "'", con);
-                            con.Open();
-                            SqlDataReader reader = cmd.ExecuteReader();
-                            while (reader.Read())
-                            {
-                                j.customer = reader["CO_Name"].ToString();
-                                j.pcbdesc = reader["SO_PCBdesc"].ToString();
-                            }
-                        }
-                    }
+                    GetCustomer(j);
                 }
 
                 if (j.EndTime != null)
@@ -638,13 +523,11 @@ namespace TimeTracker.Model
         {
             TimeTrackerEntities db = new TimeTrackerEntities();
 
-            var data = (from j in db.T_JobTrackers
-                        join t in db.T_JobTypes
-                        on j.JobTypeId equals t.Id
+            var data = (from j in db.T_JobTracker
                         where j.UserId == userid
                         && j.ScheduleDate == date
                         && j.Status == status
-                        && t.ComputeTime == true
+                        && j.M_JobType.ComputeTime == true
                         orderby j.StartTime
                         select new JobTracker()
                         {
@@ -664,7 +547,10 @@ namespace TimeTracker.Model
                             Status = j.Status,
                             SupervisorRemarks = j.SupervisorRemarks,
                             ActionRequest = j.ActionRequest,
-                            ScheduleDate = j.ScheduleDate
+                            ScheduleDate = j.ScheduleDate,
+                            JobStatus = j.JobStatus,
+                            SWNo = j.SWNo,
+                            HWNo = j.HWNo
                         }).ToList();
 
             db.Dispose();
@@ -684,11 +570,7 @@ namespace TimeTracker.Model
         {
             TimeTrackerEntities db = new TimeTrackerEntities();
 
-            var data = (from j in db.T_JobTrackers
-                        join s in db.T_JobTypes
-                        on j.JobTypeId equals s.Id
-                        join u in db.T_Users
-                        on j.UserId equals u.Id
+            var data = (from j in db.T_JobTracker
                         where j.ApprovedBy == userid
                         && j.Status == "For Approval"
                         orderby j.LastUpdateDate ascending
@@ -701,7 +583,7 @@ namespace TimeTracker.Model
                             Description = j.Description,
                             JobTypeId = j.JobTypeId,
                             JobIdNumber = j.JobIdNumber,
-                            jobtype = s.Description,
+                            jobtype = j.M_JobType.Description,
                             Remarks = j.Remarks,
                             ApprovedBy = j.ApprovedBy,
                             CreateDate = j.CreateDate,
@@ -712,41 +594,19 @@ namespace TimeTracker.Model
                             SupervisorRemarks = j.SupervisorRemarks,
                             ActionRequest = j.ActionRequest,
                             ScheduleDate = j.ScheduleDate,
-                            fullname = u.Firstname+" "+u.Lastname //Requestor
+                            JobStatus = j.JobStatus,
+                            SWNo = j.SWNo,
+                            HWNo = j.HWNo,
+                            fullname = j.M_User.Firstname + " " + j.M_User.Lastname //Requestor
                         }).ToList();
 
             db.Dispose();
 
             foreach (JobTracker j in data)
             {
-                if (j.JobIdNumber != null)
+                if (j.JobIdNumber != null && j.JobIdNumber != "")
                 {
-
-                    using (SqlConnection con = new SqlConnection(ConfigurationManager.ConnectionStrings["CAPHWConnection"].ToString()))
-                    {
-                        SqlCommand cmd = new SqlCommand("Select CO_Name,SO.SO_PCBdesc from Company CO, Sales_Order SO where SO.CO_ID = CO.CO_ID and SO.SO_Num = '" + j.JobIdNumber.Trim() + "'", con);
-                        con.Open();
-                        SqlDataReader reader = cmd.ExecuteReader();
-                        while (reader.Read())
-                        {
-                            j.customer = reader["CO_Name"].ToString();
-                            j.pcbdesc = reader["SO_PCBdesc"].ToString();
-                        }
-                    }
-                    if (j.customer == null || j.customer == "")
-                    {
-                        using (SqlConnection con = new SqlConnection(ConfigurationManager.ConnectionStrings["CAPSWConnection"].ToString()))
-                        {
-                            SqlCommand cmd = new SqlCommand("Select CO_Name,SO.SO_PCBdesc from Company CO, Sales_Order SO where SO.CO_ID = CO.CO_ID and SO.SO_Num = '" + j.JobIdNumber.Trim() + "'", con);
-                            con.Open();
-                            SqlDataReader reader = cmd.ExecuteReader();
-                            while (reader.Read())
-                            {
-                                j.customer = reader["CO_Name"].ToString();
-                                j.pcbdesc = reader["SO_PCBdesc"].ToString();
-                            }
-                        }
-                    }
+                    GetCustomer(j);
                 }
 
                 if (j.EndTime != null)
@@ -767,11 +627,7 @@ namespace TimeTracker.Model
         {
             TimeTrackerEntities db = new TimeTrackerEntities();
 
-            var data = (from j in db.T_JobTrackers
-                        join s in db.T_JobTypes
-                        on j.JobTypeId equals s.Id
-                        join u in db.T_Users
-                        on j.ApprovedBy equals u.Id
+            var data = (from j in db.T_JobTracker
                         where j.UserId == userid
                         && j.Status == "For Approval"
                         orderby j.LastUpdateDate ascending
@@ -784,7 +640,7 @@ namespace TimeTracker.Model
                             Description = j.Description,
                             JobTypeId = j.JobTypeId,
                             JobIdNumber = j.JobIdNumber,
-                            jobtype = s.Description,
+                            jobtype = j.M_JobType.Description,
                             Remarks = j.Remarks,
                             ApprovedBy = j.ApprovedBy,
                             CreateDate = j.CreateDate,
@@ -795,7 +651,10 @@ namespace TimeTracker.Model
                             SupervisorRemarks = j.SupervisorRemarks,
                             ActionRequest = j.ActionRequest,
                             ScheduleDate = j.ScheduleDate,
-                            fullname = u.Firstname+" "+u.Lastname //Supervisor
+                            JobStatus = j.JobStatus,
+                            SWNo = j.SWNo,
+                            HWNo = j.HWNo,
+                            fullname = j.M_Supervisor.Firstname + " " + j.M_Supervisor.Lastname //Supervisor
                         }).ToList();
 
             db.Dispose();
@@ -804,34 +663,8 @@ namespace TimeTracker.Model
             {
                 if (j.JobIdNumber != null)
                 {
-
-                    using (SqlConnection con = new SqlConnection(ConfigurationManager.ConnectionStrings["CAPHWConnection"].ToString()))
-                    {
-                        SqlCommand cmd = new SqlCommand("Select CO_Name,SO.SO_PCBdesc from Company CO, Sales_Order SO where SO.CO_ID = CO.CO_ID and SO.SO_Num = '" + j.JobIdNumber.Trim() + "'", con);
-                        con.Open();
-                        SqlDataReader reader = cmd.ExecuteReader();
-                        while (reader.Read())
-                        {
-                            j.customer = reader["CO_Name"].ToString();
-                            j.pcbdesc = reader["SO_PCBdesc"].ToString();
-                        }
-                    }
-                    if (j.customer == null || j.customer == "")
-                    {
-                        using (SqlConnection con = new SqlConnection(ConfigurationManager.ConnectionStrings["CAPSWConnection"].ToString()))
-                        {
-                            SqlCommand cmd = new SqlCommand("Select CO_Name,SO.SO_PCBdesc from Company CO, Sales_Order SO where SO.CO_ID = CO.CO_ID and SO.SO_Num = '" + j.JobIdNumber.Trim() + "'", con);
-                            con.Open();
-                            SqlDataReader reader = cmd.ExecuteReader();
-                            while (reader.Read())
-                            {
-                                j.customer = reader["CO_Name"].ToString();
-                                j.pcbdesc = reader["SO_PCBdesc"].ToString();
-                            }
-                        }
-                    }
+                    GetCustomer(j);
                 }
-
                 if (j.EndTime != null)
                 {
                     double time = Convert.ToDateTime(j.EndTime).Subtract(Convert.ToDateTime(j.StartTime)).TotalMinutes;
@@ -851,11 +684,7 @@ namespace TimeTracker.Model
         {
             TimeTrackerEntities db = new TimeTrackerEntities();
 
-            var data = (from j in db.T_JobTrackers
-                        join s in db.T_JobTypes
-                        on j.JobTypeId equals s.Id
-                        join u in db.T_Users
-                        on j.ApprovedBy equals u.Id
+            var data = (from j in db.T_JobTracker
                         where j.UserId == userid
                         && j.Status == "Rejected"
                         orderby j.LastUpdateDate descending
@@ -868,7 +697,7 @@ namespace TimeTracker.Model
                             Description = j.Description,
                             JobTypeId = j.JobTypeId,
                             JobIdNumber = j.JobIdNumber,
-                            jobtype = s.Description,
+                            jobtype = j.M_JobType.Description,
                             Remarks = j.Remarks,
                             ApprovedBy = j.ApprovedBy,
                             CreateDate = j.CreateDate,
@@ -879,41 +708,19 @@ namespace TimeTracker.Model
                             SupervisorRemarks = j.SupervisorRemarks,
                             ActionRequest = j.ActionRequest,
                             ScheduleDate = j.ScheduleDate,
-                            fullname = u.Firstname + " " + u.Lastname //Supervisor
+                            SWNo = j.SWNo,
+                            HWNo = j.HWNo,
+                            JobStatus = j.JobStatus,
+                            fullname = j.M_Supervisor.Firstname + " " + j.M_Supervisor.Lastname //Supervisor
                         }).Take(10).ToList();
 
             db.Dispose();
 
             foreach (JobTracker j in data)
             {
-                if (j.JobIdNumber != null)
+                if (j.JobIdNumber != null && j.JobIdNumber != "")
                 {
-
-                    using (SqlConnection con = new SqlConnection(ConfigurationManager.ConnectionStrings["CAPHWConnection"].ToString()))
-                    {
-                        SqlCommand cmd = new SqlCommand("Select CO_Name,SO.SO_PCBdesc from Company CO, Sales_Order SO where SO.CO_ID = CO.CO_ID and SO.SO_Num = '" + j.JobIdNumber.Trim() + "'", con);
-                        con.Open();
-                        SqlDataReader reader = cmd.ExecuteReader();
-                        while (reader.Read())
-                        {
-                            j.customer = reader["CO_Name"].ToString();
-                            j.pcbdesc = reader["SO_PCBdesc"].ToString();
-                        }
-                    }
-                    if (j.customer == null || j.customer == "")
-                    {
-                        using (SqlConnection con = new SqlConnection(ConfigurationManager.ConnectionStrings["CAPSWConnection"].ToString()))
-                        {
-                            SqlCommand cmd = new SqlCommand("Select CO_Name,SO.SO_PCBdesc from Company CO, Sales_Order SO where SO.CO_ID = CO.CO_ID and SO.SO_Num = '" + j.JobIdNumber.Trim() + "'", con);
-                            con.Open();
-                            SqlDataReader reader = cmd.ExecuteReader();
-                            while (reader.Read())
-                            {
-                                j.customer = reader["CO_Name"].ToString();
-                                j.pcbdesc = reader["SO_PCBdesc"].ToString();
-                            }
-                        }
-                    }
+                    GetCustomer(j);
                 }
 
                 if (j.EndTime != null)
@@ -935,11 +742,7 @@ namespace TimeTracker.Model
         {
             TimeTrackerEntities db = new TimeTrackerEntities();
 
-            var data = (from j in db.T_JobTrackers
-                        join s in db.T_JobTypes
-                        on j.JobTypeId equals s.Id
-                        join u in db.T_Users
-                        on j.UserId equals u.Id
+            var data = (from j in db.T_JobTracker
                         where j.ApprovedBy == userid
                         && j.Status == "Pending"
                         orderby j.StartTime
@@ -952,7 +755,7 @@ namespace TimeTracker.Model
                             Description = j.Description,
                             JobTypeId = j.JobTypeId,
                             JobIdNumber = j.JobIdNumber,
-                            jobtype = s.Description,
+                            jobtype = j.M_JobType.Description,
                             Remarks = j.Remarks,
                             ApprovedBy = j.ApprovedBy,
                             CreateDate = j.CreateDate,
@@ -963,7 +766,10 @@ namespace TimeTracker.Model
                             SupervisorRemarks = j.SupervisorRemarks,
                             ActionRequest = j.ActionRequest,
                             ScheduleDate = j.ScheduleDate,
-                            fullname = u.Firstname + " " + u.Lastname
+                            SWNo = j.SWNo,
+                            HWNo = j.HWNo,
+                            JobStatus = j.JobStatus,
+                            fullname = j.M_User.Firstname + " " + j.M_User.Lastname
                         }).ToList();
 
             db.Dispose();
@@ -972,32 +778,7 @@ namespace TimeTracker.Model
             {
                 if (j.JobIdNumber != null && j.JobIdNumber != "")
                 {
-
-                    using (SqlConnection con = new SqlConnection(ConfigurationManager.ConnectionStrings["CAPHWConnection"].ToString()))
-                    {
-                        SqlCommand cmd = new SqlCommand("Select CO_Name,SO.SO_PCBdesc from Company CO, Sales_Order SO where SO.CO_ID = CO.CO_ID and SO.SO_Num = '" + j.JobIdNumber.Trim() + "'", con);
-                        con.Open();
-                        SqlDataReader reader = cmd.ExecuteReader();
-                        while (reader.Read())
-                        {
-                            j.customer = reader["CO_Name"].ToString();
-                            j.pcbdesc = reader["SO_PCBdesc"].ToString();
-                        }
-                    }
-                    if (j.customer == null || j.customer == "")
-                    {
-                        using (SqlConnection con = new SqlConnection(ConfigurationManager.ConnectionStrings["CAPSWConnection"].ToString()))
-                        {
-                            SqlCommand cmd = new SqlCommand("Select CO_Name,SO.SO_PCBdesc from Company CO, Sales_Order SO where SO.CO_ID = CO.CO_ID and SO.SO_Num = '" + j.JobIdNumber.Trim() + "'", con);
-                            con.Open();
-                            SqlDataReader reader = cmd.ExecuteReader();
-                            while (reader.Read())
-                            {
-                                j.customer = reader["CO_Name"].ToString();
-                                j.pcbdesc = reader["SO_PCBdesc"].ToString();
-                            }
-                        }
-                    }
+                    GetCustomer(j);
                 }
 
             }
@@ -1010,11 +791,7 @@ namespace TimeTracker.Model
         {
             TimeTrackerEntities db = new TimeTrackerEntities();
 
-            var data = (from j in db.T_JobTrackers
-                        join s in db.T_JobTypes
-                        on j.JobTypeId equals s.Id
-                        join u in db.T_Users
-                        on j.UserId equals u.Id
+            var data = (from j in db.T_JobTracker
                         where j.ApprovedBy == userid
                         && j.Status == "Pending"
                         && j.ScheduleDate == selecteddate
@@ -1028,7 +805,7 @@ namespace TimeTracker.Model
                             Description = j.Description,
                             JobTypeId = j.JobTypeId,
                             JobIdNumber = j.JobIdNumber,
-                            jobtype = s.Description,
+                            jobtype = j.M_JobType.Description,
                             Remarks = j.Remarks,
                             ApprovedBy = j.ApprovedBy,
                             CreateDate = j.CreateDate,
@@ -1039,7 +816,10 @@ namespace TimeTracker.Model
                             SupervisorRemarks = j.SupervisorRemarks,
                             ActionRequest = j.ActionRequest,
                             ScheduleDate = j.ScheduleDate,
-                            fullname = u.Firstname + " " + u.Lastname
+                            SWNo = j.SWNo,
+                            HWNo = j.HWNo,
+                            JobStatus = j.JobStatus,
+                            fullname = j.M_User.Firstname + " " + j.M_User.Lastname
                         }).ToList();
 
             db.Dispose();
@@ -1048,32 +828,7 @@ namespace TimeTracker.Model
             {
                 if (j.JobIdNumber != null && j.JobIdNumber != "")
                 {
-
-                    using (SqlConnection con = new SqlConnection(ConfigurationManager.ConnectionStrings["CAPHWConnection"].ToString()))
-                    {
-                        SqlCommand cmd = new SqlCommand("Select CO_Name,SO.SO_PCBdesc from Company CO, Sales_Order SO where SO.CO_ID = CO.CO_ID and SO.SO_Num = '" + j.JobIdNumber.Trim() + "'", con);
-                        con.Open();
-                        SqlDataReader reader = cmd.ExecuteReader();
-                        while (reader.Read())
-                        {
-                            j.customer = reader["CO_Name"].ToString();
-                            j.pcbdesc = reader["SO_PCBdesc"].ToString();
-                        }
-                    }
-                    if (j.customer == null || j.customer == "")
-                    {
-                        using (SqlConnection con = new SqlConnection(ConfigurationManager.ConnectionStrings["CAPSWConnection"].ToString()))
-                        {
-                            SqlCommand cmd = new SqlCommand("Select CO_Name,SO.SO_PCBdesc from Company CO, Sales_Order SO where SO.CO_ID = CO.CO_ID and SO.SO_Num = '" + j.JobIdNumber.Trim() + "'", con);
-                            con.Open();
-                            SqlDataReader reader = cmd.ExecuteReader();
-                            while (reader.Read())
-                            {
-                                j.customer = reader["CO_Name"].ToString();
-                                j.pcbdesc = reader["SO_PCBdesc"].ToString();
-                            }
-                        }
-                    }
+                    GetCustomer(j);
                 }
 
                 if (j.EndTime != null)
@@ -1122,6 +877,38 @@ namespace TimeTracker.Model
             return jobTracker;
         }
 
+        public void GetCustomer(JobTracker jobtracker) 
+        {
+            if (jobtracker.HWNo != null && jobtracker.HWNo.Trim() != "")
+            {
+                using (SqlConnection con = new SqlConnection(ConfigurationManager.ConnectionStrings["CAPHWConnection"].ToString()))
+                {
+                    SqlCommand cmd = new SqlCommand("Select CO_Name,SO.SO_PCBdesc from Company CO, Sales_Order SO where SO.CO_ID = CO.CO_ID and SO.SO_Num = '" + jobtracker.HWNo.Trim() + "'", con);
+                    con.Open();
+                    SqlDataReader reader = cmd.ExecuteReader();
+                    while (reader.Read())
+                    {
+                        jobtracker.customer = reader["CO_Name"].ToString();
+                        jobtracker.pcbdesc = reader["SO_PCBdesc"].ToString();
+                    }
+                }
+            }
+            else if ((jobtracker.SWNo != null && jobtracker.SWNo.Trim() != "") && (jobtracker.customer == null || jobtracker.customer.Trim() == "")) 
+            {
+                using (SqlConnection con = new SqlConnection(ConfigurationManager.ConnectionStrings["CAPSWConnection"].ToString()))
+                {
+                    SqlCommand cmd = new SqlCommand("Select CO_Name,SO.SO_PCBdesc from Company CO, Sales_Order SO where SO.CO_ID = CO.CO_ID and SO.SO_Num = '" + jobtracker.SWNo.Trim() + "'", con);
+                    con.Open();
+                    SqlDataReader reader = cmd.ExecuteReader();
+                    while (reader.Read())
+                    {
+                        jobtracker.customer = reader["CO_Name"].ToString();
+                        jobtracker.pcbdesc = reader["SO_PCBdesc"].ToString();
+                    }
+                }
+            }
+        }
+
         public void Insert(JobTracker jobtracker) 
         {
             T_JobTracker j = new T_JobTracker();
@@ -1130,7 +917,7 @@ namespace TimeTracker.Model
             {
                 try
                 {
-                    db.T_JobTrackers.Add(j);
+                    db.T_JobTracker.Add(j);
                     db.SaveChanges();
                 }
                 catch (Exception ex) 
@@ -1147,8 +934,8 @@ namespace TimeTracker.Model
                 try
                 {
                     T_JobTracker t_jobtracker = new T_JobTracker();
-                    t_jobtracker = db.T_JobTrackers.FirstOrDefault(j => j.Id == id);
-                    db.T_JobTrackers.Remove(t_jobtracker);
+                    t_jobtracker = db.T_JobTracker.FirstOrDefault(j => j.Id == id);
+                    db.T_JobTracker.Remove(t_jobtracker);
                     db.SaveChanges();
                 }
                 catch (Exception ex) 
@@ -1164,7 +951,7 @@ namespace TimeTracker.Model
             {
                 try 
                 {
-                    T_JobTracker t_jobtracker = db.T_JobTrackers.FirstOrDefault(j => j.Id == jobtracker.Id);
+                    T_JobTracker t_jobtracker = db.T_JobTracker.FirstOrDefault(j => j.Id == jobtracker.Id);
                     UpdateParse(t_jobtracker, jobtracker);
                     db.SaveChanges();
                 }
@@ -1194,6 +981,9 @@ namespace TimeTracker.Model
             data.UserId = jobtracker.UserId;
             data.ScheduleDate = jobtracker.ScheduleDate;
             data.ActionRequest = jobtracker.ActionRequest;
+            data.HWNo = jobtracker.HWNo;
+            data.SWNo = jobtracker.SWNo;
+            data.JobStatus = jobtracker.JobStatus;
         }
 
         private void UpdateParse(T_JobTracker t_jobtracker, JobTracker jobtracker) 
@@ -1212,6 +1002,9 @@ namespace TimeTracker.Model
             t_jobtracker.UserId = jobtracker.UserId;
             t_jobtracker.ScheduleDate = jobtracker.ScheduleDate;
             t_jobtracker.ActionRequest = jobtracker.ActionRequest;
+            t_jobtracker.HWNo = jobtracker.HWNo;
+            t_jobtracker.SWNo = jobtracker.SWNo;
+            t_jobtracker.JobStatus = jobtracker.JobStatus;
         }
 
         public bool HasUnclosedJobs(int userid) 
@@ -1219,11 +1012,7 @@ namespace TimeTracker.Model
             bool result = true;
             TimeTrackerEntities db = new TimeTrackerEntities();
 
-            var data = (from j in db.T_JobTrackers
-                        join s in db.T_JobTypes
-                        on j.JobTypeId equals s.Id
-                        join u in db.T_Users
-                        on j.UserId equals u.Id
+            var data = (from j in db.T_JobTracker
                         where j.ApprovedBy == userid
                         && j.Status == "Pending"
                         select new JobTracker()
@@ -1235,7 +1024,7 @@ namespace TimeTracker.Model
                             Description = j.Description,
                             JobTypeId = j.JobTypeId,
                             JobIdNumber = j.JobIdNumber,
-                            jobtype = s.Description,
+                            jobtype = j.M_JobType.Description,
                             Remarks = j.Remarks,
                             ApprovedBy = j.ApprovedBy,
                             CreateDate = j.CreateDate,
@@ -1246,7 +1035,7 @@ namespace TimeTracker.Model
                             SupervisorRemarks = j.SupervisorRemarks,
                             ActionRequest = j.ActionRequest,
                             ScheduleDate = j.ScheduleDate,
-                            fullname = u.Firstname + " " + u.Lastname
+                            fullname = j.M_User.Firstname + " " + j.M_User.Lastname
                         }).FirstOrDefault();
 
             db.Dispose();
@@ -1255,6 +1044,94 @@ namespace TimeTracker.Model
                 result = false;
 
             return result;
+        }
+
+        public JobTracker GenerateHWAndSW(string jobidnumber) 
+        {
+            JobTracker jobtracker = new JobTracker();
+            using (SqlConnection con = new SqlConnection(ConfigurationManager.ConnectionStrings["CAPHWConnection"].ToString()))
+            {
+                SqlCommand cmd = new SqlCommand("Select TOP 1 SO_Num,CO_Name,SO.SO_PCBdesc from Company CO, Sales_Order SO where SO.CO_ID = CO.CO_ID and SO.SO_Num = '" + jobidnumber.Trim() + "'", con);
+                con.Open();
+                SqlDataReader reader = cmd.ExecuteReader();
+                while (reader.Read())
+                {
+                    jobtracker.customer = reader["CO_Name"].ToString();
+                    jobtracker.pcbdesc = reader["SO_PCBdesc"].ToString();
+                    jobtracker.HWNo = reader["SO_Num"].ToString();
+                }
+            }
+            if (jobtracker.HWNo == null || jobtracker.HWNo.Trim() == "")
+            {
+                using (SqlConnection con = new SqlConnection(ConfigurationManager.ConnectionStrings["CAPSWConnection"].ToString()))
+                {
+                    SqlCommand cmd = new SqlCommand("Select TOP 1 SO_Num,CO_Name,SO.SO_PCBdesc from Company CO, Sales_Order SO where SO.CO_ID = CO.CO_ID and SO.SO_Num = '" + jobidnumber.Trim() + "'", con);
+                    con.Open();
+                    SqlDataReader reader = cmd.ExecuteReader();
+                    while (reader.Read())
+                    {
+                        jobtracker.customer = reader["CO_Name"].ToString();
+                        jobtracker.pcbdesc = reader["SO_PCBdesc"].ToString();
+                        jobtracker.SWNo = reader["SO_Num"].ToString();
+                    }
+                }
+                if (jobtracker.SWNo != null && jobtracker.SWNo.Trim() != "")
+                {
+                    using (SqlConnection con = new SqlConnection(ConfigurationManager.ConnectionStrings["CAPHWConnection"].ToString()))
+                    {
+                        SqlCommand cmd = new SqlCommand("Select TOP 1 SO_Num from Sales_Order SO where '" + jobtracker.pcbdesc.Trim() + "' Like '%'+CAST(SO_Num as varchar(20))+'%' ORDER BY SO_NUM Desc", con);
+                        con.Open();
+                        SqlDataReader reader = cmd.ExecuteReader();
+                        while (reader.Read())
+                        {
+                            jobtracker.HWNo = reader["SO_Num"].ToString();
+                        }
+                    }
+
+                    if (jobtracker.HWNo == null || jobtracker.HWNo.Trim() == "")
+                    {
+                        using (SqlConnection con = new SqlConnection(ConfigurationManager.ConnectionStrings["CAPHWConnection"].ToString()))
+                        {
+                            SqlCommand cmd = new SqlCommand("Select TOP 1 SO_Num from Sales_Order SO where SO_PCBdesc Like '%" + jobtracker.SWNo.Trim() + "%' ORDER BY SO_NUM Desc", con);
+                            con.Open();
+                            SqlDataReader reader = cmd.ExecuteReader();
+                            while (reader.Read())
+                            {
+                                jobtracker.HWNo = reader["SO_Num"].ToString();
+                            }
+                        }
+                    }
+                }
+            }
+            else
+            {
+                using (SqlConnection con = new SqlConnection(ConfigurationManager.ConnectionStrings["CAPSWConnection"].ToString()))
+                {
+                    SqlCommand cmd = new SqlCommand("Select TOP 1 SO_Num from Sales_Order SO where '" + jobtracker.pcbdesc.Trim() + "' Like '%'+CAST(SO_Num as varchar(20))+'%' ORDER BY SO_NUM Desc", con);
+                    con.Open();
+                    SqlDataReader reader = cmd.ExecuteReader();
+                    while (reader.Read())
+                    {
+                        jobtracker.SWNo = reader["SO_Num"].ToString();
+                    }
+                }
+                
+                
+                if (jobtracker.SWNo == null || jobtracker.SWNo.Trim() == "")
+                {
+                    using (SqlConnection con = new SqlConnection(ConfigurationManager.ConnectionStrings["CAPSWConnection"].ToString()))
+                    {
+                        SqlCommand cmd = new SqlCommand("Select TOP 1 SO_Num from Sales_Order SO where SO_PCBdesc Like '%" + jobtracker.HWNo.Trim() + "%' ORDER BY SO_NUM Desc", con);
+                        con.Open();
+                        SqlDataReader reader = cmd.ExecuteReader();
+                        while (reader.Read())
+                        {
+                            jobtracker.SWNo = reader["SO_Num"].ToString();
+                        }
+                    }
+                }
+            }
+            return jobtracker;
         }
 
     }

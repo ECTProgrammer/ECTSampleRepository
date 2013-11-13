@@ -12,13 +12,10 @@ namespace TimeTracker
     using System;
     using System.Collections.Generic;
     
-    public partial class T_RoleDepartmentAccess
+    public partial class T_RolesSupervisor
     {
         public int Id { get; set; }
         public int RoleId { get; set; }
-        public int DepartmentId { get; set; }
-    
-        public virtual T_Department M_Department { get; set; }
-        public virtual T_Roles M_Role { get; set; }
+        public int SupervisorRoleId { get; set; }
     }
 }
