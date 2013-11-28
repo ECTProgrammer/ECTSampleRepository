@@ -57,16 +57,31 @@ namespace TimeTracker
         {
             JobTracker jobtracker = new JobTracker();
             DateTime selectedDate = DateTime.Parse(txtBoxDate.Text);
+            bool noError = true;
 
             if (jobtracker.HasUnclosedJobs(Convert.ToInt32(Session["UserId"])))
             {
+                noError = false;
                 panelAlertHeader2.CssClass = "modalAlertHeader";
                 alertModalBtnOK2.CssClass = "buttonalert";
                 labelAlertHeader2.Text = "Error";
                 labelAlertMessage2.Text = "Please close all jobs before adding a new one.";
                 programmaticAlertModalPopup2.Show();
             }
-            else
+            if (selectedDate.CompareTo(DateTime.Today) < 0)
+            {
+                SupervisorMapping supmap = new SupervisorMapping();
+                if (supmap.GetActiveSupervisors(Convert.ToInt32(Session["UserId"])).Count < 1) 
+                {
+                    noError = false;
+                    panelAlertHeader2.CssClass = "modalAlertHeader";
+                    alertModalBtnOK2.CssClass = "buttonalert";
+                    labelAlertHeader2.Text = "Error";
+                    labelAlertMessage2.Text = "Sorry you cannot add job on previous date without a direct supervisor. Please contact your system administrator.";
+                    programmaticAlertModalPopup2.Show();
+                }
+            }
+            if(noError)
             {
                 InitializeModalJobType();
                 InitializeModalStartTime();
@@ -74,19 +89,19 @@ namespace TimeTracker
                 InitializeModalJobStatus();
 
                 modalBtnSubmit.CommandArgument = "Add";
-                if (selectedDate.CompareTo(DateTime.Today) < 0)
-                {
-                    InitializeModalSupervisor();
-                    modalLabelSupervisor.Visible = true;
-                    modalLabelSupColon.Visible = true;
-                    modalDropDownSupervisor.Visible = true;
-                }
-                else
-                {
-                    modalLabelSupervisor.Visible = false;
-                    modalLabelSupColon.Visible = false;
-                    modalDropDownSupervisor.Visible = false;
-                }
+                //if (selectedDate.CompareTo(DateTime.Today) < 0)
+                //{
+                //    //InitializeModalSupervisor();
+                //    //modalLabelSupervisor.Visible = true;
+                //    //modalLabelSupColon.Visible = true;
+                //    //modalDropDownSupervisor.Visible = true;
+                //}
+                //else
+                //{
+                //    //modalLabelSupervisor.Visible = false;
+                //    //modalLabelSupColon.Visible = false;
+                //    //modalDropDownSupervisor.Visible = false;
+                //}
                 modalBtnDelete.Visible = false;
                 modalTxtBoxRemarks.Text = "";
                 modalLabelError.Text = "";
@@ -111,58 +126,75 @@ namespace TimeTracker
                 DateTime date = Convert.ToDateTime(txtBoxDate.Text);
                 int i = Convert.ToInt32(e.CommandArgument);
                 int userid = Convert.ToInt32(Session["UserId"]);
-                JobTracker jobtracker = new JobTracker();
-                List<JobTracker> datalist = new List<JobTracker>();
-                datalist = jobtracker.GetJobTrackerList(userid,date);
+                bool noError = true;
+                if (date.CompareTo(DateTime.Today) < 0)
+                {
+                    SupervisorMapping supmap = new SupervisorMapping();
+                    if (supmap.GetActiveSupervisors(userid).Count < 1)
+                    {
+                        noError = false;
+                        panelAlertHeader2.CssClass = "modalAlertHeader";
+                        alertModalBtnOK2.CssClass = "buttonalert";
+                        labelAlertHeader2.Text = "Error";
+                        labelAlertMessage2.Text = "Sorry you cannot edit job on previous date without a direct supervisor. Please contact your system administrator.";
+                        programmaticAlertModalPopup2.Show();
+                    }
+                }
+                if(noError)
+                {
+                    JobTracker jobtracker = new JobTracker();
+                    List<JobTracker> datalist = new List<JobTracker>();
+                    datalist = jobtracker.GetJobTrackerList(userid, date);
 
-                modalLabelError.Text = "";
-                modalLabelError.Visible = false;
-                modalBtnSubmit.CommandArgument = datalist[i].Id.ToString();
-                modalBtnDelete.CommandArgument = datalist[i].Id.ToString();
-                InitializeModalJobType(datalist[i].JobTypeId.ToString());
-                InitializeModalStartTime(datalist[i].StartTime.ToString());
-                InitializeModalJobStatus(datalist[i].JobStatus.Trim());
+                    modalLabelError.Text = "";
+                    modalLabelError.Visible = false;
+                    modalBtnSubmit.CommandArgument = datalist[i].Id.ToString();
+                    modalBtnDelete.CommandArgument = datalist[i].Id.ToString();
+                    InitializeModalJobType(datalist[i].JobTypeId.ToString());
+                    InitializeModalStartTime(datalist[i].StartTime.ToString());
+                    InitializeModalJobStatus(datalist[i].JobStatus.Trim());
 
-                string endtime = "";
-                if (datalist[i].EndTime != null)
-                    endtime = datalist[i].EndTime.ToString();
-                InitializeModalEndTime(endtime);
-                if (datalist[i].ApprovedBy != null && datalist[i].ApprovedBy != userid && datalist[i].ApprovedBy != 0) 
-                {
-                    InitializeModalSupervisor(datalist[i].ApprovedBy.ToString());
-                    modalLabelSupervisor.Visible = true;
-                    modalLabelSupColon.Visible = true;
-                    modalDropDownSupervisor.Visible = true;
-                }
-                else if (date.CompareTo(DateTime.Today) < 0) 
-                {
-                    InitializeModalSupervisor();
-                    modalLabelSupervisor.Visible = true;
-                    modalLabelSupColon.Visible = true;
-                    modalDropDownSupervisor.Visible = true;
-                }
-                else
-                {
-                    modalLabelSupervisor.Visible = false;
-                    modalLabelSupColon.Visible = false;
-                    modalDropDownSupervisor.Visible = false;
-                }
-                if (datalist[i].JobIdNumber != null && datalist[i].JobIdNumber.Trim() != "") 
-                {
-                    
-                    modalTxtBoxJobId.Text = datalist[i].JobIdNumber;
-                    JobTracker jobTracker = new JobTracker();
-                    jobTracker = jobTracker.GetCustomer(modalTxtBoxJobId.Text.Trim());
-                    modallabelBoxJobDescription.Text = jobTracker.pcbdesc;
-                    modallabelCustomer.Text = jobTracker.customer;
-                    modalLabelHWSW.Text = jobTracker.HWNo;
-                    modalLabelHWSW.ToolTip = jobTracker.SWNo;
-                }
+                    string endtime = "";
+                    if (datalist[i].EndTime != null)
+                        endtime = datalist[i].EndTime.ToString();
+                    InitializeModalEndTime(endtime);
+                    //if (datalist[i].ApprovedBy != null && datalist[i].ApprovedBy != userid && datalist[i].ApprovedBy != 0) 
+                    //{
+                    //    //InitializeModalSupervisor(datalist[i].ApprovedBy.ToString());
+                    //    //modalLabelSupervisor.Visible = true;
+                    //    //modalLabelSupColon.Visible = true;
+                    //    //modalDropDownSupervisor.Visible = true;
+                    //}
+                    //else if (date.CompareTo(DateTime.Today) < 0) 
+                    //{
+                    //InitializeModalSupervisor();
+                    //modalLabelSupervisor.Visible = true;
+                    //modalLabelSupColon.Visible = true;
+                    //modalDropDownSupervisor.Visible = true;
+                    //}
+                    //else
+                    //{
+                    //    //modalLabelSupervisor.Visible = false;
+                    //    //modalLabelSupColon.Visible = false;
+                    //    //modalDropDownSupervisor.Visible = false;
+                    //}
+                    if (datalist[i].JobIdNumber != null && datalist[i].JobIdNumber.Trim() != "")
+                    {
 
-                modalTxtBoxRemarks.Text = datalist[i].Remarks.Trim();
-                
-                Page.Validate();
-                this.programmaticModalPopup.Show();
+                        modalTxtBoxJobId.Text = datalist[i].JobIdNumber;
+                        JobTracker jobTracker = new JobTracker();
+                        jobTracker = jobTracker.GenerateHWAndSW(modalTxtBoxJobId.Text.Trim());
+                        modallabelBoxJobDescription.Text = jobTracker.pcbdesc;
+                        modallabelCustomer.Text = jobTracker.customer;
+                        modalLabelHWSW.Text = jobTracker.HWNo;
+                        modalLabelHWSW.ToolTip = jobTracker.SWNo;
+                    }
+
+                    modalTxtBoxRemarks.Text = datalist[i].Remarks.Trim();
+
+                    Page.Validate();
+                    this.programmaticModalPopup.Show();
+                }
             }
         }
 
@@ -256,20 +288,25 @@ namespace TimeTracker
                 if (jobTracker.JobIdNumber.Trim() != "")
                     jobTracker.JobStatus = modalDropDownJobStatus.SelectedItem.Value;
                 if (selectedDate.CompareTo(DateTime.Today) == 0)
+                {
+                    jobTracker.ApprovedBy = userid;
                     if (modalDropDownEndTime.SelectedItem.Text != "Select End Time")
                         jobTracker.Status = "Approved";
                     else
                         jobTracker.Status = "Pending";
+                }
                 else
+                {
                     jobTracker.Status = "For Approval";
-                if (modalDropDownSupervisor.Visible)
-                {
-                    jobTracker.ApprovedBy = Convert.ToInt32(modalDropDownSupervisor.SelectedItem.Value);
                 }
-                else 
-                {
-                    jobTracker.ApprovedBy = userid;
-                }
+                //if (modalDropDownSupervisor.Visible)
+                //{
+                //    jobTracker.ApprovedBy = Convert.ToInt32(modalDropDownSupervisor.SelectedItem.Value);
+                //}
+                //else 
+                //{
+                //    jobTracker.ApprovedBy = userid;
+                //}
                 if (e.CommandArgument.ToString() == "Add")
                 {
 
@@ -344,7 +381,6 @@ namespace TimeTracker
                 InitializeModalJobStatus();
             }
             this.programmaticModalPopup.Show();
-
         }
 
         protected void modalDropDownStartTime_IndexChanged(object sender, EventArgs e) 
@@ -422,8 +458,8 @@ namespace TimeTracker
                     modalLabelError.Visible = false;
                     modallabelBoxJobDescription.Text = jobTracker.pcbdesc;
                     modallabelCustomer.Text =  jobTracker.customer;
-                    modalLabelHWSW.Text = jobTracker.HWNo.Trim();
-                    modalLabelHWSW.ToolTip = jobTracker.SWNo.Trim();
+                    modalLabelHWSW.Text = jobTracker.HWNo == null ? "" : jobTracker.HWNo.Trim();
+                    modalLabelHWSW.ToolTip = jobTracker.SWNo == null ? "" : jobTracker.SWNo.Trim();
                 }
             }
             else 
@@ -562,7 +598,7 @@ namespace TimeTracker
             {
                 bool hasSelected = false;
                 int maxindex = 0;
-                TimeSpan maxTime = new TimeSpan(24, 59, 0);
+                TimeSpan maxTime = new TimeSpan(23, 59, 0);
                 for (int i = 0; i < modalDropDownStartTime.Items.Count;i++)
                 {
                     TimeSpan selectedTime = TimeSpan.Parse(modalDropDownStartTime.Items[i].Value);
@@ -653,30 +689,30 @@ namespace TimeTracker
 
         }
 
-        private void InitializeModalSupervisor(string value = "") 
-        {
-            RolesSupervisor roleSupervisor = new RolesSupervisor();
-            //int departmentId = Convert.ToInt32(Session["DepartmentId"]);
-            //User user = new User();
-            //var supervisors = user.GetSupervisors(departmentId);
-            var supervisors = roleSupervisor.GetSupervisors(Convert.ToInt32(Session["RoleId"]),Convert.ToInt32(Session["UserId"]));
-            modalDropDownSupervisor.DataSource = supervisors;
-            modalDropDownSupervisor.DataTextField = "supervisorname";
-            modalDropDownSupervisor.DataValueField = "supervisorid";
-            modalDropDownSupervisor.DataBind();
+        //private void InitializeModalSupervisor(string value = "") 
+        //{
+        //    RolesSupervisor roleSupervisor = new RolesSupervisor();
+        //    //int departmentId = Convert.ToInt32(Session["DepartmentId"]);
+        //    //User user = new User();
+        //    //var supervisors = user.GetSupervisors(departmentId);
+        //    var supervisors = roleSupervisor.GetSupervisors(Convert.ToInt32(Session["RoleId"]),Convert.ToInt32(Session["UserId"]));
+        //    modalDropDownSupervisor.DataSource = supervisors;
+        //    modalDropDownSupervisor.DataTextField = "supervisorname";
+        //    modalDropDownSupervisor.DataValueField = "supervisorid";
+        //    modalDropDownSupervisor.DataBind();
 
-            if (value.Trim() != "") 
-            {
-                foreach (ListItem i in modalDropDownSupervisor.Items)
-                {
-                    if (i.Value.Trim() == value.Trim())
-                    {
-                        i.Selected = true;
-                        break;
-                    }
-                }
-            }
-        }
+        //    if (value.Trim() != "") 
+        //    {
+        //        foreach (ListItem i in modalDropDownSupervisor.Items)
+        //        {
+        //            if (i.Value.Trim() == value.Trim())
+        //            {
+        //                i.Selected = true;
+        //                break;
+        //            }
+        //        }
+        //    }
+        //}
 
         private void InitializeModalJobStatus(string value = "") 
         {

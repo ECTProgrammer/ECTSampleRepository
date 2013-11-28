@@ -140,7 +140,6 @@
     <Content Include="Account\OpenAuthProviders.ascx" />
     <Content Include="Account\Register.aspx" />
     <Content Include="Account\RegisterExternalLogin.aspx" />
-    <Content Include="Contact.aspx" />
     <Content Include="Content\images\bg_gradient.gif" />
     <Content Include="Content\images\loading bar.gif" />
     <Content Include="Content\images\loading.gif" />
@@ -222,6 +221,7 @@
     <Content Include="Content\themes\redmond\jquery-ui-1.8.11.custom.css" />
     <Content Include="Content\themes\round_top_right.gif" />
     <Content Include="DashBoard.aspx" />
+    <Content Include="DatabaseSetting.aspx" />
     <Content Include="Images\accent.png" />
     <Content Include="Images\bullet.png" />
     <Content Include="Images\ect_logo.gif" />
@@ -237,7 +237,7 @@
     <Content Include="Images\orderedList7.png" />
     <Content Include="Images\orderedList8.png" />
     <Content Include="Images\orderedList9.png" />
-    <Content Include="Job Overview.aspx" />
+    <Content Include="JobOverview.aspx" />
     <Content Include="JobTrack.aspx" />
     <Content Include="Login.aspx" />
     <Content Include="logo.ico" />
@@ -273,11 +273,12 @@
     <Content Include="Default.aspx" />
     <Content Include="favicon.ico" />
     <Content Include="Global.asax" />
+    <Content Include="Setting.aspx" />
     <Content Include="Setup.aspx" />
     <Content Include="SetupDepartment.aspx" />
     <Content Include="SetupJobType.aspx" />
     <Content Include="SetupModuleAccess.aspx" />
-    <Content Include="SetupRoleSupervisors.aspx" />
+    <Content Include="SetupSupervisorMapping.aspx" />
     <Content Include="SetupUser.aspx" />
     <Content Include="ViewSwitcher.ascx" />
     <Content Include="Web.config">
@@ -349,19 +350,19 @@
       <DependentUpon>RegisterExternalLogin.aspx</DependentUpon>
     </Compile>
     <Compile Include="App_Start\RouteConfig.cs" />
-    <Compile Include="Contact.aspx.cs">
-      <DependentUpon>Contact.aspx</DependentUpon>
-      <SubType>ASPXCodeBehind</SubType>
-    </Compile>
-    <Compile Include="Contact.aspx.designer.cs">
-      <DependentUpon>Contact.aspx</DependentUpon>
-    </Compile>
     <Compile Include="DashBoard.aspx.cs">
       <DependentUpon>DashBoard.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
     </Compile>
     <Compile Include="DashBoard.aspx.designer.cs">
       <DependentUpon>DashBoard.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="DatabaseSetting.aspx.cs">
+      <DependentUpon>DatabaseSetting.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="DatabaseSetting.aspx.designer.cs">
+      <DependentUpon>DatabaseSetting.aspx</DependentUpon>
     </Compile>
     <Compile Include="Default.aspx.cs">
       <DependentUpon>Default.aspx</DependentUpon>
@@ -373,12 +374,12 @@
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
-    <Compile Include="Job Overview.aspx.cs">
-      <DependentUpon>Job Overview.aspx</DependentUpon>
+    <Compile Include="JobOverview.aspx.cs">
+      <DependentUpon>JobOverview.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
     </Compile>
-    <Compile Include="Job Overview.aspx.designer.cs">
-      <DependentUpon>Job Overview.aspx</DependentUpon>
+    <Compile Include="JobOverview.aspx.designer.cs">
+      <DependentUpon>JobOverview.aspx</DependentUpon>
     </Compile>
     <Compile Include="JobTrack.aspx.cs">
       <DependentUpon>JobTrack.aspx</DependentUpon>
@@ -404,11 +405,17 @@
     <Compile Include="Model\RoleDepartmentAccess.cs" />
     <Compile Include="Model\Roles.cs" />
     <Compile Include="Model\RolesModuleAccess.cs" />
-    <Compile Include="Model\RolesSupervisor.cs" />
     <Compile Include="Model\SupervisorMapping.cs" />
     <Compile Include="Model\Time.cs" />
     <Compile Include="Model\User.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Setting.aspx.cs">
+      <DependentUpon>Setting.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Setting.aspx.designer.cs">
+      <DependentUpon>Setting.aspx</DependentUpon>
+    </Compile>
     <Compile Include="Setup.aspx.cs">
       <DependentUpon>Setup.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
@@ -437,12 +444,12 @@
     <Compile Include="SetupModuleAccess.aspx.designer.cs">
       <DependentUpon>SetupModuleAccess.aspx</DependentUpon>
     </Compile>
-    <Compile Include="SetupRoleSupervisors.aspx.cs">
-      <DependentUpon>SetupRoleSupervisors.aspx</DependentUpon>
+    <Compile Include="SetupSupervisorMapping.aspx.cs">
+      <DependentUpon>SetupSupervisorMapping.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
     </Compile>
-    <Compile Include="SetupRoleSupervisors.aspx.designer.cs">
-      <DependentUpon>SetupRoleSupervisors.aspx</DependentUpon>
+    <Compile Include="SetupSupervisorMapping.aspx.designer.cs">
+      <DependentUpon>SetupSupervisorMapping.aspx</DependentUpon>
     </Compile>
     <Compile Include="SetupUser.aspx.cs">
       <DependentUpon>SetupUser.aspx</DependentUpon>

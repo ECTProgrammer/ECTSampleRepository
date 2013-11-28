@@ -67,6 +67,24 @@ namespace TimeTracker {
         protected global::System.Web.UI.WebControls.Panel panelAccessOK;
         
         /// <summary>
+        /// dropDownListDepartment control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.DropDownList dropDownListDepartment;
+        
+        /// <summary>
+        /// radioBtnListStatus control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.RadioButtonList radioBtnListStatus;
+        
+        /// <summary>
         /// linkBtnAddUser control.
         /// </summary>
         /// <remarks>
@@ -74,15 +92,6 @@ namespace TimeTracker {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.LinkButton linkBtnAddUser;
-        
-        /// <summary>
-        /// LabelTotalHours control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.Label LabelTotalHours;
         
         /// <summary>
         /// gridViewUser control.
@@ -317,6 +326,15 @@ namespace TimeTracker {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.TextBox modalTxtBoxFax;
+        
+        /// <summary>
+        /// modalDropDownStatus control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.DropDownList modalDropDownStatus;
         
         /// <summary>
         /// modalBtnSubmit control.

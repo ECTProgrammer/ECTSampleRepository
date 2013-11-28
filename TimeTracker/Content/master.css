@@ -214,6 +214,7 @@ h2
     background-color: #ffffff; 
     margin: 5px 0 10px 0; 
     border: 1px solid #c8ccd1; 
+    border-color: #c8ccd1; 
     border-collapse:collapse; 
 }
 .gridView td { 

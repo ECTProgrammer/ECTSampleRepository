@@ -117,11 +117,307 @@ namespace TimeTracker.Model
             return  data;
         }
 
+        public User GetActiveUser(string username, string password)
+        {
+            TimeTrackerEntities db = new TimeTrackerEntities();
+
+            var data = (from u in db.T_Users
+                        where u.Username.Equals(username, StringComparison.OrdinalIgnoreCase)
+                        && u.Password == password
+                        && u.Status == "Active"
+                        select new User()
+                        {
+                            Id = u.Id,
+                            Username = u.Username,
+                            Password = u.Password,
+                            Firstname = u.Firstname,
+                            Lastname = u.Lastname,
+                            Phone = u.Phone,
+                            Mobile = u.Mobile,
+                            Fax = u.Fax,
+                            Email = u.Email,
+                            DepartmentId = u.DepartmentId,
+                            RoleId = u.RoleId,
+                            CreateDate = u.CreateDate,
+                            CreatedBy = u.CreatedBy,
+                            LastUpdateDate = u.LastUpdateDate,
+                            LastUpdatedBy = u.LastUpdatedBy,
+                            Status = u.Status,
+                            fullname = u.Firstname + " " + u.Lastname,
+                            role = u.M_Role.Description,
+                            department = u.M_Department.Description,
+                            EmployeeNumber = u.EmployeeNumber
+                        }).FirstOrDefault();
+
+            db.Dispose();
+
+            return data;
+        }
+
         public List<User> GetUserList()
         {
             TimeTrackerEntities db = new TimeTrackerEntities();
 
             var data = (from u in db.T_Users
+                        orderby u.Firstname
+                        select new User()
+                        {
+                            Id = u.Id,
+                            Username = u.Username,
+                            Password = u.Password,
+                            Firstname = u.Firstname,
+                            Lastname = u.Lastname,
+                            Phone = u.Phone,
+                            Mobile = u.Mobile,
+                            Fax = u.Fax,
+                            Email = u.Email,
+                            DepartmentId = u.DepartmentId,
+                            RoleId = u.RoleId,
+                            CreateDate = u.CreateDate,
+                            CreatedBy = u.CreatedBy,
+                            LastUpdateDate = u.LastUpdateDate,
+                            LastUpdatedBy = u.LastUpdatedBy,
+                            Status = u.Status,
+                            fullname = u.Firstname + " " + u.Lastname,
+                            role = u.M_Role.Description,
+                            department = u.M_Department.Description,
+                            EmployeeNumber = u.EmployeeNumber
+                        }).ToList();
+
+            db.Dispose();
+
+            return data;
+        }
+
+        public List<User> GetUserList(int departmentId)
+        {
+            TimeTrackerEntities db = new TimeTrackerEntities();
+
+            var data = (from u in db.T_Users
+                        where u.DepartmentId == departmentId
+                        orderby u.Firstname
+                        select new User()
+                        {
+                            Id = u.Id,
+                            Username = u.Username,
+                            Password = u.Password,
+                            Firstname = u.Firstname,
+                            Lastname = u.Lastname,
+                            Phone = u.Phone,
+                            Mobile = u.Mobile,
+                            Fax = u.Fax,
+                            Email = u.Email,
+                            DepartmentId = u.DepartmentId,
+                            RoleId = u.RoleId,
+                            CreateDate = u.CreateDate,
+                            CreatedBy = u.CreatedBy,
+                            LastUpdateDate = u.LastUpdateDate,
+                            LastUpdatedBy = u.LastUpdatedBy,
+                            Status = u.Status,
+                            fullname = u.Firstname + " " + u.Lastname,
+                            role = u.M_Role.Description,
+                            department = u.M_Department.Description,
+                            EmployeeNumber = u.EmployeeNumber
+                        }).ToList();
+
+            db.Dispose();
+
+            return data;
+        }
+
+        public List<User> GetActiveUsersWithSupervisor()
+        {
+            TimeTrackerEntities db = new TimeTrackerEntities();
+
+            var data = (from u in db.T_Users
+                        where u.M_SupervisorMappingUsers.Count > 0
+                        && u.Status == "Active"
+                        orderby u.Firstname
+                        select new User()
+                        {
+                            Id = u.Id,
+                            Username = u.Username,
+                            Password = u.Password,
+                            Firstname = u.Firstname,
+                            Lastname = u.Lastname,
+                            Phone = u.Phone,
+                            Mobile = u.Mobile,
+                            Fax = u.Fax,
+                            Email = u.Email,
+                            DepartmentId = u.DepartmentId,
+                            RoleId = u.RoleId,
+                            CreateDate = u.CreateDate,
+                            CreatedBy = u.CreatedBy,
+                            LastUpdateDate = u.LastUpdateDate,
+                            LastUpdatedBy = u.LastUpdatedBy,
+                            Status = u.Status,
+                            fullname = u.Firstname + " " + u.Lastname,
+                            role = u.M_Role.Description,
+                            department = u.M_Department.Description,
+                            EmployeeNumber = u.EmployeeNumber
+                        }).ToList();
+
+            db.Dispose();
+
+            return data;
+        }
+
+        public List<User> GetActiveUsersWithSupervisor(int departmentid)
+        {
+            TimeTrackerEntities db = new TimeTrackerEntities();
+
+            var data = (from u in db.T_Users
+                        where u.M_SupervisorMappingUsers.Count > 0
+                        && u.DepartmentId == departmentid
+                        && u.Status == "Active"
+                        orderby u.Firstname
+                        select new User()
+                        {
+                            Id = u.Id,
+                            Username = u.Username,
+                            Password = u.Password,
+                            Firstname = u.Firstname,
+                            Lastname = u.Lastname,
+                            Phone = u.Phone,
+                            Mobile = u.Mobile,
+                            Fax = u.Fax,
+                            Email = u.Email,
+                            DepartmentId = u.DepartmentId,
+                            RoleId = u.RoleId,
+                            CreateDate = u.CreateDate,
+                            CreatedBy = u.CreatedBy,
+                            LastUpdateDate = u.LastUpdateDate,
+                            LastUpdatedBy = u.LastUpdatedBy,
+                            Status = u.Status,
+                            fullname = u.Firstname + " " + u.Lastname,
+                            role = u.M_Role.Description,
+                            department = u.M_Department.Description,
+                            EmployeeNumber = u.EmployeeNumber
+                        }).ToList();
+
+            db.Dispose();
+
+            return data;
+        }
+
+        public List<User> GetActiveUsersWithoutSupervisor()
+        {
+            TimeTrackerEntities db = new TimeTrackerEntities();
+
+            var data = (from u in db.T_Users
+                        where u.M_SupervisorMappingUsers.Count == 0
+                        && u.Status == "Active"
+                        orderby u.Firstname
+                        select new User()
+                        {
+                            Id = u.Id,
+                            Username = u.Username,
+                            Password = u.Password,
+                            Firstname = u.Firstname,
+                            Lastname = u.Lastname,
+                            Phone = u.Phone,
+                            Mobile = u.Mobile,
+                            Fax = u.Fax,
+                            Email = u.Email,
+                            DepartmentId = u.DepartmentId,
+                            RoleId = u.RoleId,
+                            CreateDate = u.CreateDate,
+                            CreatedBy = u.CreatedBy,
+                            LastUpdateDate = u.LastUpdateDate,
+                            LastUpdatedBy = u.LastUpdatedBy,
+                            Status = u.Status,
+                            fullname = u.Firstname + " " + u.Lastname,
+                            role = u.M_Role.Description,
+                            department = u.M_Department.Description,
+                            EmployeeNumber = u.EmployeeNumber
+                        }).ToList();
+
+            db.Dispose();
+
+            return data;
+        }
+
+        public List<User> GetActiveUsersWithoutSupervisor(int departmentid)
+        {
+            TimeTrackerEntities db = new TimeTrackerEntities();
+
+            var data = (from u in db.T_Users
+                        where u.M_SupervisorMappingUsers.Count == 0
+                        && u.DepartmentId == departmentid
+                        && u.Status == "Active"
+                        orderby u.Firstname
+                        select new User()
+                        {
+                            Id = u.Id,
+                            Username = u.Username,
+                            Password = u.Password,
+                            Firstname = u.Firstname,
+                            Lastname = u.Lastname,
+                            Phone = u.Phone,
+                            Mobile = u.Mobile,
+                            Fax = u.Fax,
+                            Email = u.Email,
+                            DepartmentId = u.DepartmentId,
+                            RoleId = u.RoleId,
+                            CreateDate = u.CreateDate,
+                            CreatedBy = u.CreatedBy,
+                            LastUpdateDate = u.LastUpdateDate,
+                            LastUpdatedBy = u.LastUpdatedBy,
+                            Status = u.Status,
+                            fullname = u.Firstname + " " + u.Lastname,
+                            role = u.M_Role.Description,
+                            department = u.M_Department.Description,
+                            EmployeeNumber = u.EmployeeNumber
+                        }).ToList();
+
+            db.Dispose();
+
+            return data;
+        }
+
+        public List<User> GetUserListByStatus(string status)
+        {
+            TimeTrackerEntities db = new TimeTrackerEntities();
+
+            var data = (from u in db.T_Users
+                        where u.Status == status
+                        orderby u.Firstname
+                        select new User()
+                        {
+                            Id = u.Id,
+                            Username = u.Username,
+                            Password = u.Password,
+                            Firstname = u.Firstname,
+                            Lastname = u.Lastname,
+                            Phone = u.Phone,
+                            Mobile = u.Mobile,
+                            Fax = u.Fax,
+                            Email = u.Email,
+                            DepartmentId = u.DepartmentId,
+                            RoleId = u.RoleId,
+                            CreateDate = u.CreateDate,
+                            CreatedBy = u.CreatedBy,
+                            LastUpdateDate = u.LastUpdateDate,
+                            LastUpdatedBy = u.LastUpdatedBy,
+                            Status = u.Status,
+                            fullname = u.Firstname + " " + u.Lastname,
+                            role = u.M_Role.Description,
+                            department = u.M_Department.Description,
+                            EmployeeNumber = u.EmployeeNumber
+                        }).ToList();
+
+            db.Dispose();
+
+            return data;
+        }
+
+        public List<User> GetUserListByDepartmentAndStatus(int departmentId,string status)
+        {
+            TimeTrackerEntities db = new TimeTrackerEntities();
+
+            var data = (from u in db.T_Users
+                        where u.DepartmentId == departmentId
+                        && u.Status == status
                         orderby u.Firstname
                         select new User()
                         {
@@ -188,6 +484,55 @@ namespace TimeTracker.Model
             return data;
         }
 
+        public List<User> GetAvailableSupervisors(int userid,int departmentId) 
+        {
+            TimeTrackerEntities db = new TimeTrackerEntities();
+
+            SupervisorMapping supmap = new SupervisorMapping();
+            var data = (from u in db.T_Users
+                        where u.DepartmentId == departmentId
+                        && u.Status == "Active"
+                        select new User()
+                        {
+                            Id = u.Id,
+                            Username = u.Username,
+                            Password = u.Password,
+                            Firstname = u.Firstname,
+                            Lastname = u.Lastname,
+                            Phone = u.Phone,
+                            Mobile = u.Mobile,
+                            Fax = u.Fax,
+                            Email = u.Email,
+                            DepartmentId = u.DepartmentId,
+                            RoleId = u.RoleId,
+                            CreateDate = u.CreateDate,
+                            CreatedBy = u.CreatedBy,
+                            LastUpdateDate = u.LastUpdateDate,
+                            LastUpdatedBy = u.LastUpdatedBy,
+                            Status = u.Status,
+                            fullname = u.Firstname + " " + u.Lastname,
+                            role = u.M_Role.Description,
+                            department = u.M_Department.Description,
+                            EmployeeNumber = u.EmployeeNumber
+                        }).ToList();
+            db.Dispose();
+            
+            var suplist = supmap.GetActiveSupervisors(userid, departmentId);
+
+            foreach (SupervisorMapping s in suplist) 
+            {
+                for (int i = 0; i < data.Count; i++) 
+                {
+                    if (data[i].Id == s.SupervisorId) 
+                    {
+                        data.RemoveAt(i);
+                        break;
+                    }
+                }
+            }
+
+            return data;
+        }
 
         public void Insert(User user)
         {

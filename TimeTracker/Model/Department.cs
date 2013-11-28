@@ -20,7 +20,8 @@ namespace TimeTracker.Model
                             CreateDate = d.CreateDate,
                             LastUpdateDate = d.LastUpdateDate,
                             CreatedBy = d.CreatedBy,
-                            LastUpdatedBy = d.LastUpdatedBy
+                            LastUpdatedBy = d.LastUpdatedBy,
+                            Position = d.Position
                         }).FirstOrDefault();
 
             db.Dispose();
@@ -33,6 +34,7 @@ namespace TimeTracker.Model
             TimeTrackerEntities db = new TimeTrackerEntities();
 
             var data = (from d in db.T_Department
+                        orderby d.Position ascending
                         select new Department()
                         {
                             Id = d.Id,
@@ -40,7 +42,31 @@ namespace TimeTracker.Model
                             CreateDate = d.CreateDate,
                             LastUpdateDate = d.LastUpdateDate,
                             CreatedBy = d.CreatedBy,
-                            LastUpdatedBy = d.LastUpdatedBy
+                            LastUpdatedBy = d.LastUpdatedBy,
+                            Position = d.Position
+                        }).ToList();
+
+            db.Dispose();
+
+            return data;
+        }
+
+        public List<Department> GetJobOverviewDepartment() 
+        {
+            TimeTrackerEntities db = new TimeTrackerEntities();
+
+            var data = (from d in db.T_Department
+                        where d.M_JobTypes.FirstOrDefault(j => j.ShowInJobOverview == true) != null
+                        orderby d.Position ascending
+                        select new Department()
+                        {
+                            Id = d.Id,
+                            Description = d.Description,
+                            CreateDate = d.CreateDate,
+                            LastUpdateDate = d.LastUpdateDate,
+                            CreatedBy = d.CreatedBy,
+                            LastUpdatedBy = d.LastUpdatedBy,
+                            Position = d.Position
                         }).ToList();
 
             db.Dispose();
@@ -109,7 +135,7 @@ namespace TimeTracker.Model
             t_department.LastUpdateDate = department.LastUpdateDate;
             t_department.CreatedBy = department.CreatedBy;
             t_department.LastUpdatedBy = department.LastUpdatedBy;
-
+            t_department.Position = department.Position;
             return t_department;
         }
 
@@ -118,6 +144,7 @@ namespace TimeTracker.Model
             t_department.Description = department.Description;
             t_department.LastUpdateDate = department.LastUpdateDate;
             t_department.LastUpdatedBy = department.LastUpdatedBy;
+            t_department.Position = department.Position;
         }
     }
 }

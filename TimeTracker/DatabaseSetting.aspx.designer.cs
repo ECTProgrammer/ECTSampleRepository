@@ -10,7 +10,7 @@
 namespace TimeTracker {
     
     
-    public partial class SetupJobType {
+    public partial class DatabaseSetting {
         
         /// <summary>
         /// UpdatePanelMain control.
@@ -49,246 +49,246 @@ namespace TimeTracker {
         protected global::System.Web.UI.WebControls.Panel panelContent;
         
         /// <summary>
-        /// labelAccessDenied control.
+        /// ttTxtBoxServer control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.Label labelAccessDenied;
+        protected global::System.Web.UI.WebControls.TextBox ttTxtBoxServer;
         
         /// <summary>
-        /// panelAccessOK control.
+        /// validatorTTServer control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.Panel panelAccessOK;
+        protected global::System.Web.UI.WebControls.RequiredFieldValidator validatorTTServer;
         
         /// <summary>
-        /// dropDownListDepartment control.
+        /// ttTxtBoxDatabase control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.DropDownList dropDownListDepartment;
+        protected global::System.Web.UI.WebControls.TextBox ttTxtBoxDatabase;
         
         /// <summary>
-        /// linkBtnAdd control.
+        /// validatorTTDatabase control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.LinkButton linkBtnAdd;
+        protected global::System.Web.UI.WebControls.RequiredFieldValidator validatorTTDatabase;
         
         /// <summary>
-        /// gridViewJobType control.
+        /// ttTxtBoxUsername control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.GridView gridViewJobType;
+        protected global::System.Web.UI.WebControls.TextBox ttTxtBoxUsername;
         
         /// <summary>
-        /// UpdatePanelModal control.
+        /// validatorTTUsername control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.UpdatePanel UpdatePanelModal;
+        protected global::System.Web.UI.WebControls.RequiredFieldValidator validatorTTUsername;
         
         /// <summary>
-        /// modalUpdateProgress control.
+        /// ttTxtBoxPassword control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.UpdateProgress modalUpdateProgress;
+        protected global::System.Web.UI.WebControls.TextBox ttTxtBoxPassword;
         
         /// <summary>
-        /// panelModal control.
+        /// validatorTTPassword control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.Panel panelModal;
+        protected global::System.Web.UI.WebControls.RequiredFieldValidator validatorTTPassword;
         
         /// <summary>
-        /// panelModalHeader control.
+        /// Panel1 control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.Panel panelModalHeader;
+        protected global::System.Web.UI.WebControls.Panel Panel1;
         
         /// <summary>
-        /// panelModalContent control.
+        /// hwTxtBoxServer control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.Panel panelModalContent;
+        protected global::System.Web.UI.WebControls.TextBox hwTxtBoxServer;
         
         /// <summary>
-        /// modalLabelJobTypeId control.
+        /// validatorHWServer control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.Label modalLabelJobTypeId;
+        protected global::System.Web.UI.WebControls.RequiredFieldValidator validatorHWServer;
         
         /// <summary>
-        /// modalLabelError control.
+        /// hwTxtBoxDatabase control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.Label modalLabelError;
+        protected global::System.Web.UI.WebControls.TextBox hwTxtBoxDatabase;
         
         /// <summary>
-        /// modalDropDownDepartment control.
+        /// validatorHWDatabase control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.DropDownList modalDropDownDepartment;
+        protected global::System.Web.UI.WebControls.RequiredFieldValidator validatorHWDatabase;
         
         /// <summary>
-        /// modalTxtBoxDescription control.
+        /// hwTxtBoxUsername control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.TextBox modalTxtBoxDescription;
+        protected global::System.Web.UI.WebControls.TextBox hwTxtBoxUsername;
         
         /// <summary>
-        /// modalReqDescription control.
+        /// validatorHWUsername control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.RequiredFieldValidator modalReqDescription;
+        protected global::System.Web.UI.WebControls.RequiredFieldValidator validatorHWUsername;
         
         /// <summary>
-        /// modalTxtBoxAcronym control.
+        /// hwTxtBoxPassword control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.TextBox modalTxtBoxAcronym;
+        protected global::System.Web.UI.WebControls.TextBox hwTxtBoxPassword;
         
         /// <summary>
-        /// modalReqAcronym control.
+        /// validatorHWPassword control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.RequiredFieldValidator modalReqAcronym;
+        protected global::System.Web.UI.WebControls.RequiredFieldValidator validatorHWPassword;
         
         /// <summary>
-        /// modalTxtBoxPosition control.
+        /// Panel2 control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.TextBox modalTxtBoxPosition;
+        protected global::System.Web.UI.WebControls.Panel Panel2;
         
         /// <summary>
-        /// modalReqPosition control.
+        /// swTxtBoxServer control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.RequiredFieldValidator modalReqPosition;
+        protected global::System.Web.UI.WebControls.TextBox swTxtBoxServer;
         
         /// <summary>
-        /// modalChkBoxRequiredJobId control.
+        /// validatorSWServer control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.CheckBox modalChkBoxRequiredJobId;
+        protected global::System.Web.UI.WebControls.RequiredFieldValidator validatorSWServer;
         
         /// <summary>
-        /// modalChkBoxComputeTime control.
+        /// swTxtBoxDatabase control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.CheckBox modalChkBoxComputeTime;
+        protected global::System.Web.UI.WebControls.TextBox swTxtBoxDatabase;
         
         /// <summary>
-        /// modalChkBoxShowJobOverview control.
+        /// validatorSWDatabase control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.CheckBox modalChkBoxShowJobOverview;
+        protected global::System.Web.UI.WebControls.RequiredFieldValidator validatorSWDatabase;
         
         /// <summary>
-        /// modalBtnSubmit control.
+        /// swTxtBoxUsername control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.Button modalBtnSubmit;
+        protected global::System.Web.UI.WebControls.TextBox swTxtBoxUsername;
         
         /// <summary>
-        /// modalBtnCancel control.
+        /// validatorSWUsername control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.Button modalBtnCancel;
+        protected global::System.Web.UI.WebControls.RequiredFieldValidator validatorSWUsername;
         
         /// <summary>
-        /// filterPosition control.
+        /// swTxtBoxPassword control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::AjaxControlToolkit.FilteredTextBoxExtender filterPosition;
+        protected global::System.Web.UI.WebControls.TextBox swTxtBoxPassword;
         
         /// <summary>
-        /// btnHidden control.
+        /// validatorSWPassword control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.Button btnHidden;
+        protected global::System.Web.UI.WebControls.RequiredFieldValidator validatorSWPassword;
         
         /// <summary>
-        /// programmaticModalPopup control.
+        /// btnSubmit control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::AjaxControlToolkit.ModalPopupExtender programmaticModalPopup;
+        protected global::System.Web.UI.WebControls.Button btnSubmit;
     }
 }

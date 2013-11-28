@@ -93,22 +93,27 @@ namespace TimeTracker
             int index = Convert.ToInt32(e.CommandArgument);
             JobTracker jobtracker = new JobTracker();
             JobTrackerHistory jtHist = new JobTrackerHistory();
-            var data = jobtracker.GetRequestNeededApproval(userid);
-            data[index].LastUpdateDate = DateTime.Now;
-            data[index].LastUpdatedBy = userid;
+            //var data = jobtracker.GetRequestNeededApproval(userid);
+            Label jobtrackId = (Label)gridViewLeftPanel1.Rows[index].FindControl("gridLeftlblJobTrackId");
+            jobtracker = jobtracker.GetJobTracker(Convert.ToInt32(jobtrackId.Text));
+            //data[index].LastUpdateDate = DateTime.Now;
+            //data[index].LastUpdatedBy = userid;
+            jobtracker.ApprovedBy = userid;
+            jobtracker.LastUpdateDate = DateTime.Now;
+            jobtracker.LastUpdatedBy = userid;
             if(e.CommandName == "AcceptRequest")
             {
-                if (data[index].ActionRequest == "Delete")
+                if (jobtracker.ActionRequest == "Delete")
                 {
-                    data[index].Status = "Approved";
-                    jtHist = jtHist.ConvertToHistory(data[index]);
-                    jobtracker.Delete(data[index].Id);
+                    jobtracker.Status = "Approved";
+                    jtHist = jtHist.ConvertToHistory(jobtracker);
+                    jobtracker.Delete(jobtracker.Id);
                 }
                 else
                 {
-                    data[index].Status = "Approved";
-                    jobtracker.Update(data[index]);
-                    jtHist = jtHist.ConvertToHistory(data[index]);
+                    jobtracker.Status = "Approved";
+                    jobtracker.Update(jobtracker);
+                    jtHist = jtHist.ConvertToHistory(jobtracker);
                 }
                 jtHist.Insert(jtHist);
                 InitializeGridViewLeftPanel1();
@@ -118,7 +123,7 @@ namespace TimeTracker
             else if (e.CommandName == "RejectRequest") 
             {
                 //data[index].Status = "Rejected";
-                modalBtnConfirm.CommandArgument = data[index].Id.ToString();
+                modalBtnConfirm.CommandArgument = jobtracker.Id.ToString();
                 programmaticModalPopup.Show();
                 //jobtracker.Update(data[index]);
                 //InitializeGridViewLeft();
@@ -132,6 +137,7 @@ namespace TimeTracker
             int id = Convert.ToInt32(e.CommandArgument);
             int userid = Convert.ToInt32(Session["UserId"]);
             jobtracker = jobtracker.GetJobTracker(id);
+            jobtracker.ApprovedBy = userid;
             jobtracker.LastUpdatedBy = userid;
             jobtracker.LastUpdateDate = DateTime.Now;
             jobtracker.SupervisorRemarks = modalTxtBoxRemarks.Text;
@@ -255,13 +261,9 @@ namespace TimeTracker
 
         protected bool isSupervisor() 
         {
-            int roleId = Convert.ToInt32(Session["RoleID"]);
-            Roles role = new Roles();
-            role = role.GetRole(roleId);
+            SupervisorMapping supmap = new SupervisorMapping();
 
-            RolesSupervisor rs = new RolesSupervisor();
-            var data = rs.GetSubordinates(roleId);
-            if (data.Count > 0)
+            if(supmap.GetActiveSubordinates(Convert.ToInt32(Session["UserId"])).Count > 0)
                 return true;
             else
                 return false;

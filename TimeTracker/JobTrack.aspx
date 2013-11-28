@@ -35,7 +35,11 @@
                      No Data Found.
                     </EmptyDataTemplate>
                 <Columns>
-                    <asp:BoundField DataField="Id" Visible="false" />
+                    <asp:TemplateField Visible ="false">
+                        <ItemTemplate>
+                            <asp:Label ID="labelJobTrackId" runat="server" Text='<%#Eval("Id")%>' Visible="false"></asp:Label>
+                        </ItemTemplate>
+                    </asp:TemplateField>
                     <asp:BoundField HeaderText="Start Time" DataField="StartTime" DataFormatString="{0:t}" ReadOnly="true"></asp:BoundField>
                     <asp:BoundField HeaderText="End Time" DataField="EndTime" DataFormatString="{0:t}" ReadOnly="true"></asp:BoundField>
                     <asp:BoundField HeaderText="Description of Work" DataField="jobtype" ReadOnly="true"></asp:BoundField>
@@ -72,9 +76,9 @@
                     <asp:Label ID ="modalLabelHWSW" runat="server" Visible="false"></asp:Label>
                     <table style="padding:3px;border-spacing:10px;" border="0">
                         <tr><td colspan="3"><asp:Label ID="modalLabelError" runat="server" Visible="false" CssClass="validation"></asp:Label></td></tr>
-                        <tr><td><asp:Label ID="modalLabelSupervisor" runat="server" Text="Supervisor" Visible="false"></asp:Label></td><td><asp:Label ID="modalLabelSupColon" runat="server" Text=":" Visible="false"></asp:Label></td>
+                        <%--<tr><td><asp:Label ID="modalLabelSupervisor" runat="server" Text="Supervisor" Visible="false"></asp:Label></td><td><asp:Label ID="modalLabelSupColon" runat="server" Text=":" Visible="false"></asp:Label></td>
                             <td><asp:DropDownList ID="modalDropDownSupervisor" runat="server" Visible="false" CssClass="dropDownList1"></asp:DropDownList></td>
-                        </tr>
+                        </tr>--%>
                         <tr><td>Description of Work</td><td>:</td><td><asp:DropDownList ID="modalDropDownJobType" runat="server" AutoPostBack="true" CssClass="dropDownList1" OnSelectedIndexChanged="modalDropDownJobType_IndexChanged"></asp:DropDownList></td></tr>
                         <tr><td>Job Id</td><td>:</td><td><asp:TextBox ID="modalTxtBoxJobId" runat="server" Enabled="false" AutoPostBack="true" OnTextChanged="modalTxtBoxJobId_TextChanged"></asp:TextBox></td></tr>
                         <tr><td>Job Status</td><td>:</td><td><asp:DropDownList ID="modalDropDownJobStatus" Enabled="false" runat="server">

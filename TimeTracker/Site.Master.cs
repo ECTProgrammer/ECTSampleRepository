@@ -80,13 +80,22 @@ namespace TimeTracker
                 linkBtnUserName.Text = "Welcome " + user.Firstname + " " + user.Lastname;
                 linkBtnUserName.Text += " | ";
                 linkBtnUserName.Visible = true;
-
                 InitializeRepError();
             }
             Setup.Visible = hasAccess("Setup");
             Settings.Visible = hasAccess("Settings");
             Report.Visible = hasAccess("Report");
-           
+
+            //if (modalUserlinkChkBoxUpdate.Checked == false)
+            //{
+            //    ToggleReqField(false);
+            //    cpeUserlink.ClientState = "true"; //Collapse 
+            //}
+            //else 
+            //{
+            //    ToggleReqField(true);
+            //    cpeUserlink.ClientState = "false"; //Expand
+            //}
 
             if (HttpContext.Current.Session["selectedTab"] != null) 
             {
@@ -113,6 +122,138 @@ namespace TimeTracker
             Session.Clear();
             Session.Abandon();
             Response.Redirect("~/Login.aspx");
+        }
+
+        protected void linkBtnUserlink_Click(object sender, EventArgs e) 
+        {
+            modalUserlinkChkBoxUpdate.Checked = false;
+            cpeUserlink.ClientState = "true"; //Collapse the panel
+            ToggleReqField(false);
+
+            modalUserlinkLabelError.Text = "";
+            modalUserlinkLabelError.Visible = false;
+            int userid = Convert.ToInt32(Session["UserId"]);
+            User user = new User();
+            user = user.GetUser(userid);
+            modalUserlinkTxtBoxFirstname.Text = user.Firstname.Trim();
+            modalUserlinkTxtBoxLastname.Text = user.Lastname.Trim();
+            modalUserlinkTxtBoxUsername.Text = user.Username.Trim();
+            modalUserlinkTxtBoxEmail.Text = user.Email.Trim();
+            modalUserlinkTxtBoxPhone.Text = user.Phone.Trim();
+            modalUserlinkTxtBoxMobile.Text = user.Mobile.Trim();
+            modalUserlinkTxtBoxFax.Text = user.Fax.Trim();
+            this.programmaticUserlinkModalPopup.Show();
+        }
+
+        protected void modalUserlinkTxtBoxUser_Changed(object sender, EventArgs e) 
+        {
+            if (modalUserlinkTxtBoxUsername.Text != "")
+            {
+                if (!IsValidUserName(modalUserlinkTxtBoxUsername.Text.Trim()))
+                {
+                    modalUserlinkLabelError.Text = "Username \"" + modalUserlinkTxtBoxUsername.Text.Trim() + "\" is already in use.";
+                    modalUserlinkLabelError.Visible = true;
+                }
+                else
+                {
+                    modalUserlinkLabelError.Text = "";
+                    modalUserlinkLabelError.Visible = false;
+                }
+            }
+            else
+            {
+                modalUserlinkLabelError.Text = "";
+                modalUserlinkLabelError.Visible = false;
+            }
+            this.programmaticUserlinkModalPopup.Show();
+        }
+
+        protected void modalUserlinkChkBoxUpdate_Changed(object sender, EventArgs e) 
+        {
+            if (modalUserlinkChkBoxUpdate.Checked == true)
+            {
+                ToggleReqField(true);
+                cpeUserlink.ClientState = "false";
+            }
+            else 
+            {
+                ToggleReqField(false);
+                cpeUserlink.ClientState = "true";
+            }
+            this.programmaticUserlinkModalPopup.Show();
+        }
+
+        protected void modalUserlinkBtnSubmit_Command(object sender, CommandEventArgs e) 
+        {
+            bool haserror = false;
+            int userid = Convert.ToInt32(Session["UserId"]);
+            User user = new User();
+            user = user.GetUser(userid);
+
+            if (modalUserlinkChkBoxUpdate.Checked == true)
+            {
+                if (modalUserlinkTxtBoxOldPassword.Text.Trim() != user.Password.Trim())
+                {
+                    modalUserlinkLabelError.Text = "Invalid Old Password.";
+                    modalUserlinkLabelError.Visible = true;
+                    haserror = true;
+                }
+                else if (modalUserlinkTxtBoxPassword.Text.Trim() != modalUserlinkTxtBoxRetypePassword.Text.Trim()) 
+                {
+                    modalUserlinkLabelError.Text = "New password and retype-password does not match.";
+                    modalUserlinkLabelError.Visible = true;
+                    haserror = true;
+                }
+                if (haserror == false)
+                {
+                    user.Username = modalUserlinkTxtBoxUsername.Text.Trim();
+                    user.Password = modalUserlinkTxtBoxPassword.Text.Trim();
+                }
+            }
+            if (haserror == false)
+            {
+                user.Firstname = modalUserlinkTxtBoxFirstname.Text.Trim();
+                user.Lastname = modalUserlinkTxtBoxLastname.Text.Trim();
+                user.Email = modalUserlinkTxtBoxEmail.Text.Trim();
+                user.Phone = modalUserlinkTxtBoxPhone.Text.Trim();
+                user.Fax = modalUserlinkTxtBoxFax.Text.Trim();
+                user.Mobile = modalUserlinkTxtBoxMobile.Text.Trim();
+                user.LastUpdatedBy = userid;
+                user.LastUpdateDate = DateTime.Now;
+                user.Update(user);
+            }
+            else 
+            {
+                this.programmaticUserlinkModalPopup.Show();
+            }
+        }
+
+        private void ToggleReqField(bool value) 
+        {
+            modalUserlinkReqUsername.Enabled = value;
+            modalUserlinkRegValUsername.Enabled = value;
+            modalUserlinkReqOldPassword.Enabled = value;
+            modalUserlinkRegValOldPassword.Enabled = value;
+            modalUserlinkReqPassword.Enabled = value;
+            modalUserlinkRegValPassword.Enabled = value;
+            modalUserlinkReqRetypePassword.Enabled = value;
+            modalUserlinkRegValRetypePassword.Enabled = value;
+        }
+
+        private bool IsValidUserName(string username)
+        {
+            int userid = Convert.ToInt32(Session["UserId"]);
+            bool result = true;
+            User user = new User();
+
+            user = user.GetUser(username);
+            if (user != null)
+            {
+                var curUser = user.GetUser(userid);
+                if (curUser.Username != user.Username)
+                    result = false;
+            }
+            return result;
         }
 
         protected void InitializeRepError() 

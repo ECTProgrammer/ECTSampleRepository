@@ -10,7 +10,7 @@
 namespace TimeTracker {
     
     
-    public partial class SetupRoleSupervisors {
+    public partial class SetupSupervisorMapping {
         
         /// <summary>
         /// UpdatePanelMain control.
@@ -67,6 +67,15 @@ namespace TimeTracker {
         protected global::System.Web.UI.WebControls.Panel panelAccessOK;
         
         /// <summary>
+        /// dropDownListDepartment control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.DropDownList dropDownListDepartment;
+        
+        /// <summary>
         /// linkBtnAdd control.
         /// </summary>
         /// <remarks>
@@ -76,22 +85,22 @@ namespace TimeTracker {
         protected global::System.Web.UI.WebControls.LinkButton linkBtnAdd;
         
         /// <summary>
-        /// gridViewRoles control.
+        /// gridViewUser control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.GridView gridViewRoles;
+        protected global::System.Web.UI.WebControls.GridView gridViewUser;
         
         /// <summary>
-        /// UpdatePanel1 control.
+        /// UpdatePanelModal control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.UpdatePanel UpdatePanel1;
+        protected global::System.Web.UI.UpdatePanel UpdatePanelModal;
         
         /// <summary>
         /// modalUpdateProgress control.
@@ -130,31 +139,67 @@ namespace TimeTracker {
         protected global::System.Web.UI.WebControls.Panel panelModalContent;
         
         /// <summary>
-        /// modalDropDownRoles control.
+        /// modalLabelUserId control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.DropDownList modalDropDownRoles;
+        protected global::System.Web.UI.WebControls.Label modalLabelUserId;
         
         /// <summary>
-        /// modalChkboxAll control.
+        /// modalLabelError control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.CheckBox modalChkboxAll;
+        protected global::System.Web.UI.WebControls.Label modalLabelError;
         
         /// <summary>
-        /// Panel1 control.
+        /// modalDropDownUsers control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.Panel Panel1;
+        protected global::System.Web.UI.WebControls.DropDownList modalDropDownUsers;
+        
+        /// <summary>
+        /// modalDropDownDepartment control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.DropDownList modalDropDownDepartment;
+        
+        /// <summary>
+        /// modalDropDownSupervisor control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.DropDownList modalDropDownSupervisor;
+        
+        /// <summary>
+        /// modalBtnAdd control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Button modalBtnAdd;
+        
+        /// <summary>
+        /// modalInnerPanel control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Panel modalInnerPanel;
         
         /// <summary>
         /// gridViewModal control.

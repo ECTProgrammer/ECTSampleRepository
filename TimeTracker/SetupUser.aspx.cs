@@ -25,28 +25,130 @@ namespace TimeTracker
 
             if (!IsPostBack)
             {
+                InitializeDropDownDepartment();
                 InitializeGridUser();
             }
         }
+
+        #region INITIALIZE
 
         protected void InitializeGridUser()
         {
             //int userid = Convert.ToInt32(Session["UserId"]);
             GetMyAccessRights();
-            Roles role = new Roles();
             User user = new User();
             if (myAccessRights.CanAdd == true)
                 linkBtnAddUser.Visible = true;
             else
                 linkBtnAddUser.Visible = false;
 
-            var userlist = user.GetUserList();
-
+            List<User> userlist = new List<User>();
+            if (dropDownListDepartment.SelectedItem.Text == "All")
+            {
+                if (radioBtnListStatus.SelectedItem.Text == "All")
+                    userlist = user.GetUserList();
+                else
+                    userlist = user.GetUserListByStatus(radioBtnListStatus.SelectedItem.Value.Trim());
+            }
+            else 
+            {
+                if (radioBtnListStatus.SelectedItem.Text == "All")
+                    userlist = user.GetUserList(Convert.ToInt32(dropDownListDepartment.SelectedItem.Value));
+                else
+                    userlist = user.GetUserListByDepartmentAndStatus(Convert.ToInt32(dropDownListDepartment.SelectedItem.Value), radioBtnListStatus.SelectedItem.Value.Trim());
+            }
             gridViewUser.DataSource = userlist;
             gridViewUser.DataBind();
         }
 
-        protected void InitializeDropDownDepartment(string value = "") 
+        protected void InitializeDropDownDepartment() 
+        {
+            Department department = new Department();
+            var departmentList = department.GetDepartmentList();
+            if (departmentList.Count > 0)
+            {
+                if (departmentList[0].Description == "All")
+                    departmentList.RemoveAt(0);
+            }
+            department.Id = 0;
+            department.Description = "All";
+            departmentList.Insert(0,department);
+            dropDownListDepartment.DataSource = departmentList;
+            dropDownListDepartment.DataTextField = "Description";
+            dropDownListDepartment.DataValueField = "Id";
+            dropDownListDepartment.DataBind();
+        }
+
+        #endregion
+
+        #region COMMAND
+
+        protected void linkBtnAddUser_Click(object sender, EventArgs e)
+        {
+            modalLabelError.Text = "";
+            modalLabelError.Visible = false;
+            modalLabelUserId.Text = "";
+            modalBtnSubmit.CommandArgument = "Add";
+            modalTxtBoxEmployeeNo.Text = "";
+            modalTxtBoxFirstname.Text = "";
+            modalTxtBoxLastname.Text = "";
+            modalTxtBoxUsername.Text = "";
+            modalTxtBoxPassword.Attributes.Add("value", "");
+            modalTxtBoxPhone.Text = "";
+            modalTxtBoxMobile.Text = "";
+            modalTxtBoxEmail.Text = "";
+            modalTxtBoxFax.Text = "";
+            InitializeModalDropDownDepartment();
+            InitializeModalDropDownRole();
+            InitializeModalDropDownStatus();
+            this.programmaticModalPopup.Show();
+        }
+
+        protected void gridViewUser_Command(object sender, GridViewCommandEventArgs e)
+        {
+            if (e.CommandName == "Select")
+            {
+                GetMyAccessRights();
+                modalLabelError.Text = "";
+                modalLabelError.Visible = false;
+                int index = Convert.ToInt32(e.CommandArgument);
+                int userid = Convert.ToInt32(((Label)gridViewUser.Rows[index].FindControl("labelUserId")).Text);
+                User user = new User();
+                user = user.GetUser(userid);
+                InitializeModalDropDownDepartment(user.DepartmentId.ToString());
+                InitializeModalDropDownRole(user.RoleId.ToString());
+                InitializeModalDropDownStatus(user.Status);
+                modalBtnSubmit.Visible = Convert.ToBoolean(myAccessRights.CanUpdate);
+                modalLabelUserId.Text = userid.ToString();
+                modalBtnSubmit.CommandArgument = "Update";
+                modalTxtBoxEmployeeNo.Text = user.EmployeeNumber.ToString();
+                modalTxtBoxFirstname.Text = user.Firstname.Trim();
+                modalTxtBoxLastname.Text = user.Lastname;
+                modalTxtBoxUsername.Text = user.Username;
+                modalTxtBoxPassword.Attributes.Add("value", user.Password);
+                modalTxtBoxPhone.Text = user.Phone;
+                modalTxtBoxMobile.Text = user.Mobile;
+                modalTxtBoxEmail.Text = user.Email;
+                modalTxtBoxFax.Text = user.Fax;
+                this.programmaticModalPopup.Show();
+            }
+        }
+
+        protected void dropDownDepartment_Changed(object sender, EventArgs e) 
+        {
+            InitializeGridUser();
+        }
+
+        protected void radioBtnStatus_Changed(object sender, EventArgs e) 
+        {
+            InitializeGridUser();
+        }
+
+        #endregion
+
+        #region MODAL
+        #region INITIALIZE
+        protected void InitializeModalDropDownDepartment(string value = "") 
         {
             Department department = new Department();
             var departmentList = department.GetDepartmentList();
@@ -73,7 +175,7 @@ namespace TimeTracker
             }
         }
 
-        protected void InitializeDropDownRole(string value = "") 
+        protected void InitializeModalDropDownRole(string value = "") 
         {
             Roles role = new Roles();
             var roles = role.GetRoleList();
@@ -95,62 +197,56 @@ namespace TimeTracker
             }
         }
 
-        protected void linkBtnAddUser_Click(object sender, EventArgs e)
+        protected void InitializeModalDropDownStatus(string value = "") 
         {
-            modalLabelError.Text = "";
-            modalLabelError.Visible = false;
-            modalLabelUserId.Text = "";
-            modalBtnSubmit.CommandArgument = "Add";
-            modalTxtBoxEmployeeNo.Text = "";
-            modalTxtBoxFirstname.Text = "";
-            modalTxtBoxLastname.Text = "";
-            modalTxtBoxUsername.Text = "";
-            modalTxtBoxPassword.Attributes.Add("value","");
-            modalTxtBoxPhone.Text = "";
-            modalTxtBoxMobile.Text = "";
-            modalTxtBoxEmail.Text = "";
-            modalTxtBoxFax.Text = "";
-            InitializeDropDownDepartment();
-            InitializeDropDownRole();
-            this.programmaticModalPopup.Show();
-        }
-
-        protected void gridViewUser_Command(object sender, GridViewCommandEventArgs e)
-        {
-            if (e.CommandName == "Select")
+            foreach (ListItem i in modalDropDownStatus.Items) 
             {
-                GetMyAccessRights();
-                modalLabelError.Text = "";
-                modalLabelError.Visible = false;
-                int index = Convert.ToInt32(e.CommandArgument);
-                int userid = Convert.ToInt32(((Label)gridViewUser.Rows[index].FindControl("labelUserId")).Text);
-                User user = new User();
-                user = user.GetUser(userid);
-                InitializeDropDownDepartment(user.DepartmentId.ToString());
-                InitializeDropDownRole(user.RoleId.ToString());
-                modalBtnSubmit.Visible = Convert.ToBoolean(myAccessRights.CanUpdate);
-                modalLabelUserId.Text =userid.ToString();
-                modalBtnSubmit.CommandArgument = "Update";
-                modalTxtBoxEmployeeNo.Text = user.EmployeeNumber.ToString();
-                modalTxtBoxFirstname.Text = user.Firstname.Trim();
-                modalTxtBoxLastname.Text = user.Lastname;
-                modalTxtBoxUsername.Text = user.Username;
-                modalTxtBoxPassword.Attributes.Add("value",user.Password);
-                modalTxtBoxPhone.Text = user.Phone;
-                modalTxtBoxMobile.Text = user.Mobile;
-                modalTxtBoxEmail.Text = user.Email;
-                modalTxtBoxFax.Text = user.Fax;
-                this.programmaticModalPopup.Show();
+                if (value.Trim() == i.Value.Trim()) 
+                    i.Selected = true;
+                else
+                    i.Selected = false;
             }
         }
+        #endregion
 
+        #region COMMAND
         protected void modalBtnSubmit_Command(object sender, CommandEventArgs e)
         {
             if (modalLabelError.Visible == true)
                 this.programmaticModalPopup.Show();
             else 
             {
-               
+                int userid = Convert.ToInt32(Session["UserId"]);
+                User user = new User();
+                if (modalLabelUserId.Text.Trim() != "") //Update
+                {
+                    user = user.GetUser(Convert.ToInt32(modalLabelUserId.Text));
+                }
+                user.Firstname = modalTxtBoxFirstname.Text.Trim();
+                user.Lastname = modalTxtBoxLastname.Text.Trim();
+                user.RoleId = Convert.ToInt32(modalDropDownRole.SelectedItem.Value);
+                user.DepartmentId = Convert.ToInt32(modalDropDownDepartment.SelectedItem.Value);
+                user.Username = modalTxtBoxUsername.Text.Trim();
+                user.Password = modalTxtBoxPassword.Text.Trim();
+                user.Email = modalTxtBoxEmail.Text.Trim();
+                user.Phone = modalTxtBoxPhone.Text.Trim();
+                user.Fax = modalTxtBoxFax.Text.Trim();
+                user.Mobile = modalTxtBoxMobile.Text.Trim();
+                user.LastUpdatedBy = userid;
+                user.LastUpdateDate = DateTime.Now;
+                user.EmployeeNumber = Convert.ToInt32(modalTxtBoxEmployeeNo.Text);
+                user.Status = modalDropDownStatus.SelectedItem.Value;
+                if (e.CommandArgument.ToString().Trim() == "Add") 
+                {
+                    user.CreateDate = DateTime.Now;
+                    user.CreatedBy = userid;
+                    user.Insert(user);
+                }
+                else if (e.CommandArgument.ToString().Trim() == "Update") 
+                {
+                    user.Update(user);
+                }
+                InitializeGridUser();
             }
         }
 
@@ -176,7 +272,10 @@ namespace TimeTracker
             }
             this.programmaticModalPopup.Show();
         }
+        #endregion
+        #endregion
 
+        #region OTHERS
         protected override void Render(System.Web.UI.HtmlTextWriter writer)
         {
             foreach (GridViewRow row in gridViewUser.Rows)
@@ -241,5 +340,6 @@ namespace TimeTracker
             module = module.GetModule("SetupUser.aspx");
             myAccessRights = myAccessRights.GetRolesModuleAccess(Convert.ToInt32(user.RoleId), module.Id);
         }
+        #endregion
     }
 }

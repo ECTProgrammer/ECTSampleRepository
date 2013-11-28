@@ -20,7 +20,7 @@ namespace TimeTracker
         {
             
             User user = new User();
-            user = user.GetUser(txtBoxUsername.Text.Trim(), txtBoxPassword.Text.Trim());
+            user = user.GetActiveUser(txtBoxUsername.Text.Trim(), txtBoxPassword.Text.Trim());
             if (user != null)
             {
                 Session["UserId"] = user.Id;

@@ -184,33 +184,6 @@ namespace TimeTracker {
         protected global::System.Web.UI.WebControls.Label modalLabelError;
         
         /// <summary>
-        /// modalLabelSupervisor control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.Label modalLabelSupervisor;
-        
-        /// <summary>
-        /// modalLabelSupColon control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.Label modalLabelSupColon;
-        
-        /// <summary>
-        /// modalDropDownSupervisor control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.DropDownList modalDropDownSupervisor;
-        
-        /// <summary>
         /// modalDropDownJobType control.
         /// </summary>
         /// <remarks>

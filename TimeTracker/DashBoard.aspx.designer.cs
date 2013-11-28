@@ -166,15 +166,6 @@ namespace TimeTracker {
         protected global::System.Web.UI.WebControls.DropDownList ddlBottomDepartment;
         
         /// <summary>
-        /// ddlBottomJobType control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.DropDownList ddlBottomJobType;
-        
-        /// <summary>
         /// txtBoxBottomFromDate control.
         /// </summary>
         /// <remarks>
@@ -191,42 +182,6 @@ namespace TimeTracker {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.TextBox txtBoxBottomToDate;
-        
-        /// <summary>
-        /// ddlBottomJobStatus control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.DropDownList ddlBottomJobStatus;
-        
-        /// <summary>
-        /// txtBoxBottomJobId control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.TextBox txtBoxBottomJobId;
-        
-        /// <summary>
-        /// ddlBottomRole control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.DropDownList ddlBottomRole;
-        
-        /// <summary>
-        /// ddlBottomPersonel control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.DropDownList ddlBottomPersonel;
         
         /// <summary>
         /// gridViewBottom control.

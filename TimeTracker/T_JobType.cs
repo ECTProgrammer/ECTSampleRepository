@@ -29,6 +29,9 @@ namespace TimeTracker
         public Nullable<System.DateTime> LastUpdateDate { get; set; }
         public Nullable<bool> RequiredJobId { get; set; }
         public Nullable<bool> ComputeTime { get; set; }
+        public Nullable<int> Position { get; set; }
+        public Nullable<bool> ShowInJobOverview { get; set; }
+        public string Acronym { get; set; }
     
         public virtual T_Department M_Department { get; set; }
         public virtual ICollection<T_JobTracker> M_JobTrackers { get; set; }

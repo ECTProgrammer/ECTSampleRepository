@@ -32,19 +32,24 @@
                             <asp:HyperLink ID="hyperlinkJobTrack" runat="server" NavigateUrl="~/JobTrack.aspx" Text="Job Track" ToolTip="Job Track"></asp:HyperLink>
                         </span>
                     </asp:Panel>
+                    <asp:Panel ID="JobOverview" runat="server" CssClass="navlistli" BackColor="#000793">
+                        <span class="navlistspan">
+                            <asp:HyperLink ID="hyperlinkJobOverview" runat="server" NavigateUrl="~/JobOverview.aspx" Text="Overview" ToolTip="Job Overview"></asp:HyperLink>
+                        </span>
+                    </asp:Panel>
                     <asp:Panel ID="Setup" runat="server" CssClass="navlistli" BackColor="#000793">
                         <span class="navlistspan">
-                            <asp:HyperLink ID="hyperlinkDefault" runat="server" NavigateUrl="~/Setup.aspx" Text="Setup" ToolTip="Job Track"></asp:HyperLink>
+                            <asp:HyperLink ID="hyperlinkDefault" runat="server" NavigateUrl="~/Setup.aspx" Text="Setup" ToolTip="Setup"></asp:HyperLink>
                         </span>
                     </asp:Panel>
                     <asp:Panel ID="Settings" runat="server" CssClass="navlistli" BackColor="#000793">
                         <span class="navlistspan">
-                            <asp:HyperLink ID="hyperlinkContact" runat="server" NavigateUrl="~/Contact.aspx" Text="Settings" ToolTip="Job Track"></asp:HyperLink>
+                            <asp:HyperLink ID="hyperlinkContact" runat="server" NavigateUrl="~/Setting.aspx" Text="Settings" ToolTip="Settings"></asp:HyperLink>
                         </span>
                     </asp:Panel>
                     <asp:Panel ID="Report" runat="server" CssClass="navlistli" BackColor="#000793">
                         <span class="navlistspan">
-                            <asp:HyperLink ID="hyperlinkAbout" runat="server" NavigateUrl="~/About.aspx" Text="Report" ToolTip="Job Track"></asp:HyperLink>
+                            <asp:HyperLink ID="hyperlinkAbout" runat="server" NavigateUrl="~/About.aspx" Text="Report" ToolTip="Report"></asp:HyperLink>
                         </span>
                     </asp:Panel>
                 </asp:Panel>
@@ -54,7 +59,7 @@
         <div style="border-top:solid 1px #dedede; padding:0px 0px 0px 0px;"></div>
         <div class="frame">
             <div style="text-align:right;height:20px;margin:5px 0px 5px 0px;">
-                <asp:LinkButton ID="linkBtnUserName" runat="server" CssClass="linkButton"></asp:LinkButton>
+                <asp:LinkButton ID="linkBtnUserName" runat="server" CssClass="linkButton" OnClick="linkBtnUserlink_Click"></asp:LinkButton>
                 <asp:LinkButton ID="linkBtnLogout" runat="server" Text="Log Out" CssClass="linkButton" OnClick="linkBtnLogoutClick"></asp:LinkButton>
             </div>
             <div>
@@ -68,6 +73,78 @@
             </div>
             <asp:ContentPlaceHolder runat="server" ID="FeaturedContent" />
             <asp:ContentPlaceHolder runat="server" ID="MainContent" />
+
+            <asp:UpdatePanel ID="UpdatePanelUserlinkModal" runat="server">
+                <ContentTemplate>
+                    <asp:UpdateProgress ID="modalUpdateUserlinkProgress" runat="server" AssociatedUpdatePanelID="UpdatePanelUserlinkModal" DynamicLayout="true">
+                        <ProgressTemplate>
+                            <div class="loading">
+                                <asp:Image ID="modalImageUserlinkLoading" runat="server" ImageUrl="Images/loading.gif" AlternateText="Loading..." ToolTip="Loading..." style="padding: 10px;position:fixed;top:45%;left:50%;" />
+                            </div>
+                        </ProgressTemplate>
+                    </asp:UpdateProgress>
+                    <asp:Panel Id="panelUserlinkModal" runat="server" style="display:none">
+                        <asp:Panel ID="panelUserlinkModalHeader" runat="server" CssClass="modalHeader">User Setting</asp:Panel>
+                        <asp:Panel ID="panelUserlinkModalContent" runat="server" CssClass="modal">
+                            <asp:Label ID="modalUserlinkLabelError" runat="server" CssClass="validation" Visible="false"></asp:Label>
+                                <table style="padding:10px; border-collapse:separate;border-spacing:10px; width:100%">
+                                    <tr><td>Firstname</td><td>:</td><td><asp:TextBox ID="modalUserlinkTxtBoxFirstname" ValidationGroup="modalUserlink" runat="server" CssClass="textBox"></asp:TextBox>
+                                        <asp:RequiredFieldValidator ID="modalUserlinkReqFirstname" runat="server" ValidationGroup="modalUserlink" CssClass="validation" ControlToValidate="modalUserlinkTxtBoxFirstname" Text="*"></asp:RequiredFieldValidator></td></tr>
+                                    <tr><td>Lastname</td><td>:</td><td><asp:TextBox ID="modalUserlinkTxtBoxLastname" ValidationGroup="modalUserlink" runat="server" CssClass="textBox"></asp:TextBox>
+                                        <asp:RequiredFieldValidator ID="modalUserlinkReqLastname" runat="server" ValidationGroup="modalUserlink" CssClass="validation" ControlToValidate="modalUserlinkTxtBoxLastname" Text="*"></asp:RequiredFieldValidator></td></tr>
+                                    <tr><td colspan="3"><asp:CheckBox ID="modalUserlinkChkBoxUpdate" runat="server" ValidationGroup="modalUserlink" Text="Update Username/Password" AutoPostBack="true" OnCheckedChanged="modalUserlinkChkBoxUpdate_Changed" /></td></tr>
+                                    <tr><td colspan="3"><asp:Panel ID="modalUserlinkPanel" runat="server">
+                                        <table style="padding:10px; border-collapse:separate;border-spacing:10px;">
+                                            <tr><td>Username</td><td>:</td><td><asp:TextBox ID="modalUserlinkTxtBoxUsername" runat="server" AutoPostBack="true" ValidationGroup="modalUserlink" CssClass="textBox" OnTextChanged="modalUserlinkTxtBoxUser_Changed"></asp:TextBox>
+                                                <asp:RequiredFieldValidator ID="modalUserlinkReqUsername" runat="server" ValidationGroup="modalUserlink" CssClass="validation" ControlToValidate="modalUserlinkTxtBoxUsername" Text="*"></asp:RequiredFieldValidator>
+                                                <asp:RegularExpressionValidator ID="modalUserlinkRegValUsername" runat="server" ValidationGroup="modalUserlink" CssClass="validation" ControlToValidate="modalUserlinkTxtBoxUsername" Text="Minimum 4 characters." ValidationExpression=".{4}.*"></asp:RegularExpressionValidator></td></tr>
+                                            <tr><td>Old Password</td><td>:</td><td><asp:TextBox ID="modalUserlinkTxtBoxOldPassword" runat="server" ValidationGroup="modalUserlink" CssClass="textBox" TextMode="Password"></asp:TextBox>
+                                                <asp:RequiredFieldValidator ID="modalUserlinkReqOldPassword" runat="server" CssClass="validation" ValidationGroup="modalUserlink" ControlToValidate="modalUserlinkTxtBoxOldPassword" Text="*"></asp:RequiredFieldValidator>
+                                                <asp:RegularExpressionValidator ID="modalUserlinkRegValOldPassword" runat="server" ValidationGroup="modalUserlink" CssClass="validation" ControlToValidate="modalUserlinkTxtBoxOldPassword" Text="Minimum 4 characters." ValidationExpression=".{4}.*"></asp:RegularExpressionValidator></td></tr>
+                                            <tr><td>Password</td><td>:</td><td><asp:TextBox ID="modalUserlinkTxtBoxPassword" runat="server" ValidationGroup="modalUserlink" CssClass="textBox" TextMode="Password"></asp:TextBox>
+                                                <asp:RequiredFieldValidator ID="modalUserlinkReqPassword" runat="server" CssClass="validation" ValidationGroup="modalUserlink" ControlToValidate="modalUserlinkTxtBoxPassword" Text="*"></asp:RequiredFieldValidator>
+                                                <asp:RegularExpressionValidator ID="modalUserlinkRegValPassword" runat="server" ValidationGroup="modalUserlink" CssClass="validation" ControlToValidate="modalUserlinkTxtBoxPassword" Text="Minimum 4 characters." ValidationExpression=".{4}.*"></asp:RegularExpressionValidator></td></tr>
+                                            <tr><td>Retype-Password</td><td>:</td><td><asp:TextBox ID="modalUserlinkTxtBoxRetypePassword" runat="server" ValidationGroup="modalUserlink" CssClass="textBox" TextMode="Password"></asp:TextBox>
+                                                <asp:RequiredFieldValidator ID="modalUserlinkReqRetypePassword" runat="server" CssClass="validation" ValidationGroup="modalUserlink" ControlToValidate="modalUserlinkTxtBoxRetypePassword" Text="*"></asp:RequiredFieldValidator>
+                                                <asp:RegularExpressionValidator ID="modalUserlinkRegValRetypePassword" runat="server" ValidationGroup="modalUserlink" CssClass="validation" ControlToValidate="modalUserlinkTxtBoxRetypePassword" Text="Minimum 4 characters." ValidationExpression=".{4}.*"></asp:RegularExpressionValidator></td></tr>
+                                        </table>
+                                    </asp:Panel></td></tr>
+                                    <tr><td>Email</td><td>:</td><td><asp:TextBox ID="modalUserlinkTxtBoxEmail" runat="server" ValidationGroup="modalUserlink" CssClass="textBox" TextMode="Email"></asp:TextBox></td></tr>
+                                    <tr><td>Phone</td><td>:</td><td><asp:TextBox ID="modalUserlinkTxtBoxPhone" runat="server" ValidationGroup="modalUserlink" CssClass="textBox"></asp:TextBox></td></tr>
+                                    <tr><td>Mobile</td><td>:</td><td><asp:TextBox ID="modalUserlinkTxtBoxMobile" runat="server" ValidationGroup="modalUserlink" CssClass="textBox"></asp:TextBox></td></tr>
+                                    <tr><td>Fax</td><td>:</td><td><asp:TextBox ID="modalUserlinkTxtBoxFax" runat="server" ValidationGroup="modalUserlink" CssClass="textBox"></asp:TextBox></td></tr>
+                                    <tr>
+                                        <td colspan="3" style="text-align:center">
+                                            <asp:Button ID="modalUserlinkBtnSubmit" runat="server" Text="Submit" ValidationGroup="modalUserlink" CausesValidation="true" CssClass="button" OnCommand="modalUserlinkBtnSubmit_Command"/>
+                                            <asp:Button ID="modalUserlinkBtnCancel" runat="server" Text="Cancel" CausesValidation="false" CssClass="button"/>
+                                        </td>
+                                    </tr>
+                                </table>
+                        </asp:Panel>
+                    </asp:Panel>
+                    <ajaxToolkit:CollapsiblePanelExtender ID="cpeUserlink" runat="server" 
+                        TargetControlID ="modalUserlinkPanel"
+                        CollapsedSize="0"
+                        Collapsed ="True"
+                        ExpandControlID="modalUserlinkChkBoxUpdate"
+                        CollapseControlID="modalUserlinkChkBoxUpdate"
+                        AutoExpand="false"
+                        AutoCollapse="false"
+                        ExpandDirection="Vertical"
+                        />
+                    <asp:Button ID="btnUserlinkHidden" runat="server" style="display:none"/>
+                    <ajaxToolKit:ModalPopupExtender runat="server" ID="programmaticUserlinkModalPopup"
+                        BehaviorID ="programmaticUserlinkModalPopupBehavior"
+                        TargetControlID="btnUserlinkHidden"
+                        PopupControlID="panelUserlinkModal"
+                        BackgroundCssClass="modalBackground"
+                        CancelControlID="modalUserlinkBtnCancel"
+                        DropShadow="false"
+                        PopupDragHandleControlID="panelUserlinkModalHeader"
+                        RepositionMode="RepositionOnWindowResize" >    
+                    </ajaxToolKit:ModalPopupExtender> 
+                </ContentTemplate>
+            </asp:UpdatePanel>
         </div>
     </form>
     </div>

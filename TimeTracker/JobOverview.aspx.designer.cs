@@ -10,7 +10,7 @@
 namespace TimeTracker {
     
     
-    public partial class Job_Overview {
+    public partial class JobOverview {
         
         /// <summary>
         /// UpdatePanelMain control.
@@ -67,57 +67,48 @@ namespace TimeTracker {
         protected global::System.Web.UI.WebControls.Panel panelAccessOK;
         
         /// <summary>
-        /// txtBoxDate control.
+        /// txtBoxStartDate control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.TextBox txtBoxDate;
+        protected global::System.Web.UI.WebControls.TextBox txtBoxStartDate;
         
         /// <summary>
-        /// labelDay control.
+        /// txtBoxEndDate control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.Label labelDay;
+        protected global::System.Web.UI.WebControls.TextBox txtBoxEndDate;
         
         /// <summary>
-        /// calendarExtenderDate control.
+        /// calendarExtenderStartDate control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::AjaxControlToolkit.CalendarExtender calendarExtenderDate;
+        protected global::AjaxControlToolkit.CalendarExtender calendarExtenderStartDate;
         
         /// <summary>
-        /// linkBtnAddJobTrack control.
+        /// calendarExtenderEndDate control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.LinkButton linkBtnAddJobTrack;
+        protected global::AjaxControlToolkit.CalendarExtender calendarExtenderEndDate;
         
         /// <summary>
-        /// LabelTotalHours control.
+        /// gridViewMain control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.Label LabelTotalHours;
-        
-        /// <summary>
-        /// gridJobTrack control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.GridView gridJobTrack;
+        protected global::System.Web.UI.WebControls.GridView gridViewMain;
     }
 }

@@ -16,7 +16,7 @@ namespace TimeTracker
     {
         public T_Department()
         {
-            this.M_obTypes = new HashSet<T_JobType>();
+            this.M_JobTypes = new HashSet<T_JobType>();
             this.M_RoleDepartmentAccesses = new HashSet<T_RoleDepartmentAccess>();
             this.M_Users = new HashSet<T_Users>();
         }
@@ -27,8 +27,9 @@ namespace TimeTracker
         public Nullable<System.DateTime> LastUpdateDate { get; set; }
         public Nullable<int> CreatedBy { get; set; }
         public Nullable<int> LastUpdatedBy { get; set; }
+        public Nullable<int> Position { get; set; }
     
-        public virtual ICollection<T_JobType> M_obTypes { get; set; }
+        public virtual ICollection<T_JobType> M_JobTypes { get; set; }
         public virtual ICollection<T_RoleDepartmentAccess> M_RoleDepartmentAccesses { get; set; }
         public virtual ICollection<T_Users> M_Users { get; set; }
     }

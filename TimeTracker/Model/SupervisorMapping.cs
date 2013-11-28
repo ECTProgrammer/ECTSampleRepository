@@ -7,8 +7,10 @@ namespace TimeTracker.Model
 {
     public class SupervisorMapping : T_SupervisorMapping
     {
-        string userfullname {get;set;}
-        string supervisorname {get;set;}
+        public string userfullname {get;set;}
+        public string supervisorname { get; set; }
+        public string subdepartment { get; set; }
+        public string supdepartment { get; set; }
 
         public SupervisorMapping GetSupervisorMapping(int id) 
         {
@@ -22,7 +24,9 @@ namespace TimeTracker.Model
                             UserId = s.UserId,
                             SupervisorId = s.SupervisorId,
                             userfullname = s.M_User.Firstname+" "+s.M_User.Lastname,
-                            supervisorname = s.M_Supervisor.Firstname+" "+s.M_Supervisor.Lastname
+                            supervisorname = s.M_Supervisor.Firstname+" "+s.M_Supervisor.Lastname,
+                            subdepartment = s.M_User.M_Department.Description,
+                            supdepartment = s.M_Supervisor.M_Department.Description
                         }).FirstOrDefault();
 
             db.Dispose();
@@ -43,14 +47,16 @@ namespace TimeTracker.Model
                             UserId = s.UserId,
                             SupervisorId = s.SupervisorId,
                             userfullname = s.M_User.Firstname + " " + s.M_User.Lastname,
-                            supervisorname = s.M_Supervisor.Firstname + " " + s.M_Supervisor.Lastname
+                            supervisorname = s.M_Supervisor.Firstname + " " + s.M_Supervisor.Lastname,
+                            subdepartment = s.M_User.M_Department.Description,
+                            supdepartment = s.M_Supervisor.M_Department.Description
                         }).FirstOrDefault();
 
             db.Dispose();
 
             return data;
         }
-
+        
         public List<SupervisorMapping> GetSupervisors(int userid) 
         {
             TimeTrackerEntities db = new TimeTrackerEntities();
@@ -63,7 +69,56 @@ namespace TimeTracker.Model
                             UserId = s.UserId,
                             SupervisorId = s.SupervisorId,
                             userfullname = s.M_User.Firstname + " " + s.M_User.Lastname,
-                            supervisorname = s.M_Supervisor.Firstname + " " + s.M_Supervisor.Lastname
+                            supervisorname = s.M_Supervisor.Firstname + " " + s.M_Supervisor.Lastname,
+                            subdepartment = s.M_User.M_Department.Description,
+                            supdepartment = s.M_Supervisor.M_Department.Description
+                        }).ToList();
+
+            db.Dispose();
+
+            return data;
+        }
+
+        public List<SupervisorMapping> GetActiveSupervisors(int userid,int departmentId)
+        {
+            TimeTrackerEntities db = new TimeTrackerEntities();
+
+            var data = (from s in db.T_SupervisorMapping
+                        where s.UserId == userid
+                        && s.M_Supervisor.Status == "Active"
+                        && s.M_Supervisor.DepartmentId == departmentId
+                        select new SupervisorMapping()
+                        {
+                            Id = s.Id,
+                            UserId = s.UserId,
+                            SupervisorId = s.SupervisorId,
+                            userfullname = s.M_User.Firstname + " " + s.M_User.Lastname,
+                            supervisorname = s.M_Supervisor.Firstname + " " + s.M_Supervisor.Lastname,
+                            subdepartment = s.M_User.M_Department.Description,
+                            supdepartment = s.M_Supervisor.M_Department.Description
+                        }).ToList();
+
+            db.Dispose();
+
+            return data;
+        }
+
+        public List<SupervisorMapping> GetActiveSupervisors(int userid)
+        {
+            TimeTrackerEntities db = new TimeTrackerEntities();
+
+            var data = (from s in db.T_SupervisorMapping
+                        where s.UserId == userid
+                        && s.M_Supervisor.Status == "Active"
+                        select new SupervisorMapping()
+                        {
+                            Id = s.Id,
+                            UserId = s.UserId,
+                            SupervisorId = s.SupervisorId,
+                            userfullname = s.M_User.Firstname + " " + s.M_User.Lastname,
+                            supervisorname = s.M_Supervisor.Firstname + " " + s.M_Supervisor.Lastname,
+                            subdepartment = s.M_User.M_Department.Description,
+                            supdepartment = s.M_Supervisor.M_Department.Description
                         }).ToList();
 
             db.Dispose();
@@ -77,13 +132,16 @@ namespace TimeTracker.Model
 
             var data = (from s in db.T_SupervisorMapping
                         where s.SupervisorId == supervisorid
+                        && s.M_User.Status == "Active"
                         select new SupervisorMapping()
                         {
                             Id = s.Id,
                             UserId = s.UserId,
                             SupervisorId = s.SupervisorId,
                             userfullname = s.M_User.Firstname + " " + s.M_User.Lastname,
-                            supervisorname = s.M_Supervisor.Firstname + " " + s.M_Supervisor.Lastname
+                            supervisorname = s.M_Supervisor.Firstname + " " + s.M_Supervisor.Lastname,
+                            subdepartment = s.M_User.M_Department.Description,
+                            supdepartment = s.M_Supervisor.M_Department.Description
                         }).ToList();
 
             db.Dispose();
@@ -91,9 +149,32 @@ namespace TimeTracker.Model
             return data;
         }
 
+        public List<SupervisorMapping> GetActiveSubordinates(int supervisorid)
+        {
+            TimeTrackerEntities db = new TimeTrackerEntities();
+
+            var data = (from s in db.T_SupervisorMapping
+                        where s.SupervisorId == supervisorid
+                        select new SupervisorMapping()
+                        {
+                            Id = s.Id,
+                            UserId = s.UserId,
+                            SupervisorId = s.SupervisorId,
+                            userfullname = s.M_User.Firstname + " " + s.M_User.Lastname,
+                            supervisorname = s.M_Supervisor.Firstname + " " + s.M_Supervisor.Lastname,
+                            subdepartment = s.M_User.M_Department.Description,
+                            supdepartment = s.M_Supervisor.M_Department.Description
+                        }).ToList();
+
+            db.Dispose();
+
+            return data;
+        }
+
+
         public void Insert(SupervisorMapping rm)
         {
-            SupervisorMapping t_rm = new SupervisorMapping();
+            T_SupervisorMapping t_rm = new T_SupervisorMapping();
             t_rm.UserId = rm.UserId;
             t_rm.SupervisorId = rm.SupervisorId;
 
@@ -145,6 +226,21 @@ namespace TimeTracker.Model
                     string msg = ex.Message;
                 }
             }
+        }
+
+        public double getAngle(int x1, int y1, int x2, int y2, int x3, int y3) 
+        {
+            double result = 0;
+            double a;
+            double b;
+            double c;
+
+            a = Math.Sqrt(Math.Pow(x2 - x1,2) + Math.Pow(y2-y1,2));
+            c = Math.Sqrt(Math.Pow(x3 - x2, 2) + Math.Pow(y3 - y2, 2));
+            b = Math.Sqrt(Math.Pow(x1 - x3, 2) + Math.Pow(y1 - y3, 2));
+
+            result = Math.Acos((Math.Pow(a,2)+Math.Pow(b,2)-Math.Pow(c,2))/(2*a*b));
+            return result;
         }
     }
 }

@@ -20,7 +20,11 @@
                                     No Data Found.
                                 </EmptyDataTemplate>
                                 <Columns>
-                                    <asp:BoundField DataField="Id" Visible="False" />
+                                    <asp:TemplateField Visible ="false">
+                                        <ItemTemplate>
+                                            <asp:Label ID="gridLeftlblJobTrackId" runat="server" Text='<%#Eval("Id")%>' Visible="false"></asp:Label>
+                                        </ItemTemplate>
+                                    </asp:TemplateField>
                                     <asp:BoundField HeaderText="Requested By" DataField="fullname"/>
                                     <asp:BoundField HeaderText="Action Request" DataField="ActionRequest" />
                                     <asp:BoundField HeaderText="Job Date" DataField="ScheduleDate" DataFormatString="{0:dd-MMM-yy}" />
@@ -110,18 +114,18 @@
            <asp:Panel ID="panelBottomContent" runat="server" CssClass="modalBottom" Width="99%">
                <table style="width:100%;display:table">
                    <tr><td>Departement : <asp:DropDownList ID="ddlBottomDepartment" runat="server" AutoPostBack="true" OnSelectedIndexChanged="ddlBottomDepartment_Changed"></asp:DropDownList></td>
-                       <td>Job Type : <asp:DropDownList ID="ddlBottomJobType"   runat="server"></asp:DropDownList></td>
+                       <%--<td>Job Type : <asp:DropDownList ID="ddlBottomJobType"   runat="server"></asp:DropDownList></td>--%>
                        <td>Schedule Date : <asp:TextBox ID="txtBoxBottomFromDate" runat="server" AutoPostBack="true" OnTextChanged="txtBoxBottomFromDate_Changed">
                                            </asp:TextBox> to: <asp:TextBox ID="txtBoxBottomToDate" runat="server" AutoPostBack="true" OnTextChanged="txtBoxBottomToDate_Changed"></asp:TextBox></td>
                    </tr>
-                   <tr>
+                   <%--<tr>
                        <td>Job Status : <asp:DropDownList ID="ddlBottomJobStatus" runat="server"></asp:DropDownList></td>
                        <td>Job ID : <asp:TextBox ID="txtBoxBottomJobId" runat="server"></asp:TextBox></td>
                        <td>Role : <asp:DropDownList ID="ddlBottomRole" runat="server"></asp:DropDownList></td>
-                   </tr>
-                   <tr>
+                   </tr>--%>
+                   <%--<tr>
                        <td>Personel :<asp:DropDownList ID="ddlBottomPersonel" runat="server"></asp:DropDownList></td>
-                   </tr>
+                   </tr>--%>
                    <tr><td colspan="3">
                        <asp:Panel runat="server">
                            <asp:GridView ID="gridViewBottom" runat="server" AutoGenerateColumns="false" CssClass="gridView" GridLines="None" ShowHeaderWhenEmpty="true">

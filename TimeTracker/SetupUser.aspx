@@ -14,13 +14,17 @@
                 </ProgressTemplate>
             </asp:UpdateProgress>  
 
-           <asp:Panel ID="panelHeader" runat="server" CssClass="modalHeader">Job Tracker</asp:Panel>
+           <asp:Panel ID="panelHeader" runat="server" CssClass="modalHeader">User Setup</asp:Panel>
 	       <asp:Panel ID="panelContent" runat="server" CssClass="modal">
 		        <asp:Label ID="labelAccessDenied" runat="server" Text="You do not have access rights to this page. Please contact your administrator if you need access. Thank you." Visible="false" CssClass="validation"></asp:Label>
 		        <asp:Panel ID="panelAccessOK" runat="server">
 			        <table style="width:100%;">
-				        <tr><td><asp:LinkButton ID="linkBtnAddUser" runat="server" CausesValidation="false" Text="Add New User" CssClass="linkButton" Font-Bold="true" OnClick="linkBtnAddUser_Click"></asp:LinkButton> 
-				        </td><td style="text-align:right"><asp:Label ID="LabelTotalHours" ForeColor="#ff0000" Font-Size="12px" runat="server" Font-Bold="true"></asp:Label></td></tr></table>   
+                        <tr><td>Department : <asp:DropDownList ID="dropDownListDepartment" runat="server" CssClass="dropDownList1" AutoPostBack="true" OnSelectedIndexChanged="dropDownDepartment_Changed"></asp:DropDownList></td></tr>
+                        <tr><td>Status : <asp:RadioButtonList ID="radioBtnListStatus" runat="server" AutoPostBack="true" RepeatDirection="Horizontal" RepeatLayout="Table" OnSelectedIndexChanged="radioBtnStatus_Changed">
+                            <asp:ListItem Value="All" Text="All" Selected="True"></asp:ListItem>
+                            <asp:ListItem Value="Active" Text="Active"></asp:ListItem>
+                            <asp:ListItem Value="Inactive" Text="Inactive"></asp:ListItem></asp:RadioButtonList></td></tr>
+				        <tr><td style="text-align:left"><asp:LinkButton ID="linkBtnAddUser" runat="server" CausesValidation="false" Text="Add New User" CssClass="linkButton" Font-Bold="true" OnClick="linkBtnAddUser_Click"></asp:LinkButton></td></tr></table>   
 			        <div style="margin:10px 10px 10px 10px">
 			        <asp:GridView ID="gridViewUser" runat="server" AutoGenerateColumns="false" CssClass="gridView" GridLines="None" OnRowCommand="gridViewUser_Command" ShowHeaderWhenEmpty="true">
 				        <EmptyDataRowStyle/>
@@ -88,6 +92,10 @@
                         <tr><td>Phone</td><td>:</td><td><asp:TextBox ID="modalTxtBoxPhone" runat="server" ValidationGroup="modal" CssClass="textBox"></asp:TextBox></td></tr>
                         <tr><td>Mobile</td><td>:</td><td><asp:TextBox ID="modalTxtBoxMobile" runat="server" ValidationGroup="modal" CssClass="textBox"></asp:TextBox></td></tr>
                         <tr><td>Fax</td><td>:</td><td><asp:TextBox ID="modalTxtBoxFax" runat="server" ValidationGroup="modal" CssClass="textBox"></asp:TextBox></td></tr>
+                        <tr><td>Status</td><td>:</td><td><asp:DropDownList ID="modalDropDownStatus" runat="server" ValidationGroup="modal" CssClass="dropDownList1">
+                            <asp:ListItem Text="Active" Value="Active"></asp:ListItem>
+                            <asp:ListItem Text="Inactive" Value="Inactive"></asp:ListItem>
+                                                         </asp:DropDownList></td></tr>
                         <tr>
                             <td colspan="3" style="text-align:center">
                                 <asp:Button ID="modalBtnSubmit" runat="server" Text="Submit" ValidationGroup="modal" CausesValidation="true" CssClass="button" OnCommand="modalBtnSubmit_Command"/>

@@ -217,6 +217,52 @@ namespace TimeTracker.Model
             return data;
         }
 
+        public JobTracker GetJobTrackerJobOverview(int jobtypeid,string SW,string HW,DateTime sdate,DateTime edate)
+        {
+            TimeTrackerEntities db = new TimeTrackerEntities();
+
+            var data = (from j in db.T_JobTracker
+                        where j.JobTypeId == jobtypeid
+                        &&
+                        ((j.StartTime >= sdate
+                        && j.StartTime <= edate)
+                        ||
+                        (j.EndTime >= sdate && j.EndTime <= edate))
+                        && j.Status == "Approved"
+                        && j.SWNo == SW
+                        && j.HWNo == HW
+                        orderby j.EndTime descending
+                        select new JobTracker()
+                        {
+                            Id = j.Id,
+                            UserId = j.UserId,
+                            StartTime = j.StartTime,
+                            EndTime = j.EndTime,
+                            Description = j.Description,
+                            JobTypeId = j.JobTypeId,
+                            JobIdNumber = j.JobIdNumber,
+                            jobtype = j.M_JobType.Description,
+                            Remarks = j.Remarks,
+                            ApprovedBy = j.ApprovedBy,
+                            CreateDate = j.CreateDate,
+                            LastUpdateDate = j.LastUpdateDate,
+                            CreatedBy = j.CreatedBy,
+                            LastUpdatedBy = j.LastUpdatedBy,
+                            Status = j.Status,
+                            SupervisorRemarks = j.SupervisorRemarks,
+                            ActionRequest = j.ActionRequest,
+                            ScheduleDate = j.ScheduleDate,
+                            SWNo = j.SWNo,
+                            HWNo = j.HWNo,
+                            JobStatus = j.JobStatus,
+                            fullname = j.M_User.Firstname + " " + j.M_User.Lastname
+                        }).FirstOrDefault();
+
+            db.Dispose();
+
+            return data;
+        }
+
         public string GetTotalHours(int jobtypeid, DateTime startdate, DateTime enddate, string jobstatus,int departmentid = 0)
         {
             TimeTrackerEntities db = new TimeTrackerEntities();
@@ -519,6 +565,34 @@ namespace TimeTracker.Model
             return data;
         }
 
+        public List<JobTracker> GetDistinctProjectList(DateTime sdate,DateTime edate) 
+        {
+            TimeTrackerEntities db = new TimeTrackerEntities();
+
+            var data = (from j in db.T_JobTracker
+                        where (j.HWNo != ""
+                        || j.SWNo != "") 
+                        &&
+                        ((j.StartTime >= sdate
+                        && j.StartTime <= edate) 
+                        ||
+                        ( j.EndTime >= sdate && j.EndTime <= edate))
+                        && j.Status == "Approved"
+                         && j.JobIdNumber != ""
+                        orderby j.StartTime ascending
+                        select new JobTracker()
+                        {
+                            SWNo = j.SWNo,
+                            HWNo = j.HWNo,
+                        }).Distinct().ToList();
+
+            db.Dispose();
+
+            foreach (JobTracker j in data)
+                j.GetCustomer(j);
+            return data;
+        }
+
         public string GetTotalHours(int userid, string status, DateTime date,ref double totalmin)
         {
             TimeTrackerEntities db = new TimeTrackerEntities();
@@ -571,8 +645,10 @@ namespace TimeTracker.Model
             TimeTrackerEntities db = new TimeTrackerEntities();
 
             var data = (from j in db.T_JobTracker
-                        where j.ApprovedBy == userid
-                        && j.Status == "For Approval"
+                        join s in db.T_SupervisorMapping 
+                        on new {j.UserId,userid }
+                        equals new { UserId = (int?)s.UserId,userid = s.SupervisorId }
+                        where j.Status == "For Approval"
                         orderby j.LastUpdateDate ascending
                         select new JobTracker()
                         {
