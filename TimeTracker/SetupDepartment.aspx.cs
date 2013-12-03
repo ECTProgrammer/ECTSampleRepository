@@ -119,6 +119,7 @@ namespace TimeTracker
         {
             foreach (GridViewRow row in gridViewDepartment.Rows)
             {
+                
                 if (row.RowType == DataControlRowType.DataRow)
                 {
                     row.Attributes["onmouseover"] = "this.style.cursor = 'pointer';this.style.backgroundColor = '#e5f2fc';";

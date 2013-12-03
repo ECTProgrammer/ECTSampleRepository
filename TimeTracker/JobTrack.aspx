@@ -88,8 +88,10 @@
                             </asp:DropDownList></td></tr>
                         <tr><td>Job Description</td><td>:</td><td><asp:Label ID="modallabelBoxJobDescription" runat="server"></asp:Label></td></tr>
                         <tr><td>Customer</td><td>:</td><td><asp:Label ID="modallabelCustomer" runat="server"></asp:Label></td></tr>
-                        <tr><td>Start Time</td><td>:</td><td><asp:DropDownList ID="modalDropDownStartTime" runat="server" AutoPostBack="true" OnSelectedIndexChanged="modalDropDownStartTime_IndexChanged"></asp:DropDownList></td></tr>
-                        <tr><td>End Time</td><td>:</td><td><asp:DropDownList ID="modalDropDownEndTime" runat="server"></asp:DropDownList></td></tr>
+                        <tr><td>Start Time</td><td>:</td><td><asp:DropDownList ID="modalDropDownStartTimeHour" runat="server" AutoPostBack="true" OnSelectedIndexChanged="modalDropDownStartTimeHour_IndexChanged"/>:<asp:DropDownList ID="modalDropDownStartTimeMin" runat="server" AutoPostBack="true" OnSelectedIndexChanged="modalDropDownStartTimeMin_IndexChanged" />
+                            <%--<asp:DropDownList ID="modalDropDownStartTime" runat="server" AutoPostBack="true" OnSelectedIndexChanged="modalDropDownStartTime_IndexChanged"></asp:DropDownList>--%></td></tr>
+                        <tr><td>End Time</td><td>:</td><td><asp:DropDownList ID="modalDropDownEndTimeHour" runat="server" AutoPostBack="true" OnSelectedIndexChanged="modalDropDownEndTimeHour_IndexChanged" />:<asp:DropDownList ID="modalDropDownEndTimeMin" runat="server" />
+                            <%--<asp:DropDownList ID="modalDropDownEndTime" runat="server"></asp:DropDownList>--%></td></tr>
                         <tr><td>Remarks</td><td>:</td><td></td></tr>
                         <tr><td colspan="3"><asp:TextBox ID="modalTxtBoxRemarks" runat="server" TextMode="MultiLine" Rows="5" Width="100%"></asp:TextBox></td></tr>
                         <tr><td colspan="3" style="text-align:center">

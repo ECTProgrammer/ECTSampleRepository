@@ -17,6 +17,7 @@
           <EntitySet Name="RolesSupervisor" EntityType="TimeTrackerModel.Store.RolesSupervisor" store:Type="Tables" Schema="dbo" />
           <EntitySet Name="SupervisorMapping" EntityType="TimeTrackerModel.Store.SupervisorMapping" store:Type="Tables" Schema="dbo" />
           <EntitySet Name="Time" EntityType="TimeTrackerModel.Store.Time" store:Type="Tables" Schema="dbo" />
+          <EntitySet Name="TimeSetting" EntityType="TimeTrackerModel.Store.TimeSetting" store:Type="Tables" Schema="dbo" />
           <EntitySet Name="Users" EntityType="TimeTrackerModel.Store.Users" store:Type="Tables" Schema="dbo" />
           <AssociationSet Name="Fk_JobTracker_ApprovedBy" Association="TimeTrackerModel.Store.Fk_JobTracker_ApprovedBy">
             <End Role="Users" EntitySet="Users" />
@@ -69,6 +70,10 @@
           <AssociationSet Name="Fk_SupervisorMapping_UserId" Association="TimeTrackerModel.Store.Fk_SupervisorMapping_UserId">
             <End Role="Users" EntitySet="Users" />
             <End Role="SupervisorMapping" EntitySet="SupervisorMapping" />
+          </AssociationSet>
+          <AssociationSet Name="FK_TimeSetting_LastUpdatedBy" Association="TimeTrackerModel.Store.FK_TimeSetting_LastUpdatedBy">
+            <End Role="Users" EntitySet="Users" />
+            <End Role="TimeSetting" EntitySet="TimeSetting" />
           </AssociationSet>
           <AssociationSet Name="fk_Users_DepartmentId" Association="TimeTrackerModel.Store.fk_Users_DepartmentId">
             <End Role="Department" EntitySet="Department" />
@@ -226,6 +231,15 @@
           <Property Name="Description" Type="varchar" Nullable="false" MaxLength="12" />
           <Property Name="24hrConversion" Type="varchar" Nullable="false" MaxLength="12" />
           <Property Name="Position" Type="int" Nullable="false" />
+        </EntityType>
+        <EntityType Name="TimeSetting">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" Nullable="false" StoreGeneratedPattern="Identity" />
+          <Property Name="Interval" Type="int" Nullable="false" />
+          <Property Name="LastUpdatedBy" Type="int" Nullable="false" />
+          <Property Name="LastUpdateDate" Type="datetime" Nullable="false" />
         </EntityType>
         <EntityType Name="Users">
           <Key>
@@ -405,6 +419,18 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <Association Name="FK_TimeSetting_LastUpdatedBy">
+          <End Role="Users" Type="TimeTrackerModel.Store.Users" Multiplicity="1" />
+          <End Role="TimeSetting" Type="TimeTrackerModel.Store.TimeSetting" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Users">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="TimeSetting">
+              <PropertyRef Name="LastUpdatedBy" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
         <Association Name="fk_Users_DepartmentId">
           <End Role="Department" Type="TimeTrackerModel.Store.Department" Multiplicity="0..1" />
           <End Role="Users" Type="TimeTrackerModel.Store.Users" Multiplicity="*" />
@@ -509,6 +535,11 @@
           <AssociationSet Name="Fk_SupervisorMapping_UserId" Association="TimeTrackerModel.Fk_SupervisorMapping_UserId">
             <End Role="User" EntitySet="T_Users" />
             <End Role="SupervisorMapping" EntitySet="T_SupervisorMapping" />
+          </AssociationSet>
+          <EntitySet Name="T_TimeSetting" EntityType="TimeTrackerModel.T_TimeSetting" />
+          <AssociationSet Name="FK_TimeSetting_LastUpdatedBy" Association="TimeTrackerModel.FK_TimeSetting_LastUpdatedBy">
+            <End Role="T_Users" EntitySet="T_Users" />
+            <End Role="TimeSetting" EntitySet="T_TimeSetting" />
           </AssociationSet>
         </EntityContainer>
         <EntityType Name="T_Department">
@@ -710,6 +741,7 @@
           <NavigationProperty Name="M_Role" Relationship="TimeTrackerModel.fk_Users_RoleId" FromRole="User" ToRole="Role" />
           <NavigationProperty Name="M_SupervisorMappingSupervisors" Relationship="TimeTrackerModel.Fk_SupervisorMapping_SupervisorId" FromRole="User" ToRole="SupervisorMapping" />
           <NavigationProperty Name="M_SupervisorMappingUsers" Relationship="TimeTrackerModel.Fk_SupervisorMapping_UserId" FromRole="User" ToRole="SupervisorMapping" />
+          <NavigationProperty Name="TimeSettings" Relationship="TimeTrackerModel.FK_TimeSetting_LastUpdatedBy" FromRole="T_Users" ToRole="TimeSetting" />
         </EntityType>
         <Association Name="Fk_JobType_DepartmentId">
           <End Type="TimeTrackerModel.T_Department" Role="Department" Multiplicity="0..1" />
@@ -903,6 +935,28 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <EntityType Name="T_TimeSetting">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Type="Int32" Name="Id" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Type="Int32" Name="Interval" Nullable="false" />
+          <Property Type="Int32" Name="LastUpdatedBy" Nullable="false" />
+          <Property Type="DateTime" Name="LastUpdateDate" Nullable="false" Precision="3" />
+          <NavigationProperty Name="M_User" Relationship="TimeTrackerModel.FK_TimeSetting_LastUpdatedBy" FromRole="TimeSetting" ToRole="T_Users" />
+        </EntityType>
+        <Association Name="FK_TimeSetting_LastUpdatedBy">
+          <End Type="TimeTrackerModel.T_Users" Role="T_Users" Multiplicity="1" />
+          <End Type="TimeTrackerModel.T_TimeSetting" Role="TimeSetting" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="T_Users">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="TimeSetting">
+              <PropertyRef Name="LastUpdatedBy" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
       </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
@@ -1087,6 +1141,16 @@
                 <ScalarProperty Name="RoleId" ColumnName="RoleId" />
                 <ScalarProperty Name="Lastname" ColumnName="Lastname" />
                 <ScalarProperty Name="Firstname" ColumnName="Firstname" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="T_TimeSetting">
+            <EntityTypeMapping TypeName="TimeTrackerModel.T_TimeSetting">
+              <MappingFragment StoreEntitySet="TimeSetting">
+                <ScalarProperty Name="LastUpdateDate" ColumnName="LastUpdateDate" />
+                <ScalarProperty Name="LastUpdatedBy" ColumnName="LastUpdatedBy" />
+                <ScalarProperty Name="Interval" ColumnName="Interval" />
                 <ScalarProperty Name="Id" ColumnName="Id" />
               </MappingFragment>
             </EntityTypeMapping>

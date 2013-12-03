@@ -229,22 +229,40 @@ namespace TimeTracker {
         protected global::System.Web.UI.WebControls.Label modallabelCustomer;
         
         /// <summary>
-        /// modalDropDownStartTime control.
+        /// modalDropDownStartTimeHour control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.DropDownList modalDropDownStartTime;
+        protected global::System.Web.UI.WebControls.DropDownList modalDropDownStartTimeHour;
         
         /// <summary>
-        /// modalDropDownEndTime control.
+        /// modalDropDownStartTimeMin control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.DropDownList modalDropDownEndTime;
+        protected global::System.Web.UI.WebControls.DropDownList modalDropDownStartTimeMin;
+        
+        /// <summary>
+        /// modalDropDownEndTimeHour control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.DropDownList modalDropDownEndTimeHour;
+        
+        /// <summary>
+        /// modalDropDownEndTimeMin control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.DropDownList modalDropDownEndTimeMin;
         
         /// <summary>
         /// modalTxtBoxRemarks control.

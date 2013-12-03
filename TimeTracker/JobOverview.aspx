@@ -31,7 +31,7 @@
                     <ajaxToolKit:CalendarExtender ID="calendarExtenderEndDate" runat="server" TargetControlID="txtBoxEndDate" Format="dd MMM yyyy"></ajaxToolKit:CalendarExtender>
                     <asp:Panel runat="server" ScrollBars="Auto" Width="100%">
                         <div style="margin:10px 10px 10px 10px">
-                            <asp:GridView ID="gridViewMain" runat="server" AutoGenerateColumns="true" CssClass="gridView" ShowHeaderWhenEmpty="true" OnRowCreated="gridViewMain_RowCreated">
+                            <asp:GridView ID="gridViewMain" runat="server" AutoGenerateColumns="false" CssClass="gridView" ShowHeaderWhenEmpty="true"  OnRowCreated="gridViewMain_RowCreated" OnRowDataBound="gridViewMain_RowDataBound">
                                 <EmptyDataRowStyle/>
                                     <EmptyDataTemplate>
                                         No Data Found.

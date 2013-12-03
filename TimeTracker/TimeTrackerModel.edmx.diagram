@@ -33,6 +33,8 @@
         <AssociationConnector Association="TimeTrackerModel.fk_Users_RoleId" />
         <AssociationConnector Association="TimeTrackerModel.Fk_SupervisorMapping_SupervisorId" />
         <AssociationConnector Association="TimeTrackerModel.Fk_SupervisorMapping_UserId" />
+        <EntityTypeShape EntityType="TimeTrackerModel.T_TimeSetting" Width="1.5" PointX="1.625" PointY="13.875" />
+        <AssociationConnector Association="TimeTrackerModel.FK_TimeSetting_LastUpdatedBy" />
       </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>
