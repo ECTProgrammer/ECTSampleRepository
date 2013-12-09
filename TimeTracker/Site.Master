@@ -88,9 +88,9 @@
                         <asp:Panel ID="panelUserlinkModalContent" runat="server" CssClass="modal">
                             <asp:Label ID="modalUserlinkLabelError" runat="server" CssClass="validation" Visible="false"></asp:Label>
                                 <table style="padding:10px; border-collapse:separate;border-spacing:10px; width:100%">
-                                    <tr><td>Firstname</td><td>:</td><td><asp:TextBox ID="modalUserlinkTxtBoxFirstname" ValidationGroup="modalUserlink" runat="server" CssClass="textBox"></asp:TextBox>
+                                    <tr><td>Firstname</td><td>:</td><td><asp:TextBox ID="modalUserlinkTxtBoxFirstname" ReadOnly="true" ValidationGroup="modalUserlink" runat="server" CssClass="textBox"></asp:TextBox>
                                         <asp:RequiredFieldValidator ID="modalUserlinkReqFirstname" runat="server" ValidationGroup="modalUserlink" CssClass="validation" ControlToValidate="modalUserlinkTxtBoxFirstname" Text="*"></asp:RequiredFieldValidator></td></tr>
-                                    <tr><td>Lastname</td><td>:</td><td><asp:TextBox ID="modalUserlinkTxtBoxLastname" ValidationGroup="modalUserlink" runat="server" CssClass="textBox"></asp:TextBox>
+                                    <tr><td>Lastname</td><td>:</td><td><asp:TextBox ID="modalUserlinkTxtBoxLastname" ReadOnly="true" ValidationGroup="modalUserlink" runat="server" CssClass="textBox"></asp:TextBox>
                                         <asp:RequiredFieldValidator ID="modalUserlinkReqLastname" runat="server" ValidationGroup="modalUserlink" CssClass="validation" ControlToValidate="modalUserlinkTxtBoxLastname" Text="*"></asp:RequiredFieldValidator></td></tr>
                                     <tr><td colspan="3"><asp:CheckBox ID="modalUserlinkChkBoxUpdate" runat="server" ValidationGroup="modalUserlink" Text="Update Username/Password" AutoPostBack="true" OnCheckedChanged="modalUserlinkChkBoxUpdate_Changed" /></td></tr>
                                     <tr><td colspan="3"><asp:Panel ID="modalUserlinkPanel" runat="server">

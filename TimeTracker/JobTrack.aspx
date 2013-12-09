@@ -79,25 +79,26 @@
                         <%--<tr><td><asp:Label ID="modalLabelSupervisor" runat="server" Text="Supervisor" Visible="false"></asp:Label></td><td><asp:Label ID="modalLabelSupColon" runat="server" Text=":" Visible="false"></asp:Label></td>
                             <td><asp:DropDownList ID="modalDropDownSupervisor" runat="server" Visible="false" CssClass="dropDownList1"></asp:DropDownList></td>
                         </tr>--%>
-                        <tr><td>Description of Work</td><td>:</td><td><asp:DropDownList ID="modalDropDownJobType" runat="server" AutoPostBack="true" CssClass="dropDownList1" OnSelectedIndexChanged="modalDropDownJobType_IndexChanged"></asp:DropDownList></td></tr>
-                        <tr><td>Job Id</td><td>:</td><td><asp:TextBox ID="modalTxtBoxJobId" runat="server" Enabled="false" AutoPostBack="true" OnTextChanged="modalTxtBoxJobId_TextChanged"></asp:TextBox></td></tr>
-                        <tr><td>Job Status</td><td>:</td><td><asp:DropDownList ID="modalDropDownJobStatus" Enabled="false" runat="server">
+                        <tr><td>Description of Work</td><td>:</td><td><asp:DropDownList ID="modalDropDownJobType" runat="server" ValidationGroup="modal" AutoPostBack="true" CssClass="dropDownList1" OnSelectedIndexChanged="modalDropDownJobType_IndexChanged"></asp:DropDownList></td></tr>
+                        <tr><td>Job Id</td><td>:</td><td><asp:TextBox ID="modalTxtBoxJobId" runat="server"  AutoPostBack="true" ValidationGroup="modal" OnTextChanged="modalTxtBoxJobId_TextChanged"></asp:TextBox>
+                            <asp:RequiredFieldValidator ID="modalReqJobId" runat="server" ValidationGroup="modal" CssClass="validation" ControlToValidate="modalTxtBoxJobId" Text="*" /></td></tr>
+                        <tr><td>Job Status</td><td>:</td><td><asp:DropDownList ID="modalDropDownJobStatus"  runat="server">
                             <asp:ListItem Text="In Progress" Value="In Progress"></asp:ListItem>
                             <asp:ListItem Text="On Hold" Value="On Hold"></asp:ListItem>
                             <asp:ListItem Text="Completed" Value="Completed"></asp:ListItem>
                             </asp:DropDownList></td></tr>
-                        <tr><td>Job Description</td><td>:</td><td><asp:Label ID="modallabelBoxJobDescription" runat="server"></asp:Label></td></tr>
-                        <tr><td>Customer</td><td>:</td><td><asp:Label ID="modallabelCustomer" runat="server"></asp:Label></td></tr>
-                        <tr><td>Start Time</td><td>:</td><td><asp:DropDownList ID="modalDropDownStartTimeHour" runat="server" AutoPostBack="true" OnSelectedIndexChanged="modalDropDownStartTimeHour_IndexChanged"/>:<asp:DropDownList ID="modalDropDownStartTimeMin" runat="server" AutoPostBack="true" OnSelectedIndexChanged="modalDropDownStartTimeMin_IndexChanged" />
+                        <tr><td>Job Description</td><td>:</td><td><asp:Label ID="modallabelBoxJobDescription" runat="server" ValidationGroup="modal"></asp:Label></td></tr>
+                        <tr><td>Customer</td><td>:</td><td><asp:Label ID="modallabelCustomer" runat="server" ValidationGroup="modal" ></asp:Label></td></tr>
+                        <tr><td>Start Time</td><td>:</td><td><asp:DropDownList ID="modalDropDownStartTimeHour" runat="server" AutoPostBack="true" OnSelectedIndexChanged="modalDropDownStartTimeHour_IndexChanged" ValidationGroup="modal" />:<asp:DropDownList ID="modalDropDownStartTimeMin" runat="server" AutoPostBack="true" OnSelectedIndexChanged="modalDropDownStartTimeMin_IndexChanged" ValidationGroup="modal" />
                             <%--<asp:DropDownList ID="modalDropDownStartTime" runat="server" AutoPostBack="true" OnSelectedIndexChanged="modalDropDownStartTime_IndexChanged"></asp:DropDownList>--%></td></tr>
-                        <tr><td>End Time</td><td>:</td><td><asp:DropDownList ID="modalDropDownEndTimeHour" runat="server" AutoPostBack="true" OnSelectedIndexChanged="modalDropDownEndTimeHour_IndexChanged" />:<asp:DropDownList ID="modalDropDownEndTimeMin" runat="server" />
+                        <tr><td>End Time</td><td>:</td><td><asp:DropDownList ID="modalDropDownEndTimeHour" runat="server" AutoPostBack="true" ValidationGroup="modal" OnSelectedIndexChanged="modalDropDownEndTimeHour_IndexChanged" />:<asp:DropDownList ID="modalDropDownEndTimeMin" runat="server"  ValidationGroup="modal" />
                             <%--<asp:DropDownList ID="modalDropDownEndTime" runat="server"></asp:DropDownList>--%></td></tr>
                         <tr><td>Remarks</td><td>:</td><td></td></tr>
-                        <tr><td colspan="3"><asp:TextBox ID="modalTxtBoxRemarks" runat="server" TextMode="MultiLine" Rows="5" Width="100%"></asp:TextBox></td></tr>
+                        <tr><td colspan="3"><asp:TextBox ID="modalTxtBoxRemarks" runat="server" TextMode="MultiLine" ValidationGroup="modal" Rows="5" Width="100%"></asp:TextBox></td></tr>
                         <tr><td colspan="3" style="text-align:center">
-                            <asp:Button ID="modalBtnDelete" runat="server" CssClass="button" OnClientClick="if(!confirm('Are you sure you want to delete this?')) return false;" CausesValidation="true" Text="Delete" OnCommand="modalBtnDelete_Command" />
-                            <asp:Button ID="modalBtnSubmit" runat="server" CssClass="button" CausesValidation="true" Text="Submit" OnCommand="modalBtnSubmit_Command" />
-                            <asp:Button ID="modalBtnCancel" runat="server" CssClass="button" CausesValidation="false" Text="Cancel" />
+                            <asp:Button ID="modalBtnDelete" runat="server" CssClass="button" ValidationGroup="modal" OnClientClick="if(!confirm('Are you sure you want to delete this?')) return false;" CausesValidation="true" Text="Delete" OnCommand="modalBtnDelete_Command" />
+                            <asp:Button ID="modalBtnSubmit" runat="server" CssClass="button" ValidationGroup="modal" CausesValidation="true" Text="Submit" OnCommand="modalBtnSubmit_Command" />
+                            <asp:Button ID="modalBtnCancel" runat="server" CssClass="button" ValidationGroup="modal" CausesValidation="false" Text="Cancel" />
                             </td></tr>
                     </table>
                 </asp:Panel>

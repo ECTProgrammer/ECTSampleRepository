@@ -286,23 +286,6 @@
     </Content>
     <Content Include="Bundle.config" />
     <Content Include="Site.Mobile.Master" />
-    <EntityDeploy Include="TimeTrackerModel.edmx">
-      <Generator>EntityModelCodeGenerator</Generator>
-      <LastGenOutput>TimeTrackerModel.Designer.cs</LastGenOutput>
-    </EntityDeploy>
-    <Content Include="TimeTrackerModel.Context.tt">
-      <Generator>TextTemplatingFileGenerator</Generator>
-      <DependentUpon>TimeTrackerModel.edmx</DependentUpon>
-      <LastGenOutput>TimeTrackerModel.Context.cs</LastGenOutput>
-    </Content>
-    <Content Include="TimeTrackerModel.edmx.diagram">
-      <DependentUpon>TimeTrackerModel.edmx</DependentUpon>
-    </Content>
-    <Content Include="TimeTrackerModel.tt">
-      <Generator>TextTemplatingFileGenerator</Generator>
-      <DependentUpon>TimeTrackerModel.edmx</DependentUpon>
-      <LastGenOutput>TimeTrackerModel.cs</LastGenOutput>
-    </Content>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="App_Start\BundleConfig.cs" />
@@ -401,12 +384,12 @@
     <Compile Include="Model\JobTracker.cs" />
     <Compile Include="Model\JobTrackerHistory.cs" />
     <Compile Include="Model\JobType.cs" />
+    <Compile Include="Model\JobTypeDepartment.cs" />
     <Compile Include="Model\Module.cs" />
     <Compile Include="Model\RoleDepartmentAccess.cs" />
     <Compile Include="Model\Roles.cs" />
     <Compile Include="Model\RolesModuleAccess.cs" />
     <Compile Include="Model\SupervisorMapping.cs" />
-    <Compile Include="Model\Time.cs" />
     <Compile Include="Model\TimeSetting.cs" />
     <Compile Include="Model\User.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -500,6 +483,9 @@
     <Compile Include="T_JobType.cs">
       <DependentUpon>TimeTrackerModel.tt</DependentUpon>
     </Compile>
+    <Compile Include="T_JobTypeDepartment.cs">
+      <DependentUpon>TimeTrackerModel.tt</DependentUpon>
+    </Compile>
     <Compile Include="T_Modules.cs">
       <DependentUpon>TimeTrackerModel.tt</DependentUpon>
     </Compile>
@@ -512,13 +498,7 @@
     <Compile Include="T_RolesModuleAccess.cs">
       <DependentUpon>TimeTrackerModel.tt</DependentUpon>
     </Compile>
-    <Compile Include="T_RolesSupervisor.cs">
-      <DependentUpon>TimeTrackerModel.tt</DependentUpon>
-    </Compile>
     <Compile Include="T_SupervisorMapping.cs">
-      <DependentUpon>TimeTrackerModel.tt</DependentUpon>
-    </Compile>
-    <Compile Include="T_Time.cs">
       <DependentUpon>TimeTrackerModel.tt</DependentUpon>
     </Compile>
     <Compile Include="T_TimeSetting.cs">
@@ -543,6 +523,23 @@
     <Content Include="Site.Master" />
   </ItemGroup>
   <ItemGroup>
+    <EntityDeploy Include="TimeTrackerModel.edmx">
+      <Generator>EntityModelCodeGenerator</Generator>
+      <LastGenOutput>TimeTrackerModel.Designer.cs</LastGenOutput>
+    </EntityDeploy>
+    <Content Include="TimeTrackerModel.Context.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <DependentUpon>TimeTrackerModel.edmx</DependentUpon>
+      <LastGenOutput>TimeTrackerModel.Context.cs</LastGenOutput>
+    </Content>
+    <Content Include="TimeTrackerModel.edmx.diagram">
+      <DependentUpon>TimeTrackerModel.edmx</DependentUpon>
+    </Content>
+    <Content Include="TimeTrackerModel.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <DependentUpon>TimeTrackerModel.edmx</DependentUpon>
+      <LastGenOutput>TimeTrackerModel.cs</LastGenOutput>
+    </Content>
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>

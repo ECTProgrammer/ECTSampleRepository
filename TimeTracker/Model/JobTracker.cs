@@ -217,12 +217,13 @@ namespace TimeTracker.Model
             return data;
         }
 
-        public JobTracker GetJobTrackerJobOverview(int jobtypeid,string SW,string HW,DateTime sdate,DateTime edate)
+        public JobTracker GetJobTrackerJobOverview(int jobtypeid,string SW,string HW,DateTime sdate,DateTime edate,int departmentid)
         {
             TimeTrackerEntities db = new TimeTrackerEntities();
 
             var data = (from j in db.T_JobTracker
                         where j.JobTypeId == jobtypeid
+                        && j.M_User.DepartmentId == departmentid
                         &&
                         ((j.StartTime >= sdate
                         && j.StartTime <= edate)
@@ -261,6 +262,84 @@ namespace TimeTracker.Model
             db.Dispose();
 
             return data;
+        }
+
+        public JobTracker GetJobTrackerJobOverview(string SW, string HW, DateTime sdate, DateTime edate, int departmentid)
+        {
+            TimeTrackerEntities db = new TimeTrackerEntities();
+
+            var data = (from j in db.T_JobTracker
+                        where j.M_User.DepartmentId == departmentid
+                        &&
+                        ((j.StartTime >= sdate
+                        && j.StartTime <= edate)
+                        ||
+                        (j.EndTime >= sdate && j.EndTime <= edate))
+                        && j.Status == "Approved"
+                        && j.SWNo == SW
+                        && j.HWNo == HW
+                        orderby j.EndTime descending
+                        select new JobTracker()
+                        {
+                            Id = j.Id,
+                            UserId = j.UserId,
+                            StartTime = j.StartTime,
+                            EndTime = j.EndTime,
+                            Description = j.Description,
+                            JobTypeId = j.JobTypeId,
+                            JobIdNumber = j.JobIdNumber,
+                            jobtype = j.M_JobType.Description,
+                            Remarks = j.Remarks,
+                            ApprovedBy = j.ApprovedBy,
+                            CreateDate = j.CreateDate,
+                            LastUpdateDate = j.LastUpdateDate,
+                            CreatedBy = j.CreatedBy,
+                            LastUpdatedBy = j.LastUpdatedBy,
+                            Status = j.Status,
+                            SupervisorRemarks = j.SupervisorRemarks,
+                            ActionRequest = j.ActionRequest,
+                            ScheduleDate = j.ScheduleDate,
+                            SWNo = j.SWNo,
+                            HWNo = j.HWNo,
+                            JobStatus = j.JobStatus,
+                            fullname = j.M_User.Firstname + " " + j.M_User.Lastname
+                        }).ToList();
+
+            db.Dispose();
+            JobTracker result = new JobTracker();
+            string curstatus = "";
+            int curindex = -1;
+            for (int i = 0; i < data.Count; i++) 
+            {
+                if (data[i].JobStatus.IndexOf("On Hold") > -1)
+                {
+                    curstatus = "On Hold";
+                    curindex = i;
+                    
+                    break;
+                }
+                else if (data[i].JobStatus.IndexOf("In Progress") > -1)
+                {
+                    if (curstatus != "In Progress")
+                    {
+                        curstatus = "In Progress";
+                        curindex = i;
+                    }
+                }
+                else if (data[i].JobStatus.IndexOf("Completed") > -1)
+                {
+                    if (curstatus == "") 
+                    {
+                        curstatus = "Completed";
+                        curindex = i;
+                    }
+                }
+            }
+            if (curindex != -1) 
+            {
+                result = data[curindex];
+            }
+            return result;
         }
 
         public string GetTotalHours(int jobtypeid, DateTime startdate, DateTime enddate, string jobstatus,int departmentid = 0)

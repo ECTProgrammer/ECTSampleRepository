@@ -202,6 +202,15 @@ namespace TimeTracker {
         protected global::System.Web.UI.WebControls.TextBox modalTxtBoxJobId;
         
         /// <summary>
+        /// modalReqJobId control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.RequiredFieldValidator modalReqJobId;
+        
+        /// <summary>
         /// modalDropDownJobStatus control.
         /// </summary>
         /// <remarks>

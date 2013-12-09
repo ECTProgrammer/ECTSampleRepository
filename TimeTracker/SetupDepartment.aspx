@@ -34,6 +34,7 @@
                                 </ItemTemplate>
 					        </asp:TemplateField>
 					        <asp:BoundField HeaderText="Department" DataField="Description" ReadOnly="true"></asp:BoundField>
+                            <asp:BoundField HeaderText="Acronym" DataField="Acronym" ReadOnly="true"></asp:BoundField>
                             <asp:BoundField HeaderText="Position" DataField="Position" ReadOnly="true" />
 				        </Columns>
 			        </asp:GridView>
@@ -65,6 +66,8 @@
                     <table style="padding:10px; border-collapse:separate;border-spacing:10px; width:100%">
                         <tr><td>Description</td><td>:</td><td><asp:TextBox ID="modalTxtBoxDescription" runat="server" ValidationGroup="modal" CssClass="textBox"></asp:TextBox>
                             <asp:RequiredFieldValidator ID="modalReqDescription" runat="server" ValidationGroup="modal" CssClass="validation" ControlToValidate="modalTxtBoxDescription" Text="*"></asp:RequiredFieldValidator></td></tr>
+                        <tr><td>Acronym</td><td>:</td><td><asp:TextBox ID="modalTxtBoxAcronym" runat="server" ValidationGroup="modal" CssClass="textBox" MaxLength="15"></asp:TextBox>
+                            <asp:RequiredFieldValidator ID="modalReqAcronym" runat="server" ValidationGroup="modal" CssClass="validation" ControlToValidate="modalTxtBoxAcronym" Text="*"></asp:RequiredFieldValidator></td></tr>
                         <tr><td>Position</td><td>:</td><td><asp:TextBox ID="modalTxtBoxPosition" runat="server" ValidationGroup="modal" CssClass="textBox"></asp:TextBox>
                             <asp:RequiredFieldValidator ID="modalReqPosition" runat="server" CssClass="validation" ValidationGroup="modal" ControlToValidate="modalTxtBoxPosition" Text="*"></asp:RequiredFieldValidator></td></tr>
                         <tr>

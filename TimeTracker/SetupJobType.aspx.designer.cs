@@ -157,15 +157,6 @@ namespace TimeTracker {
         protected global::System.Web.UI.WebControls.Label modalLabelError;
         
         /// <summary>
-        /// modalDropDownDepartment control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.DropDownList modalDropDownDepartment;
-        
-        /// <summary>
         /// modalTxtBoxDescription control.
         /// </summary>
         /// <remarks>
@@ -245,6 +236,33 @@ namespace TimeTracker {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.CheckBox modalChkBoxShowJobOverview;
+        
+        /// <summary>
+        /// modalChkboxAll control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.CheckBox modalChkboxAll;
+        
+        /// <summary>
+        /// Panel1 control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Panel Panel1;
+        
+        /// <summary>
+        /// modalGridViewDepartment control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.GridView modalGridViewDepartment;
         
         /// <summary>
         /// modalBtnSubmit control.

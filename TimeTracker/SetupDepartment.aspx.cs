@@ -59,6 +59,7 @@ namespace TimeTracker
             modalLabelError.Visible = false;
             modalTxtBoxDescription.Text = "";
             modalTxtBoxPosition.Text = "";
+            modalTxtBoxAcronym.Text = "";
             modalBtnSubmit.CommandArgument = "Add";
             this.programmaticModalPopup.Show();
         }
@@ -77,6 +78,7 @@ namespace TimeTracker
                 department = department.GetDepartment(departmentId);
                 modalLabelDepartmentId.Text = department.Id.ToString();
                 modalTxtBoxDescription.Text = department.Description;
+                modalTxtBoxAcronym.Text = department.Acronym;
                 modalTxtBoxPosition.Text = department.Position.ToString();
                 this.programmaticModalPopup.Show();
             }
@@ -95,6 +97,7 @@ namespace TimeTracker
                     department = department.GetDepartment(Convert.ToInt32(modalLabelDepartmentId.Text));
                 }
                 department.Description = modalTxtBoxDescription.Text.Trim();
+                department.Acronym = modalTxtBoxAcronym.Text.Trim();
                 department.Position = Convert.ToInt32(modalTxtBoxPosition.Text);
                 department.LastUpdateDate = DateTime.Now;
                 department.LastUpdatedBy = userid;

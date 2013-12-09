@@ -18,17 +18,18 @@ namespace TimeTracker.Model
             List<Analysis> data = new List<Analysis>();
             JobTracker jobtracker = new JobTracker();
             List<JobTracker> joblist = new List<JobTracker>();
-            JobType jobtype = new JobType();
+            JobTypeDepartment jobtypeDepartment = new JobTypeDepartment();
             List<JobType> jobtypelist = new List<JobType>();
             if (departmentid == 0)
             {
                 //joblist = jobtracker.GetJobTrackerForAnalysis(startdate, enddate);
+                JobType jobtype = new JobType();
                 jobtypelist = jobtype.GetJobTypeList();
             }
             else
             {
                 //joblist = jobtracker.GetJobTrackerForAnalysis(departmentid, startdate, enddate);
-                jobtypelist = jobtype.GetJobTypeList(departmentid);
+                jobtypelist = jobtypeDepartment.GetJobTypeList(departmentid);
             }
             for (int i = 0; i < jobtypelist.Count; i++) 
             {
@@ -49,9 +50,9 @@ namespace TimeTracker.Model
             List<Analysis> data = new List<Analysis>();
             JobTracker jobtracker = new JobTracker();
             List<JobTracker> joblist = new List<JobTracker>();
-            JobType jobtype = new JobType();
+            JobTypeDepartment jobtypeDepartment = new JobTypeDepartment();
             List<JobType> jobtypelist = new List<JobType>();
-            jobtypelist = jobtype.GetJobTypeList(departmentid);
+            jobtypelist = jobtypeDepartment.GetJobTypeList(departmentid);
 
             for (int i = 0; i < jobtypelist.Count; i++)
             {

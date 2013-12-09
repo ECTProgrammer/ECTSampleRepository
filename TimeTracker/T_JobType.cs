@@ -18,11 +18,11 @@ namespace TimeTracker
         {
             this.M_JobTrackers = new HashSet<T_JobTracker>();
             this.M_JobTrackerHistories = new HashSet<T_JobTrackerHistory>();
+            this.M_JobTypeDepartments = new HashSet<T_JobTypeDepartment>();
         }
     
         public int Id { get; set; }
         public string Description { get; set; }
-        public Nullable<int> DepartmentId { get; set; }
         public Nullable<int> CreatedBy { get; set; }
         public Nullable<int> LastUpdatedBy { get; set; }
         public Nullable<System.DateTime> CreateDate { get; set; }
@@ -33,8 +33,8 @@ namespace TimeTracker
         public Nullable<bool> ShowInJobOverview { get; set; }
         public string Acronym { get; set; }
     
-        public virtual T_Department M_Department { get; set; }
         public virtual ICollection<T_JobTracker> M_JobTrackers { get; set; }
         public virtual ICollection<T_JobTrackerHistory> M_JobTrackerHistories { get; set; }
+        public virtual ICollection<T_JobTypeDepartment> M_JobTypeDepartments { get; set; }
     }
 }

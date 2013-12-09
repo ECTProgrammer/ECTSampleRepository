@@ -190,7 +190,7 @@ namespace TimeTracker
         protected void InitializeBottomDropDownJobType() 
         {
             JobType jobtype = new JobType();
-            var joblist = jobtype.GetJobTypeList(Convert.ToInt32(ddlBottomDepartment.SelectedValue));
+            //var joblist = jobtype.GetJobTypeList(Convert.ToInt32(ddlBottomDepartment.SelectedValue));
         }
 
         protected void InitializeGridViewBottom() 

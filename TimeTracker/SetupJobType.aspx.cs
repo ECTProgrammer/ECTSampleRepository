@@ -38,14 +38,14 @@ namespace TimeTracker
                 linkBtnAdd.Visible = true;
             else
                 linkBtnAdd.Visible = false;
-
+            JobTypeDepartment jobtypeDepartment = new JobTypeDepartment();
             JobType jobtype = new JobType();
             List<JobType> jobtypeList = new List<JobType>();
 
             if (dropDownListDepartment.SelectedItem.Text == "All")
                 jobtypeList = jobtype.GetJobTypeList();
             else
-                jobtypeList = jobtype.GetJobTypeList(Convert.ToInt32(dropDownListDepartment.SelectedItem.Value));
+                jobtypeList = jobtypeDepartment.GetJobTypeList(Convert.ToInt32(dropDownListDepartment.SelectedItem.Value));
 
             gridViewJobType.DataSource = jobtypeList;
             gridViewJobType.DataBind();
@@ -55,14 +55,13 @@ namespace TimeTracker
         {
             Department department = new Department();
             var departmentList = department.GetDepartmentList();
-            //if (departmentList.Count > 0)
-            //{
-            //    if (departmentList[0].Description == "All")
-            //        departmentList.RemoveAt(0);
-            //}
-            //department.Id = 0;
-            //department.Description = "All";
-            //departmentList.Insert(0, department);
+            if (departmentList.Count > 1) 
+            {
+                department.Description = "All";
+                department.Id = 0;
+                departmentList.Insert(0, department);
+            }
+
             dropDownListDepartment.DataSource = departmentList;
             dropDownListDepartment.DataTextField = "Description";
             dropDownListDepartment.DataValueField = "Id";
@@ -78,8 +77,11 @@ namespace TimeTracker
 
         protected void linkBtnAdd_Click(object sender, EventArgs e)
         {
-            InitializeModalDropDownDepartment(dropDownListDepartment.SelectedItem.Value);
+            //InitializeModalDropDownDepartment(dropDownListDepartment.SelectedItem.Value);
+            InitializeModalGridViewDepartment();
+            SetStatus(true);
             modalLabelJobTypeId.Text = "";
+            modalChkboxAll.Checked = false;
             modalLabelError.Text = "";
             modalLabelError.Visible = false;
             modalTxtBoxDescription.Text = "";
@@ -92,13 +94,16 @@ namespace TimeTracker
 
             this.programmaticModalPopup.Show();
         }
+
         protected void gridViewJobType_Command(object sender, GridViewCommandEventArgs e)
         {
             if (e.CommandName == "Select")
             {
                 GetMyAccessRights();
+                
                 modalLabelError.Text = "";
                 modalLabelError.Visible = false;
+                modalChkboxAll.Checked = false;
                 int index = Convert.ToInt32(e.CommandArgument);
                 int jobtypeId = Convert.ToInt32(((Label)gridViewJobType.Rows[index].FindControl("labelJobTypeId")).Text);
                 modalBtnSubmit.CommandArgument = "Update";
@@ -111,34 +116,156 @@ namespace TimeTracker
                 modalChkBoxComputeTime.Checked = Convert.ToBoolean(jobtype.ComputeTime);
                 modalChkBoxRequiredJobId.Checked = Convert.ToBoolean(jobtype.RequiredJobId);
                 modalChkBoxShowJobOverview.Checked = Convert.ToBoolean(jobtype.ShowInJobOverview);
-                InitializeModalDropDownDepartment(jobtype.DepartmentId.ToString());
+                InitializeModalGridViewDepartment(jobtype.Id);
+                //InitializeModalDropDownDepartment(jobtype.DepartmentId.ToString());
+                SetStatus(Convert.ToBoolean(myAccessRights.CanUpdate));
                 this.programmaticModalPopup.Show();
             }
         }
         #endregion
 
         #region MODAL
-        private void InitializeModalDropDownDepartment(string value = "") 
+
+        protected void modalDescription_Changed(object sender, EventArgs e) 
+        {
+            string errorMsg = "Description already used. ";
+            if (modalTxtBoxDescription.Text.Trim() != "")
+            {
+                JobType jobtype = new JobType();
+                jobtype = jobtype.GetJobTypeByDescription(modalTxtBoxDescription.Text.Trim());
+                
+                if (jobtype != null)
+                {
+                    if (modalLabelJobTypeId.Text.Trim() == "")
+                    {
+                        modalLabelError.Text += errorMsg;
+                        modalLabelError.Visible = true;
+                    }
+                    else
+                    {
+                        JobType j = jobtype.GetJobType(Convert.ToInt32(modalLabelJobTypeId.Text));
+                        if (j.Description.Trim().Equals(modalTxtBoxDescription.Text.Trim(), StringComparison.OrdinalIgnoreCase) == true)
+                        {
+                            modalLabelError.Text += errorMsg;
+                            modalLabelError.Visible = true;
+                        }
+                        else
+                        {
+                            modalLabelError.Text = modalLabelError.Text.Replace(errorMsg, "").Trim();
+                        }
+                    }
+                }
+                else
+                {
+                    modalLabelError.Text = modalLabelError.Text.Replace(errorMsg, "").Trim();
+                }
+            }
+            else 
+            {
+                modalLabelError.Text = modalLabelError.Text.Replace(errorMsg, "").Trim();
+            }
+            if (modalLabelError.Text.Trim().Length == 0) 
+            {
+                modalLabelError.Visible = false;
+            }
+            this.programmaticModalPopup.Show();
+        }
+
+        protected void modalAcronym_Changed(object sender, EventArgs e)
+        {
+            string errorMsg = "Acronym already used.";
+            if (modalTxtBoxAcronym.Text.Trim() != "")
+            {
+                JobType jobtype = new JobType();
+                jobtype = jobtype.GetJobTypeByAcronym(modalTxtBoxAcronym.Text.Trim());
+
+                if (jobtype != null)
+                {
+                    if (modalLabelJobTypeId.Text.Trim() == "")
+                    {
+                        modalLabelError.Text += errorMsg;
+                        modalLabelError.Visible = true;
+                    }
+                    else
+                    {
+                        JobType j = jobtype.GetJobType(Convert.ToInt32(modalLabelJobTypeId.Text));
+                        if (j.Acronym.Trim().Equals(modalTxtBoxAcronym.Text.Trim(), StringComparison.OrdinalIgnoreCase) == true)
+                        {
+                            modalLabelError.Text += errorMsg;
+                            modalLabelError.Visible = true;
+                        }
+                        else
+                        {
+                            modalLabelError.Text = modalLabelError.Text.Replace(errorMsg, "").Trim();
+                        }
+                    }
+                }
+                else
+                {
+                    modalLabelError.Text = modalLabelError.Text.Replace(errorMsg, "").Trim();
+                }
+            }
+            else
+            {
+                modalLabelError.Text = modalLabelError.Text.Replace(errorMsg, "").Trim();
+            }
+            if (modalLabelError.Text.Trim().Length == 0)
+            {
+                modalLabelError.Visible = false;
+            }
+            this.programmaticModalPopup.Show();
+        }
+
+        private void InitializeModalGridViewDepartment(int jobtypeid = 0) 
         {
             Department department = new Department();
-            List<Department> departmentList = new List<Department>();
-            departmentList = department.GetDepartmentList();
-            modalDropDownDepartment.DataSource = departmentList;
-            modalDropDownDepartment.DataTextField = "Description";
-            modalDropDownDepartment.DataValueField = "Id";
-            modalDropDownDepartment.DataBind();
+            var departmentList = department.GetDepartmentList();
+            modalGridViewDepartment.DataSource = departmentList;
+            modalGridViewDepartment.DataBind();
 
-            if (value.Trim() != "") 
+            if (jobtypeid > 0) 
             {
-                foreach (ListItem i in modalDropDownDepartment.Items) 
+                InitializeModalDepartmentCheckBox(jobtypeid);
+                if (modalGridViewDepartment.Rows.Count > 1)
+                    modalChkboxAll.Visible = true;
+                else
+                    modalChkboxAll.Visible = false;
+            }
+        }
+
+        private void InitializeModalDepartmentCheckBox(int jobtypeid) 
+        {
+            JobTypeDepartment jobtypeDepartment = new JobTypeDepartment();
+            var jobdeptlist = jobtypeDepartment.GetJobTypeDepartmentListByJobType(jobtypeid);
+            for (int i = 0; i < modalGridViewDepartment.Rows.Count; i++)
+            {
+                Label labelDeptId = (Label)modalGridViewDepartment.Rows[i].FindControl("modalLabelDepartmentId");
+                CheckBox cbSelect = (CheckBox)modalGridViewDepartment.Rows[i].FindControl("modalChkBoxSelect");
+                TextBox tbPosition = (TextBox)modalGridViewDepartment.Rows[i].FindControl("modalTxtBoxDeptPosition");
+                for (int j = 0; j < jobdeptlist.Count; j++) 
                 {
-                    if (value.Trim() == i.Value.Trim()) 
+                    if (labelDeptId.Text.Trim() == jobdeptlist[j].DepartmentId.ToString()) 
                     {
-                        i.Selected = true;
+                        cbSelect.Checked = true;
+                        tbPosition.Text = jobdeptlist[j].Position == null ? "" : jobdeptlist[j].Position.ToString();
+                        labelDeptId.ToolTip = jobdeptlist[j].Id.ToString();
+                        jobdeptlist.RemoveAt(j);
                         break;
                     }
                 }
             }
+
+            
+        }
+
+        protected void modalChkboxAll_Changed(object sender, EventArgs e) 
+        {
+            for (int i = 0; i < modalGridViewDepartment.Rows.Count; i++)
+            {
+                CheckBox cbSelect = (CheckBox)modalGridViewDepartment.Rows[i].FindControl("modalChkBoxSelect");
+                cbSelect.Checked = modalChkboxAll.Checked;
+            }
+            this.programmaticModalPopup.Show();
         }
 
         protected void modalBtnSubmit_Command(object sender, CommandEventArgs e)
@@ -147,6 +274,7 @@ namespace TimeTracker
                 this.programmaticModalPopup.Show();
             else
             {
+                bool ischkBoxEmpty = IsDeptCheckBoxEmpty();
                 int userid = Convert.ToInt32(Session["UserId"]);
                 JobType jobtype = new JobType();
                 if (modalLabelJobTypeId.Text.Trim() != "")
@@ -158,7 +286,7 @@ namespace TimeTracker
                 jobtype.Position = Convert.ToInt32(modalTxtBoxPosition.Text);
                 jobtype.LastUpdateDate = DateTime.Now;
                 jobtype.LastUpdatedBy = userid;
-                jobtype.DepartmentId = Convert.ToInt32(modalDropDownDepartment.SelectedItem.Value);
+                //jobtype.DepartmentId = Convert.ToInt32(modalDropDownDepartment.SelectedItem.Value);
                 if (modalChkBoxRequiredJobId.Checked == true)
                     jobtype.RequiredJobId = true;
                 else
@@ -171,19 +299,83 @@ namespace TimeTracker
                     jobtype.ShowInJobOverview = true;
                 else
                     jobtype.ShowInJobOverview = false;
-                if (e.CommandArgument.ToString() == "Add")
+                if (e.CommandArgument.ToString() == "Add" && ischkBoxEmpty == false)
                 {
                     jobtype.CreateDate = DateTime.Now;
                     jobtype.CreatedBy = userid;
                     jobtype.Insert(jobtype);
+                    jobtype = jobtype.GetJobTypeByAcronym(modalTxtBoxAcronym.Text.Trim());
+                    JobTypeDepartmentAction(jobtype.Id);
+                    this.programmaticModalPopup.Hide();
                 }
-                else if (e.CommandArgument.ToString() == "Update")
+                else if (e.CommandArgument.ToString() == "Update" && ischkBoxEmpty == false)
                 {
                     jobtype.Update(jobtype);
+                    JobTypeDepartmentAction(jobtype.Id);
+                    this.programmaticModalPopup.Hide();
                 }
+                else if (e.CommandArgument.ToString() == "Update" && ischkBoxEmpty == true) 
+                {
+                    JobTypeDepartmentAction(jobtype.Id);
+                    jobtype.Delete(jobtype.Id);
+                    this.programmaticModalPopup.Hide();
+                } 
+
                 InitializeGridViewJobType();
             }
         }
+
+        private void SetStatus(bool value)
+        {
+            modalTxtBoxDescription.Enabled = value;
+            modalTxtBoxAcronym.Enabled = value;
+            modalTxtBoxPosition.Enabled = value;
+            modalChkBoxComputeTime.Enabled = value;
+            modalChkBoxRequiredJobId.Enabled = value;
+            modalChkBoxShowJobOverview.Enabled = value;
+            modalBtnSubmit.Visible = value;
+            modalBtnSubmit.Enabled = value;
+            for (int i = 0; i < modalGridViewDepartment.Rows.Count; i++)
+            {
+                CheckBox cbSelect = (CheckBox)modalGridViewDepartment.Rows[i].FindControl("modalChkBoxSelect");
+                TextBox tbPosition = (TextBox)modalGridViewDepartment.Rows[i].FindControl("modalTxtBoxDeptPosition");
+                cbSelect.Enabled = value;
+                tbPosition.Enabled = value;
+            }
+            modalChkboxAll.Enabled = value;
+        }
+
+        private void JobTypeDepartmentAction(int jobtypeid) 
+        {
+            JobTypeDepartment jobtypedepartment = new JobTypeDepartment();
+            for (int i = 0; i < modalGridViewDepartment.Rows.Count; i++)
+            {
+                Label labelDeptId = (Label)modalGridViewDepartment.Rows[i].FindControl("modalLabelDepartmentId");
+                CheckBox cbSelect = (CheckBox)modalGridViewDepartment.Rows[i].FindControl("modalChkBoxSelect");
+                TextBox tbPosition = (TextBox)modalGridViewDepartment.Rows[i].FindControl("modalTxtBoxDeptPosition");
+                
+                if (cbSelect.Checked == false && labelDeptId.ToolTip != "ToolTip") //Delete
+                {
+                    jobtypedepartment.Delete(Convert.ToInt32(labelDeptId.ToolTip));
+                }
+                else if (cbSelect.Checked == true && labelDeptId.ToolTip == "ToolTip") //Add
+                {
+                    jobtypedepartment.DepartmentId = Convert.ToInt32(labelDeptId.Text);
+                    jobtypedepartment.Position = Convert.ToInt32(tbPosition.Text.Trim() == "" ? modalTxtBoxPosition.Text : tbPosition.Text);
+                    jobtypedepartment.JobTypeId = jobtypeid;
+                    jobtypedepartment.Insert(jobtypedepartment);
+                }
+                else if (cbSelect.Checked == true && labelDeptId.ToolTip != "ToolTip") //Update
+                {
+                    jobtypedepartment.Id = Convert.ToInt32(labelDeptId.ToolTip);
+                    jobtypedepartment.DepartmentId = Convert.ToInt32(labelDeptId.Text);
+                    jobtypedepartment.Position = Convert.ToInt32(tbPosition.Text.Trim() == "" ? modalTxtBoxPosition.Text : tbPosition.Text);
+                    jobtypedepartment.JobTypeId = jobtypeid;
+                    jobtypedepartment.Update(jobtypedepartment);
+                }
+            }
+        }
+
         #endregion
 
         #region OTHERS
@@ -199,6 +391,22 @@ namespace TimeTracker
                 }
             }
             base.Render(writer);
+        }
+
+        private bool IsDeptCheckBoxEmpty()
+        {
+            bool isempty = true;
+            for (int i = 0; i < modalGridViewDepartment.Rows.Count; i++)
+            {
+                CheckBox cbSelect = (CheckBox)modalGridViewDepartment.Rows[i].FindControl("modalChkBoxSelect");
+                if (cbSelect.Checked == true) 
+                {
+                    isempty = false;
+                    break;
+                }
+            }
+
+            return isempty;
         }
 
         protected bool IsValidUser()

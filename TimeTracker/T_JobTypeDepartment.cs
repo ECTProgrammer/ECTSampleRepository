@@ -12,11 +12,14 @@ namespace TimeTracker
     using System;
     using System.Collections.Generic;
     
-    public partial class T_Time
+    public partial class T_JobTypeDepartment
     {
         public int Id { get; set; }
-        public string Description { get; set; }
-        public string C24hrConversion { get; set; }
-        public int Position { get; set; }
+        public int JobTypeId { get; set; }
+        public int DepartmentId { get; set; }
+        public Nullable<int> Position { get; set; }
+    
+        public virtual T_Department M_Department { get; set; }
+        public virtual T_JobType M_JobType { get; set; }
     }
 }

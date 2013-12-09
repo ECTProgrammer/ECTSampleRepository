@@ -34,7 +34,6 @@
                                     <asp:Label ID="labelJobTypeId" runat="server" Text='<%#Eval("Id")%>' Visible="false"></asp:Label>
                                 </ItemTemplate>
 					        </asp:TemplateField>
-                            <asp:BoundField HeaderText="Department" DataField="department" ReadOnly="true" />
 					        <asp:BoundField HeaderText="JobType" DataField="Description" ReadOnly="true"/>
                             <asp:BoundField HeaderText="Acronym" DataField="Acronym" ReadOnly="true" />
                             <asp:BoundField HeaderText="Position" DataField="Position" ReadOnly="true" />
@@ -48,9 +47,9 @@
 
     <%--Modal--%>
     <asp:UpdatePanel ID="UpdatePanelModal" runat="server">
-        <Triggers>
+<%--        <Triggers>
             <asp:PostBackTrigger ControlID="modalBtnSubmit" />
-        </Triggers>
+        </Triggers>--%>
         <ContentTemplate>
             <asp:UpdateProgress ID="modalUpdateProgress" runat="server" AssociatedUpdatePanelID="UpdatePanelModal" DynamicLayout="true">
                 <ProgressTemplate>
@@ -66,16 +65,37 @@
                     <asp:Label ID="modalLabelJobTypeId" runat="server" Visible="false"></asp:Label>
                     <asp:Label ID="modalLabelError" runat="server" CssClass="validation" Visible="false"></asp:Label>
                     <table style="padding:10px; border-collapse:separate;border-spacing:10px; width:100%">
-                        <tr><td>Department</td><td>:</td><td><asp:DropDownList ID="modalDropDownDepartment" runat="server" CssClass="dropDownList1"></asp:DropDownList></td></tr>
-                        <tr><td>Description</td><td>:</td><td><asp:TextBox ID="modalTxtBoxDescription" runat="server" ValidationGroup="modal" CssClass="textBox"></asp:TextBox>
+                        <tr><td>Description</td><td>:</td><td><asp:TextBox ID="modalTxtBoxDescription" runat="server" ValidationGroup="modal" CssClass="textBox" OnTextChanged="modalDescription_Changed"></asp:TextBox>
                             <asp:RequiredFieldValidator ID="modalReqDescription" runat="server" ValidationGroup="modal" CssClass="validation" ControlToValidate="modalTxtBoxDescription" Text="*"></asp:RequiredFieldValidator></td></tr>
-                        <tr><td>Acronym</td><td>:</td><td><asp:TextBox ID="modalTxtBoxAcronym" runat="server" ValidationGroup="modal" CssClass="textBox"></asp:TextBox>
-                            <asp:RequiredFieldValidator ID="modalReqAcronym" runat="server" ValidationGroup="modal" CssClass="validation" ControlToValidate="modalTxtBoxDescription" Text="*"></asp:RequiredFieldValidator></td></tr>
+                        <tr><td>Acronym</td><td>:</td><td><asp:TextBox ID="modalTxtBoxAcronym" runat="server" ValidationGroup="modal" CssClass="textBox" OnTextChanged="modalAcronym_Changed" MaxLength="10"></asp:TextBox>
+                            <asp:RequiredFieldValidator ID="modalReqAcronym" runat="server" ValidationGroup="modal" CssClass="validation" ControlToValidate="modalTxtBoxDescription" Text="*" /></td></tr>
                         <tr><td>Position</td><td>:</td><td><asp:TextBox ID="modalTxtBoxPosition" runat="server" ValidationGroup="modal" CssClass="textBox"></asp:TextBox>
                             <asp:RequiredFieldValidator ID="modalReqPosition" runat="server" CssClass="validation" ValidationGroup="modal" ControlToValidate="modalTxtBoxPosition" Text="*"></asp:RequiredFieldValidator></td></tr>
                         <tr><td>Required Job Id</td><td>:</td><td><asp:CheckBox ID="modalChkBoxRequiredJobId" runat="server" /></td></tr>
                         <tr><td>Compute Time</td><td>:</td><td><asp:CheckBox ID="modalChkBoxComputeTime" runat="server" /></td></tr>
                         <tr><td>Show in Job Overview</td><td>:</td><td><asp:CheckBox ID="modalChkBoxShowJobOverview" runat="server" /></td></tr>
+                        <tr><td colspan="3"><asp:CheckBox ID="modalChkboxAll" runat="server" Text=" Select All" AutoPostBack="true" OnCheckedChanged="modalChkboxAll_Changed" /></td></tr>
+                        <tr>
+                            <td colspan="3"><asp:Panel ID="Panel1" runat="server" ScrollBars="Auto" style="max-height:350px">
+                                <asp:GridView ID="modalGridViewDepartment" runat="server" AutoGenerateColumns="false" CssClass="gridView" GridLines="None" ShowHeaderWhenEmpty="true">
+                                    <Columns>
+                                        <asp:BoundField HeaderText="Department" DataField="Description" />
+                                        <asp:TemplateField HeaderText="Position">
+                                        <ItemTemplate>
+                                            <asp:TextBox ID="modalTxtBoxDeptPosition" runat="server" CssClass="textBox"></asp:TextBox>
+                                            <ajaxToolkit:FilteredTextBoxExtender ID="filterDepPosition" runat="server" TargetControlID="modalTxtBoxDeptPosition" FilterType="Numbers"/>
+                                        </ItemTemplate>
+                                    </asp:TemplateField>
+                                        <asp:TemplateField HeaderText="Select">
+                                        <ItemTemplate>
+                                            <asp:CheckBox ID="modalChkBoxSelect" runat="server" />
+                                            <asp:Label ID="modalLabelDepartmentId" runat="server" Visible="false" Text='<%#Eval("Id")%>' ToolTip="ToolTip"></asp:Label>
+                                        </ItemTemplate>
+                                    </asp:TemplateField>
+                                    </Columns>
+                                </asp:GridView>
+                            </asp:Panel></td>
+                        </tr>
                         <tr>
                             <td colspan="3" style="text-align:center">
                                 <asp:Button ID="modalBtnSubmit" runat="server" Text="Submit" ValidationGroup="modal" CausesValidation="true" CssClass="button" OnCommand="modalBtnSubmit_Command"/>

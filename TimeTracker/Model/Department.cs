@@ -21,7 +21,8 @@ namespace TimeTracker.Model
                             LastUpdateDate = d.LastUpdateDate,
                             CreatedBy = d.CreatedBy,
                             LastUpdatedBy = d.LastUpdatedBy,
-                            Position = d.Position
+                            Position = d.Position,
+                            Acronym = d.Acronym
                         }).FirstOrDefault();
 
             db.Dispose();
@@ -43,7 +44,8 @@ namespace TimeTracker.Model
                             LastUpdateDate = d.LastUpdateDate,
                             CreatedBy = d.CreatedBy,
                             LastUpdatedBy = d.LastUpdatedBy,
-                            Position = d.Position
+                            Position = d.Position,
+                            Acronym = d.Acronym
                         }).ToList();
 
             db.Dispose();
@@ -56,7 +58,8 @@ namespace TimeTracker.Model
             TimeTrackerEntities db = new TimeTrackerEntities();
 
             var data = (from d in db.T_Department
-                        where d.M_JobTypes.FirstOrDefault(j => j.ShowInJobOverview == true) != null
+                        where d.M_JobTypeDepartments.FirstOrDefault(j => j.M_JobType.ShowInJobOverview == true) != null
+                        && d.M_JobTypeDepartments.Count > 0
                         orderby d.Position ascending
                         select new Department()
                         {
@@ -66,7 +69,8 @@ namespace TimeTracker.Model
                             LastUpdateDate = d.LastUpdateDate,
                             CreatedBy = d.CreatedBy,
                             LastUpdatedBy = d.LastUpdatedBy,
-                            Position = d.Position
+                            Position = d.Position,
+                            Acronym = d.Acronym
                         }).ToList();
 
             db.Dispose();
@@ -136,6 +140,7 @@ namespace TimeTracker.Model
             t_department.CreatedBy = department.CreatedBy;
             t_department.LastUpdatedBy = department.LastUpdatedBy;
             t_department.Position = department.Position;
+            t_department.Acronym = department.Acronym;
             return t_department;
         }
 
@@ -145,6 +150,7 @@ namespace TimeTracker.Model
             t_department.LastUpdateDate = department.LastUpdateDate;
             t_department.LastUpdatedBy = department.LastUpdatedBy;
             t_department.Position = department.Position;
+            t_department.Acronym = department.Acronym;
         }
     }
 }

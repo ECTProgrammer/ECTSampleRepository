@@ -16,13 +16,13 @@ namespace TimeTracker
     {
         public T_Users()
         {
-            this.M_JobTrackersSupervisor = new HashSet<T_JobTracker>();
+            this.M_JobTrackerSupervisors = new HashSet<T_JobTracker>();
             this.M_JobTrackersUsers = new HashSet<T_JobTracker>();
-            this.M_JobTrackerHistoriesSup = new HashSet<T_JobTrackerHistory>();
-            this.M_JobTrackerHistoriesUsers = new HashSet<T_JobTrackerHistory>();
+            this.M_JobTrackerHistorySupervisors = new HashSet<T_JobTrackerHistory>();
+            this.M_JobTrackerHistoryUsers = new HashSet<T_JobTrackerHistory>();
             this.M_SupervisorMappingSupervisors = new HashSet<T_SupervisorMapping>();
             this.M_SupervisorMappingUsers = new HashSet<T_SupervisorMapping>();
-            this.TimeSettings = new HashSet<T_TimeSetting>();
+            this.M_TimeSettings = new HashSet<T_TimeSetting>();
         }
     
         public int Id { get; set; }
@@ -44,13 +44,13 @@ namespace TimeTracker
         public string Password { get; set; }
     
         public virtual T_Department M_Department { get; set; }
-        public virtual ICollection<T_JobTracker> M_JobTrackersSupervisor { get; set; }
+        public virtual ICollection<T_JobTracker> M_JobTrackerSupervisors { get; set; }
         public virtual ICollection<T_JobTracker> M_JobTrackersUsers { get; set; }
-        public virtual ICollection<T_JobTrackerHistory> M_JobTrackerHistoriesSup { get; set; }
-        public virtual ICollection<T_JobTrackerHistory> M_JobTrackerHistoriesUsers { get; set; }
+        public virtual ICollection<T_JobTrackerHistory> M_JobTrackerHistorySupervisors { get; set; }
+        public virtual ICollection<T_JobTrackerHistory> M_JobTrackerHistoryUsers { get; set; }
         public virtual T_Roles M_Role { get; set; }
         public virtual ICollection<T_SupervisorMapping> M_SupervisorMappingSupervisors { get; set; }
         public virtual ICollection<T_SupervisorMapping> M_SupervisorMappingUsers { get; set; }
-        public virtual ICollection<T_TimeSetting> TimeSettings { get; set; }
+        public virtual ICollection<T_TimeSetting> M_TimeSettings { get; set; }
     }
 }

@@ -114,68 +114,68 @@ namespace TimeTracker.Model
             return list;
         }
 
-        public List<Roles> GetRolesWithSupervisors() 
-        {
-            TimeTrackerEntities db = new TimeTrackerEntities();
+        //public List<Roles> GetRolesWithSupervisors() 
+        //{
+        //    TimeTrackerEntities db = new TimeTrackerEntities();
 
-            var data = (from r in db.T_Roles
-                        join s in db.T_RolesSupervisor
-                        on r.Id equals s.RoleId
-                        select new Roles()
-                        {
-                            Id = r.Id,
-                            Description = r.Description,
-                            Rank = r.Rank,
-                            CreateDate = r.CreateDate,
-                            LastUpdateDate = r.LastUpdateDate,
-                            CreatedBy = r.CreatedBy,
-                            LastUpdatedBy = r.LastUpdatedBy,
-                            IsSupervisor = r.IsSupervisor
-                        }).Distinct().ToList();
+        //    var data = (from r in db.T_Roles
+        //                join s in db.T_RolesSupervisor
+        //                on r.Id equals s.RoleId
+        //                select new Roles()
+        //                {
+        //                    Id = r.Id,
+        //                    Description = r.Description,
+        //                    Rank = r.Rank,
+        //                    CreateDate = r.CreateDate,
+        //                    LastUpdateDate = r.LastUpdateDate,
+        //                    CreatedBy = r.CreatedBy,
+        //                    LastUpdatedBy = r.LastUpdatedBy,
+        //                    IsSupervisor = r.IsSupervisor
+        //                }).Distinct().ToList();
 
-            db.Dispose();
+        //    db.Dispose();
 
-            return data;
-        }
+        //    return data;
+        //}
 
-        public List<Roles> GetRolesWithoutSupervisor()
-        {
-            TimeTrackerEntities db = new TimeTrackerEntities();
+        //public List<Roles> GetRolesWithoutSupervisor()
+        //{
+        //    TimeTrackerEntities db = new TimeTrackerEntities();
 
-            var data = (from r in db.T_Roles
-                        join s in db.T_RolesSupervisor
-                        on r.Id equals s.RoleId
-                        orderby r.Id
-                        select new Roles()
-                        {
-                            Id = r.Id,
-                            Description = r.Description,
-                            Rank = r.Rank,
-                            CreateDate = r.CreateDate,
-                            LastUpdateDate = r.LastUpdateDate,
-                            CreatedBy = r.CreatedBy,
-                            LastUpdatedBy = r.LastUpdatedBy,
-                            IsSupervisor = r.IsSupervisor
-                        }).Distinct().ToList();
+        //    var data = (from r in db.T_Roles
+        //                join s in db.T_RolesSupervisor
+        //                on r.Id equals s.RoleId
+        //                orderby r.Id
+        //                select new Roles()
+        //                {
+        //                    Id = r.Id,
+        //                    Description = r.Description,
+        //                    Rank = r.Rank,
+        //                    CreateDate = r.CreateDate,
+        //                    LastUpdateDate = r.LastUpdateDate,
+        //                    CreatedBy = r.CreatedBy,
+        //                    LastUpdatedBy = r.LastUpdatedBy,
+        //                    IsSupervisor = r.IsSupervisor
+        //                }).Distinct().ToList();
 
-            db.Dispose();
+        //    db.Dispose();
 
-            var list = GetRoleList();
+        //    var list = GetRoleList();
 
-            for (int i = 0; i < data.Count; i++)
-            {
-                for (int j = 0; j < list.Count; j++)
-                {
-                    if (data[i].Id == list[j].Id)
-                    {
-                        list.RemoveAt(j);
-                        break;
-                    }
-                }
-            }
+        //    for (int i = 0; i < data.Count; i++)
+        //    {
+        //        for (int j = 0; j < list.Count; j++)
+        //        {
+        //            if (data[i].Id == list[j].Id)
+        //            {
+        //                list.RemoveAt(j);
+        //                break;
+        //            }
+        //        }
+        //    }
 
-            return list;
-        }
+        //    return list;
+        //}
 
         public void Insert(Roles role)
         {

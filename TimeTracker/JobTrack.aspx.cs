@@ -120,7 +120,7 @@ namespace TimeTracker
                 modalTxtBoxJobId.Text = "";
                 modalLabelHWSW.Text = "";
                 modalLabelHWSW.ToolTip = "";
-                modalTxtBoxJobId.Enabled = false;
+                //modalTxtBoxJobId.Enabled = false;
                 Page.Validate();
 
                 this.programmaticModalPopup.Show();
@@ -260,26 +260,33 @@ namespace TimeTracker
         {
             bool haserror = false;
             string errormessage = "";
-            if (modalTxtBoxJobId.Enabled == true)
-            {
+            //if (modalTxtBoxJobId.Enabled == true)
+            //{
                 
-                if (modalTxtBoxJobId.Text.Trim() == "") 
-                {
-                    panelAlertHeader.CssClass = "modalAlertHeader";
-                    alertModalBtnOK.CssClass = "buttonalert";
-                    modalLabelError.Text = "Job Id is required for this job.";
-                    modalLabelError.Visible = true;
-                }
-                if (modalLabelError.Visible == true)
-                {
-                    errormessage = modalLabelError.Text;
-                    haserror = true;
-                }
+            //    if (modalTxtBoxJobId.Text.Trim() == "") 
+            //    {
+            //        panelAlertHeader.CssClass = "modalAlertHeader";
+            //        alertModalBtnOK.CssClass = "buttonalert";
+            //        modalLabelError.Text = "Job Id is required for this job.";
+            //        modalLabelError.Visible = true;
+            //    }
+            //    if (modalLabelError.Visible == true)
+            //    {
+            //        errormessage = modalLabelError.Text;
+            //        haserror = true;
+            //    }
+            //}
+            if (modalLabelError.Visible == true)
+            {
+                errormessage = modalLabelError.Text;
+                haserror = true;
             }
             
             if (haserror) 
             {
                 //System.Web.HttpContext.Current.Response.Write("<SCRIPT LANGUAGE='JavaScript'>alert('Error: "+errormessage+"')</SCRIPT>");
+                panelAlertHeader2.CssClass = "modalAlertHeader";
+                alertModalBtnOK2.CssClass = "buttonalert";
                 labelAlertHeader.Text = "Error";
                 labelAlertMessage.Text = errormessage;
                 this.programmaticModalPopup.Show();
@@ -396,17 +403,17 @@ namespace TimeTracker
             jobType = jobType.GetJobType(jobType.Id);
             if (jobType != null) 
             {
-                modalTxtBoxJobId.Enabled = Convert.ToBoolean(jobType.RequiredJobId);
+                modalReqJobId.Enabled = Convert.ToBoolean(jobType.RequiredJobId);
                 modalDropDownJobStatus.Enabled = Convert.ToBoolean(jobType.RequiredJobId);
             }
-            if (modalTxtBoxJobId.Enabled == false) 
-            {
-                modallabelCustomer.Text = "";
-                modallabelBoxJobDescription.Text = "";
-                modalTxtBoxJobId.Text = "";
-                modalLabelError.Visible = false;
-                InitializeModalJobStatus();
-            }
+            //if (modalTxtBoxJobId.Enabled == false) 
+            //{
+            //    modallabelCustomer.Text = "";
+            //    modallabelBoxJobDescription.Text = "";
+            //    modalTxtBoxJobId.Text = "";
+            //    modalLabelError.Visible = false;
+            //    InitializeModalJobStatus();
+            //}
             this.programmaticModalPopup.Show();
         }
 
@@ -560,6 +567,8 @@ namespace TimeTracker
                 modallabelCustomer.Text = "";
                 modalLabelHWSW.Text = "";
                 modalLabelHWSW.ToolTip = "";
+                modalLabelError.Text = "";
+                modalLabelError.Visible = false;
             }
             this.programmaticModalPopup.Show();
         }
@@ -607,8 +616,8 @@ namespace TimeTracker
 
         private void InitializeModalJobType(string value = "") 
         {
-            JobType jobtype = new JobType();
-            var data = jobtype.GetJobTypeList(Convert.ToInt32(Session["DepartmentId"]));
+            JobTypeDepartment jobtypeDepartment = new JobTypeDepartment();
+            var data = jobtypeDepartment.GetJobTypeList(Convert.ToInt32(Session["DepartmentId"]));
             modalDropDownJobType.DataSource = data;
             modalDropDownJobType.DataTextField = "Description";
             modalDropDownJobType.DataValueField = "Id";
@@ -620,22 +629,30 @@ namespace TimeTracker
                     if (i.Value.Trim() == value.Trim()) 
                     {
                         i.Selected = true;
-                        JobType jobType = new JobType();
-                        jobType = jobType.GetJobType(Convert.ToInt32(i.Value));
-                        if (jobType != null)
-                        {
-                            modalTxtBoxJobId.Enabled = Convert.ToBoolean(jobType.RequiredJobId);
-                        }
-                        if (modalTxtBoxJobId.Enabled == false)
-                        {
-                            modallabelCustomer.Text = "";
-                            modallabelBoxJobDescription.Text = "";
-                            modalTxtBoxJobId.Text = "";
-                            modalLabelError.Visible = false;
-                        }
+                        
+                        //if (jobType != null)
+                        //{
+                        //    //modalTxtBoxJobId.Enabled = Convert.ToBoolean(jobType.RequiredJobId);
+                        //    modalReqJobId.Enabled = Convert.ToBoolean(jobType.RequiredJobId);
+                        //}
+                        //if (modalTxtBoxJobId.Enabled == false)
+                        //{
+                        //    modallabelCustomer.Text = "";
+                        //    modallabelBoxJobDescription.Text = "";
+                        //    modalTxtBoxJobId.Text = "";
+                        //    modalLabelError.Visible = false;
+                        //}
                         break;
                     }
                 }
+            }
+            int jobtypeId = Convert.ToInt32(modalDropDownJobType.SelectedValue);
+            JobType jobType = new JobType();
+            jobType = jobType.GetJobType(jobtypeId);
+            if (jobType != null)
+            {
+                modalReqJobId.Enabled = Convert.ToBoolean(jobType.RequiredJobId);
+                modalDropDownJobStatus.Enabled = Convert.ToBoolean(jobType.RequiredJobId);
             }
         }
 
@@ -768,13 +785,18 @@ namespace TimeTracker
 
             for (int i = 0; i < usedTime.Count; i++) 
             {
-                if (usedTime[i].EndTime != null)
+                for (int j = 0; j < availableTime.Count; j++)
                 {
-                    TimeSpan stime = Convert.ToDateTime(usedTime[i].StartTime).TimeOfDay;
-                    TimeSpan etime = new TimeSpan(Convert.ToDateTime(usedTime[i].EndTime).Hour,Convert.ToDateTime(usedTime[i].EndTime).Minute,0);
-                    for (int j = 0; j < availableTime.Count; j++) 
+                    if (isCurrentDate == true && DateTime.Now.TimeOfDay < availableTime[j])
                     {
-                        if (availableTime[j] >= stime && availableTime[j] < etime) 
+                        availableTime.RemoveAt(j);
+                        --j;
+                    }
+                    else if (usedTime[i].EndTime != null)
+                    {
+                        TimeSpan stime = Convert.ToDateTime(usedTime[i].StartTime).TimeOfDay;
+                        TimeSpan etime = new TimeSpan(Convert.ToDateTime(usedTime[i].EndTime).Hour, Convert.ToDateTime(usedTime[i].EndTime).Minute, 0);
+                        if (availableTime[j] >= stime && availableTime[j] < etime)
                         {
                             if (Session["StartTime"] != null && (startTime >= stime && startTime < etime))
                                 continue;
@@ -784,13 +806,8 @@ namespace TimeTracker
                                 --j;
                             }
                         }
-                        else if (isCurrentDate == true && DateTime.Now.TimeOfDay < availableTime[j]) 
-                        {
-                            availableTime.RemoveAt(j);
-                            --j;
-                        }
                     }
-                }
+                } 
             }
             if (usedTime.Count < 1)
             {
@@ -897,12 +914,17 @@ namespace TimeTracker
 
             for (int i = 0; i < usedTime.Count; i++)
             {
-                if (usedTime[i].EndTime != null)
+                for (int j = 0; j < availableTime.Count; j++)
                 {
-                    TimeSpan stime = Convert.ToDateTime(usedTime[i].StartTime).TimeOfDay;
-                    TimeSpan etime = new TimeSpan(Convert.ToDateTime(usedTime[i].EndTime).Hour, Convert.ToDateTime(usedTime[i].EndTime).Minute, 0);
-                    for (int j = 0; j < availableTime.Count; j++)
+                    if (isCurrentDate == true && DateTime.Now.TimeOfDay < availableTime[j])
                     {
+                        availableTime.RemoveAt(j);
+                        --j;
+                    }
+                    else if (usedTime[i].EndTime != null)
+                    {
+                        TimeSpan stime = Convert.ToDateTime(usedTime[i].StartTime).TimeOfDay;
+                        TimeSpan etime = new TimeSpan(Convert.ToDateTime(usedTime[i].EndTime).Hour, Convert.ToDateTime(usedTime[i].EndTime).Minute, 0);
                         if (availableTime[j] >= stime && availableTime[j] < etime)
                         {
                             if (Session["StartTime"] != null && (startTime >= stime && startTime < etime))
@@ -912,11 +934,6 @@ namespace TimeTracker
                                 availableTime.RemoveAt(j);
                                 --j;
                             }
-                        }
-                        else if(isCurrentDate == true && DateTime.Now.TimeOfDay < availableTime[j]) 
-                        {
-                            availableTime.RemoveAt(j);
-                            --j;
                         }
                     }
                 }
@@ -1320,45 +1337,45 @@ namespace TimeTracker
             return isvalid;
         }
 
-        protected void RemoveUsedStartTime(List<Time> datalist,int stimepos, int etimepos) 
-        {
-            for (int i = 0; i < datalist.Count; i++) 
-            {
-                if (datalist[i].Position >= stimepos && datalist[i].Position < etimepos)
-                {
-                    //if (stimepos == datalist[i].Position && i > 0) 
-                    //{
-                    //    datalist.RemoveAt(i - 1);
-                    //    --i;
-                    //}
-                    datalist.RemoveAt(i);
-                    i--;
-                }
-                else if (datalist[i].Position >= etimepos)
-                    break;
-            }
-        }
+        //protected void RemoveUsedStartTime(List<Time> datalist,int stimepos, int etimepos) 
+        //{
+        //    for (int i = 0; i < datalist.Count; i++) 
+        //    {
+        //        if (datalist[i].Position >= stimepos && datalist[i].Position < etimepos)
+        //        {
+        //            //if (stimepos == datalist[i].Position && i > 0) 
+        //            //{
+        //            //    datalist.RemoveAt(i - 1);
+        //            //    --i;
+        //            //}
+        //            datalist.RemoveAt(i);
+        //            i--;
+        //        }
+        //        else if (datalist[i].Position >= etimepos)
+        //            break;
+        //    }
+        //}
 
-        protected void RemoveUsedTime(List<Time> datalist, DateTime startTime) 
-        {
-            JobTracker jobtracker = new JobTracker();
-            int userid = Convert.ToInt32(Session["UserId"]);
-            DateTime selectedDate = DateTime.Parse(txtBoxDate.Text);
-            jobtracker = jobtracker.GetNextUsedTime(userid, startTime, selectedDate);
-            if (jobtracker != null) 
-            {
-                Time jobTime = new Time();
-                jobTime = jobTime.GetTime(Convert.ToDateTime(jobtracker.StartTime));
-                for (int i = 0; i < datalist.Count; i++) 
-                {
-                    if (datalist[i].Position > jobTime.Position) 
-                    {
-                        datalist.RemoveAt(i);
-                        i--;
-                    }
-                }
-            }
-        }
+        //protected void RemoveUsedTime(List<Time> datalist, DateTime startTime) 
+        //{
+        //    JobTracker jobtracker = new JobTracker();
+        //    int userid = Convert.ToInt32(Session["UserId"]);
+        //    DateTime selectedDate = DateTime.Parse(txtBoxDate.Text);
+        //    jobtracker = jobtracker.GetNextUsedTime(userid, startTime, selectedDate);
+        //    if (jobtracker != null) 
+        //    {
+        //        Time jobTime = new Time();
+        //        jobTime = jobTime.GetTime(Convert.ToDateTime(jobtracker.StartTime));
+        //        for (int i = 0; i < datalist.Count; i++) 
+        //        {
+        //            if (datalist[i].Position > jobTime.Position) 
+        //            {
+        //                datalist.RemoveAt(i);
+        //                i--;
+        //            }
+        //        }
+        //    }
+        //}
 
         #endregion
     }

@@ -7,7 +7,6 @@ namespace TimeTracker.Model
 {
     public class JobType : T_JobType
     {
-        public string department { get; set; }
 
         public JobType GetJobType(int jobtypeid)
         {
@@ -19,7 +18,6 @@ namespace TimeTracker.Model
                         {
                             Id = j.Id,
                             Description = j.Description,
-                            DepartmentId = j.DepartmentId,
                             CreatedBy = j.CreatedBy,
                             LastUpdatedBy = j.LastUpdatedBy,
                             CreateDate = j.CreateDate,
@@ -28,8 +26,7 @@ namespace TimeTracker.Model
                             ComputeTime = j.ComputeTime,
                             Position = j.Position,
                             ShowInJobOverview = j.ShowInJobOverview,
-                            Acronym = j.Acronym,
-                            department = j.M_Department.Description
+                            Acronym = j.Acronym
                         }).FirstOrDefault();
 
             db.Dispose();
@@ -37,19 +34,16 @@ namespace TimeTracker.Model
             return data;
         }
 
-        public List<JobType> GetJobTypeList(int departmentid) 
+        public JobType GetJobTypeByDescription(string description)
         {
             TimeTrackerEntities db = new TimeTrackerEntities();
 
             var data = (from j in db.T_JobType
-                        where j.DepartmentId == 1
-                        || j.DepartmentId == departmentid
-                        orderby j.M_Department.Position, j.Position
+                        where j.Description == description
                         select new JobType()
                         {
                             Id = j.Id,
                             Description = j.Description,
-                            DepartmentId = j.DepartmentId,
                             CreatedBy = j.CreatedBy,
                             LastUpdatedBy = j.LastUpdatedBy,
                             CreateDate = j.CreateDate,
@@ -58,26 +52,78 @@ namespace TimeTracker.Model
                             ComputeTime = j.ComputeTime,
                             Position = j.Position,
                             ShowInJobOverview = j.ShowInJobOverview,
-                            Acronym = j.Acronym,
-                            department = j.M_Department.Description
-                        }).ToList();
+                            Acronym = j.Acronym
+                        }).FirstOrDefault();
 
             db.Dispose();
 
             return data;
         }
+
+        public JobType GetJobTypeByAcronym(string acronym)
+        {
+            TimeTrackerEntities db = new TimeTrackerEntities();
+
+            var data = (from j in db.T_JobType
+                        where j.Acronym == acronym
+                        select new JobType()
+                        {
+                            Id = j.Id,
+                            Description = j.Description,
+                            CreatedBy = j.CreatedBy,
+                            LastUpdatedBy = j.LastUpdatedBy,
+                            CreateDate = j.CreateDate,
+                            LastUpdateDate = j.LastUpdateDate,
+                            RequiredJobId = j.RequiredJobId,
+                            ComputeTime = j.ComputeTime,
+                            Position = j.Position,
+                            ShowInJobOverview = j.ShowInJobOverview,
+                            Acronym = j.Acronym
+                        }).FirstOrDefault();
+
+            db.Dispose();
+
+            return data;
+        }
+
+        //public List<JobType> GetJobTypeList(int departmentid) 
+        //{
+        //    TimeTrackerEntities db = new TimeTrackerEntities();
+
+        //    var data = (from j in db.T_JobType
+        //                where j.DepartmentId == 1
+        //                || j.DepartmentId == departmentid
+        //                orderby j.M_Department.Position, j.Position
+        //                select new JobType()
+        //                {
+        //                    Id = j.Id,
+        //                    Description = j.Description,
+        //                    CreatedBy = j.CreatedBy,
+        //                    LastUpdatedBy = j.LastUpdatedBy,
+        //                    CreateDate = j.CreateDate,
+        //                    LastUpdateDate = j.LastUpdateDate,
+        //                    RequiredJobId = j.RequiredJobId,
+        //                    ComputeTime = j.ComputeTime,
+        //                    Position = j.Position,
+        //                    ShowInJobOverview = j.ShowInJobOverview,
+        //                    Acronym = j.Acronym,
+        //                }).ToList();
+
+        //    db.Dispose();
+
+        //    return data;
+        //}
 
         public List<JobType> GetJobTypeList()
         {
             TimeTrackerEntities db = new TimeTrackerEntities();
 
             var data = (from j in db.T_JobType
-                        orderby j.M_Department.Position,j.Position
+                        orderby j.Position
                         select new JobType()
                         {
                             Id = j.Id,
                             Description = j.Description,
-                            DepartmentId = j.DepartmentId,
                             CreatedBy = j.CreatedBy,
                             LastUpdatedBy = j.LastUpdatedBy,
                             CreateDate = j.CreateDate,
@@ -87,7 +133,6 @@ namespace TimeTracker.Model
                             Position = j.Position,
                             ShowInJobOverview = j.ShowInJobOverview,
                             Acronym = j.Acronym,
-                            department = j.M_Department.Description
                         }).ToList();
 
             db.Dispose();
@@ -95,64 +140,60 @@ namespace TimeTracker.Model
             return data;
         }
 
-        public List<JobType> GetJobOverviewJobType(int departmentid)
-        {
-            TimeTrackerEntities db = new TimeTrackerEntities();
+        //public List<JobType> GetJobOverviewJobType(int departmentid)
+        //{
+        //    TimeTrackerEntities db = new TimeTrackerEntities();
 
-            var data = (from j in db.T_JobType
-                        where j.DepartmentId == departmentid
-                        && j.ShowInJobOverview == true
-                        orderby j.M_Department.Position, j.Position
-                        select new JobType()
-                        {
-                            Id = j.Id,
-                            Description = j.Description,
-                            DepartmentId = j.DepartmentId,
-                            CreatedBy = j.CreatedBy,
-                            LastUpdatedBy = j.LastUpdatedBy,
-                            CreateDate = j.CreateDate,
-                            LastUpdateDate = j.LastUpdateDate,
-                            RequiredJobId = j.RequiredJobId,
-                            ComputeTime = j.ComputeTime,
-                            Position = j.Position,
-                            ShowInJobOverview = j.ShowInJobOverview,
-                            Acronym = j.Acronym,
-                            department = j.M_Department.Description
-                        }).ToList();
+        //    var data = (from j in db.T_JobType
+        //                where j.DepartmentId == departmentid
+        //                && j.ShowInJobOverview == true
+        //                orderby j.M_Department.Position, j.Position
+        //                select new JobType()
+        //                {
+        //                    Id = j.Id,
+        //                    Description = j.Description,
+        //                    CreatedBy = j.CreatedBy,
+        //                    LastUpdatedBy = j.LastUpdatedBy,
+        //                    CreateDate = j.CreateDate,
+        //                    LastUpdateDate = j.LastUpdateDate,
+        //                    RequiredJobId = j.RequiredJobId,
+        //                    ComputeTime = j.ComputeTime,
+        //                    Position = j.Position,
+        //                    ShowInJobOverview = j.ShowInJobOverview,
+        //                    Acronym = j.Acronym,
+        //                }).ToList();
 
-            db.Dispose();
+        //    db.Dispose();
 
-            return data;
-        }
+        //    return data;
+        //}
 
-        public List<JobType> GetExclusiveJobTypeList(int departmentid)
-        {
-            TimeTrackerEntities db = new TimeTrackerEntities();
+        //public List<JobType> GetExclusiveJobTypeList(int departmentid)
+        //{
+        //    TimeTrackerEntities db = new TimeTrackerEntities();
 
-            var data = (from j in db.T_JobType
-                        where j.DepartmentId == departmentid
-                        orderby j.M_Department.Position, j.Position
-                        select new JobType()
-                        {
-                            Id = j.Id,
-                            Description = j.Description,
-                            DepartmentId = j.DepartmentId,
-                            CreatedBy = j.CreatedBy,
-                            LastUpdatedBy = j.LastUpdatedBy,
-                            CreateDate = j.CreateDate,
-                            LastUpdateDate = j.LastUpdateDate,
-                            RequiredJobId = j.RequiredJobId,
-                            ComputeTime = j.ComputeTime,
-                            Position = j.Position,
-                            Acronym = j.Acronym,
-                            ShowInJobOverview = j.ShowInJobOverview,
-                            department = j.M_Department.Description
-                        }).ToList();
+        //    var data = (from j in db.T_JobType
+        //                where j.DepartmentId == departmentid
+        //                orderby j.M_Department.Position, j.Position
+        //                select new JobType()
+        //                {
+        //                    Id = j.Id,
+        //                    Description = j.Description,
+        //                    CreatedBy = j.CreatedBy,
+        //                    LastUpdatedBy = j.LastUpdatedBy,
+        //                    CreateDate = j.CreateDate,
+        //                    LastUpdateDate = j.LastUpdateDate,
+        //                    RequiredJobId = j.RequiredJobId,
+        //                    ComputeTime = j.ComputeTime,
+        //                    Position = j.Position,
+        //                    Acronym = j.Acronym,
+        //                    ShowInJobOverview = j.ShowInJobOverview
+        //                }).ToList();
 
-            db.Dispose();
+        //    db.Dispose();
 
-            return data;
-        }
+        //    return data;
+        //}
 
         public void Insert(JobType jobtype)
         {
@@ -211,7 +252,6 @@ namespace TimeTracker.Model
         {
             T_JobType t_jobtype = new T_JobType();
             t_jobtype.Description = jobtype.Description;
-            t_jobtype.DepartmentId = jobtype.DepartmentId;
             t_jobtype.CreateDate = jobtype.CreateDate;
             t_jobtype.LastUpdateDate = jobtype.LastUpdateDate;
             t_jobtype.CreatedBy = jobtype.CreatedBy;
@@ -227,7 +267,6 @@ namespace TimeTracker.Model
         private void UpdateParse(T_JobType t_jobtype, JobType jobtype)
         {
             t_jobtype.Description = jobtype.Description;
-            t_jobtype.DepartmentId = jobtype.DepartmentId;
             t_jobtype.CreateDate = jobtype.CreateDate;
             t_jobtype.LastUpdateDate = jobtype.LastUpdateDate;
             t_jobtype.CreatedBy = jobtype.CreatedBy;
