@@ -93,10 +93,8 @@ namespace TimeTracker.Model
             TimeTrackerEntities db = new TimeTrackerEntities();
 
             var data = (from m in db.T_Modules
-                        join p in db.T_RolesModuleAccess
-                        on m.Id equals p.ModuleId
                         where m.ModuleType == moduletype
-                        && p.RoleId == roleId
+                        && m.M_RolesModuleAccesses.FirstOrDefault(r => r.RoleId == roleId) != null
                         orderby m.ModuleType, m.ArrangementOrder
                         select new Module()
                         {
@@ -105,7 +103,7 @@ namespace TimeTracker.Model
                             Description = m.Description,
                             ModuleType = m.ModuleType,
                             ArrangementOrder = m.ArrangementOrder
-                        }).Distinct().ToList();
+                        }).ToList();
 
             db.Dispose();
 

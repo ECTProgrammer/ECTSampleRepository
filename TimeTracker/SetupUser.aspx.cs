@@ -101,6 +101,7 @@ namespace TimeTracker
             InitializeModalDropDownDepartment();
             InitializeModalDropDownRole();
             InitializeModalDropDownStatus();
+            InitializeModalRadBtnShift();
             this.programmaticModalPopup.Show();
         }
 
@@ -130,6 +131,7 @@ namespace TimeTracker
                 modalTxtBoxMobile.Text = user.Mobile;
                 modalTxtBoxEmail.Text = user.Email;
                 modalTxtBoxFax.Text = user.Fax;
+                InitializeModalRadBtnShift(user.Shift);
                 this.programmaticModalPopup.Show();
             }
         }
@@ -207,6 +209,17 @@ namespace TimeTracker
                     i.Selected = false;
             }
         }
+
+        private void InitializeModalRadBtnShift(string value = "AM") 
+        {
+            for (int i = 0; i < modalRadBtnListShift.Items.Count; i++) 
+            {
+                if (modalRadBtnListShift.Items[i].Value.Trim() == value)
+                    modalRadBtnListShift.Items[i].Selected = true;
+                else
+                    modalRadBtnListShift.Items[i].Selected = false;
+            }
+        }
         #endregion
 
         #region COMMAND
@@ -236,6 +249,7 @@ namespace TimeTracker
                 user.LastUpdateDate = DateTime.Now;
                 user.EmployeeNumber = Convert.ToInt32(modalTxtBoxEmployeeNo.Text);
                 user.Status = modalDropDownStatus.SelectedItem.Value;
+                user.Shift = modalRadBtnListShift.SelectedItem.Value.Trim();
                 if (e.CommandArgument.ToString().Trim() == "Add") 
                 {
                     user.CreateDate = DateTime.Now;
@@ -247,6 +261,7 @@ namespace TimeTracker
                     user.Update(user);
                 }
                 InitializeGridUser();
+                this.programmaticModalPopup.Hide();
             }
         }
 

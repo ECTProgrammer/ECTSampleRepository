@@ -38,7 +38,8 @@ namespace TimeTracker.Model
                             fullname = u.Firstname+" "+u.Lastname,
                             role = u.M_Role.Description,
                             department = u.M_Department.Description,
-                            EmployeeNumber = u.EmployeeNumber
+                            EmployeeNumber = u.EmployeeNumber,
+                            Shift = u.Shift
                         }).FirstOrDefault();
 
             db.Dispose();
@@ -73,7 +74,8 @@ namespace TimeTracker.Model
                             fullname = u.Firstname + " " + u.Lastname,
                             role = u.M_Role.Description,
                             department = u.M_Department.Description,
-                            EmployeeNumber = u.EmployeeNumber
+                            EmployeeNumber = u.EmployeeNumber,
+                            Shift = u.Shift
                         }).FirstOrDefault();
 
             db.Dispose();
@@ -109,7 +111,8 @@ namespace TimeTracker.Model
                             fullname = u.Firstname + " " + u.Lastname,
                             role = u.M_Role.Description,
                             department = u.M_Department.Description,
-                            EmployeeNumber = u.EmployeeNumber
+                            EmployeeNumber = u.EmployeeNumber,
+                            Shift = u.Shift
                         }).FirstOrDefault();
 
             db.Dispose();
@@ -146,7 +149,8 @@ namespace TimeTracker.Model
                             fullname = u.Firstname + " " + u.Lastname,
                             role = u.M_Role.Description,
                             department = u.M_Department.Description,
-                            EmployeeNumber = u.EmployeeNumber
+                            EmployeeNumber = u.EmployeeNumber,
+                            Shift = u.Shift
                         }).FirstOrDefault();
 
             db.Dispose();
@@ -181,7 +185,8 @@ namespace TimeTracker.Model
                             fullname = u.Firstname + " " + u.Lastname,
                             role = u.M_Role.Description,
                             department = u.M_Department.Description,
-                            EmployeeNumber = u.EmployeeNumber
+                            EmployeeNumber = u.EmployeeNumber,
+                            Shift = u.Shift
                         }).ToList();
 
             db.Dispose();
@@ -217,7 +222,46 @@ namespace TimeTracker.Model
                             fullname = u.Firstname + " " + u.Lastname,
                             role = u.M_Role.Description,
                             department = u.M_Department.Description,
-                            EmployeeNumber = u.EmployeeNumber
+                            EmployeeNumber = u.EmployeeNumber,
+                            Shift = u.Shift
+                        }).ToList();
+
+            db.Dispose();
+
+            return data;
+        }
+
+        public List<User> GetActiveUserList(int departmentId)
+        {
+            TimeTrackerEntities db = new TimeTrackerEntities();
+
+            var data = (from u in db.T_Users
+                        where u.DepartmentId == departmentId
+                        && u.Status == "Active"
+                        orderby u.Firstname
+                        select new User()
+                        {
+                            Id = u.Id,
+                            Username = u.Username,
+                            Password = u.Password,
+                            Firstname = u.Firstname,
+                            Lastname = u.Lastname,
+                            Phone = u.Phone,
+                            Mobile = u.Mobile,
+                            Fax = u.Fax,
+                            Email = u.Email,
+                            DepartmentId = u.DepartmentId,
+                            RoleId = u.RoleId,
+                            CreateDate = u.CreateDate,
+                            CreatedBy = u.CreatedBy,
+                            LastUpdateDate = u.LastUpdateDate,
+                            LastUpdatedBy = u.LastUpdatedBy,
+                            Status = u.Status,
+                            fullname = u.Firstname + " " + u.Lastname,
+                            role = u.M_Role.Description,
+                            department = u.M_Department.Description,
+                            EmployeeNumber = u.EmployeeNumber,
+                            Shift = u.Shift
                         }).ToList();
 
             db.Dispose();
@@ -254,7 +298,8 @@ namespace TimeTracker.Model
                             fullname = u.Firstname + " " + u.Lastname,
                             role = u.M_Role.Description,
                             department = u.M_Department.Description,
-                            EmployeeNumber = u.EmployeeNumber
+                            EmployeeNumber = u.EmployeeNumber,
+                            Shift = u.Shift
                         }).ToList();
 
             db.Dispose();
@@ -367,7 +412,8 @@ namespace TimeTracker.Model
                             fullname = u.Firstname + " " + u.Lastname,
                             role = u.M_Role.Description,
                             department = u.M_Department.Description,
-                            EmployeeNumber = u.EmployeeNumber
+                            EmployeeNumber = u.EmployeeNumber,
+                            Shift = u.Shift
                         }).ToList();
 
             db.Dispose();
@@ -606,7 +652,7 @@ namespace TimeTracker.Model
             t_user.CreatedBy = user.CreatedBy;
             t_user.LastUpdatedBy = user.LastUpdatedBy;
             t_user.EmployeeNumber = user.EmployeeNumber;
-
+            t_user.Shift = user.Shift;
             return t_user;
         }
 
@@ -626,6 +672,7 @@ namespace TimeTracker.Model
             t_user.LastUpdateDate = user.LastUpdateDate;
             t_user.LastUpdatedBy = user.LastUpdatedBy;
             t_user.EmployeeNumber = user.EmployeeNumber;
+            t_user.Shift = user.Shift;
         }
     }
 }

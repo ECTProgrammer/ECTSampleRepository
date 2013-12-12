@@ -42,6 +42,7 @@ namespace TimeTracker
         public string Status { get; set; }
         public Nullable<int> EmployeeNumber { get; set; }
         public string Password { get; set; }
+        public string Shift { get; set; }
     
         public virtual T_Department M_Department { get; set; }
         public virtual ICollection<T_JobTracker> M_JobTrackerSupervisors { get; set; }

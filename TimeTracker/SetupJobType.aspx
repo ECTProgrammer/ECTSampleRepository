@@ -65,9 +65,9 @@
                     <asp:Label ID="modalLabelJobTypeId" runat="server" Visible="false"></asp:Label>
                     <asp:Label ID="modalLabelError" runat="server" CssClass="validation" Visible="false"></asp:Label>
                     <table style="padding:10px; border-collapse:separate;border-spacing:10px; width:100%">
-                        <tr><td>Description</td><td>:</td><td><asp:TextBox ID="modalTxtBoxDescription" runat="server" ValidationGroup="modal" CssClass="textBox" OnTextChanged="modalDescription_Changed"></asp:TextBox>
+                        <tr><td>Description</td><td>:</td><td><asp:TextBox ID="modalTxtBoxDescription" runat="server" ValidationGroup="modal" AutoPostBack="true" CssClass="textBox" OnTextChanged="modalDescription_Changed"></asp:TextBox>
                             <asp:RequiredFieldValidator ID="modalReqDescription" runat="server" ValidationGroup="modal" CssClass="validation" ControlToValidate="modalTxtBoxDescription" Text="*"></asp:RequiredFieldValidator></td></tr>
-                        <tr><td>Acronym</td><td>:</td><td><asp:TextBox ID="modalTxtBoxAcronym" runat="server" ValidationGroup="modal" CssClass="textBox" OnTextChanged="modalAcronym_Changed" MaxLength="10"></asp:TextBox>
+                        <tr><td>Acronym</td><td>:</td><td><asp:TextBox ID="modalTxtBoxAcronym" runat="server" ValidationGroup="modal" AutoPostBack="true" CssClass="textBox" OnTextChanged="modalAcronym_Changed" MaxLength="10"></asp:TextBox>
                             <asp:RequiredFieldValidator ID="modalReqAcronym" runat="server" ValidationGroup="modal" CssClass="validation" ControlToValidate="modalTxtBoxDescription" Text="*" /></td></tr>
                         <tr><td>Position</td><td>:</td><td><asp:TextBox ID="modalTxtBoxPosition" runat="server" ValidationGroup="modal" CssClass="textBox"></asp:TextBox>
                             <asp:RequiredFieldValidator ID="modalReqPosition" runat="server" CssClass="validation" ValidationGroup="modal" ControlToValidate="modalTxtBoxPosition" Text="*"></asp:RequiredFieldValidator></td></tr>

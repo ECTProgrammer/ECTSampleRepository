@@ -362,6 +362,7 @@ namespace TimeTracker
                 jtHist.Insert(jtHist);
                 InitializeWorkingHours();
                 InitializeGrid();
+                this.programmaticModalPopup.Hide();
             }
             
         }
@@ -404,7 +405,7 @@ namespace TimeTracker
             if (jobType != null) 
             {
                 modalReqJobId.Enabled = Convert.ToBoolean(jobType.RequiredJobId);
-                modalDropDownJobStatus.Enabled = Convert.ToBoolean(jobType.RequiredJobId);
+                //modalDropDownJobStatus.Enabled = Convert.ToBoolean(jobType.RequiredJobId);
             }
             //if (modalTxtBoxJobId.Enabled == false) 
             //{
@@ -652,7 +653,7 @@ namespace TimeTracker
             if (jobType != null)
             {
                 modalReqJobId.Enabled = Convert.ToBoolean(jobType.RequiredJobId);
-                modalDropDownJobStatus.Enabled = Convert.ToBoolean(jobType.RequiredJobId);
+                //modalDropDownJobStatus.Enabled = Convert.ToBoolean(jobType.RequiredJobId);
             }
         }
 
@@ -760,7 +761,9 @@ namespace TimeTracker
             timeSetting = timeSetting.GetTimeSetting();
             TimeSpan startTime = new TimeSpan();
             List<TimeSpan> availableTime = new List<TimeSpan>();
+            List<TimeSpan> timeMarker = new List<TimeSpan>();
 
+            //generates the timelist
             if (Session["StartTime"] != null)
             {
                 string[] s = Session["StartTime"].ToString().Split(':') ;
@@ -772,8 +775,10 @@ namespace TimeTracker
                 for (int j = 0; j < 60; j += timeSetting.Interval) 
                 {
                     availableTime.Add(new TimeSpan(i, j, 0));
+                    timeMarker.Add(new TimeSpan(i, j, 0));
                 }
             }
+            //-------------------
 
             if (selectedDate.CompareTo(DateTime.Today) == 0)
             {
@@ -824,6 +829,8 @@ namespace TimeTracker
                 //    availableTime.RemoveAt(availableTime.Count - 1);
                 //}
             }
+            
+
             int h = availableTime[availableTime.Count - 1].Hours;
             for (int i = 0; i < availableTime.Count - 1; i++)
             {
@@ -833,6 +840,21 @@ namespace TimeTracker
                     availableTime.RemoveAt(availableTime.Count - 1);
             }
 
+            //make sure that there is no gap between time
+            if (usedTime.Count > 0)
+            {
+                for (int i = 0; i < availableTime.Count; i++)
+                {
+                    if (availableTime[i] != timeMarker[i])
+                    {
+                        if (i < availableTime.Count - 1)
+                        {
+                            availableTime.RemoveRange(i + 1, availableTime.Count - i - 1);
+                            break;
+                        }
+                    }
+                }
+            }
             
             int curtime = 24;
 
@@ -858,7 +880,7 @@ namespace TimeTracker
                         i.Selected = true;
                 }
             }
-            else
+            else if (isCurrentDate == true)
             {
                 int s = DateTime.Now.Hour;
                 decimal gap = 1000;
@@ -880,6 +902,10 @@ namespace TimeTracker
                 }
                 modalDropDownStartTimeHour.Items[index].Selected = true;
             }
+            else 
+            {
+                modalDropDownStartTimeHour.Items[modalDropDownStartTimeHour.Items.Count - 1].Selected = true;
+            }
         }
 
         private void GenerateStartMin(int hour, string selectedTime = "") 
@@ -893,7 +919,7 @@ namespace TimeTracker
             timeSetting = timeSetting.GetTimeSetting();
             TimeSpan startTime = new TimeSpan();
             List<TimeSpan> availableTime = new List<TimeSpan>();
-
+           
             if (Session["StartTime"] != null)
             {
                 string[] s = Session["StartTime"].ToString().Split(':');
@@ -938,7 +964,8 @@ namespace TimeTracker
                     }
                 }
             }
-
+            
+            
             if (usedTime.Count < 1)
             {
                 for (int j = 0; j < availableTime.Count; j++)
@@ -951,6 +978,14 @@ namespace TimeTracker
                 }
             }
 
+            //make sure that there is no gap between time
+            if (Convert.ToInt32(modalDropDownStartTimeHour.Items[modalDropDownStartTimeHour.Items.Count - 1].Text) == hour && availableTime.Count > 1 && usedTime.Count > 0)
+            {
+                availableTime.RemoveRange(1, availableTime.Count - 1);
+            }
+                
+            
+
             if (availableTime.Count > 0 && hour == Convert.ToInt32(modalDropDownStartTimeHour.Items[modalDropDownStartTimeHour.Items.Count - 1].Value))
             {
 
@@ -958,6 +993,8 @@ namespace TimeTracker
                 if (modalDropDownEndTimeHour.Items.Count == 0)
                     availableTime.RemoveAt(availableTime.Count - 1);
             }
+
+            
 
             int curtime = 60;
 

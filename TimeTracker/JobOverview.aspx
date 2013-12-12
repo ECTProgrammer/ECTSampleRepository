@@ -20,17 +20,26 @@
                 <asp:Panel ID="panelAccessOK" runat="server">
                     <div style="text-align:right">
                         <table style="margin:4px 4px 4px 4px; text-align:right">
-                            <tr>
+                            <tr><td>
+                                <table><tr>
                                 <td>Select Date :</td>
                                 <td><asp:TextBox ID="txtBoxStartDate"  runat="server" AutoPostBack="true" OnTextChanged="txtBoxStartDate_Changed" ></asp:TextBox></td>
                                 <td><asp:TextBox ID="txtBoxEndDate"  runat="server" AutoPostBack="true" OnTextChanged="txtBoxEndDate_Changed"></asp:TextBox></td>
+                                </tr></table>
+                                </td>
+                                <td>
+                                    <table><tr>
+                                <td>Job ID:</td>
+                                <td><asp:TextBox ID="txtBoxJobId"  runat="server" AutoPostBack="true" OnTextChanged="txtBoxJobId_Changed" ></asp:TextBox></td>
+                                </tr></table>
+                                </td>
                             </tr>
                         </table>
                     </div>
                     <ajaxToolKit:CalendarExtender ID="calendarExtenderStartDate" runat="server" TargetControlID="txtBoxStartDate" Format="dd MMM yyyy"></ajaxToolKit:CalendarExtender> 
                     <ajaxToolKit:CalendarExtender ID="calendarExtenderEndDate" runat="server" TargetControlID="txtBoxEndDate" Format="dd MMM yyyy"></ajaxToolKit:CalendarExtender>
                     <ajaxToolKit:TabContainer ID="tabContainerJobOverview" runat="server">
-                        <ajaxToolKit:TabPanel ID="tabPanelJobSummary" runat="server" HeaderText="Job Overview Details">
+                        <ajaxToolKit:TabPanel ID="tabPanelJobSummary" runat="server" HeaderText="Job Overview Summary">
                             <ContentTemplate>
                                     <asp:Panel runat="server" ScrollBars="Auto" Width="100%">
                                         <div style="margin:10px 10px 10px 10px">
@@ -51,6 +60,22 @@
                                     <asp:Panel runat="server" ScrollBars="Auto" Width="100%">
                                         <div style="margin:10px 10px 10px 10px">
                                             <asp:GridView ID="gridViewDetail" runat="server" AutoGenerateColumns="false" CssClass="gridView" ShowHeaderWhenEmpty="true"  OnRowCreated="gridViewDetail_RowCreated" OnRowDataBound="gridViewDetail_RowDataBound">
+                                                <EmptyDataRowStyle/>
+                                                    <EmptyDataTemplate>
+                                                        No Data Found.
+                                                    </EmptyDataTemplate>
+                                                <Columns>
+                                                </Columns>
+                                            </asp:GridView>
+                                        </div>
+                                    </asp:Panel>
+                            </ContentTemplate>
+                        </ajaxToolKit:TabPanel>
+                        <ajaxToolKit:TabPanel ID="tabPanelJobFlow" runat="server" HeaderText="Process Flow">
+                            <ContentTemplate>
+                                    <asp:Panel  runat="server" ScrollBars="Auto" Width="100%">
+                                        <div style="margin:10px 10px 10px 10px">
+                                            <asp:GridView ID="gridViewJobFlow" runat="server" AutoGenerateColumns="false" CssClass="gridView" ShowHeaderWhenEmpty="true"  OnRowCreated="gridViewJobFlow_RowCreated" OnRowDataBound="gridViewJobFlow_RowDataBound">
                                                 <EmptyDataRowStyle/>
                                                     <EmptyDataTemplate>
                                                         No Data Found.

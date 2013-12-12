@@ -1,4 +1,4 @@
-﻿<%@ Page Title="Module Access" Language="C#" MasterPageFile="~/Site.Master" AutoEventWireup="true" CodeBehind="SetupModuleAccess.aspx.cs" Inherits="TimeTracker.SetupModuleAccess" %>
+﻿<%@ Page Title="" Language="C#" MasterPageFile="~/Site.Master" AutoEventWireup="true" CodeBehind="SetupDepartmentAccess.aspx.cs" Inherits="TimeTracker.SetupDepartmentAccess" %>
 <asp:Content ID="Content1" ContentPlaceHolderID="HeadContent" runat="server">
 </asp:Content>
 <asp:Content ID="Content2" ContentPlaceHolderID="FeaturedContent" runat="server">
@@ -38,12 +38,8 @@
             </asp:Panel>
        </ContentTemplate>
     </asp:UpdatePanel>
-  
-    <%--Modal--%>
+
     <asp:UpdatePanel ID="UpdatePanel1" runat="server">
-        <Triggers>
-<%--            <asp:PostBackTrigger ControlID="modalBtnSubmit" />--%>
-        </Triggers>
         <ContentTemplate>
             <asp:UpdateProgress ID="modalUpdateProgress" runat="server" AssociatedUpdatePanelID="UpdatePanel1" DynamicLayout="true">
                 <ProgressTemplate>
@@ -59,33 +55,18 @@
                     <tr><td>Role</td><td>:</td><td><asp:DropDownList ID="modalDropDownRoles" runat="server"></asp:DropDownList></td></tr>
                     <tr><td colspan="3"><asp:CheckBox ID="modalChkboxAll" runat="server" Text=" Select All" AutoPostBack="true" OnCheckedChanged="modalChkboxAll_Changed" /></td></tr>
                     <tr>
-                        <td colspan="3"><asp:Panel runat="server" ScrollBars="Auto" style="max-height:350px">
-                            <asp:GridView ID="gridViewModuleAccess" runat="server" AutoGenerateColumns="false" CssClass="gridView" GridLines="None" ShowHeaderWhenEmpty="true">
-                                <Columns>
-                                    <asp:BoundField HeaderText="Module" DataField="Description" />
-                                    <asp:TemplateField HeaderText="View">
+                        <td colspan="3"><asp:Panel ID="Panel1" runat="server" ScrollBars="Auto" style="max-height:350px">
+                            <asp:GridView ID="modalGridViewDepartment" runat="server" AutoGenerateColumns="false" CssClass="gridView" GridLines="None" ShowHeaderWhenEmpty="true">
+                                    <Columns>
+                                        <asp:BoundField HeaderText="Department" DataField="Description" />
+                                        <asp:TemplateField HeaderText="Select">
                                         <ItemTemplate>
-                                            <asp:CheckBox ID="chkboxView" runat="server" />
-                                            <asp:Label ID="modalLabelModuleId" runat="server" Visible="false" Text='<%#Eval("Id")%>' ToolTip="ToolTip"></asp:Label>
+                                            <asp:CheckBox ID="modalChkBoxSelect" runat="server" />
+                                            <asp:Label ID="modalLabelDepartmentId" runat="server" Visible="false" Text='<%#Eval("Id")%>' ToolTip="ToolTip"></asp:Label>
                                         </ItemTemplate>
                                     </asp:TemplateField>
-                                    <asp:TemplateField HeaderText="Add">
-                                        <ItemTemplate>
-                                            <asp:CheckBox ID="chkboxAdd" runat="server" />
-                                        </ItemTemplate>
-                                    </asp:TemplateField>
-                                    <asp:TemplateField HeaderText="Update">
-                                        <ItemTemplate>
-                                            <asp:CheckBox ID="chkboxUpdate" runat="server" />
-                                        </ItemTemplate>
-                                    </asp:TemplateField>
-                                    <asp:TemplateField HeaderText="Delete">
-                                        <ItemTemplate>
-                                            <asp:CheckBox ID="chkboxDelete" runat="server" />
-                                        </ItemTemplate>
-                                    </asp:TemplateField>
-                                </Columns>
-                            </asp:GridView>
+                                    </Columns>
+                                </asp:GridView>
                             </asp:Panel>
                         </td>
                     </tr>

@@ -1,4 +1,4 @@
-﻿<%@ Page Title="Setup Department" Language="C#" MasterPageFile="~/Site.Master" AutoEventWireup="true" CodeBehind="SetupDepartment.aspx.cs" Inherits="TimeTracker.SetupDepartment" %>
+﻿<%@ Page Title="Time Setting" Language="C#" MasterPageFile="~/Site.Master" AutoEventWireup="true" CodeBehind="SettingTime.aspx.cs" Inherits="TimeTracker.SettingTime" %>
 <asp:Content ID="Content1" ContentPlaceHolderID="HeadContent" runat="server">
 </asp:Content>
 <asp:Content ID="Content2" ContentPlaceHolderID="FeaturedContent" runat="server">
@@ -18,24 +18,16 @@
 	       <asp:Panel ID="panelContent" runat="server" CssClass="modal">
 		        <asp:Label ID="labelAccessDenied" runat="server" Text="You do not have access rights to this page. Please contact your administrator if you need access. Thank you." Visible="false" CssClass="validation"></asp:Label>
 		        <asp:Panel ID="panelAccessOK" runat="server">
-			        <table style="width:100%;">
-				        <tr><td style="text-align:left"><asp:LinkButton ID="linkBtnAdd" runat="server" CausesValidation="false" Text="Add New Department" CssClass="linkButton" Font-Bold="true" OnClick="linkBtnAdd_Click"></asp:LinkButton></td></tr>
-                    </table>
 			        <div style="margin:10px 10px 10px 10px">
-			        <asp:GridView ID="gridViewDepartment" runat="server" AutoGenerateColumns="false" CssClass="gridView" GridLines="None" OnRowCommand="gridViewDepartment_Command" ShowHeaderWhenEmpty="true">
+			        <asp:GridView ID="gridViewTime" runat="server" AutoGenerateColumns="false" CssClass="gridView" GridLines="None" OnRowCommand="gridViewTime_Command" ShowHeaderWhenEmpty="true">
 				        <EmptyDataRowStyle/>
 					        <EmptyDataTemplate>
 					         No Data Found.
 					        </EmptyDataTemplate>
 				        <Columns>
 					        <asp:TemplateField Visible="false">
-                                <ItemTemplate>
-                                    <asp:Label ID="labelDepartmentId" runat="server" Text='<%#Eval("Id")%>' Visible="false"></asp:Label>
-                                </ItemTemplate>
 					        </asp:TemplateField>
-					        <asp:BoundField HeaderText="Department" DataField="Description" ReadOnly="true"></asp:BoundField>
-                            <asp:BoundField HeaderText="Acronym" DataField="Acronym" ReadOnly="true"></asp:BoundField>
-                            <asp:BoundField HeaderText="Position" DataField="Position" ReadOnly="true" />
+					        <asp:BoundField HeaderText="Time Interval in Minutes" DataField="Interval" ReadOnly="true"></asp:BoundField>
 				        </Columns>
 			        </asp:GridView>
 			        </div>
@@ -44,7 +36,6 @@
        </ContentTemplate>
     </asp:UpdatePanel>
 
-    <%--Modal--%>
     <asp:UpdatePanel ID="UpdatePanelModal" runat="server">
         <Triggers>
             <%--<asp:PostBackTrigger ControlID="modalBtnSubmit" />--%>
@@ -59,17 +50,12 @@
             </asp:UpdateProgress>
 
             <asp:Panel Id="panelModal" runat="server" style="display:none">
-                <asp:Panel ID="panelModalHeader" runat="server" CssClass="modalHeader">Setup Department</asp:Panel>
+                <asp:Panel ID="panelModalHeader" runat="server" CssClass="modalHeader">Setup User</asp:Panel>
                 <asp:Panel ID="panelModalContent" runat="server" CssClass="modal">
-                    <asp:Label ID="modalLabelDepartmentId" runat="server" Visible="false"></asp:Label>
                     <asp:Label ID="modalLabelError" runat="server" CssClass="validation" Visible="false"></asp:Label>
                     <table style="padding:10px; border-collapse:separate;border-spacing:10px; width:100%">
-                        <tr><td>Description</td><td>:</td><td><asp:TextBox ID="modalTxtBoxDescription" runat="server" ValidationGroup="modal" CssClass="textBox"></asp:TextBox>
-                            <asp:RequiredFieldValidator ID="modalReqDescription" runat="server" ValidationGroup="modal" CssClass="validation" ControlToValidate="modalTxtBoxDescription" Text="*"></asp:RequiredFieldValidator></td></tr>
-                        <tr><td>Acronym</td><td>:</td><td><asp:TextBox ID="modalTxtBoxAcronym" runat="server" ValidationGroup="modal" CssClass="textBox" MaxLength="15"></asp:TextBox>
-                            <asp:RequiredFieldValidator ID="modalReqAcronym" runat="server" ValidationGroup="modal" CssClass="validation" ControlToValidate="modalTxtBoxAcronym" Text="*"></asp:RequiredFieldValidator></td></tr>
-                        <tr><td>Position</td><td>:</td><td><asp:TextBox ID="modalTxtBoxPosition" runat="server" ValidationGroup="modal" CssClass="textBox"></asp:TextBox>
-                            <asp:RequiredFieldValidator ID="modalReqPosition" runat="server" CssClass="validation" ValidationGroup="modal" ControlToValidate="modalTxtBoxPosition" Text="*"></asp:RequiredFieldValidator></td></tr>
+                        <tr><td>Time Interval in Minutes</td><td>:</td><td><asp:TextBox ID="modalTxtBoxInterval" runat="server" ValidationGroup="modal" CssClass="textBox"></asp:TextBox>
+                            <asp:RequiredFieldValidator ID="modalReqInterval" runat="server" ValidationGroup="modal" CssClass="validation" ControlToValidate="modalTxtBoxInterval" Text="*"></asp:RequiredFieldValidator></td></tr>
                         <tr>
                             <td colspan="3" style="text-align:center">
                                 <asp:Button ID="modalBtnSubmit" runat="server" Text="Submit" ValidationGroup="modal" CausesValidation="true" CssClass="button" OnCommand="modalBtnSubmit_Command"/>
@@ -77,7 +63,7 @@
                             </td>
                         </tr>
                     </table>
-                    <ajaxToolkit:FilteredTextBoxExtender ID="filterPosition" runat="server" TargetControlID="modalTxtBoxPosition" FilterType="Numbers"/>
+                    <ajaxToolkit:FilteredTextBoxExtender ID="filterInterval" runat="server" TargetControlID="modalTxtBoxInterval" FilterType="Numbers"/>
                 </asp:Panel>
             </asp:Panel>
 

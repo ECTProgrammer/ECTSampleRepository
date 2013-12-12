@@ -44,7 +44,7 @@
                     <asp:BoundField HeaderText="End Time" DataField="EndTime" DataFormatString="{0:t}" ReadOnly="true"></asp:BoundField>
                     <asp:BoundField HeaderText="Description of Work" DataField="jobtype" ReadOnly="true"></asp:BoundField>
                     <asp:BoundField HeaderText="JobId" DataField="JobIdNumber" ReadOnly="true"></asp:BoundField>
-                    <asp:BoundField HeaderText="Job Status" DataField="JobStatus" ReadOnly="true"></asp:BoundField>
+                    <asp:BoundField HeaderText="Task Status" DataField="JobStatus" ReadOnly="true"></asp:BoundField>
                     <asp:BoundField HeaderText="Customer" DataField="customer" ReadOnly="false"></asp:BoundField>
                     <asp:BoundField HeaderText="Number of Hours" DataField="totalhours" ReadOnly="false"></asp:BoundField>
                     <asp:BoundField HeaderText="Remarks" DataField="Remarks"></asp:BoundField>
@@ -82,7 +82,7 @@
                         <tr><td>Description of Work</td><td>:</td><td><asp:DropDownList ID="modalDropDownJobType" runat="server" ValidationGroup="modal" AutoPostBack="true" CssClass="dropDownList1" OnSelectedIndexChanged="modalDropDownJobType_IndexChanged"></asp:DropDownList></td></tr>
                         <tr><td>Job Id</td><td>:</td><td><asp:TextBox ID="modalTxtBoxJobId" runat="server"  AutoPostBack="true" ValidationGroup="modal" OnTextChanged="modalTxtBoxJobId_TextChanged"></asp:TextBox>
                             <asp:RequiredFieldValidator ID="modalReqJobId" runat="server" ValidationGroup="modal" CssClass="validation" ControlToValidate="modalTxtBoxJobId" Text="*" /></td></tr>
-                        <tr><td>Job Status</td><td>:</td><td><asp:DropDownList ID="modalDropDownJobStatus"  runat="server">
+                        <tr><td>Task Status</td><td>:</td><td><asp:DropDownList ID="modalDropDownJobStatus"  runat="server">
                             <asp:ListItem Text="In Progress" Value="In Progress"></asp:ListItem>
                             <asp:ListItem Text="On Hold" Value="On Hold"></asp:ListItem>
                             <asp:ListItem Text="Completed" Value="Completed"></asp:ListItem>

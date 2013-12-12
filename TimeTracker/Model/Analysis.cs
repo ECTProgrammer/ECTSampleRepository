@@ -13,7 +13,7 @@ namespace TimeTracker.Model
         public string totalrejectedtime { get; set; }
         public string totalunclosedjobs { get; set; }
 
-        public List<Analysis> GetAnalysis(int departmentid, DateTime startdate, DateTime enddate) 
+        public List<Analysis> GetAnalysis(int departmentid, DateTime startdate, DateTime enddate, string stringjobid,int roleid) 
         {
             List<Analysis> data = new List<Analysis>();
             JobTracker jobtracker = new JobTracker();
@@ -24,7 +24,7 @@ namespace TimeTracker.Model
             {
                 //joblist = jobtracker.GetJobTrackerForAnalysis(startdate, enddate);
                 JobType jobtype = new JobType();
-                jobtypelist = jobtype.GetJobTypeList();
+                jobtypelist = jobtype.GetJobTypeListByRoleId(roleid);
             }
             else
             {
@@ -35,33 +35,36 @@ namespace TimeTracker.Model
             {
                 Analysis newAnalysis = new Analysis();
                 newAnalysis.jobtype = jobtypelist[i].Description;
-                newAnalysis.totalworktime = jobtracker.GetTotalHours(jobtypelist[i].Id, startdate, enddate, "Approved",departmentid);
-                newAnalysis.totalforapproval = jobtracker.GetTotalHours(jobtypelist[i].Id, startdate, enddate, "For Approval", departmentid);
-                newAnalysis.totalrejectedtime = jobtracker.GetTotalHours(jobtypelist[i].Id, startdate, enddate, "Rejected", departmentid);
-                newAnalysis.totalunclosedjobs = jobtracker.GetTotalUnclosedJobs(jobtypelist[i].Id, startdate, enddate, "Pending", departmentid).ToString();
+                newAnalysis.totalworktime = jobtracker.GetTotalHours(jobtypelist[i].Id, startdate, enddate, "Approved", departmentid, stringjobid);
+                newAnalysis.totalforapproval = jobtracker.GetTotalHours(jobtypelist[i].Id, startdate, enddate, "For Approval", departmentid, stringjobid);
+                newAnalysis.totalrejectedtime = jobtracker.GetTotalHours(jobtypelist[i].Id, startdate, enddate, "Rejected", departmentid, stringjobid);
+                newAnalysis.totalunclosedjobs = jobtracker.GetTotalUnclosedJobs(jobtypelist[i].Id, startdate, enddate, "Pending", departmentid, stringjobid).ToString();
                 data.Add(newAnalysis);
             }
 
             return data;
         }
 
-        public List<Analysis> GetAnalysis(int departmentid, DateTime startdate, DateTime enddate,int userid)
+        public List<Analysis> GetAnalysis(DateTime startdate, DateTime enddate,int userid,string stringjobid)
         {
             List<Analysis> data = new List<Analysis>();
             JobTracker jobtracker = new JobTracker();
             List<JobTracker> joblist = new List<JobTracker>();
             JobTypeDepartment jobtypeDepartment = new JobTypeDepartment();
             List<JobType> jobtypelist = new List<JobType>();
+            User user = new User();
+            user = user.GetUser(userid);
+            int departmentid = Convert.ToInt32(user.DepartmentId);
             jobtypelist = jobtypeDepartment.GetJobTypeList(departmentid);
 
             for (int i = 0; i < jobtypelist.Count; i++)
             {
                 Analysis newAnalysis = new Analysis();
                 newAnalysis.jobtype = jobtypelist[i].Description;
-                newAnalysis.totalworktime = jobtracker.GetTotalHours(jobtypelist[i].Id,userid, startdate, enddate, "Approved", departmentid);
-                newAnalysis.totalforapproval = jobtracker.GetTotalHours(jobtypelist[i].Id, userid, startdate, enddate, "For Approval", departmentid);
-                newAnalysis.totalrejectedtime = jobtracker.GetTotalHours(jobtypelist[i].Id, userid, startdate, enddate, "Rejected", departmentid);
-                newAnalysis.totalunclosedjobs = jobtracker.GetTotalUnclosedJobs(jobtypelist[i].Id, userid, startdate, enddate, "Pending", departmentid).ToString();
+                newAnalysis.totalworktime = jobtracker.GetTotalHours(jobtypelist[i].Id, userid, startdate, enddate, "Approved", departmentid, stringjobid);
+                newAnalysis.totalforapproval = jobtracker.GetTotalHours(jobtypelist[i].Id, userid, startdate, enddate, "For Approval", departmentid, stringjobid);
+                newAnalysis.totalrejectedtime = jobtracker.GetTotalHours(jobtypelist[i].Id, userid, startdate, enddate, "Rejected", departmentid, stringjobid);
+                newAnalysis.totalunclosedjobs = jobtracker.GetTotalUnclosedJobs(jobtypelist[i].Id, userid, startdate, enddate, "Pending", departmentid, stringjobid).ToString();
                 data.Add(newAnalysis);
             }
 

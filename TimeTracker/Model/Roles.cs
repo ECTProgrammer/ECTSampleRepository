@@ -76,6 +76,29 @@ namespace TimeTracker.Model
             return data;
         }
 
+        public List<Roles> GetRolesWithDepartmentAccess()
+        {
+            TimeTrackerEntities db = new TimeTrackerEntities();
+
+            var data = (from d in db.T_Roles
+                        where d.M_RoleDepartmentAccesses.Count > 0
+                        select new Roles()
+                        {
+                            Id = d.Id,
+                            Description = d.Description,
+                            Rank = d.Rank,
+                            CreateDate = d.CreateDate,
+                            LastUpdateDate = d.LastUpdateDate,
+                            CreatedBy = d.CreatedBy,
+                            LastUpdatedBy = d.LastUpdatedBy,
+                            IsSupervisor = d.IsSupervisor
+                        }).Distinct().ToList();
+
+            db.Dispose();
+
+            return data;
+        }
+
         public List<Roles> GetRolesWithoutModuleAccess()
         {
             TimeTrackerEntities db = new TimeTrackerEntities();
@@ -104,6 +127,44 @@ namespace TimeTracker.Model
                 for (int j = 0; j < list.Count; j++)
                 {
                     if (data[i].Id == list[j].Id) 
+                    {
+                        list.RemoveAt(j);
+                        break;
+                    }
+                }
+            }
+
+            return list;
+        }
+
+        public List<Roles> GetRolesWithoutDepartmentAccess()
+        {
+            TimeTrackerEntities db = new TimeTrackerEntities();
+
+            var data = (from d in db.T_Roles
+                        where d.M_RoleDepartmentAccesses.Count > 0
+                        orderby d.Id
+                        select new Roles()
+                        {
+                            Id = d.Id,
+                            Description = d.Description,
+                            Rank = d.Rank,
+                            CreateDate = d.CreateDate,
+                            LastUpdateDate = d.LastUpdateDate,
+                            CreatedBy = d.CreatedBy,
+                            LastUpdatedBy = d.LastUpdatedBy,
+                            IsSupervisor = d.IsSupervisor
+                        }).Distinct().ToList();
+
+            db.Dispose();
+
+            var list = GetRoleList();
+
+            for (int i = 0; i < data.Count; i++)
+            {
+                for (int j = 0; j < list.Count; j++)
+                {
+                    if (data[i].Id == list[j].Id)
                     {
                         list.RemoveAt(j);
                         break;

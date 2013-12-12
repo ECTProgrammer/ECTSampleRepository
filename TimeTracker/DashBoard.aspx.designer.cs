@@ -184,6 +184,24 @@ namespace TimeTracker {
         protected global::System.Web.UI.WebControls.TextBox txtBoxBottomToDate;
         
         /// <summary>
+        /// ddlBottomPersonel control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.DropDownList ddlBottomPersonel;
+        
+        /// <summary>
+        /// txtBoxBottomJobId control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.TextBox txtBoxBottomJobId;
+        
+        /// <summary>
         /// gridViewBottom control.
         /// </summary>
         /// <remarks>
@@ -245,6 +263,24 @@ namespace TimeTracker {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.Panel panelModalContent;
+        
+        /// <summary>
+        /// modalBottomLabelError control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Label modalBottomLabelError;
+        
+        /// <summary>
+        /// modalReqRemarks control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.RequiredFieldValidator modalReqRemarks;
         
         /// <summary>
         /// modalTxtBoxRemarks control.

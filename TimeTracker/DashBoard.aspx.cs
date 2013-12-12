@@ -6,7 +6,7 @@ using System.Web.UI;
 using System.Web.UI.WebControls;
 using TimeTracker.Model;
 using System.Data;
-
+using System.Text.RegularExpressions;
 namespace TimeTracker
 {
     public partial class DashBoard : System.Web.UI.Page
@@ -36,6 +36,7 @@ namespace TimeTracker
                 InitializeGridViewLeftPanel2();
                 InitializeGridViewLeftPanel3();
                 InitializeBottomDropDownDepartment();
+                InitializeBottomDropDownPersonel();
                 InitializeGridViewBottom();
             }
         }
@@ -123,7 +124,10 @@ namespace TimeTracker
             else if (e.CommandName == "RejectRequest") 
             {
                 //data[index].Status = "Rejected";
+                modalBottomLabelError.Visible = false;
+                modalBottomLabelError.Text = "";
                 modalBtnConfirm.CommandArgument = jobtracker.Id.ToString();
+                modalTxtBoxRemarks.Text = "";
                 programmaticModalPopup.Show();
                 //jobtracker.Update(data[index]);
                 //InitializeGridViewLeft();
@@ -132,24 +136,43 @@ namespace TimeTracker
 
         protected void modalBtnConfirm_Command(object sender, CommandEventArgs e) 
         {
-            JobTracker jobtracker = new JobTracker();
-            JobTrackerHistory jtHist = new JobTrackerHistory();
-            int id = Convert.ToInt32(e.CommandArgument);
-            int userid = Convert.ToInt32(Session["UserId"]);
-            jobtracker = jobtracker.GetJobTracker(id);
-            jobtracker.ApprovedBy = userid;
-            jobtracker.LastUpdatedBy = userid;
-            jobtracker.LastUpdateDate = DateTime.Now;
-            jobtracker.SupervisorRemarks = modalTxtBoxRemarks.Text;
-            jobtracker.Status = "Rejected";
-            jobtracker.Update(jobtracker);
+            string[] remarks = modalTxtBoxRemarks.Text.Replace("\n"," ").Trim().Split(' ');
+            int counter = 0;
+            Regex rgx = new Regex("[^a-zA-Z0-9]");
+            for (int i = 0; i < remarks.Length; i++) 
+            {  
+                if (rgx.Replace(remarks[i],"").Trim() != "")
+                {
+                    counter++;
+                }
+            }
+            if (counter > 2)
+            {
+                JobTracker jobtracker = new JobTracker();
+                JobTrackerHistory jtHist = new JobTrackerHistory();
+                int id = Convert.ToInt32(e.CommandArgument);
+                int userid = Convert.ToInt32(Session["UserId"]);
+                jobtracker = jobtracker.GetJobTracker(id);
+                jobtracker.ApprovedBy = userid;
+                jobtracker.LastUpdatedBy = userid;
+                jobtracker.LastUpdateDate = DateTime.Now;
+                jobtracker.SupervisorRemarks = modalTxtBoxRemarks.Text;
+                jobtracker.Status = "Rejected";
+                jobtracker.Update(jobtracker);
 
-            jtHist = jtHist.ConvertToHistory(jobtracker);
-            jtHist.Insert(jtHist);
+                jtHist = jtHist.ConvertToHistory(jobtracker);
+                jtHist.Insert(jtHist);
 
-            InitializeGridViewLeftPanel1();
-            InitializeGridViewLeftPanel2();
-            InitializeGridViewLeftPanel3();
+                InitializeGridViewLeftPanel1();
+                InitializeGridViewLeftPanel2();
+                InitializeGridViewLeftPanel3();
+            }
+            else 
+            {
+                modalBottomLabelError.Text = "Minimum Three(3) Words";
+                modalBottomLabelError.Visible = true;
+                programmaticModalPopup.Show();
+            }
         }
         #endregion
 
@@ -186,11 +209,51 @@ namespace TimeTracker
             ddlBottomDepartment.DataBind();
 
         }
-
-        protected void InitializeBottomDropDownJobType() 
+        
+        protected void InitializeBottomDropDownPersonel()
         {
-            JobType jobtype = new JobType();
-            //var joblist = jobtype.GetJobTypeList(Convert.ToInt32(ddlBottomDepartment.SelectedValue));
+            int userid = Convert.ToInt32(Session["UserId"]);
+            int roleid = Convert.ToInt32(Session["RoleId"]);
+            RoleDepartmentAccess departmentAccess = new RoleDepartmentAccess();
+            var departmentlist = departmentAccess.GetRoleDepartmentList(roleid);
+            User user = new User();
+            List<User> userlist = new List<User>();
+            user = user.GetUser(userid);
+            if (departmentlist.Count < 1)
+            {
+                userlist.Add(user);
+                ddlBottomPersonel.Enabled = false;
+            }
+            else 
+            {
+                int departmentid = Convert.ToInt32(ddlBottomDepartment.SelectedItem.Value);
+                if (departmentid == 0)
+                {
+                    foreach (RoleDepartmentAccess r in departmentlist) 
+                    {
+                        var ulist = user.GetUserList(r.DepartmentId);
+                        userlist.AddRange(ulist);
+                    }
+                    userlist = userlist.Distinct().ToList();
+                }
+                else
+                {
+                    userlist = user.GetUserList(departmentid);
+                }
+                if (userlist.Count > 1) 
+                {
+                    User alluser = new User();
+                    alluser.fullname = "All";
+                    alluser.Id = 0;
+                    userlist.Insert(0, alluser);
+                }
+                ddlBottomPersonel.Enabled = true;
+            }
+
+            ddlBottomPersonel.DataSource = userlist;
+            ddlBottomPersonel.DataTextField = "fullname";
+            ddlBottomPersonel.DataValueField = "Id";
+            ddlBottomPersonel.DataBind();
         }
 
         protected void InitializeGridViewBottom() 
@@ -207,9 +270,18 @@ namespace TimeTracker
             Analysis analysis = new Analysis();
             List<Analysis> data = new List<Analysis>();
             if (isSingle)
-                data = analysis.GetAnalysis(Convert.ToInt32(ddlBottomDepartment.SelectedItem.Value), Convert.ToDateTime(txtBoxBottomFromDate.Text), Convert.ToDateTime(txtBoxBottomToDate.Text),userid);
+                data = analysis.GetAnalysis(Convert.ToDateTime(txtBoxBottomFromDate.Text), Convert.ToDateTime(txtBoxBottomToDate.Text), userid, txtBoxBottomJobId.Text.Trim());
             else
-                data = analysis.GetAnalysis(Convert.ToInt32(ddlBottomDepartment.SelectedItem.Value), Convert.ToDateTime(txtBoxBottomFromDate.Text), Convert.ToDateTime(txtBoxBottomToDate.Text));
+            {
+                if (ddlBottomPersonel.SelectedItem.Text.Trim() == "All")
+                {
+                    data = analysis.GetAnalysis(Convert.ToInt32(ddlBottomDepartment.SelectedItem.Value), Convert.ToDateTime(txtBoxBottomFromDate.Text), Convert.ToDateTime(txtBoxBottomToDate.Text), txtBoxBottomJobId.Text.Trim(), roleid);
+                }
+                else 
+                {
+                    data = analysis.GetAnalysis(Convert.ToDateTime(txtBoxBottomFromDate.Text), Convert.ToDateTime(txtBoxBottomToDate.Text), Convert.ToInt32(ddlBottomPersonel.SelectedItem.Value), txtBoxBottomJobId.Text.Trim());
+                }
+            }
             
             gridViewBottom.DataSource = data;
             gridViewBottom.DataBind();
@@ -236,7 +308,18 @@ namespace TimeTracker
             InitializeGridViewBottom();
         }
 
+        protected void txtBoxBottomJobId_Changed(object sender, EventArgs e) 
+        {
+            InitializeGridViewBottom();
+        }
+
         protected void ddlBottomDepartment_Changed(object sender, EventArgs e) 
+        {
+            InitializeBottomDropDownPersonel();
+            InitializeGridViewBottom();
+        }
+
+        protected void ddlBottomPersonel_Changed(object sender, EventArgs e) 
         {
             InitializeGridViewBottom();
         }

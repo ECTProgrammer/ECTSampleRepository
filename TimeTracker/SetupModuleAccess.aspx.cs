@@ -202,6 +202,7 @@ namespace TimeTracker
                     moduleAccess.Update(moduleAccess);
                 }
             }
+            this.programmaticModalPopup.Hide();
             InitializeGridRoles();
         }
 

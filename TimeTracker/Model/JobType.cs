@@ -86,6 +86,35 @@ namespace TimeTracker.Model
             return data;
         }
 
+        public List<JobType> GetAvailableJobTypeForJobFlow() 
+        {
+            TimeTrackerEntities db = new TimeTrackerEntities();
+            Department dept = new Department();
+            var deptlist = dept.GetDepartmentList();
+            int deptCount = deptlist.Count;
+            var data = (from j in db.T_JobType
+                        where j.M_JobTypeFlows.Count < deptCount
+                        orderby j.Position
+                        select new JobType()
+                        {
+                            Id = j.Id,
+                            Description = j.Description,
+                            CreatedBy = j.CreatedBy,
+                            LastUpdatedBy = j.LastUpdatedBy,
+                            CreateDate = j.CreateDate,
+                            LastUpdateDate = j.LastUpdateDate,
+                            RequiredJobId = j.RequiredJobId,
+                            ComputeTime = j.ComputeTime,
+                            Position = j.Position,
+                            ShowInJobOverview = j.ShowInJobOverview,
+                            Acronym = j.Acronym,
+                        }).ToList();
+
+            db.Dispose();
+
+            return data;
+        }
+
         //public List<JobType> GetJobTypeList(int departmentid) 
         //{
         //    TimeTrackerEntities db = new TimeTrackerEntities();
@@ -134,6 +163,24 @@ namespace TimeTracker.Model
                             ShowInJobOverview = j.ShowInJobOverview,
                             Acronym = j.Acronym,
                         }).ToList();
+
+            db.Dispose();
+
+            return data;
+        }
+        public List<JobType> GetJobTypeListByRoleId(int roleid)
+        {
+            TimeTrackerEntities db = new TimeTrackerEntities();
+            RoleDepartmentAccess deptAccess = new RoleDepartmentAccess();
+            var deptlist = deptAccess.GetRoleDepartmentList(roleid);
+            JobTypeDepartment jobtypeDept = new JobTypeDepartment();
+            List<JobType> data = new List<JobType>();
+            foreach (RoleDepartmentAccess r in deptlist) 
+            {
+                var jobtypelist = jobtypeDept.GetJobTypeList(r.DepartmentId);
+                data.AddRange(jobtypelist);
+            }
+            data = data.Distinct().ToList();
 
             db.Dispose();
 

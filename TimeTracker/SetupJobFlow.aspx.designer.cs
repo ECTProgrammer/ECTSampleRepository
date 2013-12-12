@@ -10,7 +10,7 @@
 namespace TimeTracker {
     
     
-    public partial class JobOverview {
+    public partial class SetupJobFlow {
         
         /// <summary>
         /// UpdatePanelMain control.
@@ -67,103 +67,13 @@ namespace TimeTracker {
         protected global::System.Web.UI.WebControls.Panel panelAccessOK;
         
         /// <summary>
-        /// txtBoxStartDate control.
+        /// linkBtnAdd control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.TextBox txtBoxStartDate;
-        
-        /// <summary>
-        /// txtBoxEndDate control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.TextBox txtBoxEndDate;
-        
-        /// <summary>
-        /// txtBoxJobId control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.TextBox txtBoxJobId;
-        
-        /// <summary>
-        /// calendarExtenderStartDate control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::AjaxControlToolkit.CalendarExtender calendarExtenderStartDate;
-        
-        /// <summary>
-        /// calendarExtenderEndDate control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::AjaxControlToolkit.CalendarExtender calendarExtenderEndDate;
-        
-        /// <summary>
-        /// tabContainerJobOverview control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::AjaxControlToolkit.TabContainer tabContainerJobOverview;
-        
-        /// <summary>
-        /// tabPanelJobSummary control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::AjaxControlToolkit.TabPanel tabPanelJobSummary;
-        
-        /// <summary>
-        /// gridViewSummary control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.GridView gridViewSummary;
-        
-        /// <summary>
-        /// tabPanelJobDetails control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::AjaxControlToolkit.TabPanel tabPanelJobDetails;
-        
-        /// <summary>
-        /// gridViewDetail control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.GridView gridViewDetail;
-        
-        /// <summary>
-        /// tabPanelJobFlow control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::AjaxControlToolkit.TabPanel tabPanelJobFlow;
+        protected global::System.Web.UI.WebControls.LinkButton linkBtnAdd;
         
         /// <summary>
         /// gridViewJobFlow control.
@@ -193,183 +103,192 @@ namespace TimeTracker {
         protected global::System.Web.UI.UpdateProgress modalUpdateProgress;
         
         /// <summary>
-        /// panelModalSummary control.
+        /// panelModal control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.Panel panelModalSummary;
+        protected global::System.Web.UI.WebControls.Panel panelModal;
         
         /// <summary>
-        /// panelModalHeaderSummary control.
+        /// panelModalHeader control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.Panel panelModalHeaderSummary;
+        protected global::System.Web.UI.WebControls.Panel panelModalHeader;
         
         /// <summary>
-        /// panelModalContentSummary control.
+        /// panelModalContent control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.Panel panelModalContentSummary;
+        protected global::System.Web.UI.WebControls.Panel panelModalContent;
         
         /// <summary>
-        /// modalSummaryRepeater control.
+        /// modalLabelJobFlowId control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.Repeater modalSummaryRepeater;
+        protected global::System.Web.UI.WebControls.Label modalLabelJobFlowId;
         
         /// <summary>
-        /// modalSummaryBtnCancel control.
+        /// modalLabelError control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.Button modalSummaryBtnCancel;
+        protected global::System.Web.UI.WebControls.Label modalLabelError;
         
         /// <summary>
-        /// panelModalDetail control.
+        /// modalTxtBoxDescription control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.Panel panelModalDetail;
+        protected global::System.Web.UI.WebControls.TextBox modalTxtBoxDescription;
         
         /// <summary>
-        /// panelModalHeaderDetail control.
+        /// modalReqDescription control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.Panel panelModalHeaderDetail;
+        protected global::System.Web.UI.WebControls.RequiredFieldValidator modalReqDescription;
         
         /// <summary>
-        /// panelModalContentDetail control.
+        /// modalTxtBoxAcronym control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.Panel panelModalContentDetail;
+        protected global::System.Web.UI.WebControls.TextBox modalTxtBoxAcronym;
         
         /// <summary>
-        /// modalDetailLabelName control.
+        /// modalReqAcronym control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.Label modalDetailLabelName;
+        protected global::System.Web.UI.WebControls.RequiredFieldValidator modalReqAcronym;
         
         /// <summary>
-        /// modalDetailLabelJobType control.
+        /// modalTxtBoxPosition control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.Label modalDetailLabelJobType;
+        protected global::System.Web.UI.WebControls.TextBox modalTxtBoxPosition;
         
         /// <summary>
-        /// modalDetailLabelJobStatus control.
+        /// modalReqPosition control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.Label modalDetailLabelJobStatus;
+        protected global::System.Web.UI.WebControls.RequiredFieldValidator modalReqPosition;
         
         /// <summary>
-        /// modalDetailLabelDate control.
+        /// modalDropDownJobType control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.Label modalDetailLabelDate;
+        protected global::System.Web.UI.WebControls.DropDownList modalDropDownJobType;
         
         /// <summary>
-        /// modalDetailLabelStartTime control.
+        /// modalDropDownDepartment control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.Label modalDetailLabelStartTime;
+        protected global::System.Web.UI.WebControls.DropDownList modalDropDownDepartment;
         
         /// <summary>
-        /// modalDetailLabelEndTime control.
+        /// modalBtnAdd control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.Label modalDetailLabelEndTime;
+        protected global::System.Web.UI.WebControls.Button modalBtnAdd;
         
         /// <summary>
-        /// modalDetailTxtBoxRemarks control.
+        /// modalInnerPanel control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.TextBox modalDetailTxtBoxRemarks;
+        protected global::System.Web.UI.WebControls.Panel modalInnerPanel;
         
         /// <summary>
-        /// modalDetailBtnCancel control.
+        /// gridViewModal control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.Button modalDetailBtnCancel;
+        protected global::System.Web.UI.WebControls.GridView gridViewModal;
         
         /// <summary>
-        /// btnHiddenDetail control.
+        /// modalBtnSubmit control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.Button btnHiddenDetail;
+        protected global::System.Web.UI.WebControls.Button modalBtnSubmit;
         
         /// <summary>
-        /// btnHiddenSummary control.
+        /// modalBtnCancel control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.Button btnHiddenSummary;
+        protected global::System.Web.UI.WebControls.Button modalBtnCancel;
         
         /// <summary>
-        /// programmaticModalPopupDetail control.
+        /// filterPosition control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::AjaxControlToolkit.ModalPopupExtender programmaticModalPopupDetail;
+        protected global::AjaxControlToolkit.FilteredTextBoxExtender filterPosition;
         
         /// <summary>
-        /// programmaticModalPopupSummary control.
+        /// btnHidden control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::AjaxControlToolkit.ModalPopupExtender programmaticModalPopupSummary;
+        protected global::System.Web.UI.WebControls.Button btnHidden;
+        
+        /// <summary>
+        /// programmaticModalPopup control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::AjaxControlToolkit.ModalPopupExtender programmaticModalPopup;
     }
 }

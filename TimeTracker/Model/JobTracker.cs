@@ -225,10 +225,58 @@ namespace TimeTracker.Model
                         where j.JobTypeId == jobtypeid
                         && j.M_User.DepartmentId == departmentid
                         &&
-                        ((j.StartTime >= sdate
-                        && j.StartTime <= edate)
-                        ||
-                        (j.EndTime >= sdate && j.EndTime <= edate))
+                        //((j.StartTime >= sdate
+                        //&& j.StartTime <= edate)
+                        //||
+                        //(j.EndTime >= sdate && j.EndTime <= edate))
+                         j.EndTime <= edate
+                        && j.Status == "Approved"
+                        && j.SWNo == SW
+                        && j.HWNo == HW
+                        orderby j.EndTime descending
+                        select new JobTracker()
+                        {
+                            Id = j.Id,
+                            UserId = j.UserId,
+                            StartTime = j.StartTime,
+                            EndTime = j.EndTime,
+                            Description = j.Description,
+                            JobTypeId = j.JobTypeId,
+                            JobIdNumber = j.JobIdNumber,
+                            jobtype = j.M_JobType.Description,
+                            Remarks = j.Remarks,
+                            ApprovedBy = j.ApprovedBy,
+                            CreateDate = j.CreateDate,
+                            LastUpdateDate = j.LastUpdateDate,
+                            CreatedBy = j.CreatedBy,
+                            LastUpdatedBy = j.LastUpdatedBy,
+                            Status = j.Status,
+                            SupervisorRemarks = j.SupervisorRemarks,
+                            ActionRequest = j.ActionRequest,
+                            ScheduleDate = j.ScheduleDate,
+                            SWNo = j.SWNo,
+                            HWNo = j.HWNo,
+                            JobStatus = j.JobStatus,
+                            fullname = j.M_User.Firstname + " " + j.M_User.Lastname
+                        }).FirstOrDefault();
+
+            db.Dispose();
+
+            return data;
+        }
+
+        public JobTracker GetJobTrackerJobOverview(int jobtypeid, string SW, string HW, DateTime sdate, DateTime edate)
+        {
+            TimeTrackerEntities db = new TimeTrackerEntities();
+
+            var data = (from j in db.T_JobTracker
+                        where j.JobTypeId == jobtypeid
+                        &&
+                        //((j.StartTime >= sdate
+                        //&& j.StartTime <= edate)
+                        //||
+                        //(j.EndTime >= sdate && j.EndTime <= edate))
+                        j.EndTime <= edate
                         && j.Status == "Approved"
                         && j.SWNo == SW
                         && j.HWNo == HW
@@ -271,13 +319,15 @@ namespace TimeTracker.Model
             var data = (from j in db.T_JobTracker
                         where j.M_User.DepartmentId == departmentid
                         &&
-                        ((j.StartTime >= sdate
-                        && j.StartTime <= edate)
-                        ||
-                        (j.EndTime >= sdate && j.EndTime <= edate))
+                        //((j.StartTime >= sdate
+                        //&& j.StartTime <= edate)
+                        //||
+                        //(j.EndTime >= sdate && j.EndTime <= edate))
+                        j.EndTime <= edate
                         && j.Status == "Approved"
                         && j.SWNo == SW
                         && j.HWNo == HW
+                        
                         orderby j.EndTime descending
                         select new JobTracker()
                         {
@@ -342,7 +392,7 @@ namespace TimeTracker.Model
             return result;
         }
 
-        public string GetTotalHours(int jobtypeid, DateTime startdate, DateTime enddate, string jobstatus,int departmentid = 0)
+        public string GetTotalHours(int jobtypeid, DateTime startdate, DateTime enddate, string jobstatus,int departmentid = 0,string stringjobid="")
         {
             TimeTrackerEntities db = new TimeTrackerEntities();
 
@@ -415,7 +465,8 @@ namespace TimeTracker.Model
             double totalTime = 0;
             foreach (JobTracker j in data)
             {
-                totalTime += Convert.ToDateTime(j.EndTime).Subtract(Convert.ToDateTime(j.StartTime)).TotalMinutes;
+                if (j.HWNo.ToString().Contains(stringjobid) || j.SWNo.ToString().Contains(stringjobid))
+                    totalTime += Convert.ToDateTime(j.EndTime).Subtract(Convert.ToDateTime(j.StartTime)).TotalMinutes;
             }
             double hr = Math.Truncate(totalTime / 60);
             double min = totalTime % 60;
@@ -423,7 +474,7 @@ namespace TimeTracker.Model
             return result;
         }
 
-        public string GetTotalHours(int jobtypeid,int userid, DateTime startdate, DateTime enddate, string jobstatus, int departmentid)
+        public string GetTotalHours(int jobtypeid,int userid, DateTime startdate, DateTime enddate, string jobstatus, int departmentid,string stringjobid="")
         {
             TimeTrackerEntities db = new TimeTrackerEntities();
 
@@ -465,7 +516,8 @@ namespace TimeTracker.Model
             double totalTime = 0;
             foreach (JobTracker j in data)
             {
-                totalTime += Convert.ToDateTime(j.EndTime).Subtract(Convert.ToDateTime(j.StartTime)).TotalMinutes;
+                if(j.HWNo.ToString().Contains(stringjobid) || j.SWNo.ToString().Contains(stringjobid))
+                    totalTime += Convert.ToDateTime(j.EndTime).Subtract(Convert.ToDateTime(j.StartTime)).TotalMinutes;
             }
             double hr = Math.Truncate(totalTime / 60);
             double min = totalTime % 60;
@@ -473,7 +525,7 @@ namespace TimeTracker.Model
             return result;
         }
 
-        public int GetTotalUnclosedJobs(int jobtypeid, int userid, DateTime startdate, DateTime enddate, string jobstatus, int departmentid)
+        public int GetTotalUnclosedJobs(int jobtypeid, int userid, DateTime startdate, DateTime enddate, string jobstatus, int departmentid, string stringjobid = "")
         {
             TimeTrackerEntities db = new TimeTrackerEntities();
 
@@ -509,11 +561,16 @@ namespace TimeTracker.Model
                     }).ToList();
 
             db.Dispose();
-
-            return data.Count;
+            int counter = 0;
+            foreach (JobTracker j in data)
+            {
+                if (j.HWNo.ToString().Contains(stringjobid) || j.SWNo.ToString().Contains(stringjobid))
+                    counter++;
+            }
+            return counter;
         }
 
-        public int GetTotalUnclosedJobs(int jobtypeid, DateTime startdate, DateTime enddate, string jobstatus, int departmentid = 0)
+        public int GetTotalUnclosedJobs(int jobtypeid, DateTime startdate, DateTime enddate, string jobstatus, int departmentid = 0,string stringjobid = "")
         {
             TimeTrackerEntities db = new TimeTrackerEntities();
 
@@ -583,8 +640,13 @@ namespace TimeTracker.Model
             }
 
             db.Dispose();
-
-            return data.Count;
+            int counter = 0;
+            foreach (JobTracker j in data)
+            {
+                if (j.HWNo.ToString().Contains(stringjobid) || j.SWNo.ToString().Contains(stringjobid))
+                    counter++;
+            }
+            return counter;
         }
 
         public List<JobTracker> GetJobTrackerList(int userid,DateTime selecteddate)
@@ -644,7 +706,7 @@ namespace TimeTracker.Model
             return data;
         }
 
-        public List<JobTracker> GetDistinctProjectList(DateTime sdate,DateTime edate) 
+        public List<JobTracker> GetDistinctProjectList(DateTime sdate,DateTime edate,string stringjobid = "") 
         {
             TimeTrackerEntities db = new TimeTrackerEntities();
 
@@ -666,9 +728,19 @@ namespace TimeTracker.Model
                         }).Distinct().ToList();
 
             db.Dispose();
+            for (int i = 0; i < data.Count; i++) 
+            {
+                if (data[i].HWNo.ToString().Contains(stringjobid) || data[i].SWNo.ToString().Contains(stringjobid))
+                {
+                    data[i].GetCustomer(data[i]);
+                }
+                else 
+                {
+                    data.RemoveAt(i);
+                    i--;
+                }
+            }
 
-            foreach (JobTracker j in data)
-                j.GetCustomer(j);
             return data;
         }
 

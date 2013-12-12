@@ -119,13 +119,13 @@
                                            </asp:TextBox> to: <asp:TextBox ID="txtBoxBottomToDate" runat="server" AutoPostBack="true" OnTextChanged="txtBoxBottomToDate_Changed"></asp:TextBox></td>
                    </tr>
                    <%--<tr>
-                       <td>Job Status : <asp:DropDownList ID="ddlBottomJobStatus" runat="server"></asp:DropDownList></td>
                        <td>Job ID : <asp:TextBox ID="txtBoxBottomJobId" runat="server"></asp:TextBox></td>
                        <td>Role : <asp:DropDownList ID="ddlBottomRole" runat="server"></asp:DropDownList></td>
                    </tr>--%>
-                   <%--<tr>
-                       <td>Personel :<asp:DropDownList ID="ddlBottomPersonel" runat="server"></asp:DropDownList></td>
-                   </tr>--%>
+                   <tr>
+                       <td>Personel : <asp:DropDownList ID="ddlBottomPersonel" runat="server" AutoPostBack="true" OnSelectedIndexChanged="ddlBottomPersonel_Changed"></asp:DropDownList></td>
+                       <td>Job ID : <asp:TextBox ID="txtBoxBottomJobId" runat="server" AutoPostBack="true" OnTextChanged="txtBoxBottomJobId_Changed"></asp:TextBox></td>
+                   </tr>
                    <tr><td colspan="3">
                        <asp:Panel runat="server">
                            <asp:GridView ID="gridViewBottom" runat="server" AutoGenerateColumns="false" CssClass="gridView" GridLines="None" ShowHeaderWhenEmpty="true">
@@ -138,7 +138,7 @@
                                    <asp:BoundField HeaderText="Total Work Time" DataField="totalworktime" />
                                    <asp:BoundField HeaderText="Waiting for Approval" DataField="totalforapproval" />
                                    <asp:BoundField HeaderText="Total Rejected Time" DataField="totalrejectedtime" />
-                                   <asp:BoundField HeaderText="Total Unclosed Job" DataField="totalunclosedjobs" />
+                                   <asp:BoundField HeaderText="Number of Unclosed Task" DataField="totalunclosedjobs" />
                                </Columns>
                            </asp:GridView>
                        </asp:Panel>
@@ -157,11 +157,12 @@
                 <asp:Panel ID="panelModalHeader" runat="server" CssClass="modalAlertHeader">Reject Request</asp:Panel>
                 <asp:Panel ID="panelModalContent" runat="server" CssClass="modal">
                     <table style="padding:3px;border-spacing:10px;" border="0">
-                        <tr><td>Remarks :</td></tr>
-                        <tr><td><asp:TextBox ID="modalTxtBoxRemarks" runat="server" TextMode="MultiLine" Rows="5" Width="300px"></asp:TextBox></td></tr>
+                        <tr><td><asp:Label ID="modalBottomLabelError" runat="server" CssClass="validation" Visible="false"/></td></tr>
+                        <tr><td>Remarks : <asp:RequiredFieldValidator ID="modalReqRemarks" runat="server" ValidationGroup="modalLeft" CssClass="validation" ControlToValidate="modalTxtBoxRemarks" Text="Remarks is required."/></td></tr>
+                        <tr><td><asp:TextBox ID="modalTxtBoxRemarks" runat="server" TextMode="MultiLine" ValidationGroup="modalLeft" Rows="5" Width="300px"></asp:TextBox></td></tr>
                         <tr><td style="text-align:center">
-                            <asp:Button ID="modalBtnConfirm" runat="server" CssClass="button" CausesValidation="true" Text="Confirm" OnCommand="modalBtnConfirm_Command" />
-                            <asp:Button ID="modalBtnCancel" runat="server" CssClass="button" CausesValidation="false" Text="Cancel" />
+                            <asp:Button ID="modalBtnConfirm" runat="server" CssClass="button" ValidationGroup="modalLeft" CausesValidation="true" Text="Confirm" OnCommand="modalBtnConfirm_Command" />
+                            <asp:Button ID="modalBtnCancel" runat="server" CssClass="button" ValidationGroup="modalLeft" CausesValidation="false" Text="Cancel" />
                             </td></tr>
                     </table>
                 </asp:Panel>

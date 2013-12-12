@@ -34,6 +34,11 @@
         <AssociationConnector Association="TimeTrackerModel.Fk_SupervisorMapping_SupervisorId" ManuallyRouted="false" />
         <AssociationConnector Association="TimeTrackerModel.Fk_SupervisorMapping_UserId" ManuallyRouted="false" />
         <AssociationConnector Association="TimeTrackerModel.FK_TimeSetting_LastUpdatedBy" ManuallyRouted="false" />
+        <EntityTypeShape EntityType="TimeTrackerModel.T_JobFlow" Width="1.5" PointX="8.5" PointY="9.125" />
+        <EntityTypeShape EntityType="TimeTrackerModel.T_JobTypeFlow" Width="1.5" PointX="12.25" PointY="8.375" />
+        <AssociationConnector Association="TimeTrackerModel.Fk_JobTypeFlow_JobFlowId" />
+        <AssociationConnector Association="TimeTrackerModel.Fk_JobTypeFlow_JobTypeId" />
+        <AssociationConnector Association="TimeTrackerModel.Fk_JobTypeFlow_DepartmentId" />
       </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>

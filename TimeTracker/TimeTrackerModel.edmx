@@ -4,13 +4,15 @@
   <edmx:Runtime>
     <!-- SSDL content -->
     <edmx:StorageModels>
-      <Schema Namespace="TimeTrackerModel.Store" Alias="Self" Provider="System.Data.SqlClient" ProviderManifestToken="2008" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+    <Schema Namespace="TimeTrackerModel.Store" Alias="Self" Provider="System.Data.SqlClient" ProviderManifestToken="2008" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
         <EntityContainer Name="TimeTrackerModelStoreContainer">
           <EntitySet Name="Department" EntityType="TimeTrackerModel.Store.Department" store:Type="Tables" Schema="dbo" />
+          <EntitySet Name="JobFlow" EntityType="TimeTrackerModel.Store.JobFlow" store:Type="Tables" Schema="dbo" />
           <EntitySet Name="JobTracker" EntityType="TimeTrackerModel.Store.JobTracker" store:Type="Tables" Schema="dbo" />
           <EntitySet Name="JobTrackerHistory" EntityType="TimeTrackerModel.Store.JobTrackerHistory" store:Type="Tables" Schema="dbo" />
           <EntitySet Name="JobType" EntityType="TimeTrackerModel.Store.JobType" store:Type="Tables" Schema="dbo" />
           <EntitySet Name="JobTypeDepartment" EntityType="TimeTrackerModel.Store.JobTypeDepartment" store:Type="Tables" Schema="dbo" />
+          <EntitySet Name="JobTypeFlow" EntityType="TimeTrackerModel.Store.JobTypeFlow" store:Type="Tables" Schema="dbo" />
           <EntitySet Name="Modules" EntityType="TimeTrackerModel.Store.Modules" store:Type="Tables" Schema="dbo" />
           <EntitySet Name="RoleDepartmentAccess" EntityType="TimeTrackerModel.Store.RoleDepartmentAccess" store:Type="Tables" Schema="dbo" />
           <EntitySet Name="Roles" EntityType="TimeTrackerModel.Store.Roles" store:Type="Tables" Schema="dbo" />
@@ -49,6 +51,18 @@
           <AssociationSet Name="FK_JobTypeDepartment_JobTypeId" Association="TimeTrackerModel.Store.FK_JobTypeDepartment_JobTypeId">
             <End Role="JobType" EntitySet="JobType" />
             <End Role="JobTypeDepartment" EntitySet="JobTypeDepartment" />
+          </AssociationSet>
+          <AssociationSet Name="Fk_JobTypeFlow_DepartmentId" Association="TimeTrackerModel.Store.Fk_JobTypeFlow_DepartmentId">
+            <End Role="Department" EntitySet="Department" />
+            <End Role="JobTypeFlow" EntitySet="JobTypeFlow" />
+          </AssociationSet>
+          <AssociationSet Name="Fk_JobTypeFlow_JobFlowId" Association="TimeTrackerModel.Store.Fk_JobTypeFlow_JobFlowId">
+            <End Role="JobFlow" EntitySet="JobFlow" />
+            <End Role="JobTypeFlow" EntitySet="JobTypeFlow" />
+          </AssociationSet>
+          <AssociationSet Name="Fk_JobTypeFlow_JobTypeId" Association="TimeTrackerModel.Store.Fk_JobTypeFlow_JobTypeId">
+            <End Role="JobType" EntitySet="JobType" />
+            <End Role="JobTypeFlow" EntitySet="JobTypeFlow" />
           </AssociationSet>
           <AssociationSet Name="Fk_RoleDepartmentAccess_DepartmentId" Association="TimeTrackerModel.Store.Fk_RoleDepartmentAccess_DepartmentId">
             <End Role="Department" EntitySet="Department" />
@@ -99,6 +113,15 @@
           <Property Name="LastUpdatedBy" Type="int" />
           <Property Name="Position" Type="int" />
           <Property Name="Acronym" Type="varchar" MaxLength="15" />
+        </EntityType>
+        <EntityType Name="JobFlow">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" Nullable="false" StoreGeneratedPattern="Identity" />
+          <Property Name="Description" Type="varchar" Nullable="false" MaxLength="120" />
+          <Property Name="Acronym" Type="varchar" Nullable="false" MaxLength="20" />
+          <Property Name="Position" Type="int" Nullable="false" />
         </EntityType>
         <EntityType Name="JobTracker">
           <Key>
@@ -175,6 +198,16 @@
           <Property Name="JobTypeId" Type="int" Nullable="false" />
           <Property Name="DepartmentId" Type="int" Nullable="false" />
           <Property Name="Position" Type="int" />
+        </EntityType>
+        <EntityType Name="JobTypeFlow">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" Nullable="false" StoreGeneratedPattern="Identity" />
+          <Property Name="JobTypeId" Type="int" Nullable="false" />
+          <Property Name="JobFlowId" Type="int" Nullable="false" />
+          <Property Name="Position" Type="int" Nullable="false" />
+          <Property Name="DepartmentId" Type="int" />
         </EntityType>
         <EntityType Name="Modules">
           <Key>
@@ -257,6 +290,7 @@
           <Property Name="Status" Type="varchar" MaxLength="30" />
           <Property Name="EmployeeNumber" Type="int" />
           <Property Name="Password" Type="varchar" MaxLength="20" />
+          <Property Name="Shift" Type="varchar" MaxLength="15" />
         </EntityType>
         <Association Name="Fk_JobTracker_ApprovedBy">
           <End Role="Users" Type="TimeTrackerModel.Store.Users" Multiplicity="0..1" />
@@ -350,6 +384,42 @@
               <PropertyRef Name="Id" />
             </Principal>
             <Dependent Role="JobTypeDepartment">
+              <PropertyRef Name="JobTypeId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="Fk_JobTypeFlow_DepartmentId">
+          <End Role="Department" Type="TimeTrackerModel.Store.Department" Multiplicity="0..1" />
+          <End Role="JobTypeFlow" Type="TimeTrackerModel.Store.JobTypeFlow" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Department">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="JobTypeFlow">
+              <PropertyRef Name="DepartmentId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="Fk_JobTypeFlow_JobFlowId">
+          <End Role="JobFlow" Type="TimeTrackerModel.Store.JobFlow" Multiplicity="1" />
+          <End Role="JobTypeFlow" Type="TimeTrackerModel.Store.JobTypeFlow" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="JobFlow">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="JobTypeFlow">
+              <PropertyRef Name="JobFlowId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="Fk_JobTypeFlow_JobTypeId">
+          <End Role="JobType" Type="TimeTrackerModel.Store.JobType" Multiplicity="1" />
+          <End Role="JobTypeFlow" Type="TimeTrackerModel.Store.JobTypeFlow" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="JobType">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="JobTypeFlow">
               <PropertyRef Name="JobTypeId" />
             </Dependent>
           </ReferentialConstraint>
@@ -462,8 +532,7 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
-      </Schema>
-    </edmx:StorageModels>
+      </Schema></edmx:StorageModels>
     <!-- CSDL content -->
     <edmx:ConceptualModels>
       <Schema Namespace="TimeTrackerModel" Alias="Self" p1:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:p1="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
@@ -548,6 +617,20 @@
             <End Role="Users" EntitySet="T_Users" />
             <End Role="TimeSetting" EntitySet="T_TimeSetting" />
           </AssociationSet>
+          <EntitySet Name="T_JobFlow" EntityType="TimeTrackerModel.T_JobFlow" />
+          <EntitySet Name="T_JobTypeFlow" EntityType="TimeTrackerModel.T_JobTypeFlow" />
+          <AssociationSet Name="Fk_JobTypeFlow_JobFlowId" Association="TimeTrackerModel.Fk_JobTypeFlow_JobFlowId">
+            <End Role="JobFlow" EntitySet="T_JobFlow" />
+            <End Role="JobTypeFlow" EntitySet="T_JobTypeFlow" />
+          </AssociationSet>
+          <AssociationSet Name="Fk_JobTypeFlow_JobTypeId" Association="TimeTrackerModel.Fk_JobTypeFlow_JobTypeId">
+            <End Role="T_JobType" EntitySet="T_JobType" />
+            <End Role="JobTypeFlow" EntitySet="T_JobTypeFlow" />
+          </AssociationSet>
+          <AssociationSet Name="Fk_JobTypeFlow_DepartmentId" Association="TimeTrackerModel.Fk_JobTypeFlow_DepartmentId">
+            <End Role="T_Department" EntitySet="T_Department" />
+            <End Role="T_JobTypeFlow" EntitySet="T_JobTypeFlow" />
+          </AssociationSet>
         </EntityContainer>
         <EntityType Name="T_Department">
           <Key>
@@ -564,6 +647,7 @@
           <NavigationProperty Name="M_JobTypeDepartments" Relationship="TimeTrackerModel.FK_JobTypeDepartment_DepartmentId" FromRole="Department" ToRole="JobTypeDepartment" />
           <NavigationProperty Name="M_RoleDepartmentAccesses" Relationship="TimeTrackerModel.Fk_RoleDepartmentAccess_DepartmentId" FromRole="Department" ToRole="RoleDepartmentAccess" />
           <NavigationProperty Name="M_Users" Relationship="TimeTrackerModel.fk_Users_DepartmentId" FromRole="Department" ToRole="Users" />
+          <NavigationProperty Name="M_JobTypeFlows" Relationship="TimeTrackerModel.Fk_JobTypeFlow_DepartmentId" FromRole="T_Department" ToRole="T_JobTypeFlow" />
         </EntityType>
         <EntityType Name="T_JobTracker">
           <Key>
@@ -640,6 +724,7 @@
           <NavigationProperty Name="M_JobTrackers" Relationship="TimeTrackerModel.Fk_JobTracker_JobTypeId" FromRole="JobType" ToRole="JobTracker" />
           <NavigationProperty Name="M_JobTrackerHistories" Relationship="TimeTrackerModel.Fk_JobTrackerHistory_JobTypeId" FromRole="JobType" ToRole="JobTrackerHistory" />
           <NavigationProperty Name="M_JobTypeDepartments" Relationship="TimeTrackerModel.FK_JobTypeDepartment_JobTypeId" FromRole="JobType" ToRole="JobTypeDepartment" />
+          <NavigationProperty Name="M_JobTypeFlows" Relationship="TimeTrackerModel.Fk_JobTypeFlow_JobTypeId" FromRole="T_JobType" ToRole="JobTypeFlow" />
         </EntityType>
         <EntityType Name="T_JobTypeDepartment">
           <Key>
@@ -753,6 +838,7 @@
           <NavigationProperty Name="M_SupervisorMappingSupervisors" Relationship="TimeTrackerModel.Fk_SupervisorMapping_SupervisorId" FromRole="Users" ToRole="SupervisorMapping" />
           <NavigationProperty Name="M_SupervisorMappingUsers" Relationship="TimeTrackerModel.Fk_SupervisorMapping_UserId" FromRole="Users" ToRole="SupervisorMapping" />
           <NavigationProperty Name="M_TimeSettings" Relationship="TimeTrackerModel.FK_TimeSetting_LastUpdatedBy" FromRole="Users" ToRole="TimeSetting" />
+          <Property Type="String" Name="Shift" MaxLength="15" FixedLength="false" Unicode="false" />
         </EntityType>
         <Association Name="FK_JobTypeDepartment_DepartmentId">
           <End Role="Department" Type="TimeTrackerModel.T_Department" Multiplicity="1" />
@@ -958,6 +1044,65 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <EntityType Name="T_JobFlow">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Type="Int32" Name="Id" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Type="String" Name="Description" Nullable="false" MaxLength="120" FixedLength="false" Unicode="false" />
+          <Property Type="String" Name="Acronym" Nullable="false" MaxLength="20" FixedLength="false" Unicode="false" />
+          <Property Type="Int32" Name="Position" Nullable="false" />
+          <NavigationProperty Name="M_JobTypeFlows" Relationship="TimeTrackerModel.Fk_JobTypeFlow_JobFlowId" FromRole="JobFlow" ToRole="JobTypeFlow" />
+        </EntityType>
+        <EntityType Name="T_JobTypeFlow">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Type="Int32" Name="Id" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Type="Int32" Name="JobTypeId" Nullable="false" />
+          <Property Type="Int32" Name="JobFlowId" Nullable="false" />
+          <Property Type="Int32" Name="Position" Nullable="false" />
+          <NavigationProperty Name="M_JobFlow" Relationship="TimeTrackerModel.Fk_JobTypeFlow_JobFlowId" FromRole="JobTypeFlow" ToRole="JobFlow" />
+          <NavigationProperty Name="M_JobType" Relationship="TimeTrackerModel.Fk_JobTypeFlow_JobTypeId" FromRole="JobTypeFlow" ToRole="T_JobType" />
+          <Property Type="Int32" Name="DepartmentId" />
+          <NavigationProperty Name="M_Department" Relationship="TimeTrackerModel.Fk_JobTypeFlow_DepartmentId" FromRole="T_JobTypeFlow" ToRole="T_Department" />
+        </EntityType>
+        <Association Name="Fk_JobTypeFlow_JobFlowId">
+          <End Type="TimeTrackerModel.T_JobFlow" Role="JobFlow" Multiplicity="1" />
+          <End Type="TimeTrackerModel.T_JobTypeFlow" Role="JobTypeFlow" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="JobFlow">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="JobTypeFlow">
+              <PropertyRef Name="JobFlowId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="Fk_JobTypeFlow_JobTypeId">
+          <End Type="TimeTrackerModel.T_JobType" Role="T_JobType" Multiplicity="1" />
+          <End Type="TimeTrackerModel.T_JobTypeFlow" Role="JobTypeFlow" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="T_JobType">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="JobTypeFlow">
+              <PropertyRef Name="JobTypeId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="Fk_JobTypeFlow_DepartmentId">
+          <End Type="TimeTrackerModel.T_Department" Role="T_Department" Multiplicity="0..1" />
+          <End Type="TimeTrackerModel.T_JobTypeFlow" Role="T_JobTypeFlow" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="T_Department">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="T_JobTypeFlow">
+              <PropertyRef Name="DepartmentId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
       </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
@@ -1127,6 +1272,7 @@
           <EntitySetMapping Name="T_Users">
             <EntityTypeMapping TypeName="TimeTrackerModel.T_Users">
               <MappingFragment StoreEntitySet="Users">
+                <ScalarProperty Name="Shift" ColumnName="Shift" />
                 <ScalarProperty Name="Id" ColumnName="Id" />
                 <ScalarProperty Name="Firstname" ColumnName="Firstname" />
                 <ScalarProperty Name="Lastname" ColumnName="Lastname" />
@@ -1144,6 +1290,27 @@
                 <ScalarProperty Name="Status" ColumnName="Status" />
                 <ScalarProperty Name="EmployeeNumber" ColumnName="EmployeeNumber" />
                 <ScalarProperty Name="Password" ColumnName="Password" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="T_JobFlow">
+            <EntityTypeMapping TypeName="TimeTrackerModel.T_JobFlow">
+              <MappingFragment StoreEntitySet="JobFlow">
+                <ScalarProperty Name="Position" ColumnName="Position" />
+                <ScalarProperty Name="Acronym" ColumnName="Acronym" />
+                <ScalarProperty Name="Description" ColumnName="Description" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="T_JobTypeFlow">
+            <EntityTypeMapping TypeName="TimeTrackerModel.T_JobTypeFlow">
+              <MappingFragment StoreEntitySet="JobTypeFlow">
+                <ScalarProperty Name="DepartmentId" ColumnName="DepartmentId" />
+                <ScalarProperty Name="Position" ColumnName="Position" />
+                <ScalarProperty Name="JobFlowId" ColumnName="JobFlowId" />
+                <ScalarProperty Name="JobTypeId" ColumnName="JobTypeId" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>

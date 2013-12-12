@@ -97,6 +97,7 @@ namespace TimeTracker
             InitializeModalGridView();
             InitializeModalDropDownSupervisor();
             modalDropDownUsers.Enabled = true;
+            modalBtnAdd.Visible = true;
             modalBtnSubmit.Visible = true;
             programmaticModalPopup.Show();
         }
@@ -249,6 +250,7 @@ namespace TimeTracker
             gridViewModal.DataSource = supervisors;
             gridViewModal.DataBind();
             InitializeModalDropDownSupervisor();
+            Session["SupMap"] = supervisors;
             programmaticModalPopup.Show();
         }
 
@@ -281,6 +283,7 @@ namespace TimeTracker
                 }
             }
             Session["SupMap"] = null;
+            this.programmaticModalPopup.Hide();
             InitializeMainGrid();
         }
 

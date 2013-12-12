@@ -241,6 +241,7 @@
     <Content Include="JobTrack.aspx" />
     <Content Include="Login.aspx" />
     <Content Include="logo.ico" />
+    <Content Include="SettingTime.aspx" />
     <Content Include="packages.config" />
     <None Include="Scripts\jquery-1.8.2.intellisense.js" />
     <Content Include="Scripts\jquery-1.8.2.js" />
@@ -276,8 +277,11 @@
     <Content Include="Setting.aspx" />
     <Content Include="Setup.aspx" />
     <Content Include="SetupDepartment.aspx" />
+    <Content Include="SetupDepartmentAccess.aspx" />
+    <Content Include="SetupJobFlow.aspx" />
     <Content Include="SetupJobType.aspx" />
     <Content Include="SetupModuleAccess.aspx" />
+    <Content Include="SetupRole.aspx" />
     <Content Include="SetupSupervisorMapping.aspx" />
     <Content Include="SetupUser.aspx" />
     <Content Include="ViewSwitcher.ascx" />
@@ -381,15 +385,25 @@
     <Compile Include="Model\Analysis.cs" />
     <Compile Include="Model\Converter.cs" />
     <Compile Include="Model\Department.cs" />
+    <Compile Include="Model\JobFlow.cs" />
     <Compile Include="Model\JobTracker.cs" />
     <Compile Include="Model\JobTrackerHistory.cs" />
     <Compile Include="Model\JobType.cs" />
     <Compile Include="Model\JobTypeDepartment.cs" />
+    <Compile Include="Model\JobTypeFlow.cs" />
     <Compile Include="Model\Module.cs" />
     <Compile Include="Model\RoleDepartmentAccess.cs" />
     <Compile Include="Model\Roles.cs" />
     <Compile Include="Model\RolesModuleAccess.cs" />
+    <Compile Include="SettingTime.aspx.cs">
+      <DependentUpon>SettingTime.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="SettingTime.aspx.designer.cs">
+      <DependentUpon>SettingTime.aspx</DependentUpon>
+    </Compile>
     <Compile Include="Model\SupervisorMapping.cs" />
+    <Compile Include="Model\TimeClock.cs" />
     <Compile Include="Model\TimeSetting.cs" />
     <Compile Include="Model\User.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -414,6 +428,20 @@
     <Compile Include="SetupDepartment.aspx.designer.cs">
       <DependentUpon>SetupDepartment.aspx</DependentUpon>
     </Compile>
+    <Compile Include="SetupDepartmentAccess.aspx.cs">
+      <DependentUpon>SetupDepartmentAccess.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="SetupDepartmentAccess.aspx.designer.cs">
+      <DependentUpon>SetupDepartmentAccess.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="SetupJobFlow.aspx.cs">
+      <DependentUpon>SetupJobFlow.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="SetupJobFlow.aspx.designer.cs">
+      <DependentUpon>SetupJobFlow.aspx</DependentUpon>
+    </Compile>
     <Compile Include="SetupJobType.aspx.cs">
       <DependentUpon>SetupJobType.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
@@ -427,6 +455,13 @@
     </Compile>
     <Compile Include="SetupModuleAccess.aspx.designer.cs">
       <DependentUpon>SetupModuleAccess.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="SetupRole.aspx.cs">
+      <DependentUpon>SetupRole.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="SetupRole.aspx.designer.cs">
+      <DependentUpon>SetupRole.aspx</DependentUpon>
     </Compile>
     <Compile Include="SetupSupervisorMapping.aspx.cs">
       <DependentUpon>SetupSupervisorMapping.aspx</DependentUpon>
@@ -474,6 +509,9 @@
     <Compile Include="T_Department.cs">
       <DependentUpon>TimeTrackerModel.tt</DependentUpon>
     </Compile>
+    <Compile Include="T_JobFlow.cs">
+      <DependentUpon>TimeTrackerModel.tt</DependentUpon>
+    </Compile>
     <Compile Include="T_JobTracker.cs">
       <DependentUpon>TimeTrackerModel.tt</DependentUpon>
     </Compile>
@@ -484,6 +522,9 @@
       <DependentUpon>TimeTrackerModel.tt</DependentUpon>
     </Compile>
     <Compile Include="T_JobTypeDepartment.cs">
+      <DependentUpon>TimeTrackerModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="T_JobTypeFlow.cs">
       <DependentUpon>TimeTrackerModel.tt</DependentUpon>
     </Compile>
     <Compile Include="T_Modules.cs">

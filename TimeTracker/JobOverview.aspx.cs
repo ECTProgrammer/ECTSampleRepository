@@ -11,18 +11,6 @@ namespace TimeTracker
 {
     public partial class JobOverview : System.Web.UI.Page
     {
-        protected void Page_Init(object sender, EventArgs e)
-        {
-            if (!isValidUser())
-                Response.Redirect("Login.aspx");
-            //if (!IsPostBack)
-            //{
-            //    InitializeStartDate();
-            //    InitializeEndDate();
-            //}
-            //GenerateDynamicGrid();
-            
-        }
 
         protected void Page_Load(object sender, EventArgs e)
         {
@@ -100,7 +88,7 @@ namespace TimeTracker
             JobTypeDepartment jobtypeDepartment = new JobTypeDepartment();
             JobTracker jobtracker = new JobTracker();
             var departments = dept.GetJobOverviewDepartment();
-            var distinctProjectList = jobtracker.GetDistinctProjectList(Convert.ToDateTime(txtBoxStartDate.Text + " 00:00:00"), Convert.ToDateTime(txtBoxEndDate.Text + " 23:59:59"));
+            var distinctProjectList = jobtracker.GetDistinctProjectList(Convert.ToDateTime(txtBoxStartDate.Text + " 00:00:00"), Convert.ToDateTime(txtBoxEndDate.Text + " 23:59:59"), txtBoxJobId.Text.Trim());
             foreach (JobTracker p in distinctProjectList)
             {
                 DataRow row = table.NewRow();
@@ -173,9 +161,9 @@ namespace TimeTracker
             }
         }
         #endregion
+
         #region JOB OVERVIEW DETAILS
         
-
         private DataTable GenerateDetailsColumns() 
         {
             DataTable table = new DataTable();
@@ -236,7 +224,7 @@ namespace TimeTracker
             JobTypeDepartment jobtypeDepartment = new JobTypeDepartment();
             JobTracker jobtracker = new JobTracker();
             var departments = dept.GetJobOverviewDepartment();
-            var distinctProjectList = jobtracker.GetDistinctProjectList(Convert.ToDateTime(txtBoxStartDate.Text+" 00:00:00"),Convert.ToDateTime(txtBoxEndDate.Text+" 23:59:59"));
+            var distinctProjectList = jobtracker.GetDistinctProjectList(Convert.ToDateTime(txtBoxStartDate.Text + " 00:00:00"), Convert.ToDateTime(txtBoxEndDate.Text + " 23:59:59"), txtBoxJobId.Text.Trim());
          
             foreach (JobTracker p in distinctProjectList)
             {
@@ -313,7 +301,6 @@ namespace TimeTracker
                 }
                 gridViewDetail.Controls[0].Controls.AddAt(0, gvr);
             }
-            
         }
 
         protected void gridViewDetail_RowDataBound(object sender, GridViewRowEventArgs e) 
@@ -366,71 +353,215 @@ namespace TimeTracker
         }
         #endregion
 
-        
-        
-        #region OTHERS
-        private void GenerateDynamicGrid() 
+        #region JOB FLOW
+        private DataTable GenerateFlowColumns()
         {
-            DataTable summarytable = new DataTable();
-            DataTable detailtable = new DataTable();
-            
-            gridViewSummary.Columns.Clear();
-            gridViewDetail.Columns.Clear();
+            DataTable table = new DataTable();
 
-            summarytable = GenerateSummaryColumns();
-            detailtable = GenerateDetailsColumns();
+            JobFlow jobflow = new JobFlow();
+            JobTypeFlow jobtypeflow = new JobTypeFlow();
+            var jobflows = jobflow.GetJobOverviewJobFlow();
+            DataColumn hwCol = new DataColumn("HW No", typeof(System.String));
+            DataColumn swCol = new DataColumn("SW No", typeof(System.String));
+            DataColumn cusCol = new DataColumn("Customer", typeof(System.String));
+            DataColumn jdCol = new DataColumn("Description", typeof(System.String));
+            table.Columns.Add(hwCol);
+            table.Columns.Add(swCol);
+            table.Columns.Add(cusCol);
+            table.Columns.Add(jdCol);
 
-            GenerateSummaryRows(ref summarytable);
-            GenerateDetailsRows(ref detailtable);
+            BoundField bfHw = new BoundField();
+            bfHw.HeaderText = "HW No";
+            bfHw.DataField = "HW No";
 
-            gridViewSummary.DataSource = summarytable;
-            gridViewDetail.DataSource = detailtable;
+            BoundField bfSw = new BoundField();
+            bfSw.HeaderText = "SW No";
+            bfSw.DataField = "SW No";
 
-            gridViewSummary.DataBind();
-            gridViewDetail.DataBind();
-        }
+            BoundField bfCus = new BoundField();
+            bfCus.HeaderText = "Customer";
+            bfCus.DataField = "Customer";
 
-        protected void lnkBtn_Command(object sender, CommandEventArgs e)
-        {
-            if (e.CommandName == "JobOverviewDetails")
+            BoundField bfDes = new BoundField();
+            bfDes.HeaderText = "Description";
+            bfDes.DataField = "Description";
+
+            gridViewJobFlow.Columns.Add(bfHw);
+            gridViewJobFlow.Columns.Add(bfSw);
+            gridViewJobFlow.Columns.Add(bfCus);
+            gridViewJobFlow.Columns.Add(bfDes);
+
+            foreach (JobFlow j in jobflows) //Creates the columns 
             {
-                JobTracker j = new JobTracker();
-                j = j.GetJobTracker(Convert.ToInt32(e.CommandArgument));
-                modalDetailLabelName.Text = j.fullname;
-                modalDetailLabelJobType.Text = j.jobtype;
-                modalDetailLabelJobStatus.Text = j.JobStatus;
-                modalDetailLabelDate.Text = Convert.ToDateTime(j.ScheduleDate).ToString("dd-MMM-yyyy");
-                modalDetailLabelStartTime.Text = Convert.ToDateTime(j.StartTime).ToString("hh:mm tt");
-                modalDetailLabelEndTime.Text = Convert.ToDateTime(j.EndTime).ToString("hh:mm tt");
-                modalDetailTxtBoxRemarks.Text = j.Remarks;
-                this.programmaticModalPopupDetail.Show();
-            }
-            else if (e.CommandName == "JobOverviewSummary") 
-            {
-                JobTypeDepartment jobtypeDepartment = new JobTypeDepartment();
-                JobTracker jobtracker = new JobTracker();
-                string argument = e.CommandArgument.ToString();
-                string[] s = argument.Split('|');
-                var jobtypes = jobtypeDepartment.GetJobOverviewJobType(Convert.ToInt32(s[0]));
-                Dictionary<string, string> repeaterdata = new Dictionary<string, string>();
+                var jobtypes = jobtypeflow.GetJobTypeFlowListByJobFlow(j.Id);
                 for (int i = 0; i < jobtypes.Count; i++)
                 {
-                    JobTracker j = jobtracker.GetJobTrackerJobOverview(jobtypes[i].Id, s[2], s[1], Convert.ToDateTime(txtBoxStartDate.Text + " 00:00:00"), Convert.ToDateTime(txtBoxEndDate.Text + " 23:59:59"), Convert.ToInt32(s[0]));
-                    if (j == null)
+                    string deptacro = "";
+                    if (jobtypes[i].DepartmentId != null)
+                        deptacro = jobtypes[i].departmentAcronym;
+                    DataColumn col = new DataColumn(jobtypes[i].jobtypeAcronym+deptacro+"" + j.Id, typeof(System.String));
+                    table.Columns.Add(col);
+
+                    TemplateField tfield = new TemplateField();
+                    string sdept = "";
+                    if (jobtypes[i].DepartmentId != null)
+                        sdept = jobtypes[i].departmentAcronym + "-";
+                    tfield.HeaderText = sdept+jobtypes[i].jobtypeAcronym;
+                    gridViewJobFlow.Columns.Add(tfield);
+                }
+            }
+
+            return table;
+        }
+
+        private void GenerateFlowRows(ref DataTable table)
+        {
+            JobFlow jobflow = new JobFlow();
+            JobTypeFlow jobtypeFlow = new JobTypeFlow();
+            JobTracker jobtracker = new JobTracker();
+            var jobflows = jobflow.GetJobOverviewJobFlow();
+            var distinctProjectList = jobtracker.GetDistinctProjectList(Convert.ToDateTime(txtBoxStartDate.Text + " 00:00:00"), Convert.ToDateTime(txtBoxEndDate.Text + " 23:59:59"), txtBoxJobId.Text.Trim());
+
+            foreach (JobTracker p in distinctProjectList)
+            {
+                DataRow row = table.NewRow();
+                row["HW No"] = p.HWNo == null ? "" : p.HWNo.Trim();
+                row["SW No"] = p.SWNo == null ? "" : p.SWNo.Trim();
+                row["Customer"] = p.customer == null ? "" : p.customer.Trim();
+                row["Description"] = p.pcbdesc == null ? "" : p.pcbdesc.Trim();
+                foreach (JobFlow f in jobflows)
+                {
+                    var jobtypes = jobtypeFlow.GetJobTypeFlowListByJobFlow(f.Id);
+                    for (int i = 0; i < jobtypes.Count; i++)
                     {
-                        repeaterdata.Add(jobtypes[i].Description, "");
+                        JobTracker j = new JobTracker();
+                        string deptacro = "";
+                        if (jobtypes[i].DepartmentId != null)
+                            deptacro = jobtypes[i].departmentAcronym;
+
+                        if (jobtypes[i].DepartmentId != null)
+                        {
+                            j = jobtracker.GetJobTrackerJobOverview(jobtypes[i].JobTypeId, p.SWNo, p.HWNo, Convert.ToDateTime(txtBoxStartDate.Text + " 00:00:00"), Convert.ToDateTime(txtBoxEndDate.Text + " 23:59:59"), Convert.ToInt32(jobtypes[i].DepartmentId));
+                        }
+                        else 
+                        {
+                            j = jobtracker.GetJobTrackerJobOverview(jobtypes[i].JobTypeId, p.SWNo, p.HWNo, Convert.ToDateTime(txtBoxStartDate.Text + " 00:00:00"), Convert.ToDateTime(txtBoxEndDate.Text + " 23:59:59"));
+                        }
+                        if (j == null)
+                        {
+                            row[jobtypes[i].jobtypeAcronym + deptacro + "" + f.Id] = "";
+                        }
+                        else
+                        {
+                            row[jobtypes[i].jobtypeAcronym + deptacro + "" + f.Id] = j.Id + "|" + j.JobStatus + " " + Convert.ToDateTime(j.EndTime).ToString("dd-MMM-yyyy");
+                        }
+                    }
+                }
+                table.Rows.Add(row);
+            }
+        }
+
+        protected void gridViewJobFlow_RowCreated(object sender, GridViewRowEventArgs e) 
+        {
+            if (e.Row.RowType == DataControlRowType.Header)
+            {
+                GridViewRow gvr = new GridViewRow(0, 0, DataControlRowType.Header, DataControlRowState.Normal);
+                TableHeaderCell thc = new TableHeaderCell();
+                thc.ColumnSpan = 4;
+                thc.Text = "General Info";
+                //thc.BackColor = System.Drawing.Color.Yellow;
+                gvr.Cells.Add(thc);
+                System.Drawing.Color backcolor = System.Drawing.ColorTranslator.FromHtml("#164BDB");
+                System.Drawing.Color forecolor = System.Drawing.Color.White;
+                JobFlow jobflow = new JobFlow();
+                JobTypeFlow jobtypeflow = new JobTypeFlow();
+                var jobflows = jobflow.GetJobOverviewJobFlow();
+                int rowIndex = 4;
+                for (int i = 0; i < jobflows.Count; i++)
+                {
+                    if (i % 2 != 0)
+                    {
+                        backcolor = System.Drawing.ColorTranslator.FromHtml("#0D72FF");
+                        //forecolor = System.Drawing.ColorTranslator.FromHtml("#2e6e9e");
+                        forecolor = System.Drawing.Color.White;
                     }
                     else
                     {
-                        repeaterdata.Add(jobtypes[i].Description, j.JobStatus + " " + Convert.ToDateTime(j.EndTime).ToString("dd-MMM-yyyy"));
+                        backcolor = System.Drawing.ColorTranslator.FromHtml("#164BDB");
+                        forecolor = System.Drawing.Color.White;
+                    }
+                    var jobtypes = jobtypeflow.GetJobTypeFlowListByJobFlow(jobflows[i].Id);
+                    if (jobtypes.Count > 0)
+                    {
+                        thc = new TableHeaderCell();
+                        thc.BackColor = backcolor;
+                        thc.ForeColor = forecolor;
+                        thc.ColumnSpan = jobtypes.Count;
+                        thc.Text = jobflows[i].Description;
+                        gvr.Cells.Add(thc);
+                    }
+                    for (int x = 0; x < jobtypes.Count; x++)
+                    {
+                        e.Row.Cells[rowIndex].BackColor = backcolor;
+                        e.Row.Cells[rowIndex].ForeColor = forecolor;
+                        rowIndex++;
                     }
                 }
-                modalSummaryRepeater.DataSource = repeaterdata;
-                modalSummaryRepeater.DataBind();
-                programmaticModalPopupSummary.Show();
+                gridViewJobFlow.Controls[0].Controls.AddAt(0, gvr);
             }
-
         }
+
+        protected void gridViewJobFlow_RowDataBound(object sender, GridViewRowEventArgs e) 
+        {
+            if (e.Row.RowType == DataControlRowType.DataRow)
+            {
+                for (int i = 0; i < (e.Row.DataItem as DataRowView).Row.ItemArray.Length; i++)
+                {
+                    string s = (e.Row.DataItem as DataRowView).Row[i].ToString();
+                    if (s.IndexOf("Completed") > -1)
+                    {
+                        string[] d = s.Split('|');
+                        LinkButton lnkBtn = new LinkButton();
+                        lnkBtn.ID = "modalLinkJobFlowStatus" + d[0];
+                        lnkBtn.Text = d[1];
+                        //lnkBtn.Click += new EventHandler(LinkButtonAction);
+                        lnkBtn.CommandName = "JobOverviewDetails";
+                        lnkBtn.Command += lnkBtn_Command;
+                        lnkBtn.CommandArgument = d[0];
+                        e.Row.Cells[i].Controls.Add(lnkBtn);
+                        lnkBtn.Command += lnkBtn_Command;
+                        e.Row.Cells[i].BackColor = System.Drawing.Color.LightGreen;
+                    }
+                    else if (s.IndexOf("In Progress") > -1)
+                    {
+                        string[] d = s.Split('|');
+                        LinkButton lnkBtn = new LinkButton();
+                        lnkBtn.ID = "modalLinkJobFlowStatus" + d[0];
+                        lnkBtn.Text = d[1];
+                        lnkBtn.Command += lnkBtn_Command;
+                        lnkBtn.CommandName = "JobOverviewDetails";
+                        lnkBtn.CommandArgument = d[0];
+                        e.Row.Cells[i].Controls.Add(lnkBtn);
+                        e.Row.Cells[i].BackColor = System.Drawing.Color.Yellow;
+                    }
+                    else if (s.IndexOf("On Hold") > -1)
+                    {
+                        string[] d = s.Split('|');
+                        LinkButton lnkBtn = new LinkButton();
+                        lnkBtn.ID = "modalLinkJobFlowStatus" + d[0];
+                        lnkBtn.Text = d[1];
+                        lnkBtn.Command += lnkBtn_Command;
+                        lnkBtn.CommandName = "JobOverviewDetails";
+                        lnkBtn.CommandArgument = d[0];
+                        e.Row.Cells[i].Controls.Add(lnkBtn);
+                        e.Row.Cells[i].BackColor = System.Drawing.ColorTranslator.FromHtml("#E67E9B");
+                    }
+                }
+            }
+        }
+        #endregion
+
+        #region OTHERS
 
         //protected override void Render(System.Web.UI.HtmlTextWriter writer)
         //{
@@ -445,6 +576,33 @@ namespace TimeTracker
         //    }
         //    base.Render(writer);
         //}
+        #region INITIALIZE
+        private void GenerateDynamicGrid()
+        {
+            DataTable summarytable = new DataTable();
+            DataTable detailtable = new DataTable();
+            DataTable jobflowtable = new DataTable();
+
+            gridViewSummary.Columns.Clear();
+            gridViewDetail.Columns.Clear();
+            gridViewJobFlow.Columns.Clear();
+
+            summarytable = GenerateSummaryColumns();
+            detailtable = GenerateDetailsColumns();
+            jobflowtable = GenerateFlowColumns();
+
+            GenerateSummaryRows(ref summarytable);
+            GenerateDetailsRows(ref detailtable);
+            GenerateFlowRows(ref jobflowtable);
+
+            gridViewSummary.DataSource = summarytable;
+            gridViewDetail.DataSource = detailtable;
+            gridViewJobFlow.DataSource = jobflowtable;
+
+            gridViewSummary.DataBind();
+            gridViewDetail.DataBind();
+            gridViewJobFlow.DataBind();
+        }
 
         private void InitializeStartDate(string value = "")
         {
@@ -481,7 +639,50 @@ namespace TimeTracker
                 calendarExtenderEndDate.StartDate = Convert.ToDateTime(calendarExtenderStartDate.SelectedDate);
             }
         }
+        #endregion
 
+        #region COMMAND
+        protected void lnkBtn_Command(object sender, CommandEventArgs e)
+        {
+            if (e.CommandName == "JobOverviewDetails")
+            {
+                JobTracker j = new JobTracker();
+                j = j.GetJobTracker(Convert.ToInt32(e.CommandArgument));
+                modalDetailLabelName.Text = j.fullname;
+                modalDetailLabelJobType.Text = j.jobtype;
+                modalDetailLabelJobStatus.Text = j.JobStatus;
+                modalDetailLabelDate.Text = Convert.ToDateTime(j.ScheduleDate).ToString("dd-MMM-yyyy");
+                modalDetailLabelStartTime.Text = Convert.ToDateTime(j.StartTime).ToString("hh:mm tt");
+                modalDetailLabelEndTime.Text = Convert.ToDateTime(j.EndTime).ToString("hh:mm tt");
+                modalDetailTxtBoxRemarks.Text = j.Remarks;
+                this.programmaticModalPopupDetail.Show();
+            }
+            else if (e.CommandName == "JobOverviewSummary")
+            {
+                JobTypeDepartment jobtypeDepartment = new JobTypeDepartment();
+                JobTracker jobtracker = new JobTracker();
+                string argument = e.CommandArgument.ToString();
+                string[] s = argument.Split('|');
+                var jobtypes = jobtypeDepartment.GetJobOverviewJobType(Convert.ToInt32(s[0]));
+                Dictionary<string, string> repeaterdata = new Dictionary<string, string>();
+                for (int i = 0; i < jobtypes.Count; i++)
+                {
+                    JobTracker j = jobtracker.GetJobTrackerJobOverview(jobtypes[i].Id, s[2], s[1], Convert.ToDateTime(txtBoxStartDate.Text + " 00:00:00"), Convert.ToDateTime(txtBoxEndDate.Text + " 23:59:59"), Convert.ToInt32(s[0]));
+                    if (j == null)
+                    {
+                        repeaterdata.Add(jobtypes[i].Description, "");
+                    }
+                    else
+                    {
+                        repeaterdata.Add(jobtypes[i].Description, j.JobStatus + " " + Convert.ToDateTime(j.EndTime).ToString("dd-MMM-yyyy"));
+                    }
+                }
+                modalSummaryRepeater.DataSource = repeaterdata;
+                modalSummaryRepeater.DataBind();
+                programmaticModalPopupSummary.Show();
+            }
+
+        }
         protected void txtBoxStartDate_Changed(object sender, EventArgs e)
         {
             calendarExtenderStartDate.SelectedDate = Convert.ToDateTime(txtBoxStartDate.Text);
@@ -495,7 +696,13 @@ namespace TimeTracker
             InitializeStartDate(txtBoxEndDate.Text);
             GenerateDynamicGrid();
         }
+
+        protected void txtBoxJobId_Changed(object sender, EventArgs e) 
+        {
         
+        }
+        #endregion
+
         #endregion
 
         protected bool isValidUser()

@@ -57,7 +57,7 @@
     <%--Modal--%>
     <asp:UpdatePanel ID="UpdatePanelModal" runat="server">
         <Triggers>
-            <asp:PostBackTrigger ControlID="modalBtnSubmit" />
+            <%--<asp:PostBackTrigger ControlID="modalBtnSubmit" />--%>
         </Triggers>
         <ContentTemplate>
             <asp:UpdateProgress ID="modalUpdateProgress" runat="server" AssociatedUpdatePanelID="UpdatePanelModal" DynamicLayout="true">
@@ -82,12 +82,16 @@
                             <asp:RequiredFieldValidator ID="modalReqLastname" runat="server" ValidationGroup="modal" CssClass="validation" ControlToValidate="modalTxtBoxLastname" Text="*"></asp:RequiredFieldValidator></td></tr>
                         <tr><td>Username</td><td>:</td><td><asp:TextBox ID="modalTxtBoxUsername" runat="server" AutoPostBack="true" ValidationGroup="modal" CssClass="textBox" OnTextChanged="modalTxtBoxUser_Changed"></asp:TextBox>
                             <asp:RequiredFieldValidator ID="modalReqUsername" runat="server" ValidationGroup="modal" CssClass="validation" ControlToValidate="modalTxtBoxUsername" Text="*"></asp:RequiredFieldValidator>
-                            <asp:RegularExpressionValidator ID="modalRegValUsername" runat="server" ValidationGroup="modal" CssClass="validation" ControlToValidate="modalTxtBoxUsername" Text="Minimum 4 characters." ValidationExpression=".{4}.*"></asp:RegularExpressionValidator></td></tr>
+                            <asp:RegularExpressionValidator ID="modalRegValUsername" runat="server" ValidationGroup="modal" CssClass="validation" ControlToValidate="modalTxtBoxUsername" Text="Minimum 3 characters." ValidationExpression=".{3}.*"></asp:RegularExpressionValidator></td></tr>
                         <tr><td>Password</td><td>:</td><td><asp:TextBox ID="modalTxtBoxPassword" runat="server" ValidationGroup="modal" CssClass="textBox" TextMode="Password"></asp:TextBox>
                             <asp:RequiredFieldValidator ID="modalReqPassword" runat="server" CssClass="validation" ValidationGroup="modal" ControlToValidate="modalTxtBoxPassword" Text="*"></asp:RequiredFieldValidator>
-                            <asp:RegularExpressionValidator ID="modalRegValPassword" runat="server" ValidationGroup="modal" CssClass="validation" ControlToValidate="modalTxtBoxPassword" Text="Minimum 4 characters." ValidationExpression=".{4}.*"></asp:RegularExpressionValidator></td></tr>
+                            <asp:RegularExpressionValidator ID="modalRegValPassword" runat="server" ValidationGroup="modal" CssClass="validation" ControlToValidate="modalTxtBoxPassword" Text="Minimum 3 characters." ValidationExpression=".{3}.*"></asp:RegularExpressionValidator></td></tr>
                         <tr><td>Department</td><td>:</td><td><asp:DropDownList ID="modalDropDownDepartment" runat="server" CssClass="dropDownList1"></asp:DropDownList></td></tr>
                         <tr><td>Role</td><td>:</td><td><asp:DropDownList ID="modalDropDownRole" runat="server" CssClass="dropDownList1"></asp:DropDownList></td></tr>
+                        <tr><td>Shift</td><td>:</td><td><asp:RadioButtonList ID="modalRadBtnListShift" runat="server" RepeatDirection="Horizontal">
+                            <asp:ListItem Text="AM" Value="AM"/>
+                            <asp:ListItem Text="PM" Value="PM"/>
+                                                        </asp:RadioButtonList></td></tr>
                         <tr><td>Email</td><td>:</td><td><asp:TextBox ID="modalTxtBoxEmail" runat="server" ValidationGroup="modal" CssClass="textBox" TextMode="Email"></asp:TextBox></td></tr>
                         <tr><td>Phone</td><td>:</td><td><asp:TextBox ID="modalTxtBoxPhone" runat="server" ValidationGroup="modal" CssClass="textBox"></asp:TextBox></td></tr>
                         <tr><td>Mobile</td><td>:</td><td><asp:TextBox ID="modalTxtBoxMobile" runat="server" ValidationGroup="modal" CssClass="textBox"></asp:TextBox></td></tr>
