@@ -27,7 +27,7 @@ namespace TimeTracker.Model
                 {
                     while(!String.IsNullOrEmpty(line = sr.ReadLine()))
                     {
-                        
+                        string[] s = line.Split('!');
                     }
                 }
             }

@@ -125,7 +125,7 @@
             <asp:Panel Id="panelModalDetail" runat="server" style="display:none">
                 <asp:Panel ID="panelModalHeaderDetail" runat="server" CssClass="modalHeader">Info</asp:Panel>
                 <asp:Panel ID="panelModalContentDetail" runat="server" CssClass="modal">
-                    <table style="padding:10px; border-collapse:separate;border-spacing:10px; width:100%">
+                    <table style="padding:10px; border-collapse:separate;border-spacing:10px;width:450px">
                         <tr><td>Name</td><td>:</td><td><asp:Label ID="modalDetailLabelName" runat="server"></asp:Label></td></tr>
                         <tr><td>Description of Work</td><td>:</td><td><asp:Label ID="modalDetailLabelJobType" runat="server" ValidationGroup="modal"></asp:Label></td></tr>
                         <tr><td>Job Status</td><td>:</td><td><asp:Label ID="modalDetailLabelJobStatus" runat="server" ValidationGroup="modal"></asp:Label></td></tr>
@@ -135,7 +135,7 @@
                         <tr><td>Remarks</td><td>:</td><td></td></tr>
                         <tr><td colspan="3"><asp:TextBox ID="modalDetailTxtBoxRemarks" runat="server" TextMode="MultiLine" ValidationGroup="modal" ReadOnly="true" Rows="5" Width="100%"></asp:TextBox></td></tr>
                         <tr>
-                            <td colspan="3" style="text-align:center">
+                            <td colspan="3" style="text-align:center" >
                                 <asp:Button ID="modalDetailBtnCancel" runat="server" Text="Close" CausesValidation="false" CssClass="button" />
                             </td>
                         </tr>

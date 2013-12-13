@@ -375,9 +375,9 @@ namespace TimeTracker
             JobTrackerHistory jtHist = new JobTrackerHistory();
             jobTracker.Id = Convert.ToInt32(e.CommandArgument);
             jobTracker = jobTracker.GetJobTracker(jobTracker.Id);
-            jobTracker.ActionRequest = "Delete";
-            if (selectedDate.CompareTo(DateTime.Today) == 0 || jobTracker.Status == "Rejected")
+            if (selectedDate.CompareTo(DateTime.Today) == 0 || (jobTracker.Status == "Rejected" && jobTracker.ActionRequest != "Delete"))
             {
+                jobTracker.ActionRequest = "Delete";
                 jobTracker.Status = "Approved";
                 jobTracker.LastUpdateDate = DateTime.Now;
                 jobTracker.LastUpdatedBy = userid;
@@ -386,6 +386,7 @@ namespace TimeTracker
             }
             else 
             {
+                jobTracker.ActionRequest = "Delete";
                 jobTracker.Status = "For Approval";
                 jobTracker.LastUpdateDate = DateTime.Now;
                 jobTracker.LastUpdatedBy = userid;
@@ -880,7 +881,7 @@ namespace TimeTracker
                         i.Selected = true;
                 }
             }
-            else if (isCurrentDate == true)
+            else if (isCurrentDate == true && usedTime.Count < 1)
             {
                 int s = DateTime.Now.Hour;
                 decimal gap = 1000;
