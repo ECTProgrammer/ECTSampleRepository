@@ -102,7 +102,6 @@
        <ContentTemplate>
        <asp:Panel ID="panelRightHeader" runat="server" CssClass="modalAlertHeader" Width="98%">Graph</asp:Panel>
            <asp:Panel ID="panelRightContent" runat="server" CssClass="modalRight" Width="98%">
-
         </asp:Panel>
        </ContentTemplate>
     </asp:UpdatePanel>
@@ -112,42 +111,61 @@
        <ContentTemplate>
        <asp:Panel ID="panelBottomHeader" runat="server" CssClass="modalAlertHeader2" Width="99%">Analysis</asp:Panel>
            <asp:Panel ID="panelBottomContent" runat="server" CssClass="modalBottom" Width="99%">
+               <div>
                <table style="width:100%;display:table">
                    <tr><td>Department : <asp:DropDownList ID="ddlBottomDepartment" runat="server" AutoPostBack="true" OnSelectedIndexChanged="ddlBottomDepartment_Changed"></asp:DropDownList></td>
                        <%--<td>Job Type : <asp:DropDownList ID="ddlBottomJobType"   runat="server"></asp:DropDownList></td>--%>
                        <td>Schedule Date : <asp:TextBox ID="txtBoxBottomFromDate" runat="server" AutoPostBack="true" OnTextChanged="txtBoxBottomFromDate_Changed">
                                            </asp:TextBox> to: <asp:TextBox ID="txtBoxBottomToDate" runat="server" AutoPostBack="true" OnTextChanged="txtBoxBottomToDate_Changed"></asp:TextBox></td>
                    </tr>
-                   <%--<tr>
-                       <td>Job ID : <asp:TextBox ID="txtBoxBottomJobId" runat="server"></asp:TextBox></td>
-                       <td>Role : <asp:DropDownList ID="ddlBottomRole" runat="server"></asp:DropDownList></td>
-                   </tr>--%>
                    <tr>
                        <td>Personel : <asp:DropDownList ID="ddlBottomPersonel" runat="server" AutoPostBack="true" OnSelectedIndexChanged="ddlBottomPersonel_Changed"></asp:DropDownList></td>
                        <td>Job ID : <asp:TextBox ID="txtBoxBottomJobId" runat="server" AutoPostBack="true" OnTextChanged="txtBoxBottomJobId_Changed"></asp:TextBox></td>
                    </tr>
-                   <tr><td colspan="3">
-                       <asp:Panel runat="server">
-                           <asp:GridView ID="gridViewBottom" runat="server" AutoGenerateColumns="false" CssClass="gridView" GridLines="None" ShowHeaderWhenEmpty="true">
-                               <EmptyDataRowStyle />
-                                <EmptyDataTemplate>
-                                    No Data Found.
-                                </EmptyDataTemplate>
-                               <Columns>
-                                   <asp:BoundField HeaderText="Description of Work" DataField="jobtype"/>
-                                   <asp:BoundField HeaderText="Total Work Time" DataField="totalworktime" />
-                                   <asp:BoundField HeaderText="Waiting for Approval" DataField="totalforapproval" />
-                                   <asp:BoundField HeaderText="Total Rejected Time" DataField="totalrejectedtime" />
-                                   <asp:BoundField HeaderText="Number of Unclosed Task" DataField="totalunclosedjobs" />
-                               </Columns>
-                           </asp:GridView>
-                       </asp:Panel>
-                       </td></tr>
-               </table>
-               <ajaxToolKit:CalendarExtender ID="calExtBottomFromDate" runat="server" TargetControlID="txtBoxBottomFromDate" Format="dd MMM yyyy"></ajaxToolKit:CalendarExtender>
-               <ajaxToolKit:CalendarExtender ID="calExtBottomToDate" runat="server" TargetControlID="txtBoxBottomToDate" Format="dd MMM yyyy"></ajaxToolKit:CalendarExtender>
-        </asp:Panel>
-       </ContentTemplate>
+                </table>
+                   </div>
+                <ajaxToolKit:CalendarExtender ID="calExtBottomFromDate" runat="server" TargetControlID="txtBoxBottomFromDate" Format="dd MMM yyyy"></ajaxToolKit:CalendarExtender>
+                <ajaxToolKit:CalendarExtender ID="calExtBottomToDate" runat="server" TargetControlID="txtBoxBottomToDate" Format="dd MMM yyyy"></ajaxToolKit:CalendarExtender>
+                <ajaxToolKit:TabContainer ID="tabContainerBottom" runat="server">
+                    <ajaxToolKit:TabPanel ID="tabPanelBottom1" runat="server" HeaderText="Time Analysis">   
+                        <ContentTemplate> 
+                            <asp:Panel runat="server">
+                               <asp:GridView ID="gridViewBottom" runat="server" AutoGenerateColumns="false" CssClass="gridView" GridLines="None" ShowHeaderWhenEmpty="true">
+                                   <EmptyDataRowStyle />
+                                    <EmptyDataTemplate>
+                                        No Data Found.
+                                    </EmptyDataTemplate>
+                                   <Columns>
+                                       <asp:BoundField HeaderText="Description of Work" DataField="jobtype"/>
+                                       <asp:BoundField HeaderText="Total Work Time" DataField="totalworktime" />
+                                       <asp:BoundField HeaderText="Waiting for Approval" DataField="totalforapproval" />
+                                       <asp:BoundField HeaderText="Total Rejected Time" DataField="totalrejectedtime" />
+                                       <asp:BoundField HeaderText="Number of Unclosed Task" DataField="totalunclosedjobs" />
+                                   </Columns>
+                               </asp:GridView>
+                            </asp:Panel>
+                        </ContentTemplate>
+                    </ajaxToolKit:TabPanel>
+                    <ajaxToolKit:TabPanel ID="tabPanelBottom2" runat="server" HeaderText="Task Viewer">
+                        <ContentTemplate>
+                            <asp:GridView ID="gridViewBottom2" runat="server" AutoGenerateColumns="false" CssClass="gridView" GridLines="None" ShowHeaderWhenEmpty="true">
+                                <Columns>
+                                    <asp:BoundField HeaderText="Date" DataField="ScheduleDate" DataFormatString="{0:dd MMM yyyy}" ReadOnly="true" />
+                                    <asp:BoundField HeaderText="Start Time" DataField="StartTime" DataFormatString="{0:t}" ReadOnly="true"></asp:BoundField>
+                                    <asp:BoundField HeaderText="End Time" DataField="EndTime" DataFormatString="{0:t}" ReadOnly="true"></asp:BoundField>
+                                    <asp:BoundField HeaderText="Description of Work" DataField="jobtype" ReadOnly="true"></asp:BoundField>
+                                    <asp:BoundField HeaderText="JobId" DataField="JobIdNumber" ReadOnly="true"></asp:BoundField>
+                                    <asp:BoundField HeaderText="Task Status" DataField="JobStatus" ReadOnly="true"></asp:BoundField>
+                                    <asp:BoundField HeaderText="Customer" DataField="customer" ReadOnly="false"></asp:BoundField>
+                                    <asp:BoundField HeaderText="Number of Hours" DataField="totalhours" ReadOnly="false"></asp:BoundField>
+                                    <asp:BoundField HeaderText="Remarks" DataField="Remarks"></asp:BoundField>
+                                </Columns>
+                            </asp:GridView>
+                        </ContentTemplate>
+                    </ajaxToolKit:TabPanel> 
+                </ajaxToolKit:TabContainer>
+            </asp:Panel>
+        </ContentTemplate>
     </asp:UpdatePanel>
     </div>
      <%--Modal--%>

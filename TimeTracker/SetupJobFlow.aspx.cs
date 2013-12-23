@@ -301,7 +301,7 @@ namespace TimeTracker
 
         protected void modalBtnSubmit_Command(object sender, CommandEventArgs e)
         {
-            if (gridViewModal.Rows.Count == 0) 
+            if (gridViewModal.Rows.Count == 0 ||(modalLabelJobFlowId.Text.Trim() != "" && IsCheckBoxEmpty())) 
             {
                 modalLabelError.Visible = true;
                 modalLabelError.Text += " Please add atleast one department.";

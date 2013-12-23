@@ -18,6 +18,7 @@
           <EntitySet Name="Roles" EntityType="TimeTrackerModel.Store.Roles" store:Type="Tables" Schema="dbo" />
           <EntitySet Name="RolesModuleAccess" EntityType="TimeTrackerModel.Store.RolesModuleAccess" store:Type="Tables" Schema="dbo" />
           <EntitySet Name="SupervisorMapping" EntityType="TimeTrackerModel.Store.SupervisorMapping" store:Type="Tables" Schema="dbo" />
+          <EntitySet Name="TimeClock" EntityType="TimeTrackerModel.Store.TimeClock" store:Type="Tables" Schema="dbo" />
           <EntitySet Name="TimeSetting" EntityType="TimeTrackerModel.Store.TimeSetting" store:Type="Tables" Schema="dbo" />
           <EntitySet Name="Users" EntityType="TimeTrackerModel.Store.Users" store:Type="Tables" Schema="dbo" />
           <AssociationSet Name="Fk_JobTracker_ApprovedBy" Association="TimeTrackerModel.Store.Fk_JobTracker_ApprovedBy">
@@ -189,6 +190,7 @@
           <Property Name="Position" Type="int" />
           <Property Name="ShowInJobOverview" Type="bit" />
           <Property Name="Acronym" Type="varchar" MaxLength="10" />
+          <Property Name="IsDefaultBreak" Type="bit" />
         </EntityType>
         <EntityType Name="JobTypeDepartment">
           <Key>
@@ -259,6 +261,16 @@
           <Property Name="Id" Type="int" Nullable="false" StoreGeneratedPattern="Identity" />
           <Property Name="UserId" Type="int" Nullable="false" />
           <Property Name="SupervisorId" Type="int" Nullable="false" />
+        </EntityType>
+        <EntityType Name="TimeClock">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" Nullable="false" StoreGeneratedPattern="Identity" />
+          <Property Name="EmployeeNumber" Type="int" Nullable="false" />
+          <Property Name="ScanTime" Type="datetime" Nullable="false" />
+          <Property Name="CreateDate" Type="datetime" Nullable="false" />
+          <Property Name="Filename" Type="varchar" MaxLength="150" />
         </EntityType>
         <EntityType Name="TimeSetting">
           <Key>
@@ -631,6 +643,7 @@
             <End Role="T_Department" EntitySet="T_Department" />
             <End Role="T_JobTypeFlow" EntitySet="T_JobTypeFlow" />
           </AssociationSet>
+          <EntitySet Name="T_TimeClock" EntityType="TimeTrackerModel.T_TimeClock" />
         </EntityContainer>
         <EntityType Name="T_Department">
           <Key>
@@ -725,6 +738,7 @@
           <NavigationProperty Name="M_JobTrackerHistories" Relationship="TimeTrackerModel.Fk_JobTrackerHistory_JobTypeId" FromRole="JobType" ToRole="JobTrackerHistory" />
           <NavigationProperty Name="M_JobTypeDepartments" Relationship="TimeTrackerModel.FK_JobTypeDepartment_JobTypeId" FromRole="JobType" ToRole="JobTypeDepartment" />
           <NavigationProperty Name="M_JobTypeFlows" Relationship="TimeTrackerModel.Fk_JobTypeFlow_JobTypeId" FromRole="T_JobType" ToRole="JobTypeFlow" />
+          <Property Type="Boolean" Name="IsDefaultBreak" />
         </EntityType>
         <EntityType Name="T_JobTypeDepartment">
           <Key>
@@ -1103,6 +1117,16 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <EntityType Name="T_TimeClock">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Type="Int32" Name="Id" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Type="Int32" Name="EmployeeNumber" Nullable="false" />
+          <Property Type="DateTime" Name="ScanTime" Nullable="false" Precision="3" />
+          <Property Type="DateTime" Name="CreateDate" Nullable="false" Precision="3" />
+          <Property Type="String" Name="Filename" MaxLength="150" FixedLength="false" Unicode="false" />
+        </EntityType>
       </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
@@ -1179,6 +1203,7 @@
           <EntitySetMapping Name="T_JobType">
             <EntityTypeMapping TypeName="TimeTrackerModel.T_JobType">
               <MappingFragment StoreEntitySet="JobType">
+                <ScalarProperty Name="IsDefaultBreak" ColumnName="IsDefaultBreak" />
                 <ScalarProperty Name="Id" ColumnName="Id" />
                 <ScalarProperty Name="Description" ColumnName="Description" />
                 <ScalarProperty Name="CreatedBy" ColumnName="CreatedBy" />
@@ -1310,6 +1335,17 @@
                 <ScalarProperty Name="Position" ColumnName="Position" />
                 <ScalarProperty Name="JobFlowId" ColumnName="JobFlowId" />
                 <ScalarProperty Name="JobTypeId" ColumnName="JobTypeId" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="T_TimeClock">
+            <EntityTypeMapping TypeName="TimeTrackerModel.T_TimeClock">
+              <MappingFragment StoreEntitySet="TimeClock">
+                <ScalarProperty Name="Filename" ColumnName="Filename" />
+                <ScalarProperty Name="CreateDate" ColumnName="CreateDate" />
+                <ScalarProperty Name="ScanTime" ColumnName="ScanTime" />
+                <ScalarProperty Name="EmployeeNumber" ColumnName="EmployeeNumber" />
                 <ScalarProperty Name="Id" ColumnName="Id" />
               </MappingFragment>
             </EntityTypeMapping>

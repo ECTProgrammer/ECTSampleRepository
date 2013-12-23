@@ -8,29 +8,67 @@ using System.IO;
 
 namespace TimeTracker.Model
 {
-    public class TimeClock
+    public class TimeClock : T_TimeClock
     {
-        public void GetTime() 
+        public DateTime starttime { get; set; }
+        public DateTime endtime { get; set; }
+
+        public TimeClock GetTimeClock(int id) 
         {
-            string timeClockConnectionString = ConfigurationManager.ConnectionStrings["TimeClockConnection"].ConnectionString;
-            string[] tcStrign = timeClockConnectionString.Split(';');
-            string path = tcStrign[0].Replace("Server=", "").Trim();
-            string filename = tcStrign[1].Replace("Database=", "").Trim();
-            string fileExt = tcStrign[2].Replace("User Id=", "").Trim();
-            filename += "_"+DateTime.Today.ToString("ddMMyy")+"*."+fileExt;
-            DirectoryInfo directory = new DirectoryInfo(path);
-            FileInfo[] files = directory.GetFiles(filename);
-            foreach (FileInfo file in files) 
+            TimeTrackerEntities db = new TimeTrackerEntities();
+
+            var data = (from t in db.T_TimeClock
+                        where t.Id == id
+                        select new TimeClock()
+                        {
+                            Id = t.Id,
+                            EmployeeNumber = t.EmployeeNumber,
+                            ScanTime = t.ScanTime,
+                            CreateDate = t.CreateDate,
+                            Filename = t.Filename
+                        }).FirstOrDefault();
+            
+            db.Dispose();
+
+            return data;
+        }
+
+        public TimeClock GetStartEndTime(int employeenum, DateTime stime, DateTime etime) 
+        {
+            TimeTrackerEntities db = new TimeTrackerEntities();
+            TimeClock result = new TimeClock();
+
+            var data = (from t in db.T_TimeClock
+                        where t.EmployeeNumber == employeenum
+                        && t.ScanTime >= stime
+                        && t.ScanTime <= etime
+                        orderby ScanTime ascending
+                        select new TimeClock()
+                        {
+                            Id = t.Id,
+                            EmployeeNumber = t.EmployeeNumber,
+                            ScanTime = t.ScanTime,
+                            CreateDate = t.CreateDate,
+                            Filename = t.Filename
+                        }).ToList();
+            
+            db.Dispose();
+            result.starttime = DateTime.Now.AddYears(1);
+            for (int i = 0; i < data.Count; i++) 
             {
-                string line = "";
-                using(StreamReader sr = new StreamReader(file.FullName))
+                if (i % 2 == 0)
                 {
-                    while(!String.IsNullOrEmpty(line = sr.ReadLine()))
-                    {
-                        string[] s = line.Split('!');
-                    }
+                    if (result.starttime == null || result.starttime > data[i].ScanTime)
+                        result.starttime = data[i].ScanTime;
+                }
+                else 
+                {
+                    if (result.endtime == null || result.endtime < data[i].ScanTime)
+                        result.endtime = data[i].ScanTime;
                 }
             }
+
+            return data.Count < 2 ? null : result;
         }
     }
 }

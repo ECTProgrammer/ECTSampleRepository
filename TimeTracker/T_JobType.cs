@@ -33,6 +33,7 @@ namespace TimeTracker
         public Nullable<int> Position { get; set; }
         public Nullable<bool> ShowInJobOverview { get; set; }
         public string Acronym { get; set; }
+        public Nullable<bool> IsDefaultBreak { get; set; }
     
         public virtual ICollection<T_JobTracker> M_JobTrackers { get; set; }
         public virtual ICollection<T_JobTrackerHistory> M_JobTrackerHistories { get; set; }

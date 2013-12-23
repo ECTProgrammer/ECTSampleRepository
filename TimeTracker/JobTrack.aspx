@@ -27,7 +27,7 @@
             <ajaxToolKit:CalendarExtender ID="calendarExtenderDate" runat="server" TargetControlID="txtBoxDate" Format="dd MMM yyyy"></ajaxToolKit:CalendarExtender>
             <table style="width:100%;">
                 <tr><td><asp:LinkButton ID="linkBtnAddJobTrack" runat="server" CausesValidation="false" Text="Add Job" CssClass="linkButton" Font-Bold="true" OnClick="linkBtnAddJobTrack_Click"></asp:LinkButton> 
-                </td><td style="text-align:right"><asp:Label ID="LabelTotalHours" ForeColor="#ff0000" Font-Size="12px" runat="server" Font-Bold="true"></asp:Label></td></tr></table>   
+                </td><td><asp:Label ID="LabelTimeClock" runat="server" Font-Bold="true" Font-Size="12px" /></td><td style="text-align:right"><asp:Label ID="LabelTotalHours" ForeColor="#ff0000" Font-Size="12px" runat="server" Font-Bold="true"></asp:Label></td></tr></table>   
             <div style="margin:10px 10px 10px 10px">
             <asp:GridView ID="gridJobTrack" runat="server" AutoGenerateColumns="false" CssClass="gridView" GridLines="None" OnRowCommand="gridViewJobTrack_Command" ShowHeaderWhenEmpty="true">
                 <EmptyDataRowStyle/>

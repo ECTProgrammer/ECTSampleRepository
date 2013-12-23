@@ -39,6 +39,7 @@
         <AssociationConnector Association="TimeTrackerModel.Fk_JobTypeFlow_JobFlowId" />
         <AssociationConnector Association="TimeTrackerModel.Fk_JobTypeFlow_JobTypeId" />
         <AssociationConnector Association="TimeTrackerModel.Fk_JobTypeFlow_DepartmentId" />
+        <EntityTypeShape EntityType="TimeTrackerModel.T_TimeClock" Width="1.5" PointX="0.5" PointY="9.875" />
       </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>

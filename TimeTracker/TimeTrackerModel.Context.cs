@@ -39,5 +39,6 @@ namespace TimeTracker
         public DbSet<T_Users> T_Users { get; set; }
         public DbSet<T_JobFlow> T_JobFlow { get; set; }
         public DbSet<T_JobTypeFlow> T_JobTypeFlow { get; set; }
+        public DbSet<T_TimeClock> T_TimeClock { get; set; }
     }
 }

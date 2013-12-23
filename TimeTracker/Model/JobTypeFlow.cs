@@ -54,7 +54,8 @@ namespace TimeTracker.Model
             var data = (from j in db.T_JobTypeFlow
                         where j.JobFlowId == jobflowid
                         && j.JobTypeId == jobtypeid
-                        && j.DepartmentId == departmentid
+                        && (j.DepartmentId == departmentid || 
+                        (departmentid == null && j.DepartmentId == null))
                         select new JobTypeFlow()
                         {
                             Id = j.Id,

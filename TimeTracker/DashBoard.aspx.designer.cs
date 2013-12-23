@@ -202,15 +202,6 @@ namespace TimeTracker {
         protected global::System.Web.UI.WebControls.TextBox txtBoxBottomJobId;
         
         /// <summary>
-        /// gridViewBottom control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.GridView gridViewBottom;
-        
-        /// <summary>
         /// calExtBottomFromDate control.
         /// </summary>
         /// <remarks>
@@ -227,6 +218,51 @@ namespace TimeTracker {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::AjaxControlToolkit.CalendarExtender calExtBottomToDate;
+        
+        /// <summary>
+        /// tabContainerBottom control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::AjaxControlToolkit.TabContainer tabContainerBottom;
+        
+        /// <summary>
+        /// tabPanelBottom1 control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::AjaxControlToolkit.TabPanel tabPanelBottom1;
+        
+        /// <summary>
+        /// gridViewBottom control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.GridView gridViewBottom;
+        
+        /// <summary>
+        /// tabPanelBottom2 control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::AjaxControlToolkit.TabPanel tabPanelBottom2;
+        
+        /// <summary>
+        /// gridViewBottom2 control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.GridView gridViewBottom2;
         
         /// <summary>
         /// UpdatePanel1 control.

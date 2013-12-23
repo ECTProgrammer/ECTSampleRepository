@@ -38,6 +38,7 @@ namespace TimeTracker
                 InitializeBottomDropDownDepartment();
                 InitializeBottomDropDownPersonel();
                 InitializeGridViewBottom();
+                InitializeGridViewBottom2();
             }
         }
 
@@ -273,18 +274,43 @@ namespace TimeTracker
                 data = analysis.GetAnalysis(Convert.ToDateTime(txtBoxBottomFromDate.Text), Convert.ToDateTime(txtBoxBottomToDate.Text), userid, txtBoxBottomJobId.Text.Trim());
             else
             {
-                if (ddlBottomPersonel.SelectedItem.Text.Trim() == "All")
+                if (ddlBottomPersonel.Items.Count > 0)
                 {
-                    data = analysis.GetAnalysis(Convert.ToInt32(ddlBottomDepartment.SelectedItem.Value), Convert.ToDateTime(txtBoxBottomFromDate.Text), Convert.ToDateTime(txtBoxBottomToDate.Text), txtBoxBottomJobId.Text.Trim(), roleid);
-                }
-                else 
-                {
-                    data = analysis.GetAnalysis(Convert.ToDateTime(txtBoxBottomFromDate.Text), Convert.ToDateTime(txtBoxBottomToDate.Text), Convert.ToInt32(ddlBottomPersonel.SelectedItem.Value), txtBoxBottomJobId.Text.Trim());
+                    if (ddlBottomPersonel.SelectedItem.Text.Trim() == "All")
+                    {
+                        data = analysis.GetAnalysis(Convert.ToInt32(ddlBottomDepartment.SelectedItem.Value), Convert.ToDateTime(txtBoxBottomFromDate.Text), Convert.ToDateTime(txtBoxBottomToDate.Text), txtBoxBottomJobId.Text.Trim(), roleid);
+                    }
+                    else
+                    {
+                        data = analysis.GetAnalysis(Convert.ToDateTime(txtBoxBottomFromDate.Text), Convert.ToDateTime(txtBoxBottomToDate.Text), Convert.ToInt32(ddlBottomPersonel.SelectedItem.Value), txtBoxBottomJobId.Text.Trim());
+                    }
                 }
             }
             
             gridViewBottom.DataSource = data;
             gridViewBottom.DataBind();
+        }
+
+        protected void InitializeGridViewBottom2() 
+        {       
+            JobTracker jobTracker = new JobTracker();
+            List<JobTracker> data = new List<JobTracker>();
+            gridViewBottom2.EmptyDataText = "Please select a personel.";
+
+            if (ddlBottomPersonel.Items.Count > 0)
+            {
+                if (ddlBottomPersonel.SelectedItem.Text.Trim() != "All")
+                {
+                    gridViewBottom2.EmptyDataText = "No Data Found";
+                    int personelid = Convert.ToInt32(ddlBottomPersonel.SelectedItem.Value);
+                    DateTime startdate = Convert.ToDateTime(txtBoxBottomFromDate.Text.Trim() + " 00:00:00");
+                    DateTime enddate = Convert.ToDateTime(txtBoxBottomToDate.Text.Trim() + " 23:59:59");
+                    data = jobTracker.GetJobTrackerListExcludeRejected(personelid, startdate, enddate);
+                }
+            }
+            
+            gridViewBottom2.DataSource = data;
+            gridViewBottom2.DataBind();
         }
 
         protected void txtBoxBottomFromDate_Changed(object sender, EventArgs e)
@@ -299,6 +325,7 @@ namespace TimeTracker
             }
             calExtBottomToDate.StartDate = sdate;
             InitializeGridViewBottom();
+            InitializeGridViewBottom2();
         }
 
         protected void txtBoxBottomToDate_Changed(object sender, EventArgs e)
@@ -306,6 +333,7 @@ namespace TimeTracker
             DateTime date = Convert.ToDateTime(txtBoxBottomToDate.Text);
             calExtBottomToDate.SelectedDate = date;
             InitializeGridViewBottom();
+            InitializeGridViewBottom2();
         }
 
         protected void txtBoxBottomJobId_Changed(object sender, EventArgs e) 
@@ -317,11 +345,13 @@ namespace TimeTracker
         {
             InitializeBottomDropDownPersonel();
             InitializeGridViewBottom();
+            InitializeGridViewBottom2();
         }
 
         protected void ddlBottomPersonel_Changed(object sender, EventArgs e) 
         {
             InitializeGridViewBottom();
+            InitializeGridViewBottom2();
         }
 
         #endregion

@@ -706,6 +706,65 @@ namespace TimeTracker.Model
             return data;
         }
 
+        public List<JobTracker> GetJobTrackerListExcludeRejected(int userid, DateTime startdate,DateTime enddate)
+        {
+            TimeTrackerEntities db = new TimeTrackerEntities();
+
+            var data = (from j in db.T_JobTracker
+                        where j.UserId == userid
+                        && j.ScheduleDate >= startdate
+                        && j.EndTime <= enddate
+                        && j.Status != "Rejected"
+                        orderby j.StartTime ascending
+                        select new JobTracker()
+                        {
+                            Id = j.Id,
+                            UserId = j.UserId,
+                            StartTime = j.StartTime,
+                            EndTime = j.EndTime,
+                            Description = j.Description,
+                            JobTypeId = j.JobTypeId,
+                            JobIdNumber = j.JobIdNumber,
+                            jobtype = j.M_JobType.Description,
+                            Remarks = j.Remarks,
+                            ApprovedBy = j.ApprovedBy,
+                            CreateDate = j.CreateDate,
+                            LastUpdateDate = j.LastUpdateDate,
+                            CreatedBy = j.CreatedBy,
+                            LastUpdatedBy = j.LastUpdatedBy,
+                            Status = j.Status,
+                            SupervisorRemarks = j.SupervisorRemarks,
+                            ActionRequest = j.ActionRequest,
+                            ScheduleDate = j.ScheduleDate,
+                            JobStatus = j.JobStatus,
+                            SWNo = j.SWNo,
+                            HWNo = j.HWNo,
+                            fullname = j.M_User.Firstname + " " + j.M_User.Lastname
+                        }).ToList();
+
+            db.Dispose();
+
+            foreach (JobTracker j in data)
+            {
+                if (j.JobIdNumber != null && j.JobIdNumber != "")
+                {
+                    GetCustomer(j);
+                }
+
+                if (j.EndTime != null)
+                {
+                    double time = Convert.ToDateTime(j.EndTime).Subtract(Convert.ToDateTime(j.StartTime)).TotalMinutes;
+                    double hr = Math.Truncate(time / 60);
+                    double min = time % 60;
+                    j.totalhours = hr == 0 && min == 0 ? "0 min" : (hr > 0 ? hr > 1 ? hr + " hrs" : hr + " hr" : "") + (hr > 0 && min > 0 ? ", " : "") + (min > 0 ? min > 1 ? min + " mins" : min + " min" : "");
+                }
+
+            }
+
+
+            return data;
+        }
+
         public List<JobTracker> GetDistinctProjectList(DateTime sdate,DateTime edate,string stringjobid = "") 
         {
             TimeTrackerEntities db = new TimeTrackerEntities();
@@ -1359,6 +1418,152 @@ namespace TimeTracker.Model
                 }
             }
             return jobtracker;
+        }
+
+        public string GetError(int userid, DateTime selecteddate,int numberofdays) 
+        {
+            string result = "";
+            DateTime sdate = selecteddate.AddDays(-1 * numberofdays);
+            for (int i = 1; i < numberofdays; i++) 
+            {
+                if (HasTimeGap(userid, sdate)) 
+                {
+                    result = "There is a Time Gap on " + sdate.ToString("dd MMM yyyy") + ".";
+                    break;
+                }
+                else if (HasTimeClockGap(userid, sdate)) 
+                {
+                    result = "There is a missing task not recorded on " + sdate.ToString("dd MMM yyyy") + ".";
+                    break;
+                }
+                sdate = sdate.AddDays(1);
+            }
+            return result;
+        }
+
+        private bool HasTimeGap(int userid, DateTime selecteddate) 
+        {
+            bool result = false;
+
+            TimeTrackerEntities db = new TimeTrackerEntities();
+
+            var data = (from j in db.T_JobTracker
+                        where j.UserId == userid
+                        && j.ScheduleDate == selecteddate
+                        && j.Status != "Rejected"
+                        && j.EndTime != null
+                        orderby j.StartTime ascending
+                        select new JobTracker()
+                        {
+                            Id = j.Id,
+                            UserId = j.UserId,
+                            StartTime = j.StartTime,
+                            EndTime = j.EndTime,
+                            Description = j.Description,
+                            JobTypeId = j.JobTypeId,
+                            JobIdNumber = j.JobIdNumber,
+                            jobtype = j.M_JobType.Description,
+                            Remarks = j.Remarks,
+                            ApprovedBy = j.ApprovedBy,
+                            CreateDate = j.CreateDate,
+                            LastUpdateDate = j.LastUpdateDate,
+                            CreatedBy = j.CreatedBy,
+                            LastUpdatedBy = j.LastUpdatedBy,
+                            Status = j.Status,
+                            SupervisorRemarks = j.SupervisorRemarks,
+                            ActionRequest = j.ActionRequest,
+                            ScheduleDate = j.ScheduleDate,
+                            JobStatus = j.JobStatus,
+                            SWNo = j.SWNo,
+                            HWNo = j.HWNo,
+                            fullname = j.M_User.Firstname + " " + j.M_User.Lastname
+                        }).ToList();
+
+            db.Dispose();
+            DateTime sTime = new DateTime();
+            for (int i = 0; i < data.Count; i++) 
+            {
+                if (i == 0) 
+                {
+                    sTime = Convert.ToDateTime(data[i].EndTime);
+                }
+                else if (sTime != data[i].StartTime)
+                {
+                    result = true;
+                    break;
+                }
+                else 
+                {
+                    sTime = Convert.ToDateTime(data[i].EndTime);
+                }
+            }
+
+            return result;
+        }
+
+        private bool HasTimeClockGap(int userid, DateTime selecteddate) 
+        {
+            bool result = false;
+            User user = new User();
+            user = user.GetUser(userid);
+            if (user.EmployeeNumber != 0) 
+            {
+                TimeClock timeclock = new TimeClock();
+                timeclock = timeclock.GetStartEndTime(Convert.ToInt32(user.EmployeeNumber),Convert.ToDateTime(selecteddate.ToString("dd MMM yyyy")+" 00:00:00"),Convert.ToDateTime(selecteddate.ToString("dd MMM yyyy")+" 23:59:59"));
+
+                if (timeclock != null)
+                {
+                    TimeTrackerEntities db = new TimeTrackerEntities();
+
+                    var data = (from j in db.T_JobTracker
+                                where j.UserId == userid
+                                && j.ScheduleDate == selecteddate
+                                && j.Status != "Rejected"
+                                && j.EndTime != null
+                                orderby j.StartTime ascending
+                                select new JobTracker()
+                                {
+                                    Id = j.Id,
+                                    UserId = j.UserId,
+                                    StartTime = j.StartTime,
+                                    EndTime = j.EndTime,
+                                    Description = j.Description,
+                                    JobTypeId = j.JobTypeId,
+                                    JobIdNumber = j.JobIdNumber,
+                                    jobtype = j.M_JobType.Description,
+                                    Remarks = j.Remarks,
+                                    ApprovedBy = j.ApprovedBy,
+                                    CreateDate = j.CreateDate,
+                                    LastUpdateDate = j.LastUpdateDate,
+                                    CreatedBy = j.CreatedBy,
+                                    LastUpdatedBy = j.LastUpdatedBy,
+                                    Status = j.Status,
+                                    SupervisorRemarks = j.SupervisorRemarks,
+                                    ActionRequest = j.ActionRequest,
+                                    ScheduleDate = j.ScheduleDate,
+                                    JobStatus = j.JobStatus,
+                                    SWNo = j.SWNo,
+                                    HWNo = j.HWNo,
+                                    fullname = j.M_User.Firstname + " " + j.M_User.Lastname
+                                }).ToList();
+
+                    db.Dispose();
+                    if (data.Count > 0)
+                    {
+                        TimeSetting timesetting = new TimeSetting();
+                        timesetting = timesetting.GetTimeSetting();
+                        if (timeclock.starttime.AddMinutes(timesetting.Interval) < Convert.ToDateTime(data[0].StartTime))
+                            result = true;
+                        if (timeclock.endtime.AddMinutes(-1 * timesetting.Interval) > Convert.ToDateTime(data[data.Count - 1].EndTime))
+                            result = true;
+                    }
+                    else 
+                    {
+                        result = true;
+                    }
+                }
+            }
+            return result;
         }
 
     }

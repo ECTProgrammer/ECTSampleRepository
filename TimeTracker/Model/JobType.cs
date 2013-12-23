@@ -26,7 +26,35 @@ namespace TimeTracker.Model
                             ComputeTime = j.ComputeTime,
                             Position = j.Position,
                             ShowInJobOverview = j.ShowInJobOverview,
-                            Acronym = j.Acronym
+                            Acronym = j.Acronym,
+                            IsDefaultBreak = j.IsDefaultBreak
+                        }).FirstOrDefault();
+
+            db.Dispose();
+
+            return data;
+        }
+
+        public JobType GetDefaultBreak()
+        {
+            TimeTrackerEntities db = new TimeTrackerEntities();
+
+            var data = (from j in db.T_JobType
+                        where j.IsDefaultBreak == true
+                        select new JobType()
+                        {
+                            Id = j.Id,
+                            Description = j.Description,
+                            CreatedBy = j.CreatedBy,
+                            LastUpdatedBy = j.LastUpdatedBy,
+                            CreateDate = j.CreateDate,
+                            LastUpdateDate = j.LastUpdateDate,
+                            RequiredJobId = j.RequiredJobId,
+                            ComputeTime = j.ComputeTime,
+                            Position = j.Position,
+                            ShowInJobOverview = j.ShowInJobOverview,
+                            Acronym = j.Acronym,
+                            IsDefaultBreak = j.IsDefaultBreak
                         }).FirstOrDefault();
 
             db.Dispose();
@@ -52,7 +80,8 @@ namespace TimeTracker.Model
                             ComputeTime = j.ComputeTime,
                             Position = j.Position,
                             ShowInJobOverview = j.ShowInJobOverview,
-                            Acronym = j.Acronym
+                            Acronym = j.Acronym,
+                            IsDefaultBreak = j.IsDefaultBreak
                         }).FirstOrDefault();
 
             db.Dispose();
@@ -78,7 +107,8 @@ namespace TimeTracker.Model
                             ComputeTime = j.ComputeTime,
                             Position = j.Position,
                             ShowInJobOverview = j.ShowInJobOverview,
-                            Acronym = j.Acronym
+                            Acronym = j.Acronym,
+                            IsDefaultBreak = j.IsDefaultBreak
                         }).FirstOrDefault();
 
             db.Dispose();
@@ -108,6 +138,7 @@ namespace TimeTracker.Model
                             Position = j.Position,
                             ShowInJobOverview = j.ShowInJobOverview,
                             Acronym = j.Acronym,
+                            IsDefaultBreak = j.IsDefaultBreak
                         }).ToList();
 
             db.Dispose();
@@ -162,6 +193,7 @@ namespace TimeTracker.Model
                             Position = j.Position,
                             ShowInJobOverview = j.ShowInJobOverview,
                             Acronym = j.Acronym,
+                            IsDefaultBreak = j.IsDefaultBreak
                         }).ToList();
 
             db.Dispose();
@@ -178,10 +210,16 @@ namespace TimeTracker.Model
             foreach (RoleDepartmentAccess r in deptlist) 
             {
                 var jobtypelist = jobtypeDept.GetJobTypeList(r.DepartmentId);
-                data.AddRange(jobtypelist);
+                //data.AddRange(jobtypelist);
+                foreach(JobType j in jobtypelist)
+                {
+                    if (data.FirstOrDefault(d => d.Id == j.Id) == null) 
+                    {
+                        data.Add(j);
+                    }
+                }
             }
-            data = data.Distinct().ToList();
-
+            //data = data.Distinct().ToList();
             db.Dispose();
 
             return data;
@@ -308,6 +346,7 @@ namespace TimeTracker.Model
             t_jobtype.Position = jobtype.Position;
             t_jobtype.ShowInJobOverview = jobtype.ShowInJobOverview;
             t_jobtype.Acronym = jobtype.Acronym;
+            t_jobtype.IsDefaultBreak = jobtype.IsDefaultBreak;
             return t_jobtype;
         }
 
@@ -323,6 +362,7 @@ namespace TimeTracker.Model
             t_jobtype.Position = jobtype.Position;
             t_jobtype.ShowInJobOverview = jobtype.ShowInJobOverview;
             t_jobtype.Acronym = jobtype.Acronym;
+            t_jobtype.IsDefaultBreak = jobtype.IsDefaultBreak;
         }
 
     }

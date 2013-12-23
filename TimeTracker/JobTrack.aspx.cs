@@ -27,7 +27,7 @@ namespace TimeTracker
                 calendarExtenderDate.EndDate = DateTime.Now;
                 txtBoxDate.Text = DateTime.Now.ToString("dd MMM yyyy");
                 labelDay.Text = DateTime.Now.DayOfWeek.ToString()+", "+DateTime.Today.ToString("dd MMM yyyy");
-
+                InitializeLabelTimeClock(DateTime.Today);
                 InitializeWorkingHours();
                 InitializeGrid();
             }
@@ -49,6 +49,7 @@ namespace TimeTracker
                 labelDay.ForeColor = System.Drawing.ColorTranslator.FromHtml("#0088cc");
                 //LabelTotalHours.ForeColor = System.Drawing.ColorTranslator.FromHtml("#0088cc");
             }
+            InitializeLabelTimeClock(date);
             InitializeWorkingHours();
             InitializeGrid();
         }
@@ -58,9 +59,10 @@ namespace TimeTracker
             Session["StartTime"] = null;
             JobTracker jobtracker = new JobTracker();
             DateTime selectedDate = DateTime.Parse(txtBoxDate.Text);
+            int userid = Convert.ToInt32(Session["UserId"]);
             bool noError = true;
-
-            if (jobtracker.HasUnclosedJobs(Convert.ToInt32(Session["UserId"])))
+            
+            if (jobtracker.HasUnclosedJobs(userid))
             {
                 noError = false;
                 panelAlertHeader2.CssClass = "modalAlertHeader";
@@ -72,13 +74,27 @@ namespace TimeTracker
             if (selectedDate.CompareTo(DateTime.Today) < 0)
             {
                 SupervisorMapping supmap = new SupervisorMapping();
-                if (supmap.GetActiveSupervisors(Convert.ToInt32(Session["UserId"])).Count < 1) 
+                if (supmap.GetActiveSupervisors(userid).Count < 1)
                 {
                     noError = false;
                     panelAlertHeader2.CssClass = "modalAlertHeader";
                     alertModalBtnOK2.CssClass = "buttonalert";
                     labelAlertHeader2.Text = "Error";
                     labelAlertMessage2.Text = "Sorry you cannot add job on previous date without a direct supervisor. Please contact your system administrator.";
+                    programmaticAlertModalPopup2.Show();
+                }
+            }
+            else 
+            {
+                string errMsg = "";
+                errMsg = jobtracker.GetError(userid, selectedDate, 7);
+                if (errMsg.Trim() != "")
+                {
+                    noError = false;
+                    panelAlertHeader2.CssClass = "modalAlertHeader";
+                    alertModalBtnOK2.CssClass = "buttonalert";
+                    labelAlertHeader2.Text = "Error";
+                    labelAlertMessage2.Text = errMsg.Trim() + " Please settle error first.";
                     programmaticAlertModalPopup2.Show();
                 }
             }
@@ -147,6 +163,21 @@ namespace TimeTracker
                         alertModalBtnOK2.CssClass = "buttonalert";
                         labelAlertHeader2.Text = "Error";
                         labelAlertMessage2.Text = "Sorry you cannot edit job on previous date without a direct supervisor. Please contact your system administrator.";
+                        programmaticAlertModalPopup2.Show();
+                    }
+                }
+                else 
+                {
+                    JobTracker jobtracker = new JobTracker();
+                    string errMsg = "";
+                    errMsg = jobtracker.GetError(userid, date, 7);
+                    if (errMsg.Trim() != "")
+                    {
+                        noError = false;
+                        panelAlertHeader2.CssClass = "modalAlertHeader";
+                        alertModalBtnOK2.CssClass = "buttonalert";
+                        labelAlertHeader2.Text = "Error";
+                        labelAlertMessage2.Text = errMsg.Trim() + " Please settle error first.";
                         programmaticAlertModalPopup2.Show();
                     }
                 }
@@ -231,8 +262,7 @@ namespace TimeTracker
             List<JobTracker> data = new List<JobTracker>();
             DateTime date = Convert.ToDateTime(txtBoxDate.Text);
             data = jobTracker.GetJobTrackerList(userid,date);
-            Converter model = new Converter();
-
+            //Converter model = new Converter();
             //DataTable table = model.ConvertToDataTable(data);
 
             gridJobTrack.DataSource = data;
@@ -252,6 +282,29 @@ namespace TimeTracker
                 LabelTotalHours.ForeColor = System.Drawing.ColorTranslator.FromHtml("#ff0000");
             
         }
+
+        private void InitializeLabelTimeClock(DateTime seltime) 
+        {
+            TimeClock timeclock = new TimeClock();
+            int userid = Convert.ToInt32(Session["UserId"]);
+            DateTime sdate = Convert.ToDateTime(seltime.ToString("yyyy-MM-dd") + " 00:00");
+            DateTime edate = Convert.ToDateTime(seltime.ToString("yyyy-MM-dd") + " 23:59");
+            User user = new User();
+            user = user.GetUser(userid);
+            if (user != null)
+            {
+                timeclock = timeclock.GetStartEndTime(Convert.ToInt32(user.EmployeeNumber), sdate, edate);
+            }
+            if (timeclock == null)
+            {
+                LabelTimeClock.Text = "";
+            }
+            else 
+            {
+                LabelTimeClock.Text = "Time-In: "+timeclock.starttime.ToString("hh:mm tt")+", Time-Out: " +timeclock.endtime.ToString("hh:mm tt");
+            }
+        }
+
         #endregion
 
         #region MODAL

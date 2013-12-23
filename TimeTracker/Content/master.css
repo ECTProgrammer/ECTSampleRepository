@@ -226,6 +226,7 @@ h2
     padding: 4px 4px 4px 4px; 
     color: #2e6e9e; 
     background-color: #e5f2fc; 
+    border: 1px solid #ffffff;
     border-left: 1px solid #c8ccd1; 
     
 }
@@ -447,5 +448,22 @@ h2
     height:100%;
 }
 /********************* End top navigation ***************************/
-
+table.gridviewcontainer {
+    width:90%;
+    height:330px;
+    overflow:scroll;
+    
+}
+table.gridviewcontainer tr.gridviewcontainerheader{
+        position:fixed;
+        width:90%;
+        overflow:hidden;
+        white-space:nowrap;
+        margin:0;
+        z-index:20;
+    }
+    table.gridviewcontainer tr:nth-child(2) td 
+    {
+        padding-top:40px;
+    }
 

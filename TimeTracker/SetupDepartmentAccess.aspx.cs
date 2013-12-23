@@ -166,6 +166,7 @@ namespace TimeTracker
                 CheckBox cb = (CheckBox)modalGridViewDepartment.Rows[i].FindControl("modalChkBoxSelect");
                 cb.Checked = modalChkboxAll.Checked;
             }
+            this.programmaticModalPopup.Show();
         }
 
         #region OTHERS

@@ -542,6 +542,9 @@
     <Compile Include="T_SupervisorMapping.cs">
       <DependentUpon>TimeTrackerModel.tt</DependentUpon>
     </Compile>
+    <Compile Include="T_TimeClock.cs">
+      <DependentUpon>TimeTrackerModel.tt</DependentUpon>
+    </Compile>
     <Compile Include="T_TimeSetting.cs">
       <DependentUpon>TimeTrackerModel.tt</DependentUpon>
     </Compile>

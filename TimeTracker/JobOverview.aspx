@@ -41,7 +41,7 @@
                     <ajaxToolKit:TabContainer ID="tabContainerJobOverview" runat="server">
                         <ajaxToolKit:TabPanel ID="tabPanelJobSummary" runat="server" HeaderText="Job Overview Summary">
                             <ContentTemplate>
-                                    <asp:Panel runat="server" ScrollBars="Auto" Width="100%">
+                                    <asp:Panel runat="server" ScrollBars="Auto" Width="100%" style="max-height:350px">
                                         <div style="margin:10px 10px 10px 10px">
                                             <asp:GridView ID="gridViewSummary" runat="server" AutoGenerateColumns="false" CssClass="gridView" ShowHeaderWhenEmpty="true"  OnRowDataBound="gridViewSummary_RowDataBound">
                                                 <EmptyDataRowStyle/>
@@ -57,7 +57,7 @@
                         </ajaxToolKit:TabPanel>
                         <ajaxToolKit:TabPanel ID="tabPanelJobDetails" runat="server" HeaderText="Job Overview Details">
                             <ContentTemplate>
-                                    <asp:Panel runat="server" ScrollBars="Auto" Width="100%">
+                                    <asp:Panel runat="server" ScrollBars="Auto" Width="100%" style="max-height:350px">
                                         <div style="margin:10px 10px 10px 10px">
                                             <asp:GridView ID="gridViewDetail" runat="server" AutoGenerateColumns="false" CssClass="gridView" ShowHeaderWhenEmpty="true"  OnRowCreated="gridViewDetail_RowCreated" OnRowDataBound="gridViewDetail_RowDataBound">
                                                 <EmptyDataRowStyle/>
@@ -73,7 +73,7 @@
                         </ajaxToolKit:TabPanel>
                         <ajaxToolKit:TabPanel ID="tabPanelJobFlow" runat="server" HeaderText="Process Flow">
                             <ContentTemplate>
-                                    <asp:Panel  runat="server" ScrollBars="Auto" Width="100%">
+                                    <asp:Panel  runat="server" ScrollBars="Auto" Width="100%" style="max-height:500px">
                                         <div style="margin:10px 10px 10px 10px">
                                             <asp:GridView ID="gridViewJobFlow" runat="server" AutoGenerateColumns="false" CssClass="gridView" ShowHeaderWhenEmpty="true"  OnRowCreated="gridViewJobFlow_RowCreated" OnRowDataBound="gridViewJobFlow_RowDataBound">
                                                 <EmptyDataRowStyle/>
