@@ -567,7 +567,7 @@ namespace TimeTracker
                 generateBlank = true;
 
             GenerateStartMin(Convert.ToInt32(modalDropDownStartTimeHour.SelectedItem.Value));
-            GenerateEndHour(Convert.ToInt32(modalDropDownStartTimeHour.SelectedItem.Value), Convert.ToInt32(modalDropDownStartTimeMin.SelectedItem.Value), generateBlank, modalDropDownEndTimeHour.Items.Count == 0 ? "" : modalDropDownEndTimeHour.SelectedItem.Text.Trim() + ":" + modalDropDownEndTimeMin.SelectedItem.Text.Trim());
+            GenerateEndHour(Convert.ToInt32(modalDropDownStartTimeHour.SelectedItem.Value), Convert.ToInt32(modalDropDownStartTimeMin.SelectedItem.Value), generateBlank, modalDropDownEndTimeHour.Items.Count == 0 ? "" : modalDropDownEndTimeHour.SelectedItem.Text.Trim() + ":" + (modalDropDownEndTimeMin.Items.Count < 1 ? "00" : modalDropDownEndTimeMin.SelectedItem.Text.Trim()));
             GenerateEndMin(modalDropDownEndTimeMin.Items.Count == 0 ? "" : modalDropDownEndTimeMin.SelectedItem.Text.Trim() + ":" + modalDropDownEndTimeMin.SelectedItem.Text.Trim());
             
             TimeSpan selectedTime = TimeSpan.Parse(modalDropDownStartTimeHour.SelectedValue + ":" + modalDropDownStartTimeMin.SelectedValue);
@@ -1220,18 +1220,17 @@ namespace TimeTracker
 
             for (int i = 0; i < availableTime.Count; i++)
             {
-                if (curtime != availableTime[i].Hours)
+                if (curtime != Convert.ToInt32(Math.Floor(availableTime[i].TotalHours)))
                 {
-                    //double th = availableTime[i].TotalHours;
-                    curtime = Convert.ToInt32(availableTime[i].TotalHours);
-                    if (hours.ContainsKey("00") && curtime == 0 && i == (availableTime.Count - 1)) //prevent using 00 as key for startime 00 and endtime 00
-                    {
-                        hours.Add("24", curtime > 9 ? curtime.ToString() : "0" + curtime.ToString());
-                    }
-                    else
-                    {
+                    curtime = Convert.ToInt32(Math.Floor(availableTime[i].TotalHours));
+                    //if (hours.ContainsKey("24") && curtime == 0 && i == (availableTime.Count - 1)) //prevent using 00 as key for startime 00 and endtime 00
+                    //{
+                    //    hours.Add("24", curtime > 9 ? curtime.ToString() : "0" + curtime.ToString());
+                    //}
+                    //else
+                    //{
                         hours.Add(curtime > 9 ? curtime.ToString() : "0" + curtime.ToString(), curtime > 9 ? curtime.ToString() : "0" + curtime.ToString());
-                    }
+                    //}
                 }
             }
             modalDropDownEndTimeHour.DataSource = hours;
@@ -1241,12 +1240,20 @@ namespace TimeTracker
 
             if (selectedTime.Trim() != "")
             {
-                DateTime selEndDate = Convert.ToDateTime(selectedTime);
                 string seletime = "";
-                if (selectedDate.Date < selEndDate.Date)
-                    seletime = "24:00:00";
-                else
-                    seletime = selEndDate.TimeOfDay.ToString();
+                if (selectedTime.Length > 10)
+                {
+                    DateTime selEndDate = Convert.ToDateTime(selectedTime);
+                    
+                    if (selectedDate.Date < selEndDate.Date)
+                        seletime = "24:00:00";
+                    else
+                        seletime = selEndDate.TimeOfDay.ToString();
+                }
+                else 
+                {
+                    seletime = selectedTime;
+                }
                 string[] s = seletime.Split(':');
                 foreach (ListItem i in modalDropDownEndTimeHour.Items)
                 {
