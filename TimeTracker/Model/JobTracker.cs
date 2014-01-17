@@ -1552,9 +1552,11 @@ namespace TimeTracker.Model
                     {
                         TimeSetting timesetting = new TimeSetting();
                         timesetting = timesetting.GetTimeSetting();
-                        if (timeclock.starttime.AddMinutes(timesetting.Interval) < Convert.ToDateTime(data[0].StartTime))
+                        //if (timeclock.starttime.AddMinutes(timesetting.Interval) < Convert.ToDateTime(data[0].StartTime))
+                        if (timeclock.starttime.AddMinutes(30) < Convert.ToDateTime(data[0].StartTime))
                             result = true;
-                        if (timeclock.endtime.AddMinutes(-1 * timesetting.Interval) > Convert.ToDateTime(data[data.Count - 1].EndTime))
+                        //if (timeclock.endtime.AddMinutes(-1 * timesetting.Interval) > Convert.ToDateTime(data[data.Count - 1].EndTime))
+                        if (timeclock.endtime.AddMinutes(-30) > Convert.ToDateTime(data[data.Count - 1].EndTime))
                             result = true;
                     }
                     else 

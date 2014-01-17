@@ -83,7 +83,7 @@
                             </div>
                         </ProgressTemplate>
                     </asp:UpdateProgress>
-                    <asp:Panel Id="panelUserlinkModal" runat="server" style="display:none">
+                    <asp:Panel Id="panelUserlinkModal" runat="server" style="width:500px;display:none">
                         <asp:Panel ID="panelUserlinkModalHeader" runat="server" CssClass="modalHeader">User Setting</asp:Panel>
                         <asp:Panel ID="panelUserlinkModalContent" runat="server" CssClass="modal">
                             <asp:Label ID="modalUserlinkLabelError" runat="server" CssClass="validation" Visible="false"></asp:Label>

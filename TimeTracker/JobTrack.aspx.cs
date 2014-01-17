@@ -62,7 +62,7 @@ namespace TimeTracker
             int userid = Convert.ToInt32(Session["UserId"]);
             bool noError = true;
             
-            if (jobtracker.HasUnclosedJobs(userid))
+            if (jobtracker.HasUnclosedJobs(userid)) //check if user has unclosed jobs
             {
                 noError = false;
                 panelAlertHeader2.CssClass = "modalAlertHeader";
@@ -87,7 +87,7 @@ namespace TimeTracker
             else 
             {
                 string errMsg = "";
-                errMsg = jobtracker.GetError(userid, selectedDate, 7);
+                errMsg = jobtracker.GetError(userid, selectedDate, 7); //check if there is an error
                 if (errMsg.Trim() != "")
                 {
                     noError = false;
@@ -210,7 +210,7 @@ namespace TimeTracker
                         endtime = jobtracker.EndTime.ToString();
                     //InitializeModalEndTime(endtime);
 
-                    GenerateEndHour(Convert.ToInt32(modalDropDownStartTimeHour.SelectedItem.Value), Convert.ToInt32(modalDropDownStartTimeMin.SelectedItem.Value), generateBlank, endtime == "" ? "" : Convert.ToDateTime(jobtracker.EndTime).TimeOfDay.ToString());
+                    GenerateEndHour(Convert.ToInt32(modalDropDownStartTimeHour.SelectedItem.Value), Convert.ToInt32(modalDropDownStartTimeMin.SelectedItem.Value), generateBlank, endtime == "" ? "" : Convert.ToDateTime(jobtracker.EndTime).ToString());
                     GenerateEndMin(endtime == "" ? "" : Convert.ToDateTime(jobtracker.EndTime).TimeOfDay.ToString());
                     //if (datalist[i].ApprovedBy != null && datalist[i].ApprovedBy != userid && datalist[i].ApprovedBy != 0) 
                     //{
@@ -267,6 +267,16 @@ namespace TimeTracker
 
             gridJobTrack.DataSource = data;
             gridJobTrack.DataBind();
+            Session["StartTime"] = null;
+            GenerateStartHour();
+            if (modalDropDownStartTimeHour.Items.Count < 1)
+            {
+                linkBtnAddJobTrack.Visible = false;
+            }
+            else 
+            {
+                linkBtnAddJobTrack.Visible = true;
+            }
         }
 
         protected void InitializeWorkingHours() 
@@ -304,10 +314,10 @@ namespace TimeTracker
                 LabelTimeClock.Text = "Time-In: "+timeclock.starttime.ToString("hh:mm tt")+", Time-Out: " +timeclock.endtime.ToString("hh:mm tt");
             }
         }
-
         #endregion
 
         #region MODAL
+
         #region COMMAND
         protected void modalBtnSubmit_Command(object sender, CommandEventArgs e) 
         {
@@ -355,7 +365,15 @@ namespace TimeTracker
                 //DateTime startTime = DateTime.Parse(selectedDate.Year + "-" + selectedDate.Month + "-" + selectedDate.Day + " " + modalDropDownStartTime.SelectedValue + ":00");
                 DateTime startTime = DateTime.Parse(selectedDate.Year + "-" + selectedDate.Month + "-" + selectedDate.Day + " " + modalDropDownStartTimeHour.SelectedValue+":"+modalDropDownStartTimeMin.SelectedValue + ":00");
                 //DateTime endTime = DateTime.Parse(selectedDate.Year + "-" + selectedDate.Month + "-" + selectedDate.Day + " " + modalDropDownEndTime.SelectedValue + ":00");
-                DateTime endTime = DateTime.Parse(selectedDate.Year + "-" + selectedDate.Month + "-" + selectedDate.Day + " " + modalDropDownEndTimeHour.SelectedValue+":"+modalDropDownEndTimeMin.SelectedValue + ":00");
+                DateTime endTime;
+                if (modalDropDownEndTimeHour.SelectedValue == "24") //end date selected is 12:00 AM next day
+                {
+                    endTime = DateTime.Parse((selectedDate.AddDays(1)).Year + "-" + (selectedDate.AddDays(1)).Month + "-" + (selectedDate.AddDays(1)).Day + " 00:00:00");
+                }
+                else 
+                {
+                    endTime = DateTime.Parse(selectedDate.Year + "-" + selectedDate.Month + "-" + selectedDate.Day + " " + modalDropDownEndTimeHour.SelectedValue + ":" + modalDropDownEndTimeMin.SelectedValue + ":00");
+                }
                 jobTracker.StartTime = startTime;
                 jobTracker.ScheduleDate = selectedDate;
                 //if (modalDropDownEndTime.SelectedItem.Text != "Select End Time")
@@ -396,7 +414,14 @@ namespace TimeTracker
                 //}
                 if (e.CommandArgument.ToString() == "Add")
                 {
-
+                    if (selectedDate.CompareTo(DateTime.Today) != 0) 
+                    {
+                        if ((DateTime.Now.Subtract(startTime)).TotalHours < 24)
+                        {
+                            jobTracker.Status = "Approved";
+                            jobTracker.ApprovedBy = userid;
+                        }
+                    }
                     jobTracker.CreateDate = DateTime.Now;
                     jobTracker.SupervisorRemarks = "";
                     jobTracker.CreatedBy = userid;
@@ -406,6 +431,14 @@ namespace TimeTracker
                 }
                 else 
                 {
+                    if (selectedDate.CompareTo(DateTime.Today) != 0)
+                    {
+                        if ((DateTime.Now.Subtract(startTime)).TotalHours < 2)
+                        {
+                            jobTracker.Status = "Approved";
+                            jobTracker.ApprovedBy = userid;
+                        }
+                    }
                     jobTracker.Id = Convert.ToInt32(e.CommandArgument);
                     jobTracker.ActionRequest = "Update";
                     jobTracker.Update(jobTracker);
@@ -562,7 +595,7 @@ namespace TimeTracker
             DateTime selectedDate = DateTime.Parse(txtBoxDate.Text);
             if (selectedDate.CompareTo(DateTime.Today) == 0)
                 generateBlank = true;
-            GenerateEndHour(Convert.ToInt32(modalDropDownStartTimeHour.SelectedItem.Value), Convert.ToInt32(modalDropDownStartTimeMin.SelectedItem.Value), generateBlank, modalDropDownEndTimeHour.Items.Count == 0 ? "" : modalDropDownEndTimeHour.SelectedItem.Text.Trim() + ":" + modalDropDownEndTimeMin.SelectedItem.Text.Trim());
+            GenerateEndHour(Convert.ToInt32(modalDropDownStartTimeHour.SelectedItem.Value), Convert.ToInt32(modalDropDownStartTimeMin.SelectedItem.Value), generateBlank, modalDropDownEndTimeHour.Items.Count == 0 ? "" : modalDropDownEndTimeHour.SelectedItem.Text.Trim() + ":" + (modalDropDownEndTimeMin.Items.Count == 0 ? "00" : modalDropDownEndTimeMin.SelectedItem.Text.Trim()));
             GenerateEndMin(modalDropDownEndTimeMin.Items.Count == 0 ? "" : modalDropDownEndTimeHour.SelectedItem.Text.Trim() + ":" + modalDropDownEndTimeMin.SelectedItem.Text.Trim());
             TimeSpan curtime = TimeSpan.Parse(DateTime.Now.Hour + ":" + DateTime.Now.Minute);
             TimeSpan selectedTime = TimeSpan.Parse(modalDropDownStartTimeHour.SelectedValue + ":" + modalDropDownStartTimeMin.SelectedValue);
@@ -854,7 +887,15 @@ namespace TimeTracker
                     else if (usedTime[i].EndTime != null)
                     {
                         TimeSpan stime = Convert.ToDateTime(usedTime[i].StartTime).TimeOfDay;
-                        TimeSpan etime = new TimeSpan(Convert.ToDateTime(usedTime[i].EndTime).Hour, Convert.ToDateTime(usedTime[i].EndTime).Minute, 0);
+                        TimeSpan etime;
+                        if (Convert.ToDateTime(usedTime[i].EndTime).Date > Convert.ToDateTime(usedTime[i].StartTime).Date)
+                        {
+                            etime = new TimeSpan(24,0,0);
+                        }
+                        else 
+                        {
+                            etime = new TimeSpan(Convert.ToDateTime(usedTime[i].EndTime).Hour, Convert.ToDateTime(usedTime[i].EndTime).Minute, 0);
+                        }
                         if (availableTime[j] >= stime && availableTime[j] < etime)
                         {
                             if (Session["StartTime"] != null && (startTime >= stime && startTime < etime))
@@ -885,14 +926,16 @@ namespace TimeTracker
             }
             
 
-            int h = availableTime[availableTime.Count - 1].Hours;
-            for (int i = 0; i < availableTime.Count - 1; i++)
-            {
-                if (availableTime[i].Hours == h)
-                    break;
-                else if (i == (availableTime.Count - 2))
-                    availableTime.RemoveAt(availableTime.Count - 1);
-            }
+            //int h = availableTime[availableTime.Count - 1].Hours;
+            //for (int i = 0; i < availableTime.Count - 1; i++)
+            //{
+            //    if (availableTime[i].Hours == h)
+            //        break;
+            //    else if (i == (availableTime.Count - 2))
+            //        availableTime.RemoveAt(availableTime.Count - 1);
+            //}
+            if (availableTime.Count > 0 && (availableTime[availableTime.Count - 1].Hours != availableTime[availableTime.Count - 2].Hours))
+                availableTime.RemoveAt(availableTime.Count - 1);
 
             //make sure that there is no gap between time
             if (usedTime.Count > 0)
@@ -956,7 +999,10 @@ namespace TimeTracker
                 }
                 modalDropDownStartTimeHour.Items[index].Selected = true;
             }
-            else 
+            else if (hour.Count < 1) 
+            {
+            }
+            else
             {
                 modalDropDownStartTimeHour.Items[modalDropDownStartTimeHour.Items.Count - 1].Selected = true;
             }
@@ -1033,7 +1079,7 @@ namespace TimeTracker
             }
 
             //make sure that there is no gap between time
-            if (Convert.ToInt32(modalDropDownStartTimeHour.Items[modalDropDownStartTimeHour.Items.Count - 1].Text) == hour && availableTime.Count > 1 && usedTime.Count > 0)
+            if (Convert.ToInt32(modalDropDownStartTimeHour.Items[modalDropDownStartTimeHour.Items.Count - 1].Text) == hour && availableTime.Count > 1 && usedTime.Count > 1)
             {
                 availableTime.RemoveRange(1, availableTime.Count - 1);
             }
@@ -1113,11 +1159,18 @@ namespace TimeTracker
             
             List<TimeSpan> availableTime = new List<TimeSpan>();
 
-            for (int i = hour; i < 24; i++)
+            for (int i = hour; i < 25; i++)
             {
-                for (int j = 0; j < 60; j += timeSetting.Interval)
+                if (i != 24)
                 {
-                    availableTime.Add(new TimeSpan(i, j, 0));
+                    for (int j = 0; j < 60; j += timeSetting.Interval)
+                    {
+                        availableTime.Add(new TimeSpan(i, j, 0));
+                    }
+                }
+                else //adding 24:00
+                {
+                    availableTime.Add(new TimeSpan(i, 0, 0));
                 }
             }
 
@@ -1129,14 +1182,14 @@ namespace TimeTracker
             Dictionary<string, string> hours = new Dictionary<string, string>();
             jobtracker = jobtracker.GetNextUsedTime(userid, DateTime.Parse(selectedDate.Year + "-" + selectedDate.Month + "-" + selectedDate.Day + " " + selTime.ToString()), selectedDate);
 
-            TimeSpan stime = jobtracker == null ? new TimeSpan(23,59,59) : Convert.ToDateTime(jobtracker.StartTime).TimeOfDay;
+            TimeSpan stime = jobtracker == null ? new TimeSpan(24,0,0) : Convert.ToDateTime(jobtracker.StartTime).TimeOfDay;
             if (Session["StartTime"] != null) 
             {
                 TimeSpan ts = TimeSpan.Parse(Session["StartTime"].ToString());
                 if (ts == stime)
                 {
                     jobtracker = jobtracker.GetNextUsedTime(userid, DateTime.Parse(selectedDate.Year + "-" + selectedDate.Month + "-" + selectedDate.Day + " " + Session["StartTime"].ToString()), selectedDate);
-                    stime = jobtracker == null ? new TimeSpan(23, 59, 59) : Convert.ToDateTime(jobtracker.StartTime).TimeOfDay;
+                    stime = jobtracker == null ? new TimeSpan(24, 0, 0) : Convert.ToDateTime(jobtracker.StartTime).TimeOfDay;
                 }
             }
 
@@ -1169,8 +1222,16 @@ namespace TimeTracker
             {
                 if (curtime != availableTime[i].Hours)
                 {
-                    curtime = availableTime[i].Hours;
-                    hours.Add(curtime > 9 ? curtime.ToString() : "0" + curtime.ToString(), curtime > 9 ? curtime.ToString() : "0" + curtime.ToString());
+                    //double th = availableTime[i].TotalHours;
+                    curtime = Convert.ToInt32(availableTime[i].TotalHours);
+                    if (hours.ContainsKey("00") && curtime == 0 && i == (availableTime.Count - 1)) //prevent using 00 as key for startime 00 and endtime 00
+                    {
+                        hours.Add("24", curtime > 9 ? curtime.ToString() : "0" + curtime.ToString());
+                    }
+                    else
+                    {
+                        hours.Add(curtime > 9 ? curtime.ToString() : "0" + curtime.ToString(), curtime > 9 ? curtime.ToString() : "0" + curtime.ToString());
+                    }
                 }
             }
             modalDropDownEndTimeHour.DataSource = hours;
@@ -1180,7 +1241,13 @@ namespace TimeTracker
 
             if (selectedTime.Trim() != "")
             {
-                string[] s = selectedTime.Split(':');
+                DateTime selEndDate = Convert.ToDateTime(selectedTime);
+                string seletime = "";
+                if (selectedDate.Date < selEndDate.Date)
+                    seletime = "24:00:00";
+                else
+                    seletime = selEndDate.TimeOfDay.ToString();
+                string[] s = seletime.Split(':');
                 foreach (ListItem i in modalDropDownEndTimeHour.Items)
                 {
                     if (i.Text.Trim() == s[0].Trim())
@@ -1208,10 +1275,16 @@ namespace TimeTracker
                 timeSetting = timeSetting.GetTimeSetting();
                 TimeSpan selTime = new TimeSpan(Convert.ToInt32(modalDropDownStartTimeHour.SelectedItem.Value), Convert.ToInt32(modalDropDownStartTimeMin.SelectedItem.Value), 0);
                 List<TimeSpan> availableTime = new List<TimeSpan>();
-
-                for (int j = 0; j < 60; j += timeSetting.Interval)
+                if (hour != 24)
                 {
-                    availableTime.Add(new TimeSpan(hour, j, 0));
+                    for (int j = 0; j < 60; j += timeSetting.Interval)
+                    {
+                        availableTime.Add(new TimeSpan(hour, j, 0));
+                    }
+                }
+                else 
+                {
+                    availableTime.Add(new TimeSpan(hour, 0, 0));
                 }
 
                 if (selectedDate.CompareTo(DateTime.Today) == 0)
@@ -1230,6 +1303,7 @@ namespace TimeTracker
                         stime = jobtracker == null ? new TimeSpan(23, 59, 59) : Convert.ToDateTime(jobtracker.StartTime).TimeOfDay;
                     }
                 }
+
                 for (int j = 0; j < availableTime.Count; j++)
                 {
                     if (availableTime[j] > stime)
@@ -1251,7 +1325,6 @@ namespace TimeTracker
 
                 int curtime = 60;
                 
-
                 for (int i = 0; i < availableTime.Count; i++)
                 {
                     if (curtime != availableTime[i].Minutes)
@@ -1276,7 +1349,6 @@ namespace TimeTracker
                         i.Selected = true;
                 }
             }
-            
         }
 
         //private void InitializeModalEndTime(string value = "") 
