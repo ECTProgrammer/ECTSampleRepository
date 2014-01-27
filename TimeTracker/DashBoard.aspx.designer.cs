@@ -202,6 +202,15 @@ namespace TimeTracker {
         protected global::System.Web.UI.WebControls.TextBox txtBoxBottomJobId;
         
         /// <summary>
+        /// txtBoxBottomCustomer control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.TextBox txtBoxBottomCustomer;
+        
+        /// <summary>
         /// calExtBottomFromDate control.
         /// </summary>
         /// <remarks>
@@ -346,6 +355,60 @@ namespace TimeTracker {
         protected global::System.Web.UI.WebControls.Button modalBtnCancel;
         
         /// <summary>
+        /// panelModalBottom control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Panel panelModalBottom;
+        
+        /// <summary>
+        /// panelModalHeaderBottom control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Panel panelModalHeaderBottom;
+        
+        /// <summary>
+        /// labelmodalBottom control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Label labelmodalBottom;
+        
+        /// <summary>
+        /// panelModalContentBottom control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Panel panelModalContentBottom;
+        
+        /// <summary>
+        /// gridViewModalBottom control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.GridView gridViewModalBottom;
+        
+        /// <summary>
+        /// btnDoneBottom control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Button btnDoneBottom;
+        
+        /// <summary>
         /// btnHidden control.
         /// </summary>
         /// <remarks>
@@ -355,6 +418,15 @@ namespace TimeTracker {
         protected global::System.Web.UI.WebControls.Button btnHidden;
         
         /// <summary>
+        /// btnHiddenBottom control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Button btnHiddenBottom;
+        
+        /// <summary>
         /// programmaticModalPopup control.
         /// </summary>
         /// <remarks>
@@ -362,5 +434,14 @@ namespace TimeTracker {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::AjaxControlToolkit.ModalPopupExtender programmaticModalPopup;
+        
+        /// <summary>
+        /// programmaticModalPopupBottom control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::AjaxControlToolkit.ModalPopupExtender programmaticModalPopupBottom;
     }
 }

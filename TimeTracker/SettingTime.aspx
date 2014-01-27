@@ -14,7 +14,7 @@
                 </ProgressTemplate>
             </asp:UpdateProgress>  
 
-           <asp:Panel ID="panelHeader" runat="server" CssClass="modalHeader">Job Tracker</asp:Panel>
+           <asp:Panel ID="panelHeader" runat="server" CssClass="modalHeader">Time Setting</asp:Panel>
 	       <asp:Panel ID="panelContent" runat="server" CssClass="modal">
 		        <asp:Label ID="labelAccessDenied" runat="server" Text="You do not have access rights to this page. Please contact your administrator if you need access. Thank you." Visible="false" CssClass="validation"></asp:Label>
 		        <asp:Panel ID="panelAccessOK" runat="server">

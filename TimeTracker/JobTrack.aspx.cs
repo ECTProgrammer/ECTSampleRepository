@@ -136,6 +136,7 @@ namespace TimeTracker
                 modalTxtBoxJobId.Text = "";
                 modalLabelHWSW.Text = "";
                 modalLabelHWSW.ToolTip = "";
+                modalLabelEvalNo.Text = "";
                 //modalTxtBoxJobId.Enabled = false;
                 Page.Validate();
 
@@ -184,7 +185,7 @@ namespace TimeTracker
                 if(noError)
                 {
                     JobTracker jobtracker = new JobTracker();
-                    jobtracker = jobtracker.GetJobTracker(jobtrackerId);
+                    jobtracker = jobtracker.GetJobTracker(jobtrackerId,false);
                     //List<JobTracker> datalist = new List<JobTracker>();
                     //datalist = jobtracker.GetJobTrackerList(userid, date);
                     modalLabelError.Text = "";
@@ -238,10 +239,11 @@ namespace TimeTracker
                         modalTxtBoxJobId.Text = jobtracker.JobIdNumber;
                         JobTracker jobTracker = new JobTracker();
                         jobTracker = jobTracker.GenerateHWAndSW(modalTxtBoxJobId.Text.Trim());
-                        modallabelBoxJobDescription.Text = jobTracker.pcbdesc;
-                        modallabelCustomer.Text = jobTracker.customer;
+                        modallabelBoxJobDescription.Text = jobTracker.Description;
+                        modallabelCustomer.Text = jobTracker.Customer;
                         modalLabelHWSW.Text = jobTracker.HWNo;
                         modalLabelHWSW.ToolTip = jobTracker.SWNo;
+                        modalLabelEvalNo.Text = jobTracker.EvalNo;
                     }
 
                     modalTxtBoxRemarks.Text = jobtracker.Remarks.Trim();
@@ -261,7 +263,7 @@ namespace TimeTracker
             JobTracker jobTracker = new JobTracker();
             List<JobTracker> data = new List<JobTracker>();
             DateTime date = Convert.ToDateTime(txtBoxDate.Text);
-            data = jobTracker.GetJobTrackerList(userid,date);
+            data = jobTracker.GetJobTrackerList(userid,date,false);
             //Converter model = new Converter();
             //DataTable table = model.ConvertToDataTable(data);
 
@@ -389,6 +391,9 @@ namespace TimeTracker
                 jobTracker.UserId = userid;
                 jobTracker.HWNo = modalLabelHWSW.Text;
                 jobTracker.SWNo = modalLabelHWSW.ToolTip;
+                jobTracker.Customer = modallabelCustomer.Text;
+                jobTracker.EvalNo = modalLabelEvalNo.Text;
+                jobTracker.Description = modallabelBoxJobDescription.Text;
                 if (jobTracker.JobIdNumber.Trim() != "")
                     jobTracker.JobStatus = modalDropDownJobStatus.SelectedItem.Value;
                 if (selectedDate.CompareTo(DateTime.Today) == 0)
@@ -427,7 +432,7 @@ namespace TimeTracker
                     jobTracker.CreatedBy = userid;
                     jobTracker.ActionRequest = "Add";
                     jobTracker.Insert(jobTracker);
-                    jobTracker = jobTracker.GetJobTracker(Convert.ToInt32(jobTracker.CreatedBy), Convert.ToInt32(jobTracker.LastUpdatedBy), Convert.ToDateTime(jobTracker.StartTime), Convert.ToInt32(jobTracker.JobTypeId), jobTracker.ActionRequest, jobTracker.Status);
+                    jobTracker = jobTracker.GetJobTracker(Convert.ToInt32(jobTracker.CreatedBy), Convert.ToInt32(jobTracker.LastUpdatedBy), Convert.ToDateTime(jobTracker.StartTime), Convert.ToInt32(jobTracker.JobTypeId), jobTracker.ActionRequest, jobTracker.Status,false);
                 }
                 else 
                 {
@@ -460,7 +465,7 @@ namespace TimeTracker
             JobTracker jobTracker = new JobTracker();
             JobTrackerHistory jtHist = new JobTrackerHistory();
             jobTracker.Id = Convert.ToInt32(e.CommandArgument);
-            jobTracker = jobTracker.GetJobTracker(jobTracker.Id);
+            jobTracker = jobTracker.GetJobTracker(jobTracker.Id,false);
             if (selectedDate.CompareTo(DateTime.Today) == 0 || (jobTracker.Status == "Rejected" && jobTracker.ActionRequest != "Delete"))
             {
                 jobTracker.ActionRequest = "Delete";
@@ -630,7 +635,7 @@ namespace TimeTracker
                 JobTracker jobTracker = new JobTracker();
                 //jobTracker = jobTracker.GetCustomer(modalTxtBoxJobId.Text.Trim());
                 jobTracker = jobTracker.GenerateHWAndSW(modalTxtBoxJobId.Text.Trim());
-                if (jobTracker.customer == null || jobTracker.customer == "")
+                if (jobTracker.Customer == null || jobTracker.Customer == "")
                 {
                     modalLabelError.Text = "Job Id not found in CAP.";
                     modalLabelError.Visible = true;
@@ -638,15 +643,17 @@ namespace TimeTracker
                     modallabelCustomer.Text = "";
                     modalLabelHWSW.Text = "";
                     modalLabelHWSW.ToolTip = "";
+                    modalLabelEvalNo.Text = "";
                 }
                 else 
                 {
                     modalLabelError.Text = "";
                     modalLabelError.Visible = false;
-                    modallabelBoxJobDescription.Text = jobTracker.pcbdesc;
-                    modallabelCustomer.Text =  jobTracker.customer;
+                    modallabelBoxJobDescription.Text = jobTracker.Description;
+                    modallabelCustomer.Text =  jobTracker.Customer;
                     modalLabelHWSW.Text = jobTracker.HWNo == null ? "" : jobTracker.HWNo.Trim();
                     modalLabelHWSW.ToolTip = jobTracker.SWNo == null ? "" : jobTracker.SWNo.Trim();
+                    modalLabelEvalNo.Text = jobTracker.EvalNo;
                 }
             }
             else 
@@ -655,6 +662,7 @@ namespace TimeTracker
                 modallabelCustomer.Text = "";
                 modalLabelHWSW.Text = "";
                 modalLabelHWSW.ToolTip = "";
+                modalLabelEvalNo.Text = "";
                 modalLabelError.Text = "";
                 modalLabelError.Visible = false;
             }
@@ -873,7 +881,7 @@ namespace TimeTracker
             }
 
             Dictionary<string, string> hour = new Dictionary<string, string>();
-            var usedTime = jobtracker.GetJobTrackerList(userid, selectedDate);
+            var usedTime = jobtracker.GetJobTrackerList(userid, selectedDate,false);
 
             for (int i = 0; i < usedTime.Count; i++) 
             {
@@ -1036,7 +1044,7 @@ namespace TimeTracker
                 isCurrentDate = true;
             }
             Dictionary<string, string> mins = new Dictionary<string, string>();
-            var usedTime = jobtracker.GetJobTrackerList(userid, selectedDate);
+            var usedTime = jobtracker.GetJobTrackerList(userid, selectedDate,false);
 
             for (int i = 0; i < usedTime.Count; i++)
             {

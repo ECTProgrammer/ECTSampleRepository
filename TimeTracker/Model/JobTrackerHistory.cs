@@ -11,8 +11,6 @@ namespace TimeTracker.Model
     public class JobTrackerHistory : T_JobTrackerHistory
     {
         public string jobtype { get; set; }
-        public string pcbdesc { get; set; }
-        public string customer { get; set; }
         public string totalhours { get; set; }
         public string fullname { get; set; }
 
@@ -92,6 +90,8 @@ namespace TimeTracker.Model
             data.JobStatus = jtHist.JobStatus;
             data.HWNo = jtHist.HWNo;
             data.SWNo = jtHist.SWNo;
+            data.Customer = jtHist.Customer;
+            data.EvalNo = jtHist.EvalNo;
         }
 
         private void UpdateParse(T_JobTrackerHistory t_jthist, JobTrackerHistory jthist)
@@ -114,6 +114,8 @@ namespace TimeTracker.Model
             t_jthist.JobStatus = jthist.JobStatus;
             t_jthist.HWNo = jthist.HWNo;
             t_jthist.SWNo = jthist.SWNo;
+            t_jthist.Customer = jthist.Customer;
+            t_jthist.EvalNo = jthist.EvalNo;
         }
 
         public JobTrackerHistory ConvertToHistory(JobTracker jobtracker) 
@@ -139,6 +141,8 @@ namespace TimeTracker.Model
             jthist.JobStatus = jobtracker.JobStatus;
             jthist.HWNo = jobtracker.HWNo;
             jthist.SWNo = jobtracker.SWNo;
+            jthist.Customer = jobtracker.Customer;
+            jthist.EvalNo = jobtracker.EvalNo;
 
             return jthist;
         }

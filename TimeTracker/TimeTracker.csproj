@@ -241,6 +241,7 @@
     <Content Include="JobTrack.aspx" />
     <Content Include="Login.aspx" />
     <Content Include="logo.ico" />
+    <Content Include="SettingSyncEval.aspx" />
     <Content Include="SettingTime.aspx" />
     <Content Include="packages.config" />
     <None Include="Scripts\jquery-1.8.2.intellisense.js" />
@@ -395,6 +396,13 @@
     <Compile Include="Model\RoleDepartmentAccess.cs" />
     <Compile Include="Model\Roles.cs" />
     <Compile Include="Model\RolesModuleAccess.cs" />
+    <Compile Include="SettingSyncEval.aspx.cs">
+      <DependentUpon>SettingSyncEval.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="SettingSyncEval.aspx.designer.cs">
+      <DependentUpon>SettingSyncEval.aspx</DependentUpon>
+    </Compile>
     <Compile Include="SettingTime.aspx.cs">
       <DependentUpon>SettingTime.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>

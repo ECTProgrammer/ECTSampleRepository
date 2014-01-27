@@ -50,7 +50,7 @@ namespace TimeTracker
             int userid = Convert.ToInt32(Session["UserId"]);
             JobTracker jobTracker = new JobTracker();
             List<JobTracker> data = new List<JobTracker>();
-            data = jobTracker.GetRequestNeededApproval(userid);
+            data = jobTracker.GetRequestNeededApproval(userid,false);
             Converter model = new Converter();
 
             DataTable table = model.ConvertToDataTable(data);
@@ -64,7 +64,7 @@ namespace TimeTracker
             int userid = Convert.ToInt32(Session["UserId"]);
             JobTracker jobTracker = new JobTracker();
             List<JobTracker> data = new List<JobTracker>();
-            data = jobTracker.GetPendingRequest(userid);
+            data = jobTracker.GetPendingRequest(userid,false);
             Converter model = new Converter();
 
             DataTable table = model.ConvertToDataTable(data);
@@ -78,7 +78,7 @@ namespace TimeTracker
             int userid = Convert.ToInt32(Session["UserId"]);
             JobTracker jobTracker = new JobTracker();
             List<JobTracker> data = new List<JobTracker>();
-            data = jobTracker.GetRejectedRequest(userid);
+            data = jobTracker.GetRejectedRequest(userid,false);
             Converter model = new Converter();
 
             DataTable table = model.ConvertToDataTable(data);
@@ -97,7 +97,7 @@ namespace TimeTracker
             JobTrackerHistory jtHist = new JobTrackerHistory();
             //var data = jobtracker.GetRequestNeededApproval(userid);
             Label jobtrackId = (Label)gridViewLeftPanel1.Rows[index].FindControl("gridLeftlblJobTrackId");
-            jobtracker = jobtracker.GetJobTracker(Convert.ToInt32(jobtrackId.Text));
+            jobtracker = jobtracker.GetJobTracker(Convert.ToInt32(jobtrackId.Text),false);
             //data[index].LastUpdateDate = DateTime.Now;
             //data[index].LastUpdatedBy = userid;
             jobtracker.ApprovedBy = userid;
@@ -153,7 +153,7 @@ namespace TimeTracker
                 JobTrackerHistory jtHist = new JobTrackerHistory();
                 int id = Convert.ToInt32(e.CommandArgument);
                 int userid = Convert.ToInt32(Session["UserId"]);
-                jobtracker = jobtracker.GetJobTracker(id);
+                jobtracker = jobtracker.GetJobTracker(id,false);
                 jobtracker.ApprovedBy = userid;
                 jobtracker.LastUpdatedBy = userid;
                 jobtracker.LastUpdateDate = DateTime.Now;
@@ -271,19 +271,20 @@ namespace TimeTracker
             Analysis analysis = new Analysis();
             List<Analysis> data = new List<Analysis>();
             if (isSingle)
-                data = analysis.GetAnalysis(Convert.ToDateTime(txtBoxBottomFromDate.Text), Convert.ToDateTime(txtBoxBottomToDate.Text), userid, txtBoxBottomJobId.Text.Trim());
+                data = analysis.GetAnalysis(Convert.ToDateTime(txtBoxBottomFromDate.Text), Convert.ToDateTime(txtBoxBottomToDate.Text), userid, txtBoxBottomJobId.Text.Trim(), txtBoxBottomCustomer.Text.Trim());
             else
             {
                 if (ddlBottomPersonel.Items.Count > 0)
                 {
                     if (ddlBottomPersonel.SelectedItem.Text.Trim() == "All")
                     {
-                        data = analysis.GetAnalysis(Convert.ToInt32(ddlBottomDepartment.SelectedItem.Value), Convert.ToDateTime(txtBoxBottomFromDate.Text), Convert.ToDateTime(txtBoxBottomToDate.Text), txtBoxBottomJobId.Text.Trim(), roleid);
+                        data = analysis.GetAnalysis(Convert.ToInt32(ddlBottomDepartment.SelectedItem.Value), Convert.ToDateTime(txtBoxBottomFromDate.Text), Convert.ToDateTime(txtBoxBottomToDate.Text), txtBoxBottomJobId.Text.Trim(),txtBoxBottomCustomer.Text.Trim(), roleid);
                     }
                     else
                     {
-                        data = analysis.GetAnalysis(Convert.ToDateTime(txtBoxBottomFromDate.Text), Convert.ToDateTime(txtBoxBottomToDate.Text), Convert.ToInt32(ddlBottomPersonel.SelectedItem.Value), txtBoxBottomJobId.Text.Trim());
+                        data = analysis.GetAnalysis(Convert.ToDateTime(txtBoxBottomFromDate.Text), Convert.ToDateTime(txtBoxBottomToDate.Text), Convert.ToInt32(ddlBottomPersonel.SelectedItem.Value), txtBoxBottomJobId.Text.Trim(), txtBoxBottomCustomer.Text.Trim());
                     }
+
                 }
             }
             
@@ -295,22 +296,57 @@ namespace TimeTracker
         {       
             JobTracker jobTracker = new JobTracker();
             List<JobTracker> data = new List<JobTracker>();
-            gridViewBottom2.EmptyDataText = "Please select a personel.";
+            gridViewBottom2.EmptyDataText = "No data found";
 
             if (ddlBottomPersonel.Items.Count > 0)
             {
-                if (ddlBottomPersonel.SelectedItem.Text.Trim() != "All")
-                {
-                    gridViewBottom2.EmptyDataText = "No Data Found";
-                    int personelid = Convert.ToInt32(ddlBottomPersonel.SelectedItem.Value);
-                    DateTime startdate = Convert.ToDateTime(txtBoxBottomFromDate.Text.Trim() + " 00:00:00");
-                    DateTime enddate = Convert.ToDateTime(txtBoxBottomToDate.Text.Trim() + " 23:59:59");
-                    data = jobTracker.GetJobTrackerListExcludeRejected(personelid, startdate, enddate);
-                }
+                //if (ddlBottomPersonel.SelectedItem.Text.Trim() != "All")
+                //{
+                //    gridViewBottom2.EmptyDataText = "No Data Found";
+                //    int personelid = Convert.ToInt32(ddlBottomPersonel.SelectedItem.Value);
+                //    DateTime startdate = Convert.ToDateTime(txtBoxBottomFromDate.Text.Trim() + " 00:00:00");
+                //    DateTime enddate = Convert.ToDateTime(txtBoxBottomToDate.Text.Trim() + " 23:59:59");
+                //    data = jobTracker.GetJobTrackerListExcludeRejected(personelid, startdate, enddate, false);
+                //}
+                //else 
+                //{
+                DateTime startdate = Convert.ToDateTime(txtBoxBottomFromDate.Text.Trim() + " 00:00:00");
+                DateTime enddate = Convert.ToDateTime(txtBoxBottomToDate.Text.Trim() + " 23:59:59");
+                int deptid = Convert.ToInt32(ddlBottomDepartment.SelectedValue);
+                string jobid = txtBoxBottomJobId.Text.Trim();
+                string customer = txtBoxBottomCustomer.Text.Trim();
+                int userid = Convert.ToInt32(ddlBottomPersonel.SelectedItem.Value);
+                data = jobTracker.GetJobTrackerListExcludeRejected(startdate, enddate, userid, deptid, jobid, customer);
+                //}
             }
             
             gridViewBottom2.DataSource = data;
             gridViewBottom2.DataBind();
+        }
+
+        protected void gridViewBottom_RowDataBound(object sender, GridViewRowEventArgs e)
+        {
+            if (e.Row.RowType == DataControlRowType.DataRow)
+            {
+                LinkButton approvedwork = (LinkButton)e.Row.FindControl("linkBtnBottomApprovedWork");
+                if (approvedwork.Text.Trim() == "0 min") 
+                {
+                    approvedwork.Enabled = false;
+                    approvedwork.Font.Underline = false;
+                }
+                LinkButton waitingwork = (LinkButton)e.Row.FindControl("linkBtnBottomWaitingWork");
+                if (waitingwork.Text.Trim() == "0 min")
+                {
+                    waitingwork.Enabled = false;
+                    waitingwork.Font.Underline = false;
+                }
+                LinkButton rejectedwork = (LinkButton)e.Row.FindControl("linkBtnBottomRejectedWork");
+                if (rejectedwork.Text.Trim() == "0 min")
+                {
+                    rejectedwork.Enabled = false;
+                    rejectedwork.Font.Underline = false;
+                }
+            }
         }
 
         protected void txtBoxBottomFromDate_Changed(object sender, EventArgs e)
@@ -339,6 +375,13 @@ namespace TimeTracker
         protected void txtBoxBottomJobId_Changed(object sender, EventArgs e) 
         {
             InitializeGridViewBottom();
+            InitializeGridViewBottom2();
+        }
+
+        protected void txtBoxBottomCustomer_Changed(object sender, EventArgs e) 
+        {
+            InitializeGridViewBottom();
+            InitializeGridViewBottom2();
         }
 
         protected void ddlBottomDepartment_Changed(object sender, EventArgs e) 
@@ -352,6 +395,29 @@ namespace TimeTracker
         {
             InitializeGridViewBottom();
             InitializeGridViewBottom2();
+        }
+
+        protected void linkButtonBottom_Command(object sender, CommandEventArgs e) 
+        {
+            if (ddlBottomPersonel.Items.Count > 0)
+            {
+                JobTracker jobTracker = new JobTracker();
+                string jobtypeid = e.CommandArgument.ToString();
+                List<JobTracker> data = new List<JobTracker>();
+                string[] argument = jobtypeid.Split('|');
+                LinkButton lb = (LinkButton)sender;
+                DateTime startdate = Convert.ToDateTime(txtBoxBottomFromDate.Text.Trim() + " 00:00:00");
+                DateTime enddate = Convert.ToDateTime(txtBoxBottomToDate.Text.Trim() + " 23:59:59");
+                int deptid = Convert.ToInt32(ddlBottomDepartment.SelectedValue);
+                string jobid = txtBoxBottomJobId.Text.Trim();
+                string customer = txtBoxBottomCustomer.Text.Trim();
+                int userid = Convert.ToInt32(ddlBottomPersonel.SelectedItem.Value);
+                data = jobTracker.GetJobTrackerList(startdate, enddate,Convert.ToInt32(argument[0]),argument[2].Trim(), userid, deptid, jobid, customer);
+                labelmodalBottom.Text = argument[1] + " - " + lb.Text+" - "+argument[2];
+                gridViewModalBottom.DataSource = data;
+                gridViewModalBottom.DataBind();
+                programmaticModalPopupBottom.Show();
+            }
         }
 
         #endregion

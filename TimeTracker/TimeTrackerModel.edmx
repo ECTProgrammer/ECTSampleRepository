@@ -148,6 +148,8 @@
           <Property Name="SWNo" Type="varchar" MaxLength="80" />
           <Property Name="HWNo" Type="varchar" MaxLength="80" />
           <Property Name="JobStatus" Type="varchar" MaxLength="30" />
+          <Property Name="Customer" Type="varchar" MaxLength="300" />
+          <Property Name="EvalNo" Type="varchar" MaxLength="150" />
         </EntityType>
         <EntityType Name="JobTrackerHistory">
           <Key>
@@ -174,6 +176,8 @@
           <Property Name="SWNo" Type="varchar" MaxLength="80" />
           <Property Name="HWNo" Type="varchar" MaxLength="80" />
           <Property Name="JobStatus" Type="varchar" MaxLength="30" />
+          <Property Name="Customer" Type="varchar" MaxLength="300" />
+          <Property Name="EvalNo" Type="varchar" MaxLength="150" />
         </EntityType>
         <EntityType Name="JobType">
           <Key>
@@ -689,6 +693,8 @@
           <NavigationProperty Name="M_Supervisor" Relationship="TimeTrackerModel.Fk_JobTracker_ApprovedBy" FromRole="JobTracker" ToRole="Users" />
           <NavigationProperty Name="M_JobType" Relationship="TimeTrackerModel.Fk_JobTracker_JobTypeId" FromRole="JobTracker" ToRole="JobType" />
           <NavigationProperty Name="M_User" Relationship="TimeTrackerModel.Fk_JobTracker_UserId" FromRole="JobTracker" ToRole="Users" />
+          <Property Type="String" Name="Customer" MaxLength="300" FixedLength="false" Unicode="false" />
+          <Property Type="String" Name="EvalNo" MaxLength="150" FixedLength="false" Unicode="false" />
         </EntityType>
         <EntityType Name="T_JobTrackerHistory">
           <Key>
@@ -718,6 +724,8 @@
           <NavigationProperty Name="M_Supervisor" Relationship="TimeTrackerModel.Fk_JobTrackerHistory_ApprovedBy" FromRole="JobTrackerHistory" ToRole="Users" />
           <NavigationProperty Name="M_JobType" Relationship="TimeTrackerModel.Fk_JobTrackerHistory_JobTypeId" FromRole="JobTrackerHistory" ToRole="JobType" />
           <NavigationProperty Name="M_User" Relationship="TimeTrackerModel.Fk_JobTrackerHistory_UserId" FromRole="JobTrackerHistory" ToRole="Users" />
+          <Property Type="String" Name="Customer" MaxLength="300" FixedLength="false" Unicode="false" />
+          <Property Type="String" Name="EvalNo" MaxLength="150" FixedLength="false" Unicode="false" />
         </EntityType>
         <EntityType Name="T_JobType">
           <Key>
@@ -1150,6 +1158,8 @@
           <EntitySetMapping Name="T_JobTracker">
             <EntityTypeMapping TypeName="TimeTrackerModel.T_JobTracker">
               <MappingFragment StoreEntitySet="JobTracker">
+                <ScalarProperty Name="EvalNo" ColumnName="EvalNo" />
+                <ScalarProperty Name="Customer" ColumnName="Customer" />
                 <ScalarProperty Name="Id" ColumnName="Id" />
                 <ScalarProperty Name="StartTime" ColumnName="StartTime" />
                 <ScalarProperty Name="EndTime" ColumnName="EndTime" />
@@ -1176,6 +1186,8 @@
           <EntitySetMapping Name="T_JobTrackerHistory">
             <EntityTypeMapping TypeName="TimeTrackerModel.T_JobTrackerHistory">
               <MappingFragment StoreEntitySet="JobTrackerHistory">
+                <ScalarProperty Name="EvalNo" ColumnName="EvalNo" />
+                <ScalarProperty Name="Customer" ColumnName="Customer" />
                 <ScalarProperty Name="Id" ColumnName="Id" />
                 <ScalarProperty Name="JobTrackerId" ColumnName="JobTrackerId" />
                 <ScalarProperty Name="StartTime" ColumnName="StartTime" />

@@ -17,8 +17,8 @@ namespace TimeTracker
             GetMyAccessRights();
             if (myAccessRights == null)
                 Response.Redirect("Dashboard.aspx");
-            HttpContext.Current.Session["siteSubHeader"] = "Setup";
-            HttpContext.Current.Session["selectedTab"] = "Setup";
+            HttpContext.Current.Session["siteSubHeader"] = "Setting";
+            HttpContext.Current.Session["selectedTab"] = "Setting";
 
             if (!IsPostBack)
             {

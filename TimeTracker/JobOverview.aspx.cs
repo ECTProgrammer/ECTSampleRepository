@@ -11,7 +11,13 @@ namespace TimeTracker
 {
     public partial class JobOverview : System.Web.UI.Page
     {
-
+        List<Department> joboverviewDepartment = new List<Department>();
+        List<JobTracker> distincProjectList = new List<JobTracker>();
+        List<List<JobType>> joboverviewJobType = new List<List<JobType>>();
+        List<JobFlow> jobflowList = new List<JobFlow>();
+        List<List<JobTypeFlow>> jobtypeflowlist = new List<List<JobTypeFlow>>();
+        List<List<List<JobTracker>>> joboverviewRow = new List<List<List<JobTracker>>>();
+        
         protected void Page_Load(object sender, EventArgs e)
         {
             if (!isValidUser())
@@ -38,7 +44,7 @@ namespace TimeTracker
 
             Department dept = new Department();
             JobTypeDepartment jobtypeDepartment = new JobTypeDepartment();
-            var departments = dept.GetJobOverviewDepartment();
+            joboverviewDepartment = dept.GetJobOverviewDepartment();
             DataColumn hwCol = new DataColumn("HW No", typeof(System.String));
             DataColumn swCol = new DataColumn("SW No", typeof(System.String));
             DataColumn cusCol = new DataColumn("Customer", typeof(System.String));
@@ -68,9 +74,11 @@ namespace TimeTracker
             gridViewSummary.Columns.Add(bfSw);
             gridViewSummary.Columns.Add(bfCus);
             gridViewSummary.Columns.Add(bfDes);
-
-            foreach (Department d in departments) //Creates the columns 
+            joboverviewJobType = new List<List<JobType>>();
+            foreach (Department d in joboverviewDepartment) //Creates the columns 
             {
+                var jobtypes = jobtypeDepartment.GetJobOverviewJobType(d.Id);
+                joboverviewJobType.Add(jobtypes);
                 DataColumn col = new DataColumn(d.Acronym + "" + d.Id, typeof(System.String));
                 table.Columns.Add(col);
 
@@ -87,25 +95,69 @@ namespace TimeTracker
             Department dept = new Department();
             JobTypeDepartment jobtypeDepartment = new JobTypeDepartment();
             JobTracker jobtracker = new JobTracker();
-            var departments = dept.GetJobOverviewDepartment();
-            var distinctProjectList = jobtracker.GetDistinctProjectList(Convert.ToDateTime(txtBoxStartDate.Text + " 00:00:00"), Convert.ToDateTime(txtBoxEndDate.Text + " 23:59:59"), txtBoxJobId.Text.Trim());
-            foreach (JobTracker p in distinctProjectList)
+            //joboverviewDepartment = dept.GetJobOverviewDepartment();
+            distincProjectList = jobtracker.GetDistinctProjectList(Convert.ToDateTime(txtBoxStartDate.Text + " 00:00:00"), Convert.ToDateTime(txtBoxEndDate.Text + " 23:59:59"), txtBoxJobId.Text.Trim());
+            joboverviewRow = new List<List<List<JobTracker>>>();
+            for (int y = 0; y < distincProjectList.Count;y++ )
             {
+                joboverviewRow.Add(new List<List<JobTracker>>());
                 DataRow row = table.NewRow();
-                row["HW No"] = p.HWNo == null ? "" : p.HWNo.Trim();
-                row["SW No"] = p.SWNo == null ? "" : p.SWNo.Trim();
-                row["Customer"] = p.customer == null ? "" : p.customer.Trim();
-                row["Description"] = p.pcbdesc == null ? "" : p.pcbdesc.Trim();
-                foreach (Department d in departments)
+                row["HW No"] = distincProjectList[y].HWNo == null ? "" : distincProjectList[y].HWNo.Trim();
+                row["SW No"] = distincProjectList[y].SWNo == null ? "" : distincProjectList[y].SWNo.Trim();
+                row["Customer"] = distincProjectList[y].Customer == null ? "" : distincProjectList[y].Customer.Trim();
+                row["Description"] = distincProjectList[y].Description == null ? "" : distincProjectList[y].Description.Trim();
+                for (int x = 0; x < joboverviewDepartment.Count; x++)
                 {
-                    JobTracker j = jobtracker.GetJobTrackerJobOverview(p.SWNo, p.HWNo, Convert.ToDateTime(txtBoxStartDate.Text + " 00:00:00"), Convert.ToDateTime(txtBoxEndDate.Text + " 23:59:59"), d.Id);
+                    List<JobTracker> jtlist = new List<JobTracker>();
+                    for (int i = 0; i < joboverviewJobType[x].Count; i++)
+                    {
+                        JobTracker l = jobtracker.GetJobTrackerJobOverview(joboverviewJobType[x][i].Id, distincProjectList[y].SWNo, distincProjectList[y].HWNo, Convert.ToDateTime(txtBoxStartDate.Text + " 00:00:00"), Convert.ToDateTime(txtBoxEndDate.Text + " 23:59:59"), joboverviewDepartment[x].Id);
+                        jtlist.Add(l);
+                    }
+                    joboverviewRow[y].Add(jtlist);
+                    JobTracker j = new JobTracker();
+                    string curstatus = "";
+                    int curindex = -1;
+                    for (int i = 0; i < jtlist.Count; i++)
+                    {
+                        if (jtlist[i] == null)
+                            continue;
+                        else if (jtlist[i].JobStatus.IndexOf("On Hold") > -1)
+                        {
+                            curstatus = "On Hold";
+                            curindex = i;
+
+                            break;
+                        }
+                        else if (jtlist[i].JobStatus.IndexOf("In Progress") > -1)
+                        {
+                            if (curstatus != "In Progress")
+                            {
+                                curstatus = "In Progress";
+                                curindex = i;
+                            }
+                        }
+                        else if (jtlist[i].JobStatus.IndexOf("Completed") > -1 && curindex < 0)
+                        {
+                            if (curstatus == "")
+                            {
+                                curstatus = "Completed";
+                                curindex = i;
+                            }
+                        }
+                    }
+                    if (curindex != -1)
+                    {
+                        j = jtlist[curindex];
+                    }
+                    //JobTracker j = jobtracker.GetJobTrackerJobOverview(p.SWNo, p.HWNo, Convert.ToDateTime(txtBoxStartDate.Text + " 00:00:00"), Convert.ToDateTime(txtBoxEndDate.Text + " 23:59:59"), d.Id);
                     if (j == null)
                     {
-                        row[d.Acronym + "" + d.Id] = "";
+                        row[joboverviewDepartment[x].Acronym + "" + joboverviewDepartment[x].Id] = "";
                     }
                     else
                     {
-                        row[d.Acronym + "" + d.Id] = d.Id + "|" + j.JobStatus + " " + Convert.ToDateTime(j.EndTime).ToString("dd-MMM-yyyy")+"|"+p.HWNo+"|"+p.SWNo;
+                        row[joboverviewDepartment[x].Acronym + "" + joboverviewDepartment[x].Id] = joboverviewDepartment[x].Id + "|" + j.JobStatus + " " + Convert.ToDateTime(j.EndTime).ToString("dd-MMM-yyyy") + "|" + distincProjectList[y].HWNo + "|" + distincProjectList[y].SWNo;
                     }
                 }
                 table.Rows.Add(row);
@@ -114,7 +166,7 @@ namespace TimeTracker
 
         protected void gridViewSummary_RowDataBound(object sender, GridViewRowEventArgs e)
         {
-            if (e.Row.RowType == DataControlRowType.DataRow)
+            if (e.Row.RowType == DataControlRowType.DataRow) //Check if RowType is DataRow
             {
                 for (int i = 0; i < (e.Row.DataItem as DataRowView).Row.ItemArray.Length; i++)
                 {
@@ -170,7 +222,7 @@ namespace TimeTracker
 
             Department dept = new Department();
             JobTypeDepartment jobtypeDepartment = new JobTypeDepartment();
-            var departments = dept.GetJobOverviewDepartment();
+            //var departments = dept.GetJobOverviewDepartment();
             DataColumn hwCol = new DataColumn("HW No", typeof(System.String));
             DataColumn swCol = new DataColumn("SW No", typeof(System.String));
             DataColumn cusCol = new DataColumn("Customer", typeof(System.String));
@@ -201,16 +253,18 @@ namespace TimeTracker
             gridViewDetail.Columns.Add(bfCus);
             gridViewDetail.Columns.Add(bfDes);
 
-            foreach (Department d in departments) //Creates the columns 
+            //joboverviewJobType = new List<List<JobType>>();
+            for (int x = 0; x < joboverviewDepartment.Count;x++ ) //Creates the columns 
             {
-                var jobtypes = jobtypeDepartment.GetJobOverviewJobType(d.Id);
-                for (int i = 0; i < jobtypes.Count; i++)
+                //var jobtypes = jobtypeDepartment.GetJobOverviewJobType(joboverviewDepartment[x].Id);
+                //joboverviewJobType.Add(jobtypes);
+                for (int i = 0; i < joboverviewJobType[x].Count; i++)
                 {
-                    DataColumn col = new DataColumn(jobtypes[i].Acronym+""+d.Id, typeof(System.String));
+                    DataColumn col = new DataColumn(joboverviewJobType[x][i].Acronym + "" + joboverviewDepartment[x].Id, typeof(System.String));
                     table.Columns.Add(col);
 
                     TemplateField tfield = new TemplateField();
-                    tfield.HeaderText = jobtypes[i].Acronym;
+                    tfield.HeaderText = joboverviewJobType[x][i].Acronym;
                     gridViewDetail.Columns.Add(tfield);
                 }
             }
@@ -223,29 +277,29 @@ namespace TimeTracker
             Department dept = new Department();
             JobTypeDepartment jobtypeDepartment = new JobTypeDepartment();
             JobTracker jobtracker = new JobTracker();
-            var departments = dept.GetJobOverviewDepartment();
-            var distinctProjectList = jobtracker.GetDistinctProjectList(Convert.ToDateTime(txtBoxStartDate.Text + " 00:00:00"), Convert.ToDateTime(txtBoxEndDate.Text + " 23:59:59"), txtBoxJobId.Text.Trim());
-         
-            foreach (JobTracker p in distinctProjectList)
+            //var departments = dept.GetJobOverviewDepartment();
+            //var distinctProjectList = jobtracker.GetDistinctProjectList(Convert.ToDateTime(txtBoxStartDate.Text + " 00:00:00"), Convert.ToDateTime(txtBoxEndDate.Text + " 23:59:59"), txtBoxJobId.Text.Trim());
+
+            for (int y = 0; y < distincProjectList.Count;y++ )
             {
                 DataRow row = table.NewRow();
-                row["HW No"] = p.HWNo == null ? "" : p.HWNo.Trim();
-                row["SW No"] = p.SWNo == null ? "" : p.SWNo.Trim();
-                row["Customer"] = p.customer == null ? "" : p.customer.Trim();
-                row["Description"] = p.pcbdesc == null ? "" : p.pcbdesc.Trim();
-                foreach (Department d in departments)
+                row["HW No"] = distincProjectList[y].HWNo == null ? "" : distincProjectList[y].HWNo.Trim();
+                row["SW No"] = distincProjectList[y].SWNo == null ? "" : distincProjectList[y].SWNo.Trim();
+                row["Customer"] = distincProjectList[y].Customer == null ? "" : distincProjectList[y].Customer.Trim();
+                row["Description"] = distincProjectList[y].Description == null ? "" : distincProjectList[y].Description.Trim();
+                for (int x = 0; x < joboverviewDepartment.Count; x++)
                 {
-                    var jobtypes = jobtypeDepartment.GetJobOverviewJobType(d.Id);
-                    for (int i = 0; i < jobtypes.Count; i++)
+                    //var jobtypes = jobtypeDepartment.GetJobOverviewJobType(d.Id);
+                    for (int i = 0; i < joboverviewJobType[x].Count; i++)
                     {
-                        JobTracker j = jobtracker.GetJobTrackerJobOverview(jobtypes[i].Id, p.SWNo, p.HWNo, Convert.ToDateTime(txtBoxStartDate.Text + " 00:00:00"), Convert.ToDateTime(txtBoxEndDate.Text + " 23:59:59"),d.Id);
-                        if (j == null)
+                        //JobTracker j = jobtracker.GetJobTrackerJobOverview(joboverviewJobType[x][i].Id, p.SWNo, p.HWNo, Convert.ToDateTime(txtBoxStartDate.Text + " 00:00:00"), Convert.ToDateTime(txtBoxEndDate.Text + " 23:59:59"), joboverviewDepartment[x].Id);
+                        if (joboverviewRow[y][x][i] == null)
                         {
-                            row[jobtypes[i].Acronym+""+d.Id] = "";
+                            row[joboverviewJobType[x][i].Acronym + "" + joboverviewDepartment[x].Id] = "";
                         }
                         else
                         {
-                            row[jobtypes[i].Acronym + "" + d.Id] = j.Id + "|" + j.JobStatus + " " + Convert.ToDateTime(j.EndTime).ToString("dd-MMM-yyyy");
+                            row[joboverviewJobType[x][i].Acronym + "" + joboverviewDepartment[x].Id] = joboverviewRow[y][x][i].Id + "|" + joboverviewRow[y][x][i].JobStatus + " " + Convert.ToDateTime(joboverviewRow[y][x][i].EndTime).ToString("dd-MMM-yyyy");
                         }
                     }
                 }
@@ -267,9 +321,9 @@ namespace TimeTracker
                 System.Drawing.Color forecolor = System.Drawing.Color.White;
                 Department dept = new Department();
                 JobTypeDepartment jobtypeDepartment = new JobTypeDepartment();
-                var departments = dept.GetJobOverviewDepartment();
+                //var departments = dept.GetJobOverviewDepartment();
                 int rowIndex = 4;
-                for (int i = 0; i<departments.Count;i++)
+                for (int i = 0; i < joboverviewDepartment.Count; i++)
                 {
                     if (i % 2 != 0)
                     {
@@ -282,17 +336,17 @@ namespace TimeTracker
                         backcolor = System.Drawing.ColorTranslator.FromHtml("#164BDB");
                         forecolor = System.Drawing.Color.White;
                     }
-                    var jobtypes = jobtypeDepartment.GetJobOverviewJobType(departments[i].Id);
-                    if (jobtypes.Count > 0)
+                    //var jobtypes = jobtypeDepartment.GetJobOverviewJobType(joboverviewDepartment[i].Id);
+                    if (joboverviewJobType[i].Count > 0)
                     {
                         thc = new TableHeaderCell();
                         thc.BackColor = backcolor;
                         thc.ForeColor = forecolor;
-                        thc.ColumnSpan = jobtypes.Count;
-                        thc.Text = departments[i].Description;
+                        thc.ColumnSpan = joboverviewJobType[i].Count;
+                        thc.Text = joboverviewDepartment[i].Description;
                         gvr.Cells.Add(thc);
                     }
-                    for (int x = 0;x<jobtypes.Count; x++) 
+                    for (int x = 0; x < joboverviewJobType[i].Count; x++) 
                     {
                         e.Row.Cells[rowIndex].BackColor = backcolor;
                         e.Row.Cells[rowIndex].ForeColor = forecolor;
@@ -360,7 +414,7 @@ namespace TimeTracker
 
             JobFlow jobflow = new JobFlow();
             JobTypeFlow jobtypeflow = new JobTypeFlow();
-            var jobflows = jobflow.GetJobOverviewJobFlow();
+            jobflowList = jobflow.GetJobOverviewJobFlow();
             DataColumn hwCol = new DataColumn("HW No", typeof(System.String));
             DataColumn swCol = new DataColumn("SW No", typeof(System.String));
             DataColumn cusCol = new DataColumn("Customer", typeof(System.String));
@@ -390,23 +444,24 @@ namespace TimeTracker
             gridViewJobFlow.Columns.Add(bfSw);
             gridViewJobFlow.Columns.Add(bfCus);
             gridViewJobFlow.Columns.Add(bfDes);
-
-            foreach (JobFlow j in jobflows) //Creates the columns 
+            jobtypeflowlist = new List<List<JobTypeFlow>>();
+            for (int x = 0; x < jobflowList.Count;x++ ) //Creates the columns 
             {
-                var jobtypes = jobtypeflow.GetJobTypeFlowListByJobFlow(j.Id);
+                var jobtypes = jobtypeflow.GetJobTypeFlowListByJobFlow(jobflowList[x].Id);
+                jobtypeflowlist.Add(jobtypes);
                 for (int i = 0; i < jobtypes.Count; i++)
                 {
                     string deptacro = "";
                     if (jobtypes[i].DepartmentId != null)
                         deptacro = jobtypes[i].departmentAcronym;
-                    DataColumn col = new DataColumn(jobtypes[i].jobtypeAcronym+deptacro+"" + j.Id, typeof(System.String));
+                    DataColumn col = new DataColumn(jobtypes[i].jobtypeAcronym + deptacro + "" + jobflowList[x].Id, typeof(System.String));
                     table.Columns.Add(col);
 
                     TemplateField tfield = new TemplateField();
                     string sdept = "";
                     if (jobtypes[i].DepartmentId != null)
                         sdept = jobtypes[i].departmentAcronym + "-";
-                    tfield.HeaderText = sdept+jobtypes[i].jobtypeAcronym;
+                    tfield.HeaderText = sdept + jobtypes[i].jobtypeAcronym;
                     gridViewJobFlow.Columns.Add(tfield);
                 }
             }
@@ -419,41 +474,41 @@ namespace TimeTracker
             JobFlow jobflow = new JobFlow();
             JobTypeFlow jobtypeFlow = new JobTypeFlow();
             JobTracker jobtracker = new JobTracker();
-            var jobflows = jobflow.GetJobOverviewJobFlow();
-            var distinctProjectList = jobtracker.GetDistinctProjectList(Convert.ToDateTime(txtBoxStartDate.Text + " 00:00:00"), Convert.ToDateTime(txtBoxEndDate.Text + " 23:59:59"), txtBoxJobId.Text.Trim());
+            //var jobflows = jobflow.GetJobOverviewJobFlow();
+            //var distinctProjectList = jobtracker.GetDistinctProjectList(Convert.ToDateTime(txtBoxStartDate.Text + " 00:00:00"), Convert.ToDateTime(txtBoxEndDate.Text + " 23:59:59"), txtBoxJobId.Text.Trim());
 
-            foreach (JobTracker p in distinctProjectList)
+            foreach (JobTracker p in distincProjectList)
             {
                 DataRow row = table.NewRow();
                 row["HW No"] = p.HWNo == null ? "" : p.HWNo.Trim();
                 row["SW No"] = p.SWNo == null ? "" : p.SWNo.Trim();
-                row["Customer"] = p.customer == null ? "" : p.customer.Trim();
-                row["Description"] = p.pcbdesc == null ? "" : p.pcbdesc.Trim();
-                foreach (JobFlow f in jobflows)
+                row["Customer"] = p.Customer == null ? "" : p.Customer.Trim();
+                row["Description"] = p.Description == null ? "" : p.Description.Trim();
+                for (int x = 0; x < jobflowList.Count; x++) 
                 {
-                    var jobtypes = jobtypeFlow.GetJobTypeFlowListByJobFlow(f.Id);
-                    for (int i = 0; i < jobtypes.Count; i++)
+                    //var jobtypes = jobtypeFlow.GetJobTypeFlowListByJobFlow(jobflowList[x].Id);
+                    for (int i = 0; i < jobtypeflowlist[x].Count; i++)
                     {
                         JobTracker j = new JobTracker();
                         string deptacro = "";
-                        if (jobtypes[i].DepartmentId != null)
-                            deptacro = jobtypes[i].departmentAcronym;
+                        if (jobtypeflowlist[x][i].DepartmentId != null)
+                            deptacro = jobtypeflowlist[x][i].departmentAcronym;
 
-                        if (jobtypes[i].DepartmentId != null)
+                        if (jobtypeflowlist[x][i].DepartmentId != null)
                         {
-                            j = jobtracker.GetJobTrackerJobOverview(jobtypes[i].JobTypeId, p.SWNo, p.HWNo, Convert.ToDateTime(txtBoxStartDate.Text + " 00:00:00"), Convert.ToDateTime(txtBoxEndDate.Text + " 23:59:59"), Convert.ToInt32(jobtypes[i].DepartmentId));
+                            j = jobtracker.GetJobTrackerJobOverview(jobtypeflowlist[x][i].JobTypeId, p.SWNo, p.HWNo, Convert.ToDateTime(txtBoxStartDate.Text + " 00:00:00"), Convert.ToDateTime(txtBoxEndDate.Text + " 23:59:59"), Convert.ToInt32(jobtypeflowlist[x][i].DepartmentId));
                         }
                         else 
                         {
-                            j = jobtracker.GetJobTrackerJobOverview(jobtypes[i].JobTypeId, p.SWNo, p.HWNo, Convert.ToDateTime(txtBoxStartDate.Text + " 00:00:00"), Convert.ToDateTime(txtBoxEndDate.Text + " 23:59:59"));
+                            j = jobtracker.GetJobTrackerJobOverview(jobtypeflowlist[x][i].JobTypeId, p.SWNo, p.HWNo, Convert.ToDateTime(txtBoxStartDate.Text + " 00:00:00"), Convert.ToDateTime(txtBoxEndDate.Text + " 23:59:59"));
                         }
                         if (j == null)
                         {
-                            row[jobtypes[i].jobtypeAcronym + deptacro + "" + f.Id] = "";
+                            row[jobtypeflowlist[x][i].jobtypeAcronym + deptacro + "" + jobflowList[x].Id] = "";
                         }
                         else
                         {
-                            row[jobtypes[i].jobtypeAcronym + deptacro + "" + f.Id] = j.Id + "|" + j.JobStatus + " " + Convert.ToDateTime(j.EndTime).ToString("dd-MMM-yyyy");
+                            row[jobtypeflowlist[x][i].jobtypeAcronym + deptacro + "" + jobflowList[x].Id] = j.Id + "|" + j.JobStatus + " " + Convert.ToDateTime(j.EndTime).ToString("dd-MMM-yyyy");
                         }
                     }
                 }
@@ -475,9 +530,9 @@ namespace TimeTracker
                 System.Drawing.Color forecolor = System.Drawing.Color.White;
                 JobFlow jobflow = new JobFlow();
                 JobTypeFlow jobtypeflow = new JobTypeFlow();
-                var jobflows = jobflow.GetJobOverviewJobFlow();
+                //var jobflows = jobflow.GetJobOverviewJobFlow();
                 int rowIndex = 4;
-                for (int i = 0; i < jobflows.Count; i++)
+                for (int i = 0; i < jobflowList.Count; i++)
                 {
                     if (i % 2 != 0)
                     {
@@ -490,17 +545,17 @@ namespace TimeTracker
                         backcolor = System.Drawing.ColorTranslator.FromHtml("#164BDB");
                         forecolor = System.Drawing.Color.White;
                     }
-                    var jobtypes = jobtypeflow.GetJobTypeFlowListByJobFlow(jobflows[i].Id);
-                    if (jobtypes.Count > 0)
+                    //var jobtypes = jobtypeflow.GetJobTypeFlowListByJobFlow(jobflowList[i].Id);
+                    if (jobtypeflowlist[i].Count > 0)
                     {
                         thc = new TableHeaderCell();
                         thc.BackColor = backcolor;
                         thc.ForeColor = forecolor;
-                        thc.ColumnSpan = jobtypes.Count;
-                        thc.Text = jobflows[i].Description;
+                        thc.ColumnSpan = jobtypeflowlist[i].Count;
+                        thc.Text = jobflowList[i].Description;
                         gvr.Cells.Add(thc);
                     }
-                    for (int x = 0; x < jobtypes.Count; x++)
+                    for (int x = 0; x < jobtypeflowlist[i].Count; x++)
                     {
                         e.Row.Cells[rowIndex].BackColor = backcolor;
                         e.Row.Cells[rowIndex].ForeColor = forecolor;
@@ -647,7 +702,7 @@ namespace TimeTracker
             if (e.CommandName == "JobOverviewDetails")
             {
                 JobTracker j = new JobTracker();
-                j = j.GetJobTracker(Convert.ToInt32(e.CommandArgument));
+                j = j.GetJobTracker(Convert.ToInt32(e.CommandArgument),false);
                 modalDetailLabelName.Text = j.fullname;
                 modalDetailLabelJobType.Text = j.jobtype;
                 modalDetailLabelJobStatus.Text = j.JobStatus;
@@ -683,6 +738,7 @@ namespace TimeTracker
             }
 
         }
+
         protected void txtBoxStartDate_Changed(object sender, EventArgs e)
         {
             calendarExtenderStartDate.SelectedDate = Convert.ToDateTime(txtBoxStartDate.Text);

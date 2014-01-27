@@ -34,6 +34,8 @@ namespace TimeTracker
         public string SWNo { get; set; }
         public string HWNo { get; set; }
         public string JobStatus { get; set; }
+        public string Customer { get; set; }
+        public string EvalNo { get; set; }
     
         public virtual T_Users M_Supervisor { get; set; }
         public virtual T_JobType M_JobType { get; set; }

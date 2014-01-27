@@ -121,6 +121,7 @@
                    <tr>
                        <td>Personel : <asp:DropDownList ID="ddlBottomPersonel" runat="server" AutoPostBack="true" OnSelectedIndexChanged="ddlBottomPersonel_Changed"></asp:DropDownList></td>
                        <td>Job ID : <asp:TextBox ID="txtBoxBottomJobId" runat="server" AutoPostBack="true" OnTextChanged="txtBoxBottomJobId_Changed"></asp:TextBox></td>
+                       <td style="text-align:left">Customer : <asp:TextBox ID="txtBoxBottomCustomer" runat="server" AutoPostBack="true" OnTextChanged="txtBoxBottomCustomer_Changed"></asp:TextBox></td>
                    </tr>
                 </table>
                    </div>
@@ -130,17 +131,29 @@
                     <ajaxToolKit:TabPanel ID="tabPanelBottom1" runat="server" HeaderText="Time Analysis">   
                         <ContentTemplate> 
                             <asp:Panel runat="server">
-                               <asp:GridView ID="gridViewBottom" runat="server" AutoGenerateColumns="false" CssClass="gridView" GridLines="None" ShowHeaderWhenEmpty="true">
+                               <asp:GridView ID="gridViewBottom" runat="server" AutoGenerateColumns="false" CssClass="gridView" GridLines="None" ShowHeaderWhenEmpty="true" OnRowDataBound="gridViewBottom_RowDataBound">
                                    <EmptyDataRowStyle />
                                     <EmptyDataTemplate>
                                         No Data Found.
                                     </EmptyDataTemplate>
                                    <Columns>
                                        <asp:BoundField HeaderText="Description of Work" DataField="jobtype"/>
-                                       <asp:BoundField HeaderText="Total Work Time" DataField="totalworktime" />
-                                       <asp:BoundField HeaderText="Waiting for Approval" DataField="totalforapproval" />
-                                       <asp:BoundField HeaderText="Total Rejected Time" DataField="totalrejectedtime" />
-                                       <asp:BoundField HeaderText="Number of Unclosed Task" DataField="totalunclosedjobs" />
+                                       <asp:TemplateField HeaderText="Approved Work Time">
+                                           <ItemTemplate>
+                                               <asp:LinkButton ID="linkBtnBottomApprovedWork" runat="server" Text='<%#Eval("totalworktime")%>' CommandArgument='<%#Eval("jobtypeid")+"|"+Eval("jobtype")+"|Approved"%>' OnCommand="linkButtonBottom_Command"></asp:LinkButton>
+                                           </ItemTemplate>
+                                       </asp:TemplateField>
+                                       <asp:TemplateField HeaderText="Waiting for Approval">
+                                           <ItemTemplate>
+                                               <asp:LinkButton ID="linkBtnBottomWaitingWork" runat="server" Text='<%#Eval("totalforapproval")%>' CommandArgument='<%#Eval("jobtypeid")+"|"+Eval("jobtype")+"|For Approval"%>' OnCommand="linkButtonBottom_Command"></asp:LinkButton>
+                                           </ItemTemplate>
+                                       </asp:TemplateField>
+                                       <asp:TemplateField HeaderText="Total Rejected Time">
+                                           <ItemTemplate>
+                                               <asp:LinkButton ID="linkBtnBottomRejectedWork" runat="server" Text='<%#Eval("totalrejectedtime")%>' CommandArgument='<%#Eval("jobtypeid")+"|"+Eval("jobtype")+"|Rejected"%>' OnCommand="linkButtonBottom_Command"></asp:LinkButton>
+                                           </ItemTemplate>
+                                       </asp:TemplateField>
+                                       <%--<asp:BoundField HeaderText="Number of Unclosed Task" DataField="totalunclosedjobs" />--%>
                                    </Columns>
                                </asp:GridView>
                             </asp:Panel>
@@ -150,15 +163,18 @@
                         <ContentTemplate>
                             <asp:GridView ID="gridViewBottom2" runat="server" AutoGenerateColumns="false" CssClass="gridView" GridLines="None" ShowHeaderWhenEmpty="true">
                                 <Columns>
+                                    <asp:BoundField HeaderText="Department" DataField="department" ReadOnly="true" />
+                                    <asp:BoundField HeaderText="Personel" DataField="fullname" ReadOnly="true" />
                                     <asp:BoundField HeaderText="Date" DataField="ScheduleDate" DataFormatString="{0:dd MMM yyyy}" ReadOnly="true" />
                                     <asp:BoundField HeaderText="Start Time" DataField="StartTime" DataFormatString="{0:t}" ReadOnly="true"></asp:BoundField>
                                     <asp:BoundField HeaderText="End Time" DataField="EndTime" DataFormatString="{0:t}" ReadOnly="true"></asp:BoundField>
                                     <asp:BoundField HeaderText="Description of Work" DataField="jobtype" ReadOnly="true"></asp:BoundField>
                                     <asp:BoundField HeaderText="JobId" DataField="JobIdNumber" ReadOnly="true"></asp:BoundField>
+                                    <asp:BoundField HeaderText="Customer" DataField="customer" ReadOnly="true"></asp:BoundField>
+                                    <%--<asp:BoundField HeaderText="Number of Hours" DataField="totalhours" ReadOnly="true"></asp:BoundField>--%>
+                                    <asp:BoundField HeaderText="Remarks" DataField="Remarks" ReadOnly="true"></asp:BoundField>
                                     <asp:BoundField HeaderText="Task Status" DataField="JobStatus" ReadOnly="true"></asp:BoundField>
-                                    <asp:BoundField HeaderText="Customer" DataField="customer" ReadOnly="false"></asp:BoundField>
-                                    <asp:BoundField HeaderText="Number of Hours" DataField="totalhours" ReadOnly="false"></asp:BoundField>
-                                    <asp:BoundField HeaderText="Remarks" DataField="Remarks"></asp:BoundField>
+                                    <asp:BoundField HeaderText="Entry Status" DataField="Status" ReadOnly="true"></asp:BoundField>
                                 </Columns>
                             </asp:GridView>
                         </ContentTemplate>
@@ -186,7 +202,38 @@
                 </asp:Panel>
             </asp:Panel>
 
+             <asp:Panel ID="panelModalBottom" runat="server" stye="display:none">
+                 <asp:Panel ID="panelModalHeaderBottom" runat="server" CssClass="modalHeader"><asp:Label ID="labelmodalBottom" runat="server"></asp:Label></asp:Panel>
+                 <asp:Panel ID="panelModalContentBottom" runat="server" CssClass="modal">
+                     <table>
+                         <tr><td>
+                            <asp:GridView ID="gridViewModalBottom" runat="server" AutoGenerateColumns="false" CssClass="gridView" GridLines="None" ShowHeaderWhenEmpty="true">
+                                <EmptyDataRowStyle/>
+					            <EmptyDataTemplate>
+					                No Data Found.
+					            </EmptyDataTemplate>
+                                <Columns>
+                                    <asp:BoundField HeaderText="Department" DataField="department" ReadOnly="true" />
+                                    <asp:BoundField HeaderText="Personel" DataField="fullname" ReadOnly="true" />
+                                    <asp:BoundField HeaderText="Date" DataField="ScheduleDate" DataFormatString="{0:dd MMM yyyy}" ReadOnly="true" />
+                                    <asp:BoundField HeaderText="Start Time" DataField="StartTime" DataFormatString="{0:t}" ReadOnly="true"></asp:BoundField>
+                                    <asp:BoundField HeaderText="End Time" DataField="EndTime" DataFormatString="{0:t}" ReadOnly="true"></asp:BoundField>
+                                    <asp:BoundField HeaderText="JobId" DataField="JobIdNumber" ReadOnly="true"></asp:BoundField>
+                                    <asp:BoundField HeaderText="Customer" DataField="customer" ReadOnly="true"></asp:BoundField>
+                                    <asp:BoundField HeaderText="Remarks" DataField="Remarks" ReadOnly="true"></asp:BoundField>
+                                    <asp:BoundField HeaderText="Task Status" DataField="JobStatus" ReadOnly="true"></asp:BoundField>
+                                </Columns>
+                            </asp:GridView>
+                        </td></tr>
+                         <tr><td style="text-align:center">
+                            <asp:Button ID="btnDoneBottom" runat="server" CssClass="button" Text="Done"/>
+                            </td></tr>
+                    </table>
+                 </asp:Panel>
+             </asp:Panel>
+
             <asp:Button ID="btnHidden" runat="server" style="display:none"/>
+             <asp:Button ID="btnHiddenBottom" runat="server" style="display:none"/>
             <ajaxToolKit:ModalPopupExtender runat="server" ID="programmaticModalPopup"
                 BehaviorID ="programmaticModalPopupBehavior"
                 TargetControlID="btnHidden"
@@ -197,6 +244,18 @@
                 PopupDragHandleControlID="panelModalHeader"
                 RepositionMode="RepositionOnWindowResize" >    
             </ajaxToolKit:ModalPopupExtender> 
+
+         <ajaxToolKit:ModalPopupExtender runat="server" ID="programmaticModalPopupBottom"
+                BehaviorID ="programmaticModalPopupBehaviorBottom"
+                TargetControlID="btnHiddenBottom"
+                PopupControlID="panelModalBottom"
+                BackgroundCssClass="modalBackground"
+                CancelControlID="btnDoneBottom"
+                DropShadow="false"
+                PopupDragHandleControlID="panelModalHeaderBottom"
+                RepositionMode="RepositionOnWindowResize" >    
+            </ajaxToolKit:ModalPopupExtender> 
+
          </ContentTemplate>
      </asp:UpdatePanel>
 </asp:Content>

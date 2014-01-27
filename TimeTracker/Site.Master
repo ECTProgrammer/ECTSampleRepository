@@ -14,7 +14,7 @@
  <div id="container">
     <form runat="server">
 
-    <ajaxToolKit:ToolkitScriptManager ID="ToolkitScriptManager1" runat="server"></ajaxToolKit:ToolkitScriptManager>
+    <ajaxToolKit:ToolkitScriptManager ID="ToolkitScriptManager1" runat="server" AsyncPostBackTimeout="3600"></ajaxToolKit:ToolkitScriptManager>
         <div class="frame">
             <table style="padding:0; border-spacing:0; width:100%" border="0">
                 <tr><td style="width:100px; height:40px;"><img src="Images/ect_logo.gif" /></td>

@@ -11,12 +11,12 @@ namespace TimeTracker.Model
     public class JobTracker : T_JobTracker
     {
         public string jobtype { get; set; }
-        public string pcbdesc { get; set; }
-        public string customer { get; set; }
         public string totalhours { get; set; }
         public string fullname { get; set; }
+        public int? departmentid { get; set; }
+        public string department { get; set; }
 
-        public JobTracker GetJobTracker(int jobtrackerid)
+        public JobTracker GetJobTracker(int jobtrackerid,bool computetime)
         {
             TimeTrackerEntities db = new TimeTrackerEntities();
 
@@ -45,28 +45,32 @@ namespace TimeTracker.Model
                             SWNo = j.SWNo,
                             HWNo = j.HWNo,
                             JobStatus = j.JobStatus,
-                            fullname = j.M_User.Firstname + " " + j.M_User.Lastname
+                            fullname = j.M_User.Firstname + " " + j.M_User.Lastname,
+                            Customer = j.Customer,
+                            EvalNo = j.EvalNo
                         }).FirstOrDefault();
 
             db.Dispose();
 
-            if (data.JobIdNumber != null && data.JobIdNumber != "")
+            //if (data.JobIdNumber != null && data.JobIdNumber != "")
+            //{
+            //    GetCustomer(data);
+            //}
+            if (computetime == true)
             {
-                GetCustomer(data);
-            }
-
-            if (data.EndTime != null)
-            {
-                double time = Convert.ToDateTime(data.EndTime).Subtract(Convert.ToDateTime(data.StartTime)).TotalMinutes;
-                double hr = Math.Truncate(time / 60);
-                double min = time % 60;
-                data.totalhours = hr == 0 && min == 0 ? "0 min" : (hr > 0 ? hr > 1 ? hr + " hrs" : hr + " hr" : "") + (hr > 0 && min > 0 ? ", " : "") + (min > 0 ? min > 1 ? min + " mins" : min + " min" : "");
+                if (data.EndTime != null)
+                {
+                    double time = Convert.ToDateTime(data.EndTime).Subtract(Convert.ToDateTime(data.StartTime)).TotalMinutes;
+                    double hr = Math.Truncate(time / 60);
+                    double min = time % 60;
+                    data.totalhours = hr == 0 && min == 0 ? "0 min" : (hr > 0 ? hr > 1 ? hr + " hrs" : hr + " hr" : "") + (hr > 0 && min > 0 ? ", " : "") + (min > 0 ? min > 1 ? min + " mins" : min + " min" : "");
+                }
             }
 
             return data;
         }
 
-        public JobTracker GetJobTracker(int createdby,int lastupdatedby,DateTime starttime,int jobtypeid,string actionrequest,string status)
+        public JobTracker GetJobTracker(int createdby, int lastupdatedby, DateTime starttime, int jobtypeid, string actionrequest, string status, bool computetime)
         {
             TimeTrackerEntities db = new TimeTrackerEntities();
 
@@ -100,23 +104,27 @@ namespace TimeTracker.Model
                             SWNo = j.SWNo,
                             HWNo = j.HWNo,
                             JobStatus = j.JobStatus,
-                            fullname = j.M_User.Firstname + " " + j.M_User.Lastname
+                            fullname = j.M_User.Firstname + " " + j.M_User.Lastname,
+                            Customer = j.Customer,
+                            EvalNo = j.EvalNo
                         }).FirstOrDefault();
 
             db.Dispose();
 
 
-            if (data.JobIdNumber != null && data.JobIdNumber != "")
+            //if (data.JobIdNumber != null && data.JobIdNumber != "")
+            //{
+            //    GetCustomer(data);
+            //}
+            if (computetime == true)
             {
-                GetCustomer(data);
-            }
-
-            if (data.EndTime != null)
-            {
-                double time = Convert.ToDateTime(data.EndTime).Subtract(Convert.ToDateTime(data.StartTime)).TotalMinutes;
-                double hr = Math.Truncate(time / 60);
-                double min = time % 60;
-                data.totalhours = hr == 0 && min == 0 ? "0 min" : (hr > 0 ? hr > 1 ? hr + " hrs" : hr + " hr" : "") + (hr > 0 && min > 0 ? ", " : "") + (min > 0 ? min > 1 ? min + " mins" : min + " min" : "");
+                if (data.EndTime != null)
+                {
+                    double time = Convert.ToDateTime(data.EndTime).Subtract(Convert.ToDateTime(data.StartTime)).TotalMinutes;
+                    double hr = Math.Truncate(time / 60);
+                    double min = time % 60;
+                    data.totalhours = hr == 0 && min == 0 ? "0 min" : (hr > 0 ? hr > 1 ? hr + " hrs" : hr + " hr" : "") + (hr > 0 && min > 0 ? ", " : "") + (min > 0 ? min > 1 ? min + " mins" : min + " min" : "");
+                }
             }
 
             return data;
@@ -154,7 +162,9 @@ namespace TimeTracker.Model
                             SWNo = j.SWNo,
                             HWNo = j.HWNo,
                             JobStatus = j.JobStatus,
-                            fullname = j.M_User.Firstname + " " + j.M_User.Lastname
+                            fullname = j.M_User.Firstname + " " + j.M_User.Lastname,
+                            Customer = j.Customer,
+                            EvalNo = j.EvalNo
                         }).FirstOrDefault();
 
             db.Dispose();
@@ -162,7 +172,7 @@ namespace TimeTracker.Model
             return data;
         }
 
-        public List<JobTracker> GetJobTrackerList(int userid) 
+        public List<JobTracker> GetJobTrackerList(int userid,bool computetime) 
         {
             TimeTrackerEntities db = new TimeTrackerEntities();
 
@@ -191,28 +201,86 @@ namespace TimeTracker.Model
                             SWNo = j.SWNo,
                             HWNo = j.HWNo,
                             JobStatus = j.JobStatus,
-                            fullname = j.M_User.Firstname + " " + j.M_User.Lastname
+                            fullname = j.M_User.Firstname + " " + j.M_User.Lastname,
+                            Customer = j.Customer,
+                            EvalNo = j.EvalNo
                         }).ToList();
 
             db.Dispose();
 
-            foreach (JobTracker j in data)
+            if (computetime == true)
             {
-                if (j.JobIdNumber != null && j.JobIdNumber != "")
+                foreach (JobTracker j in data)
                 {
-                    GetCustomer(j);
-                }
+                    //if (j.JobIdNumber != null && j.JobIdNumber != "")
+                    //{
+                    //    GetCustomer(j);
+                    //}
 
-                if (j.EndTime != null)
-                {
-                    double time = Convert.ToDateTime(j.EndTime).Subtract(Convert.ToDateTime(j.StartTime)).TotalMinutes;
-                    double hr = Math.Truncate(time / 60);
-                    double min = time % 60;
-                    j.totalhours = hr == 0 && min == 0 ? "0 min" : (hr > 0 ? hr > 1 ? hr + " hrs" : hr + " hr" : "") + (hr > 0 && min > 0 ? ", " : "") + (min > 0 ? min > 1 ? min + " mins" : min + " min" : "");
-                }
+                    if (j.EndTime != null)
+                    {
+                        double time = Convert.ToDateTime(j.EndTime).Subtract(Convert.ToDateTime(j.StartTime)).TotalMinutes;
+                        double hr = Math.Truncate(time / 60);
+                        double min = time % 60;
+                        j.totalhours = hr == 0 && min == 0 ? "0 min" : (hr > 0 ? hr > 1 ? hr + " hrs" : hr + " hr" : "") + (hr > 0 && min > 0 ? ", " : "") + (min > 0 ? min > 1 ? min + " mins" : min + " min" : "");
+                    }
 
+                }
             }
 
+            return data;
+        }
+
+        public List<JobTracker> GetJobTrackerListWithJobId(bool computetime)
+        {
+            TimeTrackerEntities db = new TimeTrackerEntities();
+
+            var data = (from j in db.T_JobTracker
+                        where j.JobIdNumber != ""
+                        select new JobTracker()
+                        {
+                            Id = j.Id,
+                            UserId = j.UserId,
+                            StartTime = j.StartTime,
+                            EndTime = j.EndTime,
+                            Description = j.Description,
+                            JobTypeId = j.JobTypeId,
+                            JobIdNumber = j.JobIdNumber,
+                            jobtype = j.M_JobType.Description,
+                            Remarks = j.Remarks,
+                            ApprovedBy = j.ApprovedBy,
+                            CreateDate = j.CreateDate,
+                            LastUpdateDate = j.LastUpdateDate,
+                            CreatedBy = j.CreatedBy,
+                            LastUpdatedBy = j.LastUpdatedBy,
+                            Status = j.Status,
+                            SupervisorRemarks = j.SupervisorRemarks,
+                            ActionRequest = j.ActionRequest,
+                            ScheduleDate = j.ScheduleDate,
+                            SWNo = j.SWNo,
+                            HWNo = j.HWNo,
+                            JobStatus = j.JobStatus,
+                            fullname = j.M_User.Firstname + " " + j.M_User.Lastname,
+                            Customer = j.Customer,
+                            EvalNo = j.EvalNo
+                        }).ToList();
+
+            db.Dispose();
+
+            if (computetime == true)
+            {
+                foreach (JobTracker j in data)
+                {
+                    if (j.EndTime != null)
+                    {
+                        double time = Convert.ToDateTime(j.EndTime).Subtract(Convert.ToDateTime(j.StartTime)).TotalMinutes;
+                        double hr = Math.Truncate(time / 60);
+                        double min = time % 60;
+                        j.totalhours = hr == 0 && min == 0 ? "0 min" : (hr > 0 ? hr > 1 ? hr + " hrs" : hr + " hr" : "") + (hr > 0 && min > 0 ? ", " : "") + (min > 0 ? min > 1 ? min + " mins" : min + " min" : "");
+                    }
+
+                }
+            }
 
             return data;
         }
@@ -257,7 +325,9 @@ namespace TimeTracker.Model
                             SWNo = j.SWNo,
                             HWNo = j.HWNo,
                             JobStatus = j.JobStatus,
-                            fullname = j.M_User.Firstname + " " + j.M_User.Lastname
+                            fullname = j.M_User.Firstname + " " + j.M_User.Lastname,
+                            Customer = j.Customer,
+                            EvalNo = j.EvalNo
                         }).FirstOrDefault();
 
             db.Dispose();
@@ -304,7 +374,9 @@ namespace TimeTracker.Model
                             SWNo = j.SWNo,
                             HWNo = j.HWNo,
                             JobStatus = j.JobStatus,
-                            fullname = j.M_User.Firstname + " " + j.M_User.Lastname
+                            fullname = j.M_User.Firstname + " " + j.M_User.Lastname,
+                            Customer = j.Customer,
+                            EvalNo = j.EvalNo
                         }).FirstOrDefault();
 
             db.Dispose();
@@ -352,7 +424,9 @@ namespace TimeTracker.Model
                             SWNo = j.SWNo,
                             HWNo = j.HWNo,
                             JobStatus = j.JobStatus,
-                            fullname = j.M_User.Firstname + " " + j.M_User.Lastname
+                            fullname = j.M_User.Firstname + " " + j.M_User.Lastname,
+                            Customer = j.Customer,
+                            EvalNo = j.EvalNo
                         }).ToList();
 
             db.Dispose();
@@ -376,7 +450,7 @@ namespace TimeTracker.Model
                         curindex = i;
                     }
                 }
-                else if (data[i].JobStatus.IndexOf("Completed") > -1)
+                else if (data[i].JobStatus.IndexOf("Completed") > -1 && curindex < 0)
                 {
                     if (curstatus == "") 
                     {
@@ -392,7 +466,7 @@ namespace TimeTracker.Model
             return result;
         }
 
-        public string GetTotalHours(int jobtypeid, DateTime startdate, DateTime enddate, string jobstatus,int departmentid = 0,string stringjobid="")
+        public string GetTotalHours(int jobtypeid, DateTime startdate, DateTime enddate, string jobstatus,int departmentid = 0,string stringjobid="",string customer = "")
         {
             TimeTrackerEntities db = new TimeTrackerEntities();
 
@@ -426,7 +500,9 @@ namespace TimeTracker.Model
                             ScheduleDate = j.ScheduleDate,
                             JobStatus = j.JobStatus,
                             SWNo = j.SWNo,
-                            HWNo = j.HWNo
+                            HWNo = j.HWNo,
+                            Customer = j.Customer,
+                            EvalNo = j.EvalNo
                         }).ToList();
             }
             else 
@@ -457,16 +533,27 @@ namespace TimeTracker.Model
                             ScheduleDate = j.ScheduleDate,
                             JobStatus = j.JobStatus,
                             SWNo = j.SWNo,
-                            HWNo = j.HWNo
+                            HWNo = j.HWNo,
+                            Customer = j.Customer,
+                            EvalNo = j.EvalNo
                         }).ToList();
             }
 
             db.Dispose();
+            if (customer.Trim() != "") 
+            {
+                data = data.Where(d => (d.Customer == null ? "" : d.Customer).ToUpper().Contains(customer.ToUpper().Trim())).ToList();
+            }
+            if (stringjobid.Trim() != "") 
+            {
+                data = data.Where(d => (d.EvalNo == null ? "" : d.EvalNo).ToUpper().Contains(stringjobid.ToUpper().Trim()) || d.HWNo.Trim() == stringjobid.Trim() || d.SWNo.Trim() == stringjobid.Trim()).ToList();
+            }
+
             double totalTime = 0;
             foreach (JobTracker j in data)
             {
-                if (j.HWNo.ToString().Contains(stringjobid) || j.SWNo.ToString().Contains(stringjobid))
-                    totalTime += Convert.ToDateTime(j.EndTime).Subtract(Convert.ToDateTime(j.StartTime)).TotalMinutes;
+                //if (j.HWNo.ToString().Contains(stringjobid) || j.SWNo.ToString().Contains(stringjobid))
+                totalTime += Convert.ToDateTime(j.EndTime).Subtract(Convert.ToDateTime(j.StartTime)).TotalMinutes;
             }
             double hr = Math.Truncate(totalTime / 60);
             double min = totalTime % 60;
@@ -474,7 +561,7 @@ namespace TimeTracker.Model
             return result;
         }
 
-        public string GetTotalHours(int jobtypeid,int userid, DateTime startdate, DateTime enddate, string jobstatus, int departmentid,string stringjobid="")
+        public string GetTotalHours(int jobtypeid,int userid, DateTime startdate, DateTime enddate, string jobstatus, int departmentid,string stringjobid="",string customer = "")
         {
             TimeTrackerEntities db = new TimeTrackerEntities();
 
@@ -508,16 +595,25 @@ namespace TimeTracker.Model
                         ScheduleDate = j.ScheduleDate,
                         JobStatus = j.JobStatus,
                         SWNo = j.SWNo,
-                        HWNo = j.HWNo
+                        HWNo = j.HWNo,
+                        Customer = j.Customer,
+                        EvalNo = j.EvalNo
                     }).ToList();
 
             db.Dispose();
-
+            if (customer.Trim() != "")
+            {
+                data = data.Where(d => (d.Customer == null ? "" : d.Customer).ToUpper().Contains(customer.ToUpper().Trim())).ToList();
+            }
+            if (stringjobid.Trim() != "")
+            {
+                data = data.Where(d => (d.EvalNo == null ? "" : d.EvalNo).ToUpper().Contains(stringjobid.ToUpper().Trim()) || d.HWNo.Trim() == stringjobid.Trim() || d.SWNo.Trim() == stringjobid.Trim()).ToList();
+            }
             double totalTime = 0;
             foreach (JobTracker j in data)
             {
-                if(j.HWNo.ToString().Contains(stringjobid) || j.SWNo.ToString().Contains(stringjobid))
-                    totalTime += Convert.ToDateTime(j.EndTime).Subtract(Convert.ToDateTime(j.StartTime)).TotalMinutes;
+                //if(j.HWNo.ToString().Contains(stringjobid) || j.SWNo.ToString().Contains(stringjobid))
+                totalTime += Convert.ToDateTime(j.EndTime).Subtract(Convert.ToDateTime(j.StartTime)).TotalMinutes;
             }
             double hr = Math.Truncate(totalTime / 60);
             double min = totalTime % 60;
@@ -557,7 +653,9 @@ namespace TimeTracker.Model
                         ScheduleDate = j.ScheduleDate,
                         JobStatus = j.JobStatus,
                         SWNo = j.SWNo,
-                        HWNo = j.HWNo
+                        HWNo = j.HWNo,
+                        EvalNo = j.EvalNo,
+                        Customer = j.Customer
                     }).ToList();
 
             db.Dispose();
@@ -649,7 +747,7 @@ namespace TimeTracker.Model
             return counter;
         }
 
-        public List<JobTracker> GetJobTrackerList(int userid,DateTime selecteddate)
+        public List<JobTracker> GetJobTrackerList(int userid, DateTime selecteddate, bool computetime)
         {
             TimeTrackerEntities db = new TimeTrackerEntities();
 
@@ -680,42 +778,107 @@ namespace TimeTracker.Model
                             JobStatus = j.JobStatus,
                             SWNo = j.SWNo,
                             HWNo = j.HWNo,
-                            fullname = j.M_User.Firstname + " " + j.M_User.Lastname
+                            fullname = j.M_User.Firstname + " " + j.M_User.Lastname,
+                            Customer = j.Customer,
+                            EvalNo = j.EvalNo
                         }).ToList();
 
             db.Dispose();
 
-            foreach (JobTracker j in data)
+            if (computetime == true)
             {
-                if (j.JobIdNumber != null && j.JobIdNumber != "")
+                foreach (JobTracker j in data)
                 {
-                    GetCustomer(j);
-                }
+                    //if (j.JobIdNumber != null && j.JobIdNumber != "")
+                    //{
+                    //    GetCustomer(j);
+                    //}
 
-                if (j.EndTime != null)
-                {
-                    double time = Convert.ToDateTime(j.EndTime).Subtract(Convert.ToDateTime(j.StartTime)).TotalMinutes;
-                    double hr = Math.Truncate(time / 60);
-                    double min = time % 60;
-                    j.totalhours = hr == 0 && min == 0 ? "0 min" : (hr > 0 ? hr > 1 ? hr + " hrs" : hr + " hr" : "") + (hr > 0 && min > 0 ? ", " : "") + (min > 0 ? min > 1 ? min + " mins" : min + " min" : "");
+                    if (j.EndTime != null)
+                    {
+                        double time = Convert.ToDateTime(j.EndTime).Subtract(Convert.ToDateTime(j.StartTime)).TotalMinutes;
+                        double hr = Math.Truncate(time / 60);
+                        double min = time % 60;
+                        j.totalhours = hr == 0 && min == 0 ? "0 min" : (hr > 0 ? hr > 1 ? hr + " hrs" : hr + " hr" : "") + (hr > 0 && min > 0 ? ", " : "") + (min > 0 ? min > 1 ? min + " mins" : min + " min" : "");
+                    }
                 }
-
             }
 
 
             return data;
         }
 
-        public List<JobTracker> GetJobTrackerListExcludeRejected(int userid, DateTime startdate,DateTime enddate)
+        //public List<JobTracker> GetJobTrackerListExcludeRejected(int userid, DateTime startdate, DateTime enddate, bool computetime)
+        //{
+        //    TimeTrackerEntities db = new TimeTrackerEntities();
+
+        //    var data = (from j in db.T_JobTracker
+        //                where j.UserId == userid
+        //                && j.ScheduleDate >= startdate
+        //                && j.EndTime <= enddate
+        //                && j.Status != "Rejected"
+        //                orderby j.StartTime ascending, j.EndTime ascending
+        //                select new JobTracker()
+        //                {
+        //                    Id = j.Id,
+        //                    UserId = j.UserId,
+        //                    StartTime = j.StartTime,
+        //                    EndTime = j.EndTime,
+        //                    Description = j.Description,
+        //                    JobTypeId = j.JobTypeId,
+        //                    JobIdNumber = j.JobIdNumber,
+        //                    jobtype = j.M_JobType.Description,
+        //                    Remarks = j.Remarks,
+        //                    ApprovedBy = j.ApprovedBy,
+        //                    CreateDate = j.CreateDate,
+        //                    LastUpdateDate = j.LastUpdateDate,
+        //                    CreatedBy = j.CreatedBy,
+        //                    LastUpdatedBy = j.LastUpdatedBy,
+        //                    Status = j.Status,
+        //                    SupervisorRemarks = j.SupervisorRemarks,
+        //                    ActionRequest = j.ActionRequest,
+        //                    ScheduleDate = j.ScheduleDate,
+        //                    JobStatus = j.JobStatus,
+        //                    SWNo = j.SWNo,
+        //                    HWNo = j.HWNo,
+        //                    fullname = j.M_User.Firstname + " " + j.M_User.Lastname,
+        //                    Customer = j.Customer,
+        //                    EvalNo = j.EvalNo
+        //                }).ToList();
+
+        //    db.Dispose();
+
+        //    if (computetime == true)
+        //    {
+        //        foreach (JobTracker j in data)
+        //        {
+        //            //if (j.JobIdNumber != null && j.JobIdNumber != "")
+        //            //{
+        //            //    GetCustomer(j);
+        //            //}
+
+        //            if (j.EndTime != null)
+        //            {
+        //                double time = Convert.ToDateTime(j.EndTime).Subtract(Convert.ToDateTime(j.StartTime)).TotalMinutes;
+        //                double hr = Math.Truncate(time / 60);
+        //                double min = time % 60;
+        //                j.totalhours = hr == 0 && min == 0 ? "0 min" : (hr > 0 ? hr > 1 ? hr + " hrs" : hr + " hr" : "") + (hr > 0 && min > 0 ? ", " : "") + (min > 0 ? min > 1 ? min + " mins" : min + " min" : "");
+        //            }
+        //        }
+        //    }
+
+        //    return data;
+        //}
+
+        public List<JobTracker> GetJobTrackerListExcludeRejected(DateTime startdate, DateTime enddate, int userid = 0,int dept = 0, string jobid = "",string customer = "", bool computetime = false)
         {
             TimeTrackerEntities db = new TimeTrackerEntities();
 
             var data = (from j in db.T_JobTracker
-                        where j.UserId == userid
-                        && j.ScheduleDate >= startdate
+                        where j.ScheduleDate >= startdate
                         && j.EndTime <= enddate
                         && j.Status != "Rejected"
-                        orderby j.StartTime ascending
+                        orderby j.StartTime ascending, j.EndTime ascending
                         select new JobTracker()
                         {
                             Id = j.Id,
@@ -739,29 +902,128 @@ namespace TimeTracker.Model
                             JobStatus = j.JobStatus,
                             SWNo = j.SWNo,
                             HWNo = j.HWNo,
-                            fullname = j.M_User.Firstname + " " + j.M_User.Lastname
+                            fullname = j.M_User.Firstname + " " + j.M_User.Lastname,
+                            Customer = j.Customer,
+                            EvalNo = j.EvalNo,
+                            departmentid = j.M_User.DepartmentId,
+                            department = j.M_User.M_Department.Description
                         }).ToList();
 
             db.Dispose();
 
-            foreach (JobTracker j in data)
+            if (userid != 0) 
             {
-                if (j.JobIdNumber != null && j.JobIdNumber != "")
-                {
-                    GetCustomer(j);
-                }
-
-                if (j.EndTime != null)
-                {
-                    double time = Convert.ToDateTime(j.EndTime).Subtract(Convert.ToDateTime(j.StartTime)).TotalMinutes;
-                    double hr = Math.Truncate(time / 60);
-                    double min = time % 60;
-                    j.totalhours = hr == 0 && min == 0 ? "0 min" : (hr > 0 ? hr > 1 ? hr + " hrs" : hr + " hr" : "") + (hr > 0 && min > 0 ? ", " : "") + (min > 0 ? min > 1 ? min + " mins" : min + " min" : "");
-                }
-
+                data = data.Where(d => d.UserId == userid).ToList();
             }
+            if (dept != 0) 
+            {
+                data = data.Where(d => d.departmentid == dept).ToList();
+            }
+            if (jobid.Trim() != "") 
+            {
+                data = data.Where(d => d.EvalNo.ToUpper().Contains(jobid.ToUpper().Trim()) || d.HWNo == jobid.Trim() || d.SWNo == jobid.Trim()).ToList();
+            }
+            if (customer.Trim() != "") 
+            {
+                data = data.Where(d => d.Customer.ToUpper().Contains(customer.ToUpper().Trim())).ToList();
+            }
+            if (computetime == true)
+            {
+                foreach (JobTracker j in data)
+                {
+                    //if (j.JobIdNumber != null && j.JobIdNumber != "")
+                    //{
+                    //    GetCustomer(j);
+                    //}
 
+                    if (j.EndTime != null)
+                    {
+                        double time = Convert.ToDateTime(j.EndTime).Subtract(Convert.ToDateTime(j.StartTime)).TotalMinutes;
+                        double hr = Math.Truncate(time / 60);
+                        double min = time % 60;
+                        j.totalhours = hr == 0 && min == 0 ? "0 min" : (hr > 0 ? hr > 1 ? hr + " hrs" : hr + " hr" : "") + (hr > 0 && min > 0 ? ", " : "") + (min > 0 ? min > 1 ? min + " mins" : min + " min" : "");
+                    }
+                }
+            }
+            return data;
+        }
 
+        public List<JobTracker> GetJobTrackerList(DateTime startdate, DateTime enddate,int jobtypeid,string status, int userid = 0, int dept = 0, string jobid = "", string customer = "", bool computetime = false)
+        {
+            TimeTrackerEntities db = new TimeTrackerEntities();
+
+            var data = (from j in db.T_JobTracker
+                        where j.ScheduleDate >= startdate
+                        && j.EndTime <= enddate
+                        && j.Status == status
+                        && j.JobTypeId == jobtypeid
+                        orderby j.StartTime ascending, j.EndTime ascending
+                        select new JobTracker()
+                        {
+                            Id = j.Id,
+                            UserId = j.UserId,
+                            StartTime = j.StartTime,
+                            EndTime = j.EndTime,
+                            Description = j.Description,
+                            JobTypeId = j.JobTypeId,
+                            JobIdNumber = j.JobIdNumber,
+                            jobtype = j.M_JobType.Description,
+                            Remarks = j.Remarks,
+                            ApprovedBy = j.ApprovedBy,
+                            CreateDate = j.CreateDate,
+                            LastUpdateDate = j.LastUpdateDate,
+                            CreatedBy = j.CreatedBy,
+                            LastUpdatedBy = j.LastUpdatedBy,
+                            Status = j.Status,
+                            SupervisorRemarks = j.SupervisorRemarks,
+                            ActionRequest = j.ActionRequest,
+                            ScheduleDate = j.ScheduleDate,
+                            JobStatus = j.JobStatus,
+                            SWNo = j.SWNo,
+                            HWNo = j.HWNo,
+                            fullname = j.M_User.Firstname + " " + j.M_User.Lastname,
+                            Customer = j.Customer,
+                            EvalNo = j.EvalNo,
+                            departmentid = j.M_User.DepartmentId,
+                            department = j.M_User.M_Department.Description
+                        }).ToList();
+
+            db.Dispose();
+
+            if (userid != 0)
+            {
+                data = data.Where(d => d.UserId == userid).ToList();
+            }
+            if (dept != 0)
+            {
+                data = data.Where(d => d.departmentid == dept).ToList();
+            }
+            if (jobid.Trim() != "")
+            {
+                data = data.Where(d => d.EvalNo.ToUpper().Contains(jobid.ToUpper().Trim()) || d.HWNo == jobid.Trim() || d.SWNo == jobid.Trim()).ToList();
+            }
+            if (customer.Trim() != "")
+            {
+                data = data.Where(d => d.Customer.ToUpper().Contains(customer.ToUpper().Trim())).ToList();
+            }
+            if (computetime == true)
+            {
+                foreach (JobTracker j in data)
+                {
+                    //if (j.JobIdNumber != null && j.JobIdNumber != "")
+                    //{
+                    //    GetCustomer(j);
+                    //}
+
+                    if (j.EndTime != null)
+                    {
+                        double time = Convert.ToDateTime(j.EndTime).Subtract(Convert.ToDateTime(j.StartTime)).TotalMinutes;
+                        double hr = Math.Truncate(time / 60);
+                        double min = time % 60;
+                        j.totalhours = hr == 0 && min == 0 ? "0 min" : (hr > 0 ? hr > 1 ? hr + " hrs" : hr + " hr" : "") + (hr > 0 && min > 0 ? ", " : "") + (min > 0 ? min > 1 ? min + " mins" : min + " min" : "");
+                    }
+                }
+            }
             return data;
         }
 
@@ -786,12 +1048,18 @@ namespace TimeTracker.Model
                             HWNo = j.HWNo,
                         }).Distinct().ToList();
 
-            db.Dispose();
+            
             for (int i = 0; i < data.Count; i++) 
             {
                 if (data[i].HWNo.ToString().Contains(stringjobid) || data[i].SWNo.ToString().Contains(stringjobid))
                 {
-                    data[i].GetCustomer(data[i]);
+                    //data[i].GetCustomer(data[i]);
+                    string hwno = data[i].HWNo;
+                    string swno = data[i].SWNo;
+                    var jt = db.T_JobTracker.First(j => j.HWNo == hwno && j.SWNo == swno);
+                    data[i].Customer = jt.Customer;
+                    data[i].Description = jt.Description;
+                    data[i].EvalNo = jt.EvalNo;
                 }
                 else 
                 {
@@ -799,7 +1067,7 @@ namespace TimeTracker.Model
                     i--;
                 }
             }
-
+            db.Dispose();
             return data;
         }
 
@@ -850,7 +1118,7 @@ namespace TimeTracker.Model
             return result;
         }
 
-        public List<JobTracker> GetRequestNeededApproval(int userid)
+        public List<JobTracker> GetRequestNeededApproval(int userid, bool computetime)
         {
             TimeTrackerEntities db = new TimeTrackerEntities();
 
@@ -883,33 +1151,37 @@ namespace TimeTracker.Model
                             JobStatus = j.JobStatus,
                             SWNo = j.SWNo,
                             HWNo = j.HWNo,
-                            fullname = j.M_User.Firstname + " " + j.M_User.Lastname //Requestor
+                            fullname = j.M_User.Firstname + " " + j.M_User.Lastname, //Requestor
+                            Customer = j.Customer,
+                            EvalNo = j.EvalNo
                         }).ToList();
 
             db.Dispose();
 
-            foreach (JobTracker j in data)
+            if (computetime == true)
             {
-                if (j.JobIdNumber != null && j.JobIdNumber != "")
+                foreach (JobTracker j in data)
                 {
-                    GetCustomer(j);
-                }
+                    //if (j.JobIdNumber != null && j.JobIdNumber != "")
+                    //{
+                    //    GetCustomer(j);
+                    //}
 
-                if (j.EndTime != null)
-                {
-                    double time = Convert.ToDateTime(j.EndTime).Subtract(Convert.ToDateTime(j.StartTime)).TotalMinutes;
-                    double hr = Math.Truncate(time / 60);
-                    double min = time % 60;
-                    j.totalhours = hr == 0 && min == 0 ? "0 min" : (hr > 0 ? hr > 1 ? hr + " hrs" : hr + " hr" : "") + (hr > 0 && min > 0 ? ", " : "") + (min > 0 ? min > 1 ? min + " mins" : min + " min" : "");
+                    if (j.EndTime != null)
+                    {
+                        double time = Convert.ToDateTime(j.EndTime).Subtract(Convert.ToDateTime(j.StartTime)).TotalMinutes;
+                        double hr = Math.Truncate(time / 60);
+                        double min = time % 60;
+                        j.totalhours = hr == 0 && min == 0 ? "0 min" : (hr > 0 ? hr > 1 ? hr + " hrs" : hr + " hr" : "") + (hr > 0 && min > 0 ? ", " : "") + (min > 0 ? min > 1 ? min + " mins" : min + " min" : "");
+                    }
                 }
-
             }
 
 
             return data;
         }
 
-        public List<JobTracker> GetPendingRequest(int userid) 
+        public List<JobTracker> GetPendingRequest(int userid, bool computetime) 
         {
             TimeTrackerEntities db = new TimeTrackerEntities();
 
@@ -940,25 +1212,29 @@ namespace TimeTracker.Model
                             JobStatus = j.JobStatus,
                             SWNo = j.SWNo,
                             HWNo = j.HWNo,
-                            fullname = j.M_Supervisor.Firstname + " " + j.M_Supervisor.Lastname //Supervisor
+                            fullname = j.M_Supervisor.Firstname + " " + j.M_Supervisor.Lastname, //Supervisor
+                            Customer = j.Customer,
+                            EvalNo = j.EvalNo
                         }).ToList();
 
             db.Dispose();
 
-            foreach (JobTracker j in data)
+            if (computetime == true)
             {
-                if (j.JobIdNumber != null)
+                foreach (JobTracker j in data)
                 {
-                    GetCustomer(j);
+                    //if (j.JobIdNumber != null)
+                    //{
+                    //    GetCustomer(j);
+                    //}
+                    if (j.EndTime != null)
+                    {
+                        double time = Convert.ToDateTime(j.EndTime).Subtract(Convert.ToDateTime(j.StartTime)).TotalMinutes;
+                        double hr = Math.Truncate(time / 60);
+                        double min = time % 60;
+                        j.totalhours = hr == 0 && min == 0 ? "0 min" : (hr > 0 ? hr > 1 ? hr + " hrs" : hr + " hr" : "") + (hr > 0 && min > 0 ? ", " : "") + (min > 0 ? min > 1 ? min + " mins" : min + " min" : "");
+                    }
                 }
-                if (j.EndTime != null)
-                {
-                    double time = Convert.ToDateTime(j.EndTime).Subtract(Convert.ToDateTime(j.StartTime)).TotalMinutes;
-                    double hr = Math.Truncate(time / 60);
-                    double min = time % 60;
-                    j.totalhours = hr == 0 && min == 0 ? "0 min" : (hr > 0 ? hr > 1 ? hr + " hrs" : hr + " hr" : "") + (hr > 0 && min > 0 ? ", " : "") + (min > 0 ? min > 1 ? min + " mins" : min + " min" : "");
-                }
-
             }
 
 
@@ -966,7 +1242,7 @@ namespace TimeTracker.Model
         
         }
 
-        public List<JobTracker> GetRejectedRequest(int userid)
+        public List<JobTracker> GetRejectedRequest(int userid, bool computetime)
         {
             TimeTrackerEntities db = new TimeTrackerEntities();
 
@@ -997,26 +1273,30 @@ namespace TimeTracker.Model
                             SWNo = j.SWNo,
                             HWNo = j.HWNo,
                             JobStatus = j.JobStatus,
-                            fullname = j.M_Supervisor.Firstname + " " + j.M_Supervisor.Lastname //Supervisor
+                            fullname = j.M_Supervisor.Firstname + " " + j.M_Supervisor.Lastname, //Supervisor
+                            Customer = j.Customer,
+                            EvalNo = j.EvalNo
                         }).Take(10).ToList();
 
             db.Dispose();
 
-            foreach (JobTracker j in data)
+            if (computetime == true)
             {
-                if (j.JobIdNumber != null && j.JobIdNumber != "")
+                foreach (JobTracker j in data)
                 {
-                    GetCustomer(j);
-                }
+                    //if (j.JobIdNumber != null && j.JobIdNumber != "")
+                    //{
+                    //    GetCustomer(j);
+                    //}
 
-                if (j.EndTime != null)
-                {
-                    double time = Convert.ToDateTime(j.EndTime).Subtract(Convert.ToDateTime(j.StartTime)).TotalMinutes;
-                    double hr = Math.Truncate(time / 60);
-                    double min = time % 60;
-                    j.totalhours = hr == 0 && min == 0 ? "0 min" : (hr > 0 ? hr > 1 ? hr + " hrs" : hr + " hr" : "") + (hr > 0 && min > 0 ? ", " : "") + (min > 0 ? min > 1 ? min + " mins" : min + " min" : "");
+                    if (j.EndTime != null)
+                    {
+                        double time = Convert.ToDateTime(j.EndTime).Subtract(Convert.ToDateTime(j.StartTime)).TotalMinutes;
+                        double hr = Math.Truncate(time / 60);
+                        double min = time % 60;
+                        j.totalhours = hr == 0 && min == 0 ? "0 min" : (hr > 0 ? hr > 1 ? hr + " hrs" : hr + " hr" : "") + (hr > 0 && min > 0 ? ", " : "") + (min > 0 ? min > 1 ? min + " mins" : min + " min" : "");
+                    }
                 }
-
             }
 
 
@@ -1055,25 +1335,27 @@ namespace TimeTracker.Model
                             SWNo = j.SWNo,
                             HWNo = j.HWNo,
                             JobStatus = j.JobStatus,
-                            fullname = j.M_User.Firstname + " " + j.M_User.Lastname
+                            fullname = j.M_User.Firstname + " " + j.M_User.Lastname,
+                            Customer = j.Customer,
+                            EvalNo = j.EvalNo
                         }).ToList();
 
             db.Dispose();
 
-            foreach (JobTracker j in data)
-            {
-                if (j.JobIdNumber != null && j.JobIdNumber != "")
-                {
-                    GetCustomer(j);
-                }
+            //foreach (JobTracker j in data)
+            //{
+            //    if (j.JobIdNumber != null && j.JobIdNumber != "")
+            //    {
+            //        GetCustomer(j);
+            //    }
 
-            }
+            //}
 
 
             return data;
         }
 
-        public List<JobTracker> GetUnclosedJobs(int userid,DateTime selecteddate)
+        public List<JobTracker> GetUnclosedJobs(int userid, DateTime selecteddate, bool computetime)
         {
             TimeTrackerEntities db = new TimeTrackerEntities();
 
@@ -1105,95 +1387,101 @@ namespace TimeTracker.Model
                             SWNo = j.SWNo,
                             HWNo = j.HWNo,
                             JobStatus = j.JobStatus,
-                            fullname = j.M_User.Firstname + " " + j.M_User.Lastname
+                            fullname = j.M_User.Firstname + " " + j.M_User.Lastname,
+                            Customer = j.Customer,
+                            EvalNo = j.EvalNo
                         }).ToList();
 
             db.Dispose();
 
-            foreach (JobTracker j in data)
+            if (computetime == true)
             {
-                if (j.JobIdNumber != null && j.JobIdNumber != "")
+                foreach (JobTracker j in data)
                 {
-                    GetCustomer(j);
-                }
+                    //if (j.JobIdNumber != null && j.JobIdNumber != "")
+                    //{
+                    //    GetCustomer(j);
+                    //}
 
-                if (j.EndTime != null)
-                {
-                    double time = Convert.ToDateTime(j.EndTime).Subtract(Convert.ToDateTime(j.StartTime)).TotalMinutes;
-                    double hr = Math.Truncate(time / 60);
-                    double min = time % 60;
-                    j.totalhours = hr == 0 && min == 0 ? "0 min" : (hr > 0 ? hr > 1 ? hr + " hrs" : hr + " hr" : "") + (hr > 0 && min > 0 ? ", " : "") + (min > 0 ? min > 1 ? min + " mins" : min + " min" : "");
+                    if (j.EndTime != null)
+                    {
+                        double time = Convert.ToDateTime(j.EndTime).Subtract(Convert.ToDateTime(j.StartTime)).TotalMinutes;
+                        double hr = Math.Truncate(time / 60);
+                        double min = time % 60;
+                        j.totalhours = hr == 0 && min == 0 ? "0 min" : (hr > 0 ? hr > 1 ? hr + " hrs" : hr + " hr" : "") + (hr > 0 && min > 0 ? ", " : "") + (min > 0 ? min > 1 ? min + " mins" : min + " min" : "");
+                    }
                 }
-
             }
 
 
             return data;
         }
 
-        public JobTracker GetCustomer(string jobid) 
-        {
-            JobTracker jobTracker = new JobTracker();
-            using (SqlConnection con = new SqlConnection(ConfigurationManager.ConnectionStrings["CAPHWConnection"].ToString()))
-            {
-                SqlCommand cmd = new SqlCommand("Select CO_Name,SO.SO_PCBdesc from Company CO, Sales_Order SO where SO.CO_ID = CO.CO_ID and SO.SO_Num = '" + jobid.Trim() + "'", con);
-                con.Open();
-                SqlDataReader reader = cmd.ExecuteReader();
-                while (reader.Read())
-                {
-                    jobTracker.customer = reader["CO_Name"].ToString();
-                    jobTracker.pcbdesc = reader["SO_PCBdesc"].ToString();
-                }
-            }
-            if (jobTracker.customer == null || jobTracker.customer == "")
-            {
-                using (SqlConnection con = new SqlConnection(ConfigurationManager.ConnectionStrings["CAPSWConnection"].ToString()))
-                {
-                    SqlCommand cmd = new SqlCommand("Select CO_Name,SO.SO_PCBdesc from Company CO, Sales_Order SO where SO.CO_ID = CO.CO_ID and SO.SO_Num = '" + jobid.Trim() + "'", con);
-                    con.Open();
-                    SqlDataReader reader = cmd.ExecuteReader();
-                    while (reader.Read())
-                    {
-                        jobTracker.customer = reader["CO_Name"].ToString();
-                        jobTracker.pcbdesc = reader["SO_PCBdesc"].ToString();
-                    }
-                }
-            }
+        //private JobTracker GetCustomer(string jobid) 
+        //{
+        //    JobTracker jobTracker = new JobTracker();
+        //    using (SqlConnection con = new SqlConnection(ConfigurationManager.ConnectionStrings["CAPHWConnection"].ToString()))
+        //    {
+        //        SqlCommand cmd = new SqlCommand("Select CO_Name,SO.SO_PCBdesc from Company CO, Sales_Order SO where SO.CO_ID = CO.CO_ID and SO.SO_Num = '" + jobid.Trim() + "'", con);
+        //        con.Open();
+        //        SqlDataReader reader = cmd.ExecuteReader();
+        //        while (reader.Read())
+        //        {
+        //            jobTracker.Customer = reader["CO_Name"].ToString();
+        //            jobTracker.Description = reader["SO_PCBdesc"].ToString();
+        //        }
+        //    }
+        //    if (jobTracker.Customer == null || jobTracker.Customer == "")
+        //    {
+        //        using (SqlConnection con = new SqlConnection(ConfigurationManager.ConnectionStrings["CAPSWConnection"].ToString()))
+        //        {
+        //            SqlCommand cmd = new SqlCommand("Select CO_Name,SO.SO_PCBdesc from Company CO, Sales_Order SO where SO.CO_ID = CO.CO_ID and SO.SO_Num = '" + jobid.Trim() + "'", con);
+        //            con.Open();
+        //            SqlDataReader reader = cmd.ExecuteReader();
+        //            while (reader.Read())
+        //            {
+        //                jobTracker.Customer = reader["CO_Name"].ToString();
+        //                jobTracker.Description = reader["SO_PCBdesc"].ToString();
+        //            }
+        //        }
+        //    }
 
-            return jobTracker;
-        }
+        //    return jobTracker;
+        //}
 
-        public void GetCustomer(JobTracker jobtracker) 
-        {
-            if (jobtracker.HWNo != null && jobtracker.HWNo.Trim() != "")
-            {
-                using (SqlConnection con = new SqlConnection(ConfigurationManager.ConnectionStrings["CAPHWConnection"].ToString()))
-                {
-                    SqlCommand cmd = new SqlCommand("Select CO_Name,SO.SO_PCBdesc from Company CO, Sales_Order SO where SO.CO_ID = CO.CO_ID and SO.SO_Num = '" + jobtracker.HWNo.Trim() + "'", con);
-                    con.Open();
-                    SqlDataReader reader = cmd.ExecuteReader();
-                    while (reader.Read())
-                    {
-                        jobtracker.customer = reader["CO_Name"].ToString();
-                        jobtracker.pcbdesc = reader["SO_PCBdesc"].ToString();
-                    }
-                }
-            }
-            else if ((jobtracker.SWNo != null && jobtracker.SWNo.Trim() != "") && (jobtracker.customer == null || jobtracker.customer.Trim() == "")) 
-            {
-                using (SqlConnection con = new SqlConnection(ConfigurationManager.ConnectionStrings["CAPSWConnection"].ToString()))
-                {
-                    SqlCommand cmd = new SqlCommand("Select CO_Name,SO.SO_PCBdesc from Company CO, Sales_Order SO where SO.CO_ID = CO.CO_ID and SO.SO_Num = '" + jobtracker.SWNo.Trim() + "'", con);
-                    con.Open();
-                    SqlDataReader reader = cmd.ExecuteReader();
-                    while (reader.Read())
-                    {
-                        jobtracker.customer = reader["CO_Name"].ToString();
-                        jobtracker.pcbdesc = reader["SO_PCBdesc"].ToString();
-                    }
-                }
-            }
-        }
+        //private void GetCustomer(JobTracker jobtracker) 
+        //{
+        //    if (jobtracker.HWNo != null && jobtracker.HWNo.Trim() != "")
+        //    {
+        //        using (SqlConnection con = new SqlConnection(ConfigurationManager.ConnectionStrings["CAPHWConnection"].ToString()))
+        //        {
+        //            SqlCommand cmd = new SqlCommand("Select CO_Name,SO.SO_PCBdesc from Company CO, Sales_Order SO where SO.CO_ID = CO.CO_ID and SO.SO_Num = '" + jobtracker.HWNo.Trim() + "'", con);
+        //            con.Open();
+        //            SqlDataReader reader = cmd.ExecuteReader();
+        //            while (reader.Read())
+        //            {
+        //                jobtracker.Customer = reader["CO_Name"].ToString();
+        //                jobtracker.Description = reader["SO_PCBdesc"].ToString();
+        //            }
+        //        }
+        //    }
+        //    else if ((jobtracker.SWNo != null && jobtracker.SWNo.Trim() != "") && (jobtracker.Customer == null || jobtracker.Customer.Trim() == "")) 
+        //    {
+        //        using (SqlConnection con = new SqlConnection(ConfigurationManager.ConnectionStrings["CAPSWConnection"].ToString()))
+        //        {
+        //            SqlCommand cmd = new SqlCommand("Select CO_Name,SO.SO_PCBdesc from Company CO, Sales_Order SO where SO.CO_ID = CO.CO_ID and SO.SO_Num = '" + jobtracker.SWNo.Trim() + "'", con);
+        //            con.Open();
+        //            SqlDataReader reader = cmd.ExecuteReader();
+        //            while (reader.Read())
+        //            {
+        //                jobtracker.Customer = reader["CO_Name"].ToString();
+        //                jobtracker.Description = reader["SO_PCBdesc"].ToString();
+        //            }
+        //        }
+        //    }
+        //}
+
+
 
         public void Insert(JobTracker jobtracker) 
         {
@@ -1270,6 +1558,8 @@ namespace TimeTracker.Model
             data.HWNo = jobtracker.HWNo;
             data.SWNo = jobtracker.SWNo;
             data.JobStatus = jobtracker.JobStatus;
+            data.Customer = jobtracker.Customer;
+            data.EvalNo = jobtracker.EvalNo;
         }
 
         private void UpdateParse(T_JobTracker t_jobtracker, JobTracker jobtracker) 
@@ -1291,6 +1581,8 @@ namespace TimeTracker.Model
             t_jobtracker.HWNo = jobtracker.HWNo;
             t_jobtracker.SWNo = jobtracker.SWNo;
             t_jobtracker.JobStatus = jobtracker.JobStatus;
+            t_jobtracker.Customer = jobtracker.Customer;
+            t_jobtracker.EvalNo = jobtracker.EvalNo;
         }
 
         public bool HasUnclosedJobs(int userid) 
@@ -1332,7 +1624,7 @@ namespace TimeTracker.Model
             return result;
         }
 
-        public JobTracker GenerateHWAndSW(string jobidnumber) 
+        public JobTracker GenerateHWAndSWOld2(string jobidnumber) 
         {
             JobTracker jobtracker = new JobTracker();
             using (SqlConnection con = new SqlConnection(ConfigurationManager.ConnectionStrings["CAPHWConnection"].ToString()))
@@ -1342,8 +1634,8 @@ namespace TimeTracker.Model
                 SqlDataReader reader = cmd.ExecuteReader();
                 while (reader.Read())
                 {
-                    jobtracker.customer = reader["CO_Name"].ToString();
-                    jobtracker.pcbdesc = reader["SO_PCBdesc"].ToString();
+                    jobtracker.Customer = reader["CO_Name"].ToString();
+                    jobtracker.Description = reader["SO_PCBdesc"].ToString();
                     jobtracker.HWNo = reader["SO_Num"].ToString();
                 }
             }
@@ -1356,8 +1648,8 @@ namespace TimeTracker.Model
                     SqlDataReader reader = cmd.ExecuteReader();
                     while (reader.Read())
                     {
-                        jobtracker.customer = reader["CO_Name"].ToString();
-                        jobtracker.pcbdesc = reader["SO_PCBdesc"].ToString();
+                        jobtracker.Customer = reader["CO_Name"].ToString();
+                        jobtracker.Description = reader["SO_PCBdesc"].ToString();
                         jobtracker.SWNo = reader["SO_Num"].ToString();
                     }
                 }
@@ -1365,7 +1657,7 @@ namespace TimeTracker.Model
                 {
                     using (SqlConnection con = new SqlConnection(ConfigurationManager.ConnectionStrings["CAPHWConnection"].ToString()))
                     {
-                        SqlCommand cmd = new SqlCommand("Select TOP 1 SO_Num from Sales_Order SO where '" + jobtracker.pcbdesc.Trim() + "' Like '%'+CAST(SO_Num as varchar(20))+'%' ORDER BY SO_NUM Desc", con);
+                        SqlCommand cmd = new SqlCommand("Select TOP 1 SO_Num from Sales_Order SO where '" + jobtracker.Description.Trim() + "' Like '%'+CAST(SO_Num as varchar(20))+'%' ORDER BY SO_NUM Desc", con);
                         con.Open();
                         SqlDataReader reader = cmd.ExecuteReader();
                         while (reader.Read())
@@ -1393,7 +1685,7 @@ namespace TimeTracker.Model
             {
                 using (SqlConnection con = new SqlConnection(ConfigurationManager.ConnectionStrings["CAPSWConnection"].ToString()))
                 {
-                    SqlCommand cmd = new SqlCommand("Select TOP 1 SO_Num from Sales_Order SO where '" + jobtracker.pcbdesc.Trim() + "' Like '%'+CAST(SO_Num as varchar(20))+'%' ORDER BY SO_NUM Desc", con);
+                    SqlCommand cmd = new SqlCommand("Select TOP 1 SO_Num from Sales_Order SO where '" + jobtracker.Description.Trim() + "' Like '%'+CAST(SO_Num as varchar(20))+'%' ORDER BY SO_NUM Desc", con);
                     con.Open();
                     SqlDataReader reader = cmd.ExecuteReader();
                     while (reader.Read())
@@ -1413,6 +1705,114 @@ namespace TimeTracker.Model
                         while (reader.Read())
                         {
                             jobtracker.SWNo = reader["SO_Num"].ToString();
+                        }
+                    }
+                }
+            }
+            return jobtracker;
+        }
+
+        public JobTracker GenerateHWAndSWOld(string jobidnumber)
+        {
+            JobTracker jobtracker = new JobTracker();
+            using (SqlConnection con = new SqlConnection(ConfigurationManager.ConnectionStrings["CAPHWConnection"].ToString()))
+            {
+                SqlCommand cmd = new SqlCommand("Select TOP 1 SO_Num,CO_Name,SO.SO_PCBdesc,SO_TotalSolSO,SO.SO_EvalNo from Company CO, Sales_Order SO where SO.CO_ID = CO.CO_ID and SO.SO_Num = '" + jobidnumber.Trim() + "'", con);
+                con.Open();
+                SqlDataReader reader = cmd.ExecuteReader();
+                while (reader.Read())
+                {
+                    jobtracker.Customer = reader["CO_Name"].ToString();
+                    jobtracker.Description = reader["SO_PCBdesc"].ToString();
+                    jobtracker.HWNo = reader["SO_Num"].ToString();
+                    jobtracker.SWNo = reader["SO_TotalSolSO"].ToString();
+                    jobtracker.EvalNo = reader["SO_EvalNo"].ToString();
+                }
+            }
+            if (jobtracker.HWNo == null || jobtracker.HWNo.Trim() == "")
+            {
+                using (SqlConnection con = new SqlConnection(ConfigurationManager.ConnectionStrings["CAPSWConnection"].ToString()))
+                {
+                    SqlCommand cmd = new SqlCommand("Select TOP 1 SO_Num,CO_Name,SO.SO_PCBdesc,SO_TotalSolSO,SO.SO_EvalNo from Company CO, Sales_Order SO where SO.CO_ID = CO.CO_ID and SO.SO_Num = '" + jobidnumber.Trim() + "'", con);
+                    con.Open();
+                    SqlDataReader reader = cmd.ExecuteReader();
+                    while (reader.Read())
+                    {
+                        jobtracker.Customer = reader["CO_Name"].ToString();
+                        jobtracker.Description = reader["SO_PCBdesc"].ToString();
+                        jobtracker.SWNo = reader["SO_Num"].ToString();
+                        jobtracker.HWNo = reader["SO_TotalSolSO"].ToString();
+                        jobtracker.EvalNo = reader["SO_EvalNo"].ToString();
+                    }
+                }
+            }
+            return jobtracker;
+        }
+
+        public JobTracker GenerateHWAndSW(string jobidnumber)
+        {
+            JobTracker jobtracker = new JobTracker();
+            using (SqlConnection con = new SqlConnection(ConfigurationManager.ConnectionStrings["CAPHWConnection"].ToString()))
+            {
+                SqlCommand cmd = new SqlCommand("Select TOP 1 SO_Num,CO_Name,SO.SO_PCBdesc,SO_TotalSolSO,SO.SO_EvalNo from Company CO, Sales_Order SO where SO.CO_ID = CO.CO_ID and SO.SO_EvalNo Like '%" + jobidnumber.Trim() + "%'", con);
+                con.Open();
+                SqlDataReader reader = cmd.ExecuteReader();
+                while (reader.Read())
+                {
+                    jobtracker.Customer = reader["CO_Name"].ToString();
+                    jobtracker.Description = reader["SO_PCBdesc"].ToString();
+                    jobtracker.HWNo = reader["SO_Num"].ToString();
+                    jobtracker.SWNo = reader["SO_TotalSolSO"].ToString();
+                    jobtracker.EvalNo = reader["SO_EvalNo"].ToString();
+                }
+            }
+            if (jobtracker.HWNo == null || jobtracker.HWNo.Trim() == "")
+            {
+                using (SqlConnection con = new SqlConnection(ConfigurationManager.ConnectionStrings["CAPSWConnection"].ToString()))
+                {
+                    SqlCommand cmd = new SqlCommand("Select TOP 1 SO_Num,CO_Name,SO.SO_PCBdesc,SO_TotalSolSO,SO.SO_EvalNo from Company CO, Sales_Order SO where SO.CO_ID = CO.CO_ID and SO.SO_EvalNo Like '%" + jobidnumber.Trim() + "%'", con);
+                    con.Open();
+                    SqlDataReader reader = cmd.ExecuteReader();
+                    while (reader.Read())
+                    {
+                        jobtracker.Customer = reader["CO_Name"].ToString();
+                        jobtracker.Description = reader["SO_PCBdesc"].ToString();
+                        jobtracker.SWNo = reader["SO_Num"].ToString();
+                        jobtracker.HWNo = reader["SO_TotalSolSO"].ToString();
+                        jobtracker.EvalNo = reader["SO_EvalNo"].ToString();
+                    }
+                }
+            }
+            if ((jobtracker.HWNo == null || jobtracker.HWNo.Trim() == "") && (jobtracker.SWNo == null || jobtracker.SWNo.Trim() == ""))
+            {
+                using (SqlConnection con = new SqlConnection(ConfigurationManager.ConnectionStrings["CAPHWConnection"].ToString()))
+                {
+                    SqlCommand cmd = new SqlCommand("Select TOP 1 SO_Num,CO_Name,SO.SO_PCBdesc,SO_TotalSolSO,SO.SO_EvalNo from Company CO, Sales_Order SO where SO.CO_ID = CO.CO_ID and SO.SO_Num = '" + jobidnumber.Trim() + "'", con);
+                    con.Open();
+                    SqlDataReader reader = cmd.ExecuteReader();
+                    while (reader.Read())
+                    {
+                        jobtracker.Customer = reader["CO_Name"].ToString();
+                        jobtracker.Description = reader["SO_PCBdesc"].ToString();
+                        jobtracker.HWNo = reader["SO_Num"].ToString();
+                        jobtracker.SWNo = reader["SO_TotalSolSO"].ToString();
+                        jobtracker.EvalNo = reader["SO_EvalNo"].ToString();
+                    }
+                }
+                if (jobtracker.HWNo == null || jobtracker.HWNo.Trim() == "")
+                {
+                    using (SqlConnection con = new SqlConnection(ConfigurationManager.ConnectionStrings["CAPSWConnection"].ToString()))
+                    {
+                        SqlCommand cmd = new SqlCommand("Select TOP 1 SO_Num,CO_Name,SO.SO_PCBdesc,SO_TotalSolSO,SO.SO_EvalNo from Company CO, Sales_Order SO where SO.CO_ID = CO.CO_ID and SO.SO_Num = '" + jobidnumber.Trim() + "'", con);
+                        con.Open();
+                        SqlDataReader reader = cmd.ExecuteReader();
+                        while (reader.Read())
+                        {
+                            jobtracker.Customer = reader["CO_Name"].ToString();
+                            jobtracker.Description = reader["SO_PCBdesc"].ToString();
+                            jobtracker.SWNo = reader["SO_Num"].ToString();
+                            jobtracker.HWNo = reader["SO_TotalSolSO"].ToString();
+                            jobtracker.EvalNo = reader["SO_EvalNo"].ToString();
                         }
                     }
                 }
