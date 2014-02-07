@@ -154,19 +154,122 @@ namespace TimeTracker
             JobTracker jobtracker = new JobTracker();
             int jobtrackid = 0;
             bool noError = true;
-            if (BtnBreak.Text == "Take a break") 
+
+            if (jobtracker.HasPreviousUnclosedJobs(userid,DateTime.Today)) //check if user has unclosed jobs
             {
-                DateTime startTime = new DateTime();
-                if (gridJobTrack.Rows.Count > 0)
+                noError = false;
+                panelAlertHeader2.CssClass = "modalAlertHeader";
+                alertModalBtnOK2.CssClass = "buttonalert";
+                labelAlertHeader2.Text = "Error";
+                labelAlertMessage2.Text = "Please close all jobs before adding a new one.";
+                programmaticAlertModalPopup2.Show();
+            }
+            else
+            {
+                string errMsg = "";
+                errMsg = jobtracker.GetError(userid, selectedDate, 30); //check if there is an error
+                if (errMsg.Trim() != "")
+                {
+                    noError = false;
+                    panelAlertHeader2.CssClass = "modalAlertHeader";
+                    alertModalBtnOK2.CssClass = "buttonalert";
+                    labelAlertHeader2.Text = "Error";
+                    labelAlertMessage2.Text = errMsg.Trim() + " Please settle error first.";
+                    programmaticAlertModalPopup2.Show();
+                }
+            }
+            if (noError)
+            {
+                if (BtnBreak.Text == "Take a break")
+                {
+                    DateTime startTime = new DateTime();
+                    if (gridJobTrack.Rows.Count > 0)
+                    {
+                        jobtrackid = Convert.ToInt32(((Label)gridJobTrack.Rows[gridJobTrack.Rows.Count - 1].FindControl("labelJobTrackId")).Text);
+                        jobtracker = jobtracker.GetJobTracker(jobtrackid, false);
+                        JobType jtype = jobtype.GetJobType(Convert.ToInt32(jobtracker.JobTypeId));
+                        if (jobtracker.EndTime == null)
+                        {
+                            DateTime stime = Convert.ToDateTime(jobtracker.StartTime);
+                            GenerateEndHour(stime.Hour, stime.Minute, true);
+                            GenerateEndMin(stime.Hour, stime.Minute, "--");
+                            modalDropDownEndTimeHour.SelectedIndex = (modalDropDownEndTimeHour.Items.Count - 1);
+                            GenerateEndMin(stime.Hour, stime.Minute, modalDropDownEndTimeHour.SelectedItem.Text.Trim(), modalDropDownEndTimeMin.Items.Count == 0 ? "" : modalDropDownEndTimeHour.Items[modalDropDownEndTimeHour.Items.Count - 1].Text.Trim() + ":" + modalDropDownEndTimeMin.SelectedItem.Text.Trim());
+                            if (modalDropDownEndTimeHour.Items[modalDropDownEndTimeHour.Items.Count - 1].Text != "--")
+                            {
+                                if (modalDropDownEndTimeHour.SelectedValue == "24") //end date selected is 12:00 AM next day
+                                {
+                                    jobtracker.EndTime = DateTime.Parse((selectedDate.AddDays(1)).Year + "-" + (selectedDate.AddDays(1)).Month + "-" + (selectedDate.AddDays(1)).Day + " 00:00:00");
+                                }
+                                else
+                                {
+                                    jobtracker.EndTime = DateTime.Parse(selectedDate.Year + "-" + selectedDate.Month + "-" + selectedDate.Day + " " + modalDropDownEndTimeHour.Items[modalDropDownEndTimeHour.Items.Count - 1].Value + ":" + modalDropDownEndTimeMin.Items[modalDropDownEndTimeMin.Items.Count - 1].Value + ":00");
+                                }
+                                jobtracker.Status = "Approved";
+                                jobtracker.ApprovedBy = userid;
+                                jobtracker.ActionRequest = "Update";
+                                jobtracker.Update(jobtracker);
+                                startTime = Convert.ToDateTime(jobtracker.EndTime);
+                                InitializeGrid();
+                            }
+                            else
+                            {
+                                noError = false;
+                                TimeSetting tsetting = new TimeSetting();
+                                tsetting = tsetting.GetTimeSetting();
+                                panelAlertHeader2.CssClass = "modalAlertHeader";
+                                alertModalBtnOK2.CssClass = "buttonalert";
+                                labelAlertHeader2.Text = "Error";
+                                labelAlertMessage2.Text = "Cannot take a break without spending at least " + tsetting + " minutes on the last task.";
+                            }
+                        }
+                        else
+                        {
+                            startTime = Convert.ToDateTime(jobtracker.EndTime);
+                        }
+                    }
+                    else
+                    {
+                        GenerateStartHour();
+                        GenerateStartMin(Convert.ToInt32(modalDropDownStartTimeHour.SelectedItem.Value));
+                        startTime = DateTime.Parse(selectedDate.Year + "-" + selectedDate.Month + "-" + selectedDate.Day + " " + modalDropDownStartTimeHour.SelectedValue + ":" + modalDropDownStartTimeMin.SelectedValue + ":00");
+                    }
+                    if (noError)
+                    {
+                        jobtracker = new JobTracker();
+                        jobtracker.StartTime = startTime;
+                        jobtracker.Status = "Pending";
+                        jobtracker.JobStatus = "";
+                        jobtracker.ApprovedBy = userid;
+                        jobtracker.ActionRequest = "Add";
+                        jobtracker.UserId = userid;
+                        jobtracker.CreateDate = DateTime.Now;
+                        jobtracker.CreatedBy = userid;
+                        jobtracker.LastUpdateDate = DateTime.Now;
+                        jobtracker.LastUpdatedBy = userid;
+                        jobtracker.Description = jobtype.Description;
+                        jobtracker.JobTypeId = jobtype.Id;
+                        jobtracker.ScheduleDate = selectedDate;
+                        jobtracker.Remarks = "";
+                        jobtracker.Insert(jobtracker);
+                        InitializeGrid();
+                    }
+                    else
+                    {
+                        programmaticAlertModalPopup2.Show();
+                    }
+                }
+                else if (BtnBreak.Text == "End break")
                 {
                     jobtrackid = Convert.ToInt32(((Label)gridJobTrack.Rows[gridJobTrack.Rows.Count - 1].FindControl("labelJobTrackId")).Text);
                     jobtracker = jobtracker.GetJobTracker(jobtrackid, false);
-                    JobType jtype = jobtype.GetJobType(Convert.ToInt32(jobtracker.JobTypeId));
-                    if (jobtracker.EndTime == null)
+                    jobtracker.LastUpdateDate = DateTime.Now;
+                    jobtracker.LastUpdatedBy = userid;
+                    if (jobtracker.JobTypeId == jobtype.Id)
                     {
                         DateTime stime = Convert.ToDateTime(jobtracker.StartTime);
                         GenerateEndHour(stime.Hour, stime.Minute, true);
-                        GenerateEndMin(stime.Hour,stime.Minute,"--");
+                        GenerateEndMin(stime.Hour, stime.Minute, "--");
                         modalDropDownEndTimeHour.SelectedIndex = (modalDropDownEndTimeHour.Items.Count - 1);
                         GenerateEndMin(stime.Hour, stime.Minute, modalDropDownEndTimeHour.SelectedItem.Text.Trim(), modalDropDownEndTimeMin.Items.Count == 0 ? "" : modalDropDownEndTimeHour.Items[modalDropDownEndTimeHour.Items.Count - 1].Text.Trim() + ":" + modalDropDownEndTimeMin.SelectedItem.Text.Trim());
                         if (modalDropDownEndTimeHour.Items[modalDropDownEndTimeHour.Items.Count - 1].Text != "--")
@@ -183,112 +286,41 @@ namespace TimeTracker
                             jobtracker.ApprovedBy = userid;
                             jobtracker.ActionRequest = "Update";
                             jobtracker.Update(jobtracker);
-                            startTime = Convert.ToDateTime(jobtracker.EndTime);
+                            InitializeGrid();
                         }
                         else
                         {
-                            noError = false;
-                            TimeSetting tsetting = new TimeSetting();
-                            tsetting = tsetting.GetTimeSetting();
-                            panelAlertHeader2.CssClass = "modalAlertHeader";
-                            alertModalBtnOK2.CssClass = "buttonalert";
-                            labelAlertHeader2.Text = "Error";
-                            labelAlertMessage2.Text = "Cannot take a break without spending at least " + tsetting + " minutes on the last task.";
+                            jobtracker.Delete(jobtracker.Id);
+                            InitializeGrid();
                         }
                     }
-                    else
+                    if (gridJobTrack.Rows.Count > 1)
                     {
-                        startTime = Convert.ToDateTime(jobtracker.EndTime);
+                        for (int i = gridJobTrack.Rows.Count - 1; i >= 0; i--)
+                        {
+                            jobtrackid = Convert.ToInt32(((Label)gridJobTrack.Rows[i].FindControl("labelJobTrackId")).Text);
+                            JobTracker jtracker = jobtracker.GetJobTracker(jobtrackid, false);
+                            JobType jtype = jobtype.GetJobType(Convert.ToInt32(jtracker.JobTypeId));
+                            if (jtype.ComputeTime == true)
+                            {
+                                jtracker.StartTime = jobtracker.EndTime;
+                                jtracker.UserId = userid;
+                                jtracker.CreateDate = DateTime.Now;
+                                jtracker.CreatedBy = userid;
+                                jtracker.LastUpdateDate = DateTime.Now;
+                                jtracker.LastUpdatedBy = userid;
+                                jtracker.EndTime = null;
+                                jtracker.ActionRequest = "Add";
+                                jtracker.Status = "Approved";
+                                jtracker.Insert(jtracker);
+                                InitializeGrid();
+                                break;
+                            }
+                        }
                     }
                 }
-                else 
-                {
-                    GenerateStartHour();
-                    GenerateStartMin(Convert.ToInt32(modalDropDownStartTimeHour.SelectedItem.Value));
-                    startTime = DateTime.Parse(selectedDate.Year + "-" + selectedDate.Month + "-" + selectedDate.Day + " " + modalDropDownStartTimeHour.SelectedValue + ":" + modalDropDownStartTimeMin.SelectedValue + ":00");
-                }
-                if (noError)
-                {
-                    jobtracker = new JobTracker();
-                    jobtracker.StartTime = startTime;
-                    jobtracker.Status = "Pending";
-                    jobtracker.JobStatus = "";
-                    jobtracker.ApprovedBy = userid;
-                    jobtracker.ActionRequest = "Add";
-                    jobtracker.UserId = userid;
-                    jobtracker.CreateDate = DateTime.Now;
-                    jobtracker.CreatedBy = userid;
-                    jobtracker.LastUpdateDate = DateTime.Now;
-                    jobtracker.LastUpdatedBy = userid;
-                    jobtracker.Description = jobtype.Description;
-                    jobtracker.JobTypeId = jobtype.Id;
-                    jobtracker.ScheduleDate = selectedDate;
-                    jobtracker.Remarks = "";
-                    jobtracker.Insert(jobtracker);
-                }
-                else 
-                {
-                    programmaticAlertModalPopup2.Show();
-                }
+                
             }
-            else if (BtnBreak.Text == "End break") 
-            {
-                jobtrackid = Convert.ToInt32(((Label)gridJobTrack.Rows[gridJobTrack.Rows.Count - 1].FindControl("labelJobTrackId")).Text);
-                jobtracker = jobtracker.GetJobTracker(jobtrackid, false);
-                jobtracker.LastUpdateDate = DateTime.Now;
-                jobtracker.LastUpdatedBy = userid;
-                if (jobtracker.JobTypeId == jobtype.Id)
-                {
-                    DateTime stime = Convert.ToDateTime(jobtracker.StartTime);
-                    GenerateEndHour(stime.Hour, stime.Minute, true);
-                    GenerateEndMin(stime.Hour,stime.Minute,"--");
-                    modalDropDownEndTimeHour.SelectedIndex = (modalDropDownEndTimeHour.Items.Count - 1);
-                    GenerateEndMin(stime.Hour, stime.Minute, modalDropDownEndTimeHour.SelectedItem.Text.Trim(), modalDropDownEndTimeMin.Items.Count == 0 ? "" : modalDropDownEndTimeHour.Items[modalDropDownEndTimeHour.Items.Count - 1].Text.Trim() + ":" + modalDropDownEndTimeMin.SelectedItem.Text.Trim());
-                    if (modalDropDownEndTimeHour.Items[modalDropDownEndTimeHour.Items.Count - 1].Text != "--")
-                    {
-                        if (modalDropDownEndTimeHour.SelectedValue == "24") //end date selected is 12:00 AM next day
-                        {
-                            jobtracker.EndTime = DateTime.Parse((selectedDate.AddDays(1)).Year + "-" + (selectedDate.AddDays(1)).Month + "-" + (selectedDate.AddDays(1)).Day + " 00:00:00");
-                        }
-                        else
-                        {
-                            jobtracker.EndTime = DateTime.Parse(selectedDate.Year + "-" + selectedDate.Month + "-" + selectedDate.Day + " " + modalDropDownEndTimeHour.Items[modalDropDownEndTimeHour.Items.Count -1].Value + ":" + modalDropDownEndTimeMin.Items[modalDropDownEndTimeMin.Items.Count -1].Value + ":00");
-                        }
-                        jobtracker.Status = "Approved";
-                        jobtracker.ApprovedBy = userid;
-                        jobtracker.ActionRequest = "Update";
-                        jobtracker.Update(jobtracker);
-                    }
-                    else
-                    {
-                        jobtracker.Delete(jobtracker.Id);
-                    }
-                }
-                if (gridJobTrack.Rows.Count > 1)
-                {
-                    for (int i = gridJobTrack.Rows.Count - 1; i >= 0; i--)
-                    {
-                        jobtrackid = Convert.ToInt32(((Label)gridJobTrack.Rows[i].FindControl("labelJobTrackId")).Text);
-                        JobTracker jtracker = jobtracker.GetJobTracker(jobtrackid, false);
-                        JobType jtype = jobtype.GetJobType(Convert.ToInt32(jtracker.JobTypeId));
-                        if (jtype.ComputeTime == true) 
-                        {
-                            jtracker.StartTime = jobtracker.EndTime;
-                            jtracker.UserId = userid;
-                            jtracker.CreateDate = DateTime.Now;
-                            jtracker.CreatedBy = userid;
-                            jtracker.LastUpdateDate = DateTime.Now;
-                            jtracker.LastUpdatedBy = userid;
-                            jtracker.EndTime = null;
-                            jtracker.ActionRequest = "Add";
-                            jtracker.Status = "Approved";
-                            jtracker.Insert(jtracker);
-                            break;
-                        }
-                    }
-                }
-            }
-            InitializeGrid();
         }
 
         protected void gridViewJobTrack_Command(object sender, GridViewCommandEventArgs e) 

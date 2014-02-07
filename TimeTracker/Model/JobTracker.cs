@@ -1632,8 +1632,48 @@ namespace TimeTracker.Model
             TimeTrackerEntities db = new TimeTrackerEntities();
 
             var data = (from j in db.T_JobTracker
-                        where j.ApprovedBy == userid
+                        where j.UserId == userid
                         && j.Status == "Pending"
+                        select new JobTracker()
+                        {
+                            Id = j.Id,
+                            UserId = j.UserId,
+                            StartTime = j.StartTime,
+                            EndTime = j.EndTime,
+                            Description = j.Description,
+                            JobTypeId = j.JobTypeId,
+                            JobIdNumber = j.JobIdNumber,
+                            jobtype = j.M_JobType.Description,
+                            Remarks = j.Remarks,
+                            ApprovedBy = j.ApprovedBy,
+                            CreateDate = j.CreateDate,
+                            LastUpdateDate = j.LastUpdateDate,
+                            CreatedBy = j.CreatedBy,
+                            LastUpdatedBy = j.LastUpdatedBy,
+                            Status = j.Status,
+                            SupervisorRemarks = j.SupervisorRemarks,
+                            ActionRequest = j.ActionRequest,
+                            ScheduleDate = j.ScheduleDate,
+                            fullname = j.M_User.Firstname + " " + j.M_User.Lastname
+                        }).FirstOrDefault();
+
+            db.Dispose();
+
+            if (data == null)
+                result = false;
+
+            return result;
+        }
+
+        public bool HasPreviousUnclosedJobs(int userid,DateTime? currentDate)
+        {
+            bool result = true;
+            TimeTrackerEntities db = new TimeTrackerEntities();
+
+            var data = (from j in db.T_JobTracker
+                        where j.UserId == userid
+                        && j.Status == "Pending"
+                        && j.ScheduleDate != currentDate
                         select new JobTracker()
                         {
                             Id = j.Id,
