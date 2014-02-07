@@ -1304,6 +1304,47 @@ namespace TimeTracker.Model
 
         }
 
+        public JobTracker GetOldestUnclosedJob(int userid)
+        {
+            TimeTrackerEntities db = new TimeTrackerEntities();
+
+            var data = (from j in db.T_JobTracker
+                        where j.ApprovedBy == userid
+                        && j.Status == "Pending"
+                        orderby j.StartTime ascending
+                        select new JobTracker()
+                        {
+                            Id = j.Id,
+                            UserId = j.UserId,
+                            StartTime = j.StartTime,
+                            EndTime = j.EndTime,
+                            Description = j.Description,
+                            JobTypeId = j.JobTypeId,
+                            JobIdNumber = j.JobIdNumber,
+                            jobtype = j.M_JobType.Description,
+                            Remarks = j.Remarks,
+                            ApprovedBy = j.ApprovedBy,
+                            CreateDate = j.CreateDate,
+                            LastUpdateDate = j.LastUpdateDate,
+                            CreatedBy = j.CreatedBy,
+                            LastUpdatedBy = j.LastUpdatedBy,
+                            Status = j.Status,
+                            SupervisorRemarks = j.SupervisorRemarks,
+                            ActionRequest = j.ActionRequest,
+                            ScheduleDate = j.ScheduleDate,
+                            SWNo = j.SWNo,
+                            HWNo = j.HWNo,
+                            JobStatus = j.JobStatus,
+                            fullname = j.M_User.Firstname + " " + j.M_User.Lastname,
+                            Customer = j.Customer,
+                            EvalNo = j.EvalNo
+                        }).FirstOrDefault();
+
+            db.Dispose();
+
+            return data;
+        }
+
         public List<JobTracker> GetUnclosedJobs(int userid)
         {
             TimeTrackerEntities db = new TimeTrackerEntities();
@@ -1824,7 +1865,7 @@ namespace TimeTracker.Model
         {
             string result = "";
             DateTime sdate = selecteddate.AddDays(-1 * numberofdays);
-            for (int i = 1; i < numberofdays; i++) 
+            for (int i = 0; i < numberofdays; i++) 
             {
                 if (HasTimeGap(userid, sdate)) 
                 {
@@ -1837,6 +1878,27 @@ namespace TimeTracker.Model
                     break;
                 }
                 sdate = sdate.AddDays(1);
+            }
+            return result;
+        }
+
+        public bool CanConnectToCAP() 
+        {
+            bool result = true;
+            using (SqlConnection con = new SqlConnection(ConfigurationManager.ConnectionStrings["CAPHWConnection"].ToString()))
+            {
+                try
+                {
+                    con.Open();
+                }
+                catch
+                {
+                    result = false;
+                }
+                finally 
+                {
+                    con.Close();
+                }
             }
             return result;
         }

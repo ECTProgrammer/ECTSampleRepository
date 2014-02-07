@@ -19,7 +19,12 @@
         <div style="border-top:solid 1px #dedede; padding:0px 0px 0px 0px;"></div>
         <div class="frame">
             <br /><br /><br />
-            <asp:Panel runat="server" DefaultButton="btnLogin" HorizontalAlign="Center" >
+            <asp:Panel ID="Panel_Error" runat="server" DefaultButton="btnLogin" HorizontalAlign="Center" Visible="false" >
+                <table class="table" style="margin-left:auto; margin-right:auto;" border="0">
+                    <tr><td><asp:Label ID="labelCapError" runat="server" Text="Cannot establish connection to CAP server. Please contact your system administrator." CssClass="validation"></asp:Label></td></tr>
+                </table>
+            </asp:Panel>
+            <asp:Panel ID="PanelLogin" runat="server" DefaultButton="btnLogin" HorizontalAlign="Center" >
             <table class="table" style="margin-left:auto; margin-right:auto;" border="0">
                 <tr><td colspan="3"  style="text-align:center">
                     <asp:Label ID="labelError" runat="server" Text="" Visible="false" CssClass="validation"></asp:Label>

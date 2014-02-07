@@ -148,9 +148,9 @@
                                                <asp:LinkButton ID="linkBtnBottomWaitingWork" runat="server" Text='<%#Eval("totalforapproval")%>' CommandArgument='<%#Eval("jobtypeid")+"|"+Eval("jobtype")+"|For Approval"%>' OnCommand="linkButtonBottom_Command"></asp:LinkButton>
                                            </ItemTemplate>
                                        </asp:TemplateField>
-                                       <asp:TemplateField HeaderText="Total Rejected Time">
+                                       <asp:TemplateField HeaderText="Total Job Time">
                                            <ItemTemplate>
-                                               <asp:LinkButton ID="linkBtnBottomRejectedWork" runat="server" Text='<%#Eval("totalrejectedtime")%>' CommandArgument='<%#Eval("jobtypeid")+"|"+Eval("jobtype")+"|Rejected"%>' OnCommand="linkButtonBottom_Command"></asp:LinkButton>
+                                               <asp:LinkButton ID="linkBtnBottomRejectedWork" runat="server" Text='<%#Eval("totaljobTime")%>' CommandArgument='<%#Eval("jobtypeid")+"|"+Eval("jobtype")+"|Approved|JobTime"%>' OnCommand="linkButtonBottom_Command"></asp:LinkButton>
                                            </ItemTemplate>
                                        </asp:TemplateField>
                                        <%--<asp:BoundField HeaderText="Number of Unclosed Task" DataField="totalunclosedjobs" />--%>
@@ -171,7 +171,7 @@
                                     <asp:BoundField HeaderText="Description of Work" DataField="jobtype" ReadOnly="true"></asp:BoundField>
                                     <asp:BoundField HeaderText="JobId" DataField="JobIdNumber" ReadOnly="true"></asp:BoundField>
                                     <asp:BoundField HeaderText="Customer" DataField="customer" ReadOnly="true"></asp:BoundField>
-                                    <%--<asp:BoundField HeaderText="Number of Hours" DataField="totalhours" ReadOnly="true"></asp:BoundField>--%>
+                                    <asp:BoundField HeaderText="Hours in Words" DataField="totalhours" ReadOnly="true"></asp:BoundField>
                                     <asp:BoundField HeaderText="Remarks" DataField="Remarks" ReadOnly="true"></asp:BoundField>
                                     <asp:BoundField HeaderText="Task Status" DataField="JobStatus" ReadOnly="true"></asp:BoundField>
                                     <asp:BoundField HeaderText="Entry Status" DataField="Status" ReadOnly="true"></asp:BoundField>
@@ -218,6 +218,7 @@
                                     <asp:BoundField HeaderText="Date" DataField="ScheduleDate" DataFormatString="{0:dd MMM yyyy}" ReadOnly="true" />
                                     <asp:BoundField HeaderText="Start Time" DataField="StartTime" DataFormatString="{0:t}" ReadOnly="true"></asp:BoundField>
                                     <asp:BoundField HeaderText="End Time" DataField="EndTime" DataFormatString="{0:t}" ReadOnly="true"></asp:BoundField>
+                                    <asp:BoundField HeaderText="Hours in Words" DataField="totalhours" ReadOnly="true"></asp:BoundField>
                                     <asp:BoundField HeaderText="JobId" DataField="JobIdNumber" ReadOnly="true"></asp:BoundField>
                                     <asp:BoundField HeaderText="Customer" DataField="customer" ReadOnly="true"></asp:BoundField>
                                     <asp:BoundField HeaderText="Remarks" DataField="Remarks" ReadOnly="true"></asp:BoundField>

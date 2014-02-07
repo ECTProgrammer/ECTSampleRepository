@@ -13,7 +13,7 @@ namespace TimeTracker
         protected void Page_Load(object sender, EventArgs e)
         {
             //btnLogin.Attributes.Add("onclick", "document.body.style.cursor = 'wait';"); //change mouse pointer to hourglass on button click
-
+            ConnectToCAP();
         }
 
         protected void BtnLogin_Click(object sender, EventArgs e)
@@ -35,6 +35,15 @@ namespace TimeTracker
                 labelError.Text = "Login Failed. Please check your username or/and password.";
                 labelError.Visible = true;
             }
+        }
+
+        protected void ConnectToCAP() 
+        {
+            JobTracker jobtracker = new JobTracker();
+
+            PanelLogin.Visible = jobtracker.CanConnectToCAP();
+            Panel_Error.Visible = !jobtracker.CanConnectToCAP();
+            
         }
     }
 }

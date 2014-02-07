@@ -15,7 +15,8 @@ namespace TimeTracker
 
         protected void Page_Load(object sender, EventArgs e)
         {
-            if (!IsValidUser())
+            JobTracker jobtracker = new JobTracker();
+            if (!isValidUser() || (!jobtracker.CanConnectToCAP()))
                 Response.Redirect("Login.aspx");
             GetMyAccessRights();
             if (myAccessRights == null)
@@ -69,20 +70,28 @@ namespace TimeTracker
             modalDropDownRoles.DataBind();
         }
 
-        private void InitializeModalGridViewDepartment(int jobtypeid = 0)
+        private void InitializeModalGridViewDepartment(int roleid = 0)
         {
             Department department = new Department();
             var departmentList = department.GetDepartmentList();
             modalGridViewDepartment.DataSource = departmentList;
             modalGridViewDepartment.DataBind();
 
-            if (jobtypeid > 0)
+            if (roleid > 0)
             {
-                InitializeModalDepartmentCheckBox(jobtypeid);
+                InitializeModalDepartmentCheckBox(roleid);
                 if (modalGridViewDepartment.Rows.Count > 1)
                     modalChkboxAll.Visible = true;
                 else
                     modalChkboxAll.Visible = false;
+            }
+            else 
+            {
+                for (int i = 0; i < modalGridViewDepartment.Rows.Count; i++)
+                {
+                    CheckBox cb = (CheckBox)modalGridViewDepartment.Rows[i].FindControl("modalChkBoxSelect");
+                    cb.Checked = false;
+                }
             }
         }
 
@@ -114,6 +123,7 @@ namespace TimeTracker
             InitializeModalDropDownRoles();
             modalBtnSubmit.Visible = true;
             modalBtnSubmit.CommandArgument = "Add";
+            modalChkboxAll.Checked = false;
             this.programmaticModalPopup.Show();
         }
 
@@ -128,6 +138,7 @@ namespace TimeTracker
                 InitializeModalDropDownRoles(roleId);
                 modalBtnSubmit.CommandArgument = "Update";
                 modalBtnSubmit.Visible = Convert.ToBoolean(myAccessRights.CanUpdate);
+                modalChkboxAll.Checked = areAllDepartmentSelected();
                 this.programmaticModalPopup.Show();
             }
         }
@@ -201,7 +212,7 @@ namespace TimeTracker
             return isempty;
         }
 
-        protected bool IsValidUser()
+        protected bool isValidUser()
         {
             bool isvalid = false;
             if (Session["UserId"] != null)
@@ -225,6 +236,21 @@ namespace TimeTracker
             Module module = new Module();
             module = module.GetModule("SetupDepartmentAccess.aspx");
             myAccessRights = myAccessRights.GetRolesModuleAccess(Convert.ToInt32(user.RoleId), module.Id);
+        }
+
+        protected bool areAllDepartmentSelected() 
+        {
+            bool result = true;
+            for (int i = 0; i < modalGridViewDepartment.Rows.Count; i++)
+            {
+                CheckBox cb = (CheckBox)modalGridViewDepartment.Rows[i].FindControl("modalChkBoxSelect");
+                if (cb.Checked == false) 
+                {
+                    result = false;
+                    break;
+                }
+            }
+            return result;
         }
 
         #endregion

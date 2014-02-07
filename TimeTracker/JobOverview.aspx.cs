@@ -20,7 +20,8 @@ namespace TimeTracker
         
         protected void Page_Load(object sender, EventArgs e)
         {
-            if (!isValidUser())
+            JobTracker jobtracker = new JobTracker();
+            if (!isValidUser() || (!jobtracker.CanConnectToCAP()))
                 Response.Redirect("Login.aspx");
             HttpContext.Current.Session["siteSubHeader"] = "JobOverview";
             HttpContext.Current.Session["selectedTab"] = "JobOverview";

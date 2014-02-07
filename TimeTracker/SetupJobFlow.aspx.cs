@@ -14,7 +14,8 @@ namespace TimeTracker
         RolesModuleAccess myAccessRights = new RolesModuleAccess();
         protected void Page_Load(object sender, EventArgs e)
         {
-            if (!IsValidUser())
+            JobTracker jobtracker = new JobTracker();
+            if (!isValidUser() || (!jobtracker.CanConnectToCAP()))
                 Response.Redirect("Login.aspx");
             GetMyAccessRights();
             if (myAccessRights == null)
@@ -416,7 +417,7 @@ namespace TimeTracker
             base.Render(writer);
         }
 
-        protected bool IsValidUser()
+        protected bool isValidUser()
         {
             bool isvalid = false;
             if (Session["UserId"] != null)

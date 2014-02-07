@@ -13,7 +13,8 @@ namespace TimeTracker
     {
         protected void Page_Load(object sender, EventArgs e)
         {
-            if (!isValidUser())
+            JobTracker jobtracker = new JobTracker();
+            if (!isValidUser() || (!jobtracker.CanConnectToCAP()))
                 Response.Redirect("Login.aspx");
             HttpContext.Current.Session["siteSubHeader"] = "Dashboard";
             HttpContext.Current.Session["selectedTab"] = "Dashboard";
@@ -316,7 +317,7 @@ namespace TimeTracker
                 string jobid = txtBoxBottomJobId.Text.Trim();
                 string customer = txtBoxBottomCustomer.Text.Trim();
                 int userid = Convert.ToInt32(ddlBottomPersonel.SelectedItem.Value);
-                data = jobTracker.GetJobTrackerListExcludeRejected(startdate, enddate, userid, deptid, jobid, customer);
+                data = jobTracker.GetJobTrackerListExcludeRejected(startdate, enddate, userid, deptid, jobid, customer,true);
                 //}
             }
             
@@ -341,7 +342,7 @@ namespace TimeTracker
                     waitingwork.Font.Underline = false;
                 }
                 LinkButton rejectedwork = (LinkButton)e.Row.FindControl("linkBtnBottomRejectedWork");
-                if (rejectedwork.Text.Trim() == "0 min")
+                if (rejectedwork.Text.Trim() == "0 min" || rejectedwork.Text.Trim() == "")
                 {
                     rejectedwork.Enabled = false;
                     rejectedwork.Font.Underline = false;
@@ -405,14 +406,20 @@ namespace TimeTracker
                 string jobtypeid = e.CommandArgument.ToString();
                 List<JobTracker> data = new List<JobTracker>();
                 string[] argument = jobtypeid.Split('|');
-                LinkButton lb = (LinkButton)sender;
                 DateTime startdate = Convert.ToDateTime(txtBoxBottomFromDate.Text.Trim() + " 00:00:00");
                 DateTime enddate = Convert.ToDateTime(txtBoxBottomToDate.Text.Trim() + " 23:59:59");
+                if (argument.Count() > 3) 
+                {
+                    startdate = Convert.ToDateTime("1900-01-01");
+                    enddate = DateTime.Now;
+                }
+                LinkButton lb = (LinkButton)sender;
+                
                 int deptid = Convert.ToInt32(ddlBottomDepartment.SelectedValue);
                 string jobid = txtBoxBottomJobId.Text.Trim();
                 string customer = txtBoxBottomCustomer.Text.Trim();
                 int userid = Convert.ToInt32(ddlBottomPersonel.SelectedItem.Value);
-                data = jobTracker.GetJobTrackerList(startdate, enddate,Convert.ToInt32(argument[0]),argument[2].Trim(), userid, deptid, jobid, customer);
+                data = jobTracker.GetJobTrackerList(startdate, enddate,Convert.ToInt32(argument[0]),argument[2].Trim(), userid, deptid, jobid, customer,true);
                 labelmodalBottom.Text = argument[1] + " - " + lb.Text+" - "+argument[2];
                 gridViewModalBottom.DataSource = data;
                 gridViewModalBottom.DataBind();

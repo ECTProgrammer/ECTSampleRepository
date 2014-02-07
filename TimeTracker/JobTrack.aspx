@@ -27,7 +27,9 @@
             <ajaxToolKit:CalendarExtender ID="calendarExtenderDate" runat="server" TargetControlID="txtBoxDate" Format="dd MMM yyyy"></ajaxToolKit:CalendarExtender>
             <table style="width:100%;">
                 <tr><td><asp:LinkButton ID="linkBtnAddJobTrack" runat="server" CausesValidation="false" Text="Add Job" CssClass="linkButton" Font-Bold="true" OnClick="linkBtnAddJobTrack_Click"></asp:LinkButton> 
-                </td><td><asp:Label ID="LabelTimeClock" runat="server" Font-Bold="true" Font-Size="12px" /></td><td style="text-align:right"><asp:Label ID="LabelTotalHours" ForeColor="#ff0000" Font-Size="12px" runat="server" Font-Bold="true"></asp:Label></td></tr></table>   
+                </td><td><asp:Label ID="LabelTimeClock" runat="server" Font-Bold="true" Font-Size="12px" /></td>
+                    <td style="text-align:right"><asp:Button ID="BtnBreak" runat="server" CausesValidation="false" Text="Take a break" CssClass="buttongreen" OnClick="BtnBreak_Click" /></td>
+                    <td style="text-align:right"><asp:Label ID="LabelTotalHours" ForeColor="#ff0000" Font-Size="12px" runat="server" Font-Bold="true"></asp:Label></td></tr></table>   
             <div style="margin:10px 10px 10px 10px">
             <asp:GridView ID="gridJobTrack" runat="server" AutoGenerateColumns="false" CssClass="gridView" GridLines="None" OnRowCommand="gridViewJobTrack_Command" ShowHeaderWhenEmpty="true">
                 <EmptyDataRowStyle/>
@@ -46,7 +48,7 @@
                     <asp:BoundField HeaderText="JobId" DataField="JobIdNumber" ReadOnly="true"></asp:BoundField>
                     <asp:BoundField HeaderText="Task Status" DataField="JobStatus" ReadOnly="true"></asp:BoundField>
                     <asp:BoundField HeaderText="Customer" DataField="Customer" ReadOnly="false"></asp:BoundField>
-                    <asp:BoundField HeaderText="Number of Hours" DataField="totalhours" ReadOnly="false"></asp:BoundField>
+                    <asp:BoundField HeaderText="Hours in Words" DataField="totalhours" ReadOnly="false"></asp:BoundField>
                     <asp:BoundField HeaderText="Remarks" DataField="Remarks"></asp:BoundField>
                     <asp:BoundField HeaderText="Status" DataField="Status"></asp:BoundField>
                 </Columns>
@@ -83,11 +85,12 @@
                         <tr><td>Description of Work</td><td>:</td><td><asp:DropDownList ID="modalDropDownJobType" runat="server" ValidationGroup="modal" AutoPostBack="true" CssClass="dropDownList1" OnSelectedIndexChanged="modalDropDownJobType_IndexChanged"></asp:DropDownList></td></tr>
                         <tr><td>Job Id</td><td>:</td><td><asp:TextBox ID="modalTxtBoxJobId" runat="server"  AutoPostBack="true" ValidationGroup="modal" OnTextChanged="modalTxtBoxJobId_TextChanged"></asp:TextBox>
                             <asp:RequiredFieldValidator ID="modalReqJobId" runat="server" ValidationGroup="modal" CssClass="validation" ControlToValidate="modalTxtBoxJobId" Text="*" /></td></tr>
-                        <tr><td>Task Status</td><td>:</td><td><asp:DropDownList ID="modalDropDownJobStatus"  runat="server">
+                        <tr><td>Task Status</td><td>:</td><td><asp:DropDownList ID="modalDropDownJobStatus"  runat="server" AppendDataBoundItems="true" ValidationGroup="modal">
+                            <asp:ListItem Text="--Select--" Value="--Select--"></asp:ListItem>
                             <asp:ListItem Text="In Progress" Value="In Progress"></asp:ListItem>
                             <asp:ListItem Text="On Hold" Value="On Hold"></asp:ListItem>
                             <asp:ListItem Text="Completed" Value="Completed"></asp:ListItem>
-                            </asp:DropDownList></td></tr>
+                            </asp:DropDownList> <asp:RequiredFieldValidator ID="modalReqJobStatus" runat="server" ValidationGroup="modal" ControlToValidate="modalDropDownJobStatus" ErrorMessage="*" InitialValue="--Select--"></asp:RequiredFieldValidator></td></tr>
                         <tr><td>Job Description</td><td>:</td><td><asp:Label ID="modallabelBoxJobDescription" runat="server"></asp:Label></td></tr>
                         <tr><td>Customer</td><td>:</td><td><asp:Label ID="modallabelCustomer" runat="server" ></asp:Label></td></tr>
                         <tr><td>Start Time</td><td>:</td><td><asp:DropDownList ID="modalDropDownStartTimeHour" runat="server" AutoPostBack="true" OnSelectedIndexChanged="modalDropDownStartTimeHour_IndexChanged" ValidationGroup="modal" />:<asp:DropDownList ID="modalDropDownStartTimeMin" runat="server" AutoPostBack="true" OnSelectedIndexChanged="modalDropDownStartTimeMin_IndexChanged" ValidationGroup="modal" />
