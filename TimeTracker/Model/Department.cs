@@ -7,6 +7,7 @@ namespace TimeTracker.Model
 {
     public class Department : T_Department
     {
+        //Get Department by Department Id
         public Department GetDepartment(int departmentid)
         {
             TimeTrackerEntities db = new TimeTrackerEntities();
@@ -30,6 +31,7 @@ namespace TimeTracker.Model
             return data;
         }
 
+        //Get all departments
         public List<Department> GetDepartmentList()
         {
             TimeTrackerEntities db = new TimeTrackerEntities();
@@ -53,6 +55,7 @@ namespace TimeTracker.Model
             return data;
         }
 
+        //Get List of department that will be shown in Job Overview
         public List<Department> GetJobOverviewDepartment() 
         {
             TimeTrackerEntities db = new TimeTrackerEntities();
@@ -78,6 +81,7 @@ namespace TimeTracker.Model
             return data;
         }
 
+        //Insert new department in database
         public void Insert(Department department)
         {
             T_Department t_department = InsertParse(department);
@@ -96,6 +100,7 @@ namespace TimeTracker.Model
             }
         }
 
+        //Delete a department in the database
         public void Delete(int id)
         {
             using (TimeTrackerEntities db = new TimeTrackerEntities())
@@ -114,6 +119,7 @@ namespace TimeTracker.Model
             }
         }
 
+        //Update a department in the database
         public void Update(Department department)
         {
             using (TimeTrackerEntities db = new TimeTrackerEntities())
@@ -131,6 +137,7 @@ namespace TimeTracker.Model
             }
         }
 
+        //Parsing done before Inserting record in the database
         private T_Department InsertParse(Department department)
         {
             T_Department t_department = new T_Department();
@@ -144,6 +151,7 @@ namespace TimeTracker.Model
             return t_department;
         }
 
+        //Parsing done before Updating record in the database
         private void UpdateParse(T_Department t_department, Department department) 
         {
             t_department.Description = department.Description;

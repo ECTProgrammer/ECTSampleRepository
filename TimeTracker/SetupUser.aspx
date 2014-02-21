@@ -46,6 +46,9 @@
 					        <asp:BoundField HeaderText="Phone" DataField="Phone" ReadOnly="false"></asp:BoundField>
 					        <asp:BoundField HeaderText="Mobile" DataField="Mobile"></asp:BoundField>
 					        <asp:BoundField HeaderText="Fax" DataField="Fax"></asp:BoundField>
+                            <asp:BoundField HeaderText="Base Rate" DataField="currentBaseRate" />
+                            <asp:BoundField HeaderText="OT Rate" DataField="currentOTRate" />
+                            <asp:BoundField HeaderText="Special Rate" DataField="currentSpecialRate" />
 				        </Columns>
 			        </asp:GridView>
 			        </div>
@@ -100,6 +103,28 @@
                             <asp:ListItem Text="Active" Value="Active"></asp:ListItem>
                             <asp:ListItem Text="Inactive" Value="Inactive"></asp:ListItem>
                                                          </asp:DropDownList></td></tr>
+                        <tr><td colspan="3"><asp:CheckBox ID="modalChkBoxUpdateRate" runat="server" Text="Update Salary Rate" ValidationGroup="modal" AutoPostBack="true" OnCheckedChanged="modalChkBoxUpdateRate_Changed" /></td></tr>
+                        <tr><td colspan="3"><asp:Panel ID="modalRatePanel" runat="server">
+                            <table style="padding:10px; border-collapse:separate;border-spacing:10px;">
+                                            <tr><td>Start Time</td><td>:</td><td><asp:TextBox ID="modalTxtBoxStartTime" runat="server" ValidationGroup="modal" CssClass="textBox"></asp:TextBox>
+                                                <asp:RequiredFieldValidator ID="modalReqStartTime" runat="server" ValidationGroup="modal" CssClass="validation" ControlToValidate="modalTxtBoxStartTime" Text="*"></asp:RequiredFieldValidator>
+                                                <asp:RegularExpressionValidator ID="modalRegValStartTime" runat="server" ValidationGroup="modal" CssClass="validation" ControlToValidate="modalTxtBoxStartTime" Text="Invalid Value" ValidationExpression="([0-1][0-9]:[0-5][0-9])|(2[0-3]:[0-5][0-9])"></asp:RegularExpressionValidator>
+                                                                             (00:00-23:59)</td></tr>
+                                            <tr><td>End Time</td><td>:</td><td><asp:TextBox ID="modalTxtBoxEndTime" runat="server" ValidationGroup="modal" CssClass="textBox"></asp:TextBox>
+                                                <asp:RequiredFieldValidator ID="modalReqEndTime" runat="server" ValidationGroup="modal" CssClass="validation" ControlToValidate="modalTxtBoxEndTime" Text="*"></asp:RequiredFieldValidator>
+                                                <asp:RegularExpressionValidator ID="modalRegValEndTime" runat="server" ValidationGroup="modal" CssClass="validation" ControlToValidate="modalTxtBoxEndTime" Text="Invalid Value" ValidationExpression="([0-1][0-9]:[0-5][0-9])|(2[0-3]:[0-5][0-9])"></asp:RegularExpressionValidator>
+                                                                             (00:00-23:59)</td></tr>
+                                            <tr><td>Base Rate</td><td>:</td><td><asp:TextBox ID="modalTxtBoxBaseRate" runat="server" ValidationGroup="modal" CssClass="textBox"></asp:TextBox>
+                                                <asp:RequiredFieldValidator ID="modalReqBaseRate" runat="server" ValidationGroup="modal" CssClass="validation" ControlToValidate="modalTxtBoxBaseRate" Text="*"></asp:RequiredFieldValidator>
+                                                <asp:RegularExpressionValidator ID="modalRegValBaseRate" runat="server" ValidationGroup="modal" CssClass="validation" ControlToValidate="modalTxtBoxBaseRate" Text="Invalid Value" ValidationExpression="^\d*\.?\d*$"></asp:RegularExpressionValidator></td></tr>
+                                            <tr><td>Over Time Rate</td><td>:</td><td><asp:TextBox ID="modalTxtBoxOTRate" runat="server" ValidationGroup="modal" CssClass="textBox"></asp:TextBox>
+                                                <asp:RequiredFieldValidator ID="modalReqOTRate" runat="server" CssClass="validation" ValidationGroup="modal" ControlToValidate="modalTxtBoxOTRate" Text="*"></asp:RequiredFieldValidator>
+                                                <asp:RegularExpressionValidator ID="modalRegValOTRate" runat="server" ValidationGroup="modal" CssClass="validation" ControlToValidate="modalTxtBoxOTRate" Text="Invalid Value" ValidationExpression="^\d*\.?\d*$"></asp:RegularExpressionValidator></td></tr>
+                                            <tr><td>Special Rate</td><td>:</td><td><asp:TextBox ID="modalTxtBoxSpecialRate" runat="server" ValidationGroup="modal" CssClass="textBox"></asp:TextBox>
+                                                <asp:RequiredFieldValidator ID="modalReqSpecialRate" runat="server" CssClass="validation" ValidationGroup="modal" ControlToValidate="modalTxtBoxSpecialRate" Text="*"></asp:RequiredFieldValidator>
+                                                <asp:RegularExpressionValidator ID="modalRegValSpecialRate" runat="server" ValidationGroup="modalUserlink" CssClass="validation" ControlToValidate="modalTxtBoxSpecialRate" Text="Invalid Value" ValidationExpression="^\d*\.?\d*$"></asp:RegularExpressionValidator></td></tr>
+                                        </table>
+                                            </asp:Panel></td></tr>
                         <tr>
                             <td colspan="3" style="text-align:center">
                                 <asp:Button ID="modalBtnSubmit" runat="server" Text="Submit" ValidationGroup="modal" CausesValidation="true" CssClass="button" OnCommand="modalBtnSubmit_Command"/>
@@ -110,7 +135,16 @@
                     <ajaxToolkit:FilteredTextBoxExtender ID="filterEmployeeNo" runat="server" TargetControlID="modalTxtBoxEmployeeNo" FilterType="Numbers"/>
                 </asp:Panel>
             </asp:Panel>
-
+            <ajaxToolkit:CollapsiblePanelExtender ID="cpeSalaryRate" runat="server" 
+                        TargetControlID ="modalRatePanel"
+                        CollapsedSize="0"
+                        Collapsed ="True"
+                        ExpandControlID="modalChkBoxUpdateRate"
+                        CollapseControlID="modalChkBoxUpdateRate"
+                        AutoExpand="false"
+                        AutoCollapse="false"
+                        ExpandDirection="Vertical"
+                        />
             <asp:Button ID="btnHidden" runat="server" style="display:none"/>
             <ajaxToolKit:ModalPopupExtender runat="server" ID="programmaticModalPopup"
                 BehaviorID ="programmaticModalPopupBehavior"

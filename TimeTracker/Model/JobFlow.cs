@@ -7,6 +7,7 @@ namespace TimeTracker.Model
 {
     public class JobFlow : T_JobFlow
     {
+        //Get JobFlow by JobFlow Id
         public JobFlow GetJobFlow(int jobFlowId)
         {
             TimeTrackerEntities db = new TimeTrackerEntities();
@@ -26,6 +27,7 @@ namespace TimeTracker.Model
             return data;
         }
 
+        //Get JobFlow By JobFlow Description
         public JobFlow GetJobFlowByDescription(string description) 
         {
             TimeTrackerEntities db = new TimeTrackerEntities();
@@ -45,6 +47,7 @@ namespace TimeTracker.Model
             return data;
         }
 
+        //Get JobFlow By JobFlow Acronym
         public JobFlow GetJobFlowByAcronym(string acronym)
         {
             TimeTrackerEntities db = new TimeTrackerEntities();
@@ -64,6 +67,7 @@ namespace TimeTracker.Model
             return data;
         }
 
+        //Get all JobFlow
         public List<JobFlow> GetJobFlowList()
         {
             TimeTrackerEntities db = new TimeTrackerEntities();
@@ -83,6 +87,7 @@ namespace TimeTracker.Model
             return data;
         }
 
+        //Get JobFlow that will be shown in JobOverview
         public List<JobFlow> GetJobOverviewJobFlow()
         {
             TimeTrackerEntities db = new TimeTrackerEntities();
@@ -104,6 +109,7 @@ namespace TimeTracker.Model
             return data;
         }
 
+        //Insert new JobFlow in Database
         public void Insert(JobFlow jobflow)
         {
             T_JobFlow t_jobflow = new T_JobFlow();
@@ -123,6 +129,7 @@ namespace TimeTracker.Model
             }
         }
 
+        //Delete JobFlow in Database
         public void Delete(int id)
         {
             using (TimeTrackerEntities db = new TimeTrackerEntities())
@@ -141,6 +148,7 @@ namespace TimeTracker.Model
             }
         }
 
+        //Update JobFlow in Database
         public void Update(JobFlow jobflow)
         {
             using (TimeTrackerEntities db = new TimeTrackerEntities())
@@ -157,8 +165,8 @@ namespace TimeTracker.Model
                 }
             }
         }
-
-
+        
+        //Parsing done before updating or inserting jobflow in database
         private void ParseJobFlow(T_JobFlow t_jobflow, JobFlow jobflow)
         {
             t_jobflow.Description = jobflow.Description;

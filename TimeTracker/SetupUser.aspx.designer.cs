@@ -346,6 +346,159 @@ namespace TimeTracker {
         protected global::System.Web.UI.WebControls.DropDownList modalDropDownStatus;
         
         /// <summary>
+        /// modalChkBoxUpdateRate control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.CheckBox modalChkBoxUpdateRate;
+        
+        /// <summary>
+        /// modalRatePanel control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Panel modalRatePanel;
+        
+        /// <summary>
+        /// modalTxtBoxStartTime control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.TextBox modalTxtBoxStartTime;
+        
+        /// <summary>
+        /// modalReqStartTime control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.RequiredFieldValidator modalReqStartTime;
+        
+        /// <summary>
+        /// modalRegValStartTime control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.RegularExpressionValidator modalRegValStartTime;
+        
+        /// <summary>
+        /// modalTxtBoxEndTime control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.TextBox modalTxtBoxEndTime;
+        
+        /// <summary>
+        /// modalReqEndTime control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.RequiredFieldValidator modalReqEndTime;
+        
+        /// <summary>
+        /// modalRegValEndTime control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.RegularExpressionValidator modalRegValEndTime;
+        
+        /// <summary>
+        /// modalTxtBoxBaseRate control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.TextBox modalTxtBoxBaseRate;
+        
+        /// <summary>
+        /// modalReqBaseRate control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.RequiredFieldValidator modalReqBaseRate;
+        
+        /// <summary>
+        /// modalRegValBaseRate control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.RegularExpressionValidator modalRegValBaseRate;
+        
+        /// <summary>
+        /// modalTxtBoxOTRate control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.TextBox modalTxtBoxOTRate;
+        
+        /// <summary>
+        /// modalReqOTRate control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.RequiredFieldValidator modalReqOTRate;
+        
+        /// <summary>
+        /// modalRegValOTRate control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.RegularExpressionValidator modalRegValOTRate;
+        
+        /// <summary>
+        /// modalTxtBoxSpecialRate control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.TextBox modalTxtBoxSpecialRate;
+        
+        /// <summary>
+        /// modalReqSpecialRate control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.RequiredFieldValidator modalReqSpecialRate;
+        
+        /// <summary>
+        /// modalRegValSpecialRate control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.RegularExpressionValidator modalRegValSpecialRate;
+        
+        /// <summary>
         /// modalBtnSubmit control.
         /// </summary>
         /// <remarks>
@@ -371,6 +524,15 @@ namespace TimeTracker {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::AjaxControlToolkit.FilteredTextBoxExtender filterEmployeeNo;
+        
+        /// <summary>
+        /// cpeSalaryRate control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::AjaxControlToolkit.CollapsiblePanelExtender cpeSalaryRate;
         
         /// <summary>
         /// btnHidden control.

@@ -285,6 +285,7 @@
     <Content Include="SetupRole.aspx" />
     <Content Include="SetupSupervisorMapping.aspx" />
     <Content Include="SetupUser.aspx" />
+    <Content Include="SetupUserRate.aspx" />
     <Content Include="ViewSwitcher.ascx" />
     <Content Include="Web.config">
       <SubType>Designer</SubType>
@@ -396,6 +397,7 @@
     <Compile Include="Model\RoleDepartmentAccess.cs" />
     <Compile Include="Model\Roles.cs" />
     <Compile Include="Model\RolesModuleAccess.cs" />
+    <Compile Include="Model\UserRateSchedule.cs" />
     <Compile Include="SettingSyncEval.aspx.cs">
       <DependentUpon>SettingSyncEval.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
@@ -485,6 +487,13 @@
     <Compile Include="SetupUser.aspx.designer.cs">
       <DependentUpon>SetupUser.aspx</DependentUpon>
     </Compile>
+    <Compile Include="SetupUserRate.aspx.cs">
+      <DependentUpon>SetupUserRate.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="SetupUserRate.aspx.designer.cs">
+      <DependentUpon>SetupUserRate.aspx</DependentUpon>
+    </Compile>
     <Compile Include="Site.Master.cs">
       <DependentUpon>Site.Master</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
@@ -554,6 +563,9 @@
       <DependentUpon>TimeTrackerModel.tt</DependentUpon>
     </Compile>
     <Compile Include="T_TimeSetting.cs">
+      <DependentUpon>TimeTrackerModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="T_UserRateSchedule.cs">
       <DependentUpon>TimeTrackerModel.tt</DependentUpon>
     </Compile>
     <Compile Include="T_Users.cs">

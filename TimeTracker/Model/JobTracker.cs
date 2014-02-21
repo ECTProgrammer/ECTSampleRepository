@@ -16,6 +16,7 @@ namespace TimeTracker.Model
         public int? departmentid { get; set; }
         public string department { get; set; }
 
+        //Get JobTracker by Jobtracker id (has the option to compute the time by providing true to computetime parameter)
         public JobTracker GetJobTracker(int jobtrackerid,bool computetime)
         {
             TimeTrackerEntities db = new TimeTrackerEntities();
@@ -70,6 +71,7 @@ namespace TimeTracker.Model
             return data;
         }
 
+        //Use to get newly created jobtracker
         public JobTracker GetJobTracker(int createdby, int lastupdatedby, DateTime starttime, int jobtypeid, string actionrequest, string status, bool computetime)
         {
             TimeTrackerEntities db = new TimeTrackerEntities();
@@ -130,6 +132,7 @@ namespace TimeTracker.Model
             return data;
         }
 
+        //Get the Jobtracker data of a specific user which start time is after the provided start time on a selected date
         public JobTracker GetNextUsedTime(int userid,DateTime starttime, DateTime selecteddate)
         {
             TimeTrackerEntities db = new TimeTrackerEntities();
@@ -172,6 +175,7 @@ namespace TimeTracker.Model
             return data;
         }
 
+        //Get All jobtracker data of a specifc user (has an option to compute the time spent per task by providing the value true in the computetime parameter)
         public List<JobTracker> GetJobTrackerList(int userid,bool computetime) 
         {
             TimeTrackerEntities db = new TimeTrackerEntities();
@@ -231,6 +235,7 @@ namespace TimeTracker.Model
             return data;
         }
 
+        //Get all the jobtracker which the user provides job id (has the option to compute the time per task by providing the value true to the computetime parameter)
         public List<JobTracker> GetJobTrackerListWithJobId(bool computetime)
         {
             TimeTrackerEntities db = new TimeTrackerEntities();
@@ -285,6 +290,7 @@ namespace TimeTracker.Model
             return data;
         }
 
+        //Get Jobtracker data for Overview Tab
         public JobTracker GetJobTrackerJobOverview(int jobtypeid,string SW,string HW,DateTime sdate,DateTime edate,int departmentid)
         {
             TimeTrackerEntities db = new TimeTrackerEntities();
@@ -335,6 +341,7 @@ namespace TimeTracker.Model
             return data;
         }
 
+        //Get Jobtracker data for Overview Tab
         public JobTracker GetJobTrackerJobOverview(int jobtypeid, string SW, string HW, DateTime sdate, DateTime edate)
         {
             TimeTrackerEntities db = new TimeTrackerEntities();
@@ -384,6 +391,7 @@ namespace TimeTracker.Model
             return data;
         }
 
+        //Get Jobtracker data for Overview Tab
         public JobTracker GetJobTrackerJobOverview(string SW, string HW, DateTime sdate, DateTime edate, int departmentid)
         {
             TimeTrackerEntities db = new TimeTrackerEntities();
@@ -807,68 +815,6 @@ namespace TimeTracker.Model
 
             return data;
         }
-
-        //public List<JobTracker> GetJobTrackerListExcludeRejected(int userid, DateTime startdate, DateTime enddate, bool computetime)
-        //{
-        //    TimeTrackerEntities db = new TimeTrackerEntities();
-
-        //    var data = (from j in db.T_JobTracker
-        //                where j.UserId == userid
-        //                && j.ScheduleDate >= startdate
-        //                && j.EndTime <= enddate
-        //                && j.Status != "Rejected"
-        //                orderby j.StartTime ascending, j.EndTime ascending
-        //                select new JobTracker()
-        //                {
-        //                    Id = j.Id,
-        //                    UserId = j.UserId,
-        //                    StartTime = j.StartTime,
-        //                    EndTime = j.EndTime,
-        //                    Description = j.Description,
-        //                    JobTypeId = j.JobTypeId,
-        //                    JobIdNumber = j.JobIdNumber,
-        //                    jobtype = j.M_JobType.Description,
-        //                    Remarks = j.Remarks,
-        //                    ApprovedBy = j.ApprovedBy,
-        //                    CreateDate = j.CreateDate,
-        //                    LastUpdateDate = j.LastUpdateDate,
-        //                    CreatedBy = j.CreatedBy,
-        //                    LastUpdatedBy = j.LastUpdatedBy,
-        //                    Status = j.Status,
-        //                    SupervisorRemarks = j.SupervisorRemarks,
-        //                    ActionRequest = j.ActionRequest,
-        //                    ScheduleDate = j.ScheduleDate,
-        //                    JobStatus = j.JobStatus,
-        //                    SWNo = j.SWNo,
-        //                    HWNo = j.HWNo,
-        //                    fullname = j.M_User.Firstname + " " + j.M_User.Lastname,
-        //                    Customer = j.Customer,
-        //                    EvalNo = j.EvalNo
-        //                }).ToList();
-
-        //    db.Dispose();
-
-        //    if (computetime == true)
-        //    {
-        //        foreach (JobTracker j in data)
-        //        {
-        //            //if (j.JobIdNumber != null && j.JobIdNumber != "")
-        //            //{
-        //            //    GetCustomer(j);
-        //            //}
-
-        //            if (j.EndTime != null)
-        //            {
-        //                double time = Convert.ToDateTime(j.EndTime).Subtract(Convert.ToDateTime(j.StartTime)).TotalMinutes;
-        //                double hr = Math.Truncate(time / 60);
-        //                double min = time % 60;
-        //                j.totalhours = hr == 0 && min == 0 ? "0 min" : (hr > 0 ? hr > 1 ? hr + " hrs" : hr + " hr" : "") + (hr > 0 && min > 0 ? ", " : "") + (min > 0 ? min > 1 ? min + " mins" : min + " min" : "");
-        //            }
-        //        }
-        //    }
-
-        //    return data;
-        //}
 
         public List<JobTracker> GetJobTrackerListExcludeRejected(DateTime startdate, DateTime enddate, int userid = 0,int dept = 0, string jobid = "",string customer = "", bool computetime = false)
         {
@@ -1521,8 +1467,6 @@ namespace TimeTracker.Model
         //        }
         //    }
         //}
-
-
 
         public void Insert(JobTracker jobtracker) 
         {

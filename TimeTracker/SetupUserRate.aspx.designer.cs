@@ -10,42 +10,33 @@
 namespace TimeTracker {
     
     
-    public partial class Setup {
+    public partial class SetupUserRate {
         
         /// <summary>
-        /// panelSetupMain control.
+        /// UpdatePanelMain control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.Panel panelSetupMain;
+        protected global::System.Web.UI.UpdatePanel UpdatePanelMain;
         
         /// <summary>
-        /// panelModalHeader control.
+        /// UpdateProgress1 control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.Panel panelModalHeader;
+        protected global::System.Web.UI.UpdateProgress UpdateProgress1;
         
         /// <summary>
-        /// modalContent control.
+        /// panelHeader control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.Panel modalContent;
-        
-        /// <summary>
-        /// repeaterSetup control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.Repeater repeaterSetup;
+        protected global::System.Web.UI.WebControls.Panel panelHeader;
     }
 }

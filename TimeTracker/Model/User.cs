@@ -10,7 +10,13 @@ namespace TimeTracker.Model
         public string fullname { get; set; }
         public string department { get; set; }
         public string role { get; set; }
+        public string startTime {get;set;}
+        public string endTime {get;set;}
+        public double currentBaseRate { get; set; }
+        public double currentOTRate { get; set; }
+        public double currentSpecialRate { get; set; }
 
+        //Gets User data base on userid
         public User GetUser(int userid)
         {
             TimeTrackerEntities db = new TimeTrackerEntities();
@@ -39,14 +45,24 @@ namespace TimeTracker.Model
                             role = u.M_Role.Description,
                             department = u.M_Department.Description,
                             EmployeeNumber = u.EmployeeNumber,
-                            Shift = u.Shift
+                            Shift = u.Shift,
+                            currentBaseRate = 0.00,
+                            currentOTRate = 0.00,
+                            currentSpecialRate = 0.00,
+                            startTime = "",
+                            endTime = ""
                         }).FirstOrDefault();
 
             db.Dispose();
 
+            if (data != null)
+            {
+                data.GetMyRate();
+            }
             return data;
         }
 
+        //Gets User data base on username
         public User GetUser(string username)
         {
             TimeTrackerEntities db = new TimeTrackerEntities();
@@ -75,14 +91,23 @@ namespace TimeTracker.Model
                             role = u.M_Role.Description,
                             department = u.M_Department.Description,
                             EmployeeNumber = u.EmployeeNumber,
-                            Shift = u.Shift
+                            Shift = u.Shift,
+                            currentBaseRate = 0.00,
+                            currentOTRate = 0.00,
+                            currentSpecialRate = 0.00,
+                            startTime = "",
+                            endTime = ""
                         }).FirstOrDefault();
 
             db.Dispose();
-
+            if (data != null)
+            {
+                data.GetMyRate();
+            }
             return data;
         }
 
+        //Gets User data base on username and password
         public User GetUser(string username, string password) 
         {
             TimeTrackerEntities db = new TimeTrackerEntities();
@@ -112,14 +137,62 @@ namespace TimeTracker.Model
                             role = u.M_Role.Description,
                             department = u.M_Department.Description,
                             EmployeeNumber = u.EmployeeNumber,
-                            Shift = u.Shift
+                            Shift = u.Shift,
+                            startTime = "",
+                            endTime = ""
                         }).FirstOrDefault();
 
             db.Dispose();
-
+            data.GetMyRate();
             return  data;
         }
 
+        //Get Last Inserted User
+        public User GetLastInsertedUser()
+        {
+            TimeTrackerEntities db = new TimeTrackerEntities();
+
+            var data = (from u in db.T_Users
+                        orderby u.Id descending
+                        select new User()
+                        {
+                            Id = u.Id,
+                            Username = u.Username,
+                            Password = u.Password,
+                            Firstname = u.Firstname,
+                            Lastname = u.Lastname,
+                            Phone = u.Phone,
+                            Mobile = u.Mobile,
+                            Fax = u.Fax,
+                            Email = u.Email,
+                            DepartmentId = u.DepartmentId,
+                            RoleId = u.RoleId,
+                            CreateDate = u.CreateDate,
+                            CreatedBy = u.CreatedBy,
+                            LastUpdateDate = u.LastUpdateDate,
+                            LastUpdatedBy = u.LastUpdatedBy,
+                            Status = u.Status,
+                            fullname = u.Firstname + " " + u.Lastname,
+                            role = u.M_Role.Description,
+                            department = u.M_Department.Description,
+                            EmployeeNumber = u.EmployeeNumber,
+                            Shift = u.Shift,
+                            currentBaseRate = 0.00,
+                            currentOTRate = 0.00,
+                            currentSpecialRate = 0.00,
+                            startTime = "",
+                            endTime = ""
+                        }).FirstOrDefault();
+
+            db.Dispose();
+            if (data != null)
+            {
+                data.GetMyRate();
+            }
+            return data;
+        }
+
+        // Gets active user base on username and password
         public User GetActiveUser(string username, string password)
         {
             TimeTrackerEntities db = new TimeTrackerEntities();
@@ -150,14 +223,23 @@ namespace TimeTracker.Model
                             role = u.M_Role.Description,
                             department = u.M_Department.Description,
                             EmployeeNumber = u.EmployeeNumber,
-                            Shift = u.Shift
+                            Shift = u.Shift,
+                            currentBaseRate = 0.00,
+                            currentOTRate = 0.00,
+                            currentSpecialRate = 0.00,
+                            startTime = "",
+                            endTime = ""
                         }).FirstOrDefault();
 
             db.Dispose();
-
+            if (data != null)
+            {
+                data.GetMyRate();
+            }
             return data;
         }
 
+        //Gets all Users
         public List<User> GetUserList()
         {
             TimeTrackerEntities db = new TimeTrackerEntities();
@@ -186,14 +268,24 @@ namespace TimeTracker.Model
                             role = u.M_Role.Description,
                             department = u.M_Department.Description,
                             EmployeeNumber = u.EmployeeNumber,
-                            Shift = u.Shift
+                            Shift = u.Shift,
+                            currentBaseRate = 0.00,
+                            currentOTRate = 0.00,
+                            currentSpecialRate = 0.00,
+                            startTime = "",
+                            endTime = ""
                         }).ToList();
 
             db.Dispose();
+            foreach (User u in data) 
+            {
+                u.GetMyRate();
+            }
 
             return data;
         }
 
+        //Gets all users of a department
         public List<User> GetUserList(int departmentId)
         {
             TimeTrackerEntities db = new TimeTrackerEntities();
@@ -223,14 +315,23 @@ namespace TimeTracker.Model
                             role = u.M_Role.Description,
                             department = u.M_Department.Description,
                             EmployeeNumber = u.EmployeeNumber,
-                            Shift = u.Shift
+                            Shift = u.Shift,
+                            currentBaseRate = 0.00,
+                            currentOTRate = 0.00,
+                            currentSpecialRate = 0.00,
+                            startTime = "",
+                            endTime = ""
                         }).ToList();
 
             db.Dispose();
-
+            foreach (User u in data)
+            {
+                u.GetMyRate();
+            }
             return data;
         }
 
+        //Gets all active users in a department
         public List<User> GetActiveUserList(int departmentId)
         {
             TimeTrackerEntities db = new TimeTrackerEntities();
@@ -261,14 +362,21 @@ namespace TimeTracker.Model
                             role = u.M_Role.Description,
                             department = u.M_Department.Description,
                             EmployeeNumber = u.EmployeeNumber,
-                            Shift = u.Shift
+                            Shift = u.Shift,
+                            currentBaseRate = 0.00,
+                            currentOTRate = 0.00,
+                            currentSpecialRate = 0.00,
                         }).ToList();
 
             db.Dispose();
-
+            foreach (User u in data)
+            {
+                u.GetMyRate();
+            }
             return data;
         }
 
+        //Gets all Active users with supervisors
         public List<User> GetActiveUsersWithSupervisor()
         {
             TimeTrackerEntities db = new TimeTrackerEntities();
@@ -299,14 +407,23 @@ namespace TimeTracker.Model
                             role = u.M_Role.Description,
                             department = u.M_Department.Description,
                             EmployeeNumber = u.EmployeeNumber,
-                            Shift = u.Shift
+                            Shift = u.Shift,
+                            currentBaseRate = 0.00,
+                            currentOTRate = 0.00,
+                            currentSpecialRate = 0.00,
+                            startTime = "",
+                            endTime = ""
                         }).ToList();
 
             db.Dispose();
-
+            foreach (User u in data)
+            {
+                u.GetMyRate();
+            }
             return data;
         }
 
+        //Gets all active users in a specific department with supervisor
         public List<User> GetActiveUsersWithSupervisor(int departmentid)
         {
             TimeTrackerEntities db = new TimeTrackerEntities();
@@ -337,14 +454,23 @@ namespace TimeTracker.Model
                             fullname = u.Firstname + " " + u.Lastname,
                             role = u.M_Role.Description,
                             department = u.M_Department.Description,
-                            EmployeeNumber = u.EmployeeNumber
+                            EmployeeNumber = u.EmployeeNumber,
+                            currentBaseRate = 0.00,
+                            currentOTRate = 0.00,
+                            currentSpecialRate = 0.00,
+                            startTime = "",
+                            endTime = ""
                         }).ToList();
 
             db.Dispose();
-
+            foreach (User u in data)
+            {
+                u.GetMyRate();
+            }
             return data;
         }
 
+        //Gets All active users without supervisors
         public List<User> GetActiveUsersWithoutSupervisor()
         {
             TimeTrackerEntities db = new TimeTrackerEntities();
@@ -374,14 +500,24 @@ namespace TimeTracker.Model
                             fullname = u.Firstname + " " + u.Lastname,
                             role = u.M_Role.Description,
                             department = u.M_Department.Description,
-                            EmployeeNumber = u.EmployeeNumber
+                            EmployeeNumber = u.EmployeeNumber,
+                            Shift = u.Shift,
+                            currentBaseRate = 0.00,
+                            currentOTRate = 0.00,
+                            currentSpecialRate = 0.00,
+                            startTime = "",
+                            endTime = ""
                         }).ToList();
 
             db.Dispose();
-
+            foreach (User u in data)
+            {
+                u.GetMyRate();
+            }
             return data;
         }
 
+        //Gets all active users in a specific department without a supervisor
         public List<User> GetActiveUsersWithoutSupervisor(int departmentid)
         {
             TimeTrackerEntities db = new TimeTrackerEntities();
@@ -413,14 +549,23 @@ namespace TimeTracker.Model
                             role = u.M_Role.Description,
                             department = u.M_Department.Description,
                             EmployeeNumber = u.EmployeeNumber,
-                            Shift = u.Shift
+                            Shift = u.Shift,
+                            currentBaseRate = 0.00,
+                            currentOTRate = 0.00,
+                            currentSpecialRate = 0.00,
+                            startTime = "",
+                            endTime = ""
                         }).ToList();
 
             db.Dispose();
-
+            foreach (User u in data)
+            {
+                u.GetMyRate();
+            }
             return data;
         }
 
+        //Gets all users by status
         public List<User> GetUserListByStatus(string status)
         {
             TimeTrackerEntities db = new TimeTrackerEntities();
@@ -449,14 +594,24 @@ namespace TimeTracker.Model
                             fullname = u.Firstname + " " + u.Lastname,
                             role = u.M_Role.Description,
                             department = u.M_Department.Description,
-                            EmployeeNumber = u.EmployeeNumber
+                            EmployeeNumber = u.EmployeeNumber,
+                            Shift = u.Shift,
+                            currentBaseRate = 0.00,
+                            currentOTRate = 0.00,
+                            currentSpecialRate = 0.00,
+                            startTime = "",
+                            endTime = ""
                         }).ToList();
 
             db.Dispose();
-
+            foreach (User u in data)
+            {
+                u.GetMyRate();
+            }
             return data;
         }
 
+        //Gets all users in a specific department by status
         public List<User> GetUserListByDepartmentAndStatus(int departmentId,string status)
         {
             TimeTrackerEntities db = new TimeTrackerEntities();
@@ -486,14 +641,24 @@ namespace TimeTracker.Model
                             fullname = u.Firstname + " " + u.Lastname,
                             role = u.M_Role.Description,
                             department = u.M_Department.Description,
-                            EmployeeNumber = u.EmployeeNumber
+                            EmployeeNumber = u.EmployeeNumber,
+                            Shift = u.Shift,
+                            currentBaseRate = 0.00,
+                            currentOTRate = 0.00,
+                            currentSpecialRate = 0.00,
+                            startTime = "",
+                            endTime = ""
                         }).ToList();
 
             db.Dispose();
-
+            foreach (User u in data)
+            {
+                u.GetMyRate();
+            }
             return data;
         }
 
+        //Old Code not in use
         public List<User> GetSupervisors(int departmentId,int userid = 0) 
         {
             TimeTrackerEntities db = new TimeTrackerEntities();
@@ -522,14 +687,24 @@ namespace TimeTracker.Model
                             fullname = u.Firstname + " " + u.Lastname,
                             role = u.M_Role.Description,
                             department = u.M_Department.Description,
-                            EmployeeNumber = u.EmployeeNumber
+                            EmployeeNumber = u.EmployeeNumber,
+                            currentBaseRate = 0.00,
+                            currentOTRate = 0.00,
+                            currentSpecialRate = 0.00,
+                            Shift = u.Shift,
+                            startTime = "",
+                            endTime = ""
                         }).ToList();
 
             db.Dispose();
-
+            foreach (User u in data)
+            {
+                u.GetMyRate();
+            }
             return data;
         }
 
+        //Get all available users that is not yet selected as a supervisor by a specific user
         public List<User> GetAvailableSupervisors(int userid,int departmentId) 
         {
             TimeTrackerEntities db = new TimeTrackerEntities();
@@ -559,7 +734,12 @@ namespace TimeTracker.Model
                             fullname = u.Firstname + " " + u.Lastname,
                             role = u.M_Role.Description,
                             department = u.M_Department.Description,
-                            EmployeeNumber = u.EmployeeNumber
+                            EmployeeNumber = u.EmployeeNumber,
+                            currentBaseRate = 0.00,
+                            currentOTRate = 0.00,
+                            currentSpecialRate = 0.00,
+                            startTime = "",
+                            endTime = ""
                         }).ToList();
             db.Dispose();
             
@@ -580,6 +760,7 @@ namespace TimeTracker.Model
             return data;
         }
 
+        //Insert User in the database
         public void Insert(User user)
         {
             T_Users t_user = InsertParse(user);
@@ -598,6 +779,7 @@ namespace TimeTracker.Model
             }
         }
 
+        //Delete user in the database
         public void Delete(int id)
         {
             using (TimeTrackerEntities db = new TimeTrackerEntities())
@@ -616,6 +798,7 @@ namespace TimeTracker.Model
             }
         }
 
+        //Update User record in the database
         public void Update(User user)
         {
             using (TimeTrackerEntities db = new TimeTrackerEntities())
@@ -633,6 +816,7 @@ namespace TimeTracker.Model
             }
         }
 
+        //Parsing done before inserting in the database
         private T_Users InsertParse(User user)
         {
             T_Users t_user = new T_Users();
@@ -656,6 +840,7 @@ namespace TimeTracker.Model
             return t_user;
         }
 
+        //Parsing done before updating record in the database
         private void UpdateParse(T_Users t_user, User user)
         {
             t_user.Firstname = user.Firstname;
@@ -673,6 +858,36 @@ namespace TimeTracker.Model
             t_user.LastUpdatedBy = user.LastUpdatedBy;
             t_user.EmployeeNumber = user.EmployeeNumber;
             t_user.Shift = user.Shift;
+        }
+
+        private void GetMyRate() 
+        {
+            UserRateSchedule URS = new UserRateSchedule();
+
+            URS = URS.GetUserScheduleRateCurrentRate(Id);
+            if (URS != null) 
+            {
+                startTime = URS.StartTime;
+                endTime = URS.EndTime;
+                currentBaseRate = Convert.ToDouble(URS.BaseRate == null ? 0.00: URS.BaseRate);
+                currentOTRate = Convert.ToDouble(URS.OTRate == null ? 0.00: URS.OTRate);
+                currentSpecialRate = Convert.ToDouble(URS.SpecialRate == null ? 0.00: URS.SpecialRate);
+            }
+        }
+
+        private void GetMyRate(DateTime date) 
+        {
+            UserRateSchedule URS = new UserRateSchedule();
+
+            URS = URS.GetUserScheduleRateByUserIdDate(Id, date);
+            if (URS != null)
+            {
+                startTime = URS.StartTime;
+                endTime = URS.EndTime;
+                currentBaseRate = Convert.ToDouble(URS.BaseRate == null ? 0 : URS.BaseRate);
+                currentOTRate = Convert.ToDouble(URS.OTRate == null ? 0 : URS.OTRate);
+                currentSpecialRate = Convert.ToDouble(URS.SpecialRate == null ? 0 : URS.SpecialRate);
+            }
         }
     }
 }

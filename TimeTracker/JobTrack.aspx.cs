@@ -14,18 +14,19 @@ namespace TimeTracker
         protected void Page_Load(object sender, EventArgs e)
         {
             JobTracker jobtracker = new JobTracker();
-            if (!isValidUser() || (!jobtracker.CanConnectToCAP()))
-                Response.Redirect("Login.aspx");
+            if (!isValidUser() || (!jobtracker.CanConnectToCAP())) //Check if the user is properly login and if the system can connect to CAP database
+                Response.Redirect("Login.aspx"); //Redirects the user to login page
             HttpContext.Current.Session["siteSubHeader"] = "JobTrack";
             HttpContext.Current.Session["selectedTab"] = "JobTrack";
 
             if (!IsPostBack)
             {
+                //makesure that the alertmodalpopup is on top
                 string script = "<script type=\"text/javascript\"> //<![CDATA[Sys.Application.add_load(function(){setTimeout(function(){ var popup = $find(\"<%=programmaticAlertModalPopup.ClientID %>\"); popup._backgroundElement.style.zIndex = 10010; popup._foregroundElement.style.zIndex = 10011;},0);}0;//]]></script>";
-                ClientScript.RegisterStartupScript(Page.GetType(), "OnLoad", script, false);
-                txtBoxDate.Attributes.Add("readonly", "readonly");
-                calendarExtenderDate.SelectedDate = DateTime.Now;
-                calendarExtenderDate.EndDate = DateTime.Now;
+                ClientScript.RegisterStartupScript(Page.GetType(), "OnLoad", script, false); //function to register new script
+                txtBoxDate.Attributes.Add("readonly", "readonly"); //prevents user to manualy key in dates
+                calendarExtenderDate.SelectedDate = DateTime.Now; //Initialize the selected date to be the current date
+                calendarExtenderDate.EndDate = DateTime.Now; 
                 txtBoxDate.Text = DateTime.Now.ToString("dd MMM yyyy");
                 labelDay.Text = DateTime.Now.DayOfWeek.ToString()+", "+DateTime.Today.ToString("dd MMM yyyy");
                 InitializeLabelTimeClock(DateTime.Today);
@@ -35,7 +36,8 @@ namespace TimeTracker
         }
 
         #region COMMAND
-        protected void txtBoxDate_TextChanged(object sender, EventArgs e) 
+            //Action trigger when a new date is selected
+        protected void txtBoxDate_TextChanged(object sender, EventArgs e)
         {
             DateTime date = Convert.ToDateTime(txtBoxDate.Text);
             calendarExtenderDate.SelectedDate = date;
@@ -55,6 +57,7 @@ namespace TimeTracker
             InitializeGrid();
         }
 
+        //Action triggered when the users click the add job track button
         protected void linkBtnAddJobTrack_Click(object sender, EventArgs e) 
         {
             Session["StartTime"] = null;
@@ -457,8 +460,8 @@ namespace TimeTracker
             {
                 linkBtnAddJobTrack.Visible = true;
             }
-            //break button
-            if (date.CompareTo(DateTime.Today) == 0)
+           
+            if (date.CompareTo(DateTime.Today) == 0)//If doing job track on the current day, show take a break button
             {
                 BtnBreak.Text = "Take a break";
                 BtnBreak.CssClass = "buttongreen";
@@ -1620,82 +1623,6 @@ namespace TimeTracker
             }
         }
 
-        //private void InitializeModalEndTime(string value = "") 
-        //{
-        //    //GenerateEndHour(Convert.ToInt32(modalDropDownStartTimeHour.SelectedItem.Value), Convert.ToInt32(modalDropDownStartTimeMin.SelectedItem.Value), false);
-        //    //GenerateEndMin(false);
-        //    Time time = new Time();
-        //    TimeSpan curtime = TimeSpan.Parse(DateTime.Now.Hour + ":" + DateTime.Now.Minute);
-        //    var timelist = time.GetTimeList();
-        //    List<Time> endtime = new List<Time>();
-        //    DateTime date = Convert.ToDateTime(txtBoxDate.Text);
-
-        //    if (date.CompareTo(DateTime.Today) == 0)
-        //    {
-        //        foreach (Time t in timelist)
-        //        {
-        //            TimeSpan selectedTime = TimeSpan.Parse(t.C24hrConversion);
-        //            if (selectedTime >= curtime)
-        //            {
-        //                time.Position = t.Position;
-        //                break;
-        //            }
-        //        }
-        //        endtime = time.GetEndTimeList(modalDropDownStartTime.SelectedItem.Value,time.Position);
-        //        time.Description = "Select End Time";
-        //        time.C24hrConversion = "00";
-        //        time.Position = 0;
-        //        endtime.Insert(0, time);
-        //    }
-        //    else
-        //        endtime = time.GetEndTimeList(modalDropDownStartTime.SelectedItem.Value);
-        //    //Remove Used Time
-        //    RemoveUsedTime(endtime, DateTime.Parse(date.Year + "-" + date.Month + "-" + date.Day + " " + modalDropDownStartTime.SelectedValue + ":00"));
-        //    //
-        //    modalDropDownEndTime.DataSource = endtime;
-        //    modalDropDownEndTime.DataTextField = "Description";
-        //    modalDropDownEndTime.DataValueField = "C24hrConversion";
-        //    modalDropDownEndTime.DataBind();
-        //    if (value.Trim() != "")
-        //    {
-        //        DateTime stime = DateTime.Parse(value);
-        //        string selectedTime = stime.Hour + ":" + stime.Minute;
-        //        foreach (ListItem i in modalDropDownEndTime.Items)
-        //        {
-        //            if (TimeSpan.Parse(i.Value) == TimeSpan.Parse(selectedTime.Trim()))
-        //            {
-        //                i.Selected = true;
-        //                break;
-        //            }
-        //        }
-        //    }
-        //}
-
-        //private void InitializeModalSupervisor(string value = "") 
-        //{
-        //    RolesSupervisor roleSupervisor = new RolesSupervisor();
-        //    //int departmentId = Convert.ToInt32(Session["DepartmentId"]);
-        //    //User user = new User();
-        //    //var supervisors = user.GetSupervisors(departmentId);
-        //    var supervisors = roleSupervisor.GetSupervisors(Convert.ToInt32(Session["RoleId"]),Convert.ToInt32(Session["UserId"]));
-        //    modalDropDownSupervisor.DataSource = supervisors;
-        //    modalDropDownSupervisor.DataTextField = "supervisorname";
-        //    modalDropDownSupervisor.DataValueField = "supervisorid";
-        //    modalDropDownSupervisor.DataBind();
-
-        //    if (value.Trim() != "") 
-        //    {
-        //        foreach (ListItem i in modalDropDownSupervisor.Items)
-        //        {
-        //            if (i.Value.Trim() == value.Trim())
-        //            {
-        //                i.Selected = true;
-        //                break;
-        //            }
-        //        }
-        //    }
-        //}
-
         private void InitializeModalJobStatus(string value = "") 
         {
             if (value == null)
@@ -1714,30 +1641,6 @@ namespace TimeTracker
         #endregion
 
         #region OTHERS
-
-        //protected void gridViewJobTrack_RowCreated(object sender, GridViewRowEventArgs e) //OnRowCreated
-        //{
-        //    if (e.Row.RowType == DataControlRowType.Header) 
-        //    {
-        //        GridViewRow gvr = new GridViewRow(0, 0, DataControlRowType.Header, DataControlRowState.Normal);
-        //        TableHeaderCell thc = new TableHeaderCell();
-        //        thc.ColumnSpan = 2;
-        //        thc.Text = "Header 1";
-        //        gvr.Cells.Add(thc);
-
-        //        thc = new TableHeaderCell();
-        //        thc.ColumnSpan = 3;
-        //        thc.Text = "Header 3";
-        //        gvr.Cells.Add(thc);
-
-        //        thc = new TableHeaderCell();
-        //        thc.ColumnSpan = 4;
-        //        thc.Text = "Header 2";
-        //        gvr.Cells.Add(thc);
-
-        //        gridJobTrack.Controls[0].Controls.AddAt(0, gvr);
-        //    }
-        //}
 
         protected override void Render(System.Web.UI.HtmlTextWriter writer)
         {

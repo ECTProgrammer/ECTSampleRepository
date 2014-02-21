@@ -103,6 +103,16 @@ namespace TimeTracker
             InitializeModalDropDownRole();
             InitializeModalDropDownStatus();
             InitializeModalRadBtnShift();
+
+            modalTxtBoxStartTime.Text = "08:00";
+            modalTxtBoxEndTime.Text = "05:00";
+            modalTxtBoxBaseRate.Text = "0.00";
+            modalTxtBoxOTRate.Text = "0.00";
+            modalTxtBoxSpecialRate.Text = "0.00";
+            modalChkBoxUpdateRate.Checked = false;
+            cpeSalaryRate.ClientState = "true";
+            ToggleReqField(false);
+
             this.programmaticModalPopup.Show();
         }
 
@@ -133,6 +143,17 @@ namespace TimeTracker
                 modalTxtBoxEmail.Text = user.Email;
                 modalTxtBoxFax.Text = user.Fax;
                 InitializeModalRadBtnShift(user.Shift);
+
+                modalTxtBoxStartTime.Text = user.startTime;
+                modalTxtBoxEndTime.Text = user.endTime;
+                modalTxtBoxBaseRate.Text = user.currentBaseRate.ToString();
+                modalTxtBoxOTRate.Text = user.currentOTRate.ToString();
+                modalTxtBoxSpecialRate.Text = user.currentSpecialRate.ToString();
+
+                modalChkBoxUpdateRate.Checked = false;
+                cpeSalaryRate.ClientState = "true";
+                ToggleReqField(false);
+
                 this.programmaticModalPopup.Show();
             }
         }
@@ -226,6 +247,29 @@ namespace TimeTracker
         #region COMMAND
         protected void modalBtnSubmit_Command(object sender, CommandEventArgs e)
         {
+            if (modalChkBoxUpdateRate.Checked == true) //Checks if starttime and endtime is in correct format
+            { 
+                TimeSpan starttime = new TimeSpan();
+                TimeSpan endtime = new TimeSpan();
+                if (TimeSpan.TryParse(modalTxtBoxStartTime.Text, out starttime))
+                {
+                    
+                }
+                else 
+                {
+                    modalLabelError.Text = "Start Time not in valid format.";
+                    modalLabelError.Visible = true;
+                }
+                if (TimeSpan.TryParse(modalTxtBoxEndTime.Text, out endtime))
+                {
+
+                }
+                else
+                {
+                    modalLabelError.Text = "End Time not in valid format.";
+                    modalLabelError.Visible = true;
+                }
+            }
             if (modalLabelError.Visible == true)
                 this.programmaticModalPopup.Show();
             else 
@@ -256,10 +300,50 @@ namespace TimeTracker
                     user.CreateDate = DateTime.Now;
                     user.CreatedBy = userid;
                     user.Insert(user);
+                    user = user.GetLastInsertedUser(); //assign newly created user to variable user
                 }
                 else if (e.CommandArgument.ToString().Trim() == "Update") 
                 {
                     user.Update(user);
+                }
+                if (modalChkBoxUpdateRate.Checked == true) //User intends to update salary rate
+                {
+                    UserRateSchedule userRateSchedule = new UserRateSchedule();
+                    userRateSchedule = userRateSchedule.GetUserScheduleRateByUserIdStartDate(user.Id, DateTime.Today); //Checks if there is already a schedule date with the same start date
+                    if (userRateSchedule != null)
+                    {
+                        userRateSchedule.StartTime = modalTxtBoxStartTime.Text.Trim(); 
+                        userRateSchedule.EndTime = modalTxtBoxEndTime.Text.Trim(); 
+                        userRateSchedule.BaseRate = Convert.ToDouble(modalTxtBoxBaseRate.Text);
+                        userRateSchedule.OTRate = Convert.ToDouble(modalTxtBoxOTRate.Text);
+                        userRateSchedule.SpecialRate = Convert.ToDouble(modalTxtBoxSpecialRate.Text);
+                        userRateSchedule.Update(userRateSchedule);
+                    }
+                    else 
+                    {
+                        userRateSchedule = new UserRateSchedule();
+                        List<UserRateSchedule> userRateScheduleList = userRateSchedule.GetCurrentUserScheduleRatesByUserId(user.Id);
+                        userRateSchedule.StartTime = modalTxtBoxStartTime.Text.Trim();
+                        userRateSchedule.EndTime = modalTxtBoxEndTime.Text.Trim(); 
+                        userRateSchedule.UserId = user.Id;
+                        userRateSchedule.BaseRate = Convert.ToDouble(modalTxtBoxBaseRate.Text);
+                        userRateSchedule.OTRate = Convert.ToDouble(modalTxtBoxOTRate.Text);
+                        userRateSchedule.SpecialRate = Convert.ToDouble(modalTxtBoxSpecialRate.Text);
+                        userRateSchedule.StartDate = DateTime.Today;
+                        userRateSchedule.IsCurrentRate = true;
+
+                        foreach (UserRateSchedule u in userRateScheduleList) 
+                        {
+                            if (u.EndDate == null) 
+                            {
+                                u.EndDate = DateTime.Today.AddDays(-1);
+                            }
+                            u.IsCurrentRate = false;
+                            u.Update(u);
+                        }
+
+                        userRateSchedule.Insert(userRateSchedule);
+                    }
                 }
                 InitializeGridUser();
                 this.programmaticModalPopup.Hide();
@@ -285,6 +369,21 @@ namespace TimeTracker
             {
                 modalLabelError.Text = "";
                 modalLabelError.Visible = false;
+            }
+            this.programmaticModalPopup.Show();
+        }
+
+        protected void modalChkBoxUpdateRate_Changed(object sender, EventArgs e)
+        {
+            if (modalChkBoxUpdateRate.Checked == true)
+            {
+                ToggleReqField(true);
+                cpeSalaryRate.ClientState = "false";
+            }
+            else
+            {
+                ToggleReqField(false);
+                cpeSalaryRate.ClientState = "true";
             }
             this.programmaticModalPopup.Show();
         }
@@ -355,6 +454,21 @@ namespace TimeTracker
             Module module = new Module();
             module = module.GetModule("SetupUser.aspx");
             myAccessRights = myAccessRights.GetRolesModuleAccess(Convert.ToInt32(user.RoleId), module.Id);
+        }
+
+        private void ToggleReqField(bool value)
+        {
+            modalReqStartTime.Enabled = value;
+            modalRegValStartTime.Enabled = value;
+            modalReqEndTime.Enabled = value;
+            modalRegValEndTime.Enabled = value;
+            modalReqBaseRate.Enabled = value;
+            modalRegValBaseRate.Enabled = value;
+            modalReqOTRate.Enabled = value;
+            modalRegValOTRate.Enabled = value;
+            modalReqSpecialRate.Enabled = value;
+            modalRegValSpecialRate.Enabled = value;
+
         }
         #endregion
     }
