@@ -277,6 +277,7 @@
     <Content Include="Global.asax" />
     <Content Include="Setting.aspx" />
     <Content Include="Setup.aspx" />
+    <Content Include="SetupCAPStageMapping.aspx" />
     <Content Include="SetupDepartment.aspx" />
     <Content Include="SetupDepartmentAccess.aspx" />
     <Content Include="SetupJobFlow.aspx" />
@@ -385,6 +386,7 @@
       <DependentUpon>Login.aspx</DependentUpon>
     </Compile>
     <Compile Include="Model\Analysis.cs" />
+    <Compile Include="Model\CAPStageMapping.cs" />
     <Compile Include="Model\Converter.cs" />
     <Compile Include="Model\Department.cs" />
     <Compile Include="Model\JobFlow.cs" />
@@ -430,6 +432,13 @@
     </Compile>
     <Compile Include="Setup.aspx.designer.cs">
       <DependentUpon>Setup.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="SetupCAPStageMapping.aspx.cs">
+      <DependentUpon>SetupCAPStageMapping.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="SetupCAPStageMapping.aspx.designer.cs">
+      <DependentUpon>SetupCAPStageMapping.aspx</DependentUpon>
     </Compile>
     <Compile Include="SetupDepartment.aspx.cs">
       <DependentUpon>SetupDepartment.aspx</DependentUpon>
@@ -522,6 +531,9 @@
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
       <DependentUpon>TimeTrackerModel.edmx</DependentUpon>
+    </Compile>
+    <Compile Include="T_CAPStageMapping.cs">
+      <DependentUpon>TimeTrackerModel.tt</DependentUpon>
     </Compile>
     <Compile Include="T_Department.cs">
       <DependentUpon>TimeTrackerModel.tt</DependentUpon>

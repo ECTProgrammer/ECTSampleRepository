@@ -501,21 +501,40 @@ namespace TimeTracker
         {
             TimeClock timeclock = new TimeClock();
             int userid = Convert.ToInt32(Session["UserId"]);
-            DateTime sdate = Convert.ToDateTime(seltime.ToString("yyyy-MM-dd") + " 00:00");
-            DateTime edate = Convert.ToDateTime(seltime.ToString("yyyy-MM-dd") + " 23:59");
+            LabelTimeClock.Text = "";
+            
             User user = new User();
-            user = user.GetUser(userid);
+            user = user.GetUser(userid,seltime);
             if (user != null)
             {
-                timeclock = timeclock.GetStartEndTime(Convert.ToInt32(user.EmployeeNumber), sdate, edate);
-            }
-            if (timeclock == null)
-            {
-                LabelTimeClock.Text = "";
-            }
-            else 
-            {
-                LabelTimeClock.Text = "Time-In: "+timeclock.starttime.ToString("hh:mm tt")+", Time-Out: " +timeclock.endtime.ToString("hh:mm tt");
+                if (TimeSpan.Parse(user.startTime) > TimeSpan.Parse(user.endTime)) //user with shifting hour 
+                {
+                    TimeSpan cutOfTime = user.GetMyCutOfTime();
+                    string cot = cutOfTime.ToString("hh\\:mm");
+                    timeclock = timeclock.GetStartEndTimeForShifting(Convert.ToInt32(user.EmployeeNumber), Convert.ToDateTime(seltime.AddDays(-1).ToString("yyyy-MM-dd") + " " + cutOfTime.ToString("hh\\:mm")), Convert.ToDateTime(seltime.ToString("yyyy-MM-dd") + " " + cutOfTime.ToString("hh\\:mm")), false);
+                    if (timeclock != null)
+                    {
+                        LabelTimeClock.Text = "Time-In: " + timeclock.starttime.ToString("hh:mm tt") + ", Time-Out: " + timeclock.endtime.ToString("hh:mm tt");
+                    }
+                    timeclock = new TimeClock();
+                    timeclock = timeclock.GetStartEndTimeForShifting(Convert.ToInt32(user.EmployeeNumber), Convert.ToDateTime(seltime.ToString("yyyy-MM-dd") + " " + cutOfTime.ToString("hh\\:mm\\:ss")), Convert.ToDateTime(seltime.AddDays(1).ToString("yyyy-MM-dd") + " " + cutOfTime.ToString("hh\\:mm\\:ss")), true);
+                    if (timeclock != null) 
+                    {
+                        if (LabelTimeClock.Text != "")
+                            LabelTimeClock.Text += " | ";
+                        LabelTimeClock.Text += "Time-In: " + timeclock.starttime.ToString("hh:mm tt") + ", Time-Out: " + timeclock.endtime.ToString("hh:mm tt");
+                    }
+                }
+                else
+                {
+                    DateTime sdate = Convert.ToDateTime(seltime.ToString("yyyy-MM-dd") + " 00:00");
+                    DateTime edate = Convert.ToDateTime(seltime.ToString("yyyy-MM-dd") + " 23:59");
+                    timeclock = timeclock.GetStartEndTime(Convert.ToInt32(user.EmployeeNumber), sdate, edate);
+                    if (timeclock != null)
+                    {
+                        LabelTimeClock.Text = "Time-In: " + timeclock.starttime.ToString("hh:mm tt") + ", Time-Out: " + timeclock.endtime.ToString("hh:mm tt");
+                    }
+                }
             }
         }
 

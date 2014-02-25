@@ -42,6 +42,9 @@
         <EntityTypeShape EntityType="TimeTrackerModel.T_TimeClock" Width="1.5" PointX="0.5" PointY="9.875" />
         <EntityTypeShape EntityType="TimeTrackerModel.T_UserRateSchedule" Width="1.5" PointX="6.125" PointY="11.375" />
         <AssociationConnector Association="TimeTrackerModel.FK_UserRateSchedule_UserId" />
+        <EntityTypeShape EntityType="TimeTrackerModel.T_CAPStageMapping" Width="1.5" PointX="3.625" PointY="11.375" />
+        <AssociationConnector Association="TimeTrackerModel.FK_CapStageMapping_DepartmentId" />
+        <AssociationConnector Association="TimeTrackerModel.FK_CapStageMapping_JobType" />
       </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>

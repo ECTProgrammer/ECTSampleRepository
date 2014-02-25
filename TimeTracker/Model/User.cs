@@ -62,6 +62,52 @@ namespace TimeTracker.Model
             return data;
         }
 
+        //Gets User and rate on the datetime provided
+        public User GetUser(int userid,DateTime seleteddate)
+        {
+            TimeTrackerEntities db = new TimeTrackerEntities();
+
+            var data = (from u in db.T_Users
+                        where u.Id == userid
+                        select new User()
+                        {
+                            Id = u.Id,
+                            Username = u.Username,
+                            Password = u.Password,
+                            Firstname = u.Firstname,
+                            Lastname = u.Lastname,
+                            Phone = u.Phone,
+                            Mobile = u.Mobile,
+                            Fax = u.Fax,
+                            Email = u.Email,
+                            DepartmentId = u.DepartmentId,
+                            RoleId = u.RoleId,
+                            CreateDate = u.CreateDate,
+                            CreatedBy = u.CreatedBy,
+                            LastUpdateDate = u.LastUpdateDate,
+                            LastUpdatedBy = u.LastUpdatedBy,
+                            Status = u.Status,
+                            fullname = u.Firstname + " " + u.Lastname,
+                            role = u.M_Role.Description,
+                            department = u.M_Department.Description,
+                            EmployeeNumber = u.EmployeeNumber,
+                            Shift = u.Shift,
+                            currentBaseRate = 0.00,
+                            currentOTRate = 0.00,
+                            currentSpecialRate = 0.00,
+                            startTime = "",
+                            endTime = ""
+                        }).FirstOrDefault();
+
+            db.Dispose();
+
+            if (data != null)
+            {
+                data.GetMyRate(seleteddate);
+            }
+            return data;
+        }
+
         //Gets User data base on username
         public User GetUser(string username)
         {
@@ -867,11 +913,19 @@ namespace TimeTracker.Model
             URS = URS.GetUserScheduleRateCurrentRate(Id);
             if (URS != null) 
             {
-                startTime = URS.StartTime;
-                endTime = URS.EndTime;
+                startTime = URS.StartTime == "" ? "08:00" : URS.StartTime;
+                endTime = URS.EndTime == "" ? "17:00" : URS.EndTime;
                 currentBaseRate = Convert.ToDouble(URS.BaseRate == null ? 0.00: URS.BaseRate);
                 currentOTRate = Convert.ToDouble(URS.OTRate == null ? 0.00: URS.OTRate);
                 currentSpecialRate = Convert.ToDouble(URS.SpecialRate == null ? 0.00: URS.SpecialRate);
+            }
+            else
+            {
+                startTime = "08:00";
+                endTime = "17:00";
+                currentBaseRate = 0;
+                currentOTRate = 0;
+                currentSpecialRate = 0;
             }
         }
 
@@ -882,12 +936,33 @@ namespace TimeTracker.Model
             URS = URS.GetUserScheduleRateByUserIdDate(Id, date);
             if (URS != null)
             {
-                startTime = URS.StartTime;
-                endTime = URS.EndTime;
+                startTime = URS.StartTime == "" ? "08:00" : URS.StartTime;
+                endTime = URS.EndTime == "" ? "17:00" : URS.EndTime;
                 currentBaseRate = Convert.ToDouble(URS.BaseRate == null ? 0 : URS.BaseRate);
                 currentOTRate = Convert.ToDouble(URS.OTRate == null ? 0 : URS.OTRate);
                 currentSpecialRate = Convert.ToDouble(URS.SpecialRate == null ? 0 : URS.SpecialRate);
             }
+            else 
+            {
+                startTime = "08:00";
+                endTime = "17:00";
+                currentBaseRate = 0;
+                currentOTRate = 0;
+                currentSpecialRate = 0;
+            }
+        }
+
+        public TimeSpan GetMyCutOfTime() 
+        {
+            TimeSpan cutOfTime = new TimeSpan(00,00,00);
+            TimeSpan stime = TimeSpan.Parse(startTime == "" ? "08:00" : startTime);
+            TimeSpan etime = TimeSpan.Parse(endTime == "" ? "17:00" : endTime);
+            if(stime > etime)
+            {
+                double result = stime.TotalMinutes - etime.TotalMinutes;
+                cutOfTime = etime.Add(TimeSpan.FromMinutes(result/2));
+            }
+            return cutOfTime;
         }
     }
 }

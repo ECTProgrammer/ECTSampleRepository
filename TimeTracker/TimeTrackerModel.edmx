@@ -6,6 +6,7 @@
     <edmx:StorageModels>
     <Schema Namespace="TimeTrackerModel.Store" Alias="Self" Provider="System.Data.SqlClient" ProviderManifestToken="2008" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
         <EntityContainer Name="TimeTrackerModelStoreContainer">
+          <EntitySet Name="CAPStageMapping" EntityType="TimeTrackerModel.Store.CAPStageMapping" store:Type="Tables" Schema="dbo" />
           <EntitySet Name="Department" EntityType="TimeTrackerModel.Store.Department" store:Type="Tables" Schema="dbo" />
           <EntitySet Name="JobFlow" EntityType="TimeTrackerModel.Store.JobFlow" store:Type="Tables" Schema="dbo" />
           <EntitySet Name="JobTracker" EntityType="TimeTrackerModel.Store.JobTracker" store:Type="Tables" Schema="dbo" />
@@ -22,6 +23,14 @@
           <EntitySet Name="TimeSetting" EntityType="TimeTrackerModel.Store.TimeSetting" store:Type="Tables" Schema="dbo" />
           <EntitySet Name="UserRateSchedule" EntityType="TimeTrackerModel.Store.UserRateSchedule" store:Type="Tables" Schema="dbo" />
           <EntitySet Name="Users" EntityType="TimeTrackerModel.Store.Users" store:Type="Tables" Schema="dbo" />
+          <AssociationSet Name="FK_CapStageMapping_DepartmentId" Association="TimeTrackerModel.Store.FK_CapStageMapping_DepartmentId">
+            <End Role="Department" EntitySet="Department" />
+            <End Role="CAPStageMapping" EntitySet="CAPStageMapping" />
+          </AssociationSet>
+          <AssociationSet Name="FK_CapStageMapping_JobType" Association="TimeTrackerModel.Store.FK_CapStageMapping_JobType">
+            <End Role="JobType" EntitySet="JobType" />
+            <End Role="CAPStageMapping" EntitySet="CAPStageMapping" />
+          </AssociationSet>
           <AssociationSet Name="Fk_JobTracker_ApprovedBy" Association="TimeTrackerModel.Store.Fk_JobTracker_ApprovedBy">
             <End Role="Users" EntitySet="Users" />
             <End Role="JobTracker" EntitySet="JobTracker" />
@@ -107,6 +116,17 @@
             <End Role="Users" EntitySet="Users" />
           </AssociationSet>
         </EntityContainer>
+        <EntityType Name="CAPStageMapping">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" Nullable="false" StoreGeneratedPattern="Identity" />
+          <Property Name="DepartmentId" Type="int" Nullable="false" />
+          <Property Name="JobTypeId" Type="int" Nullable="false" />
+          <Property Name="SD_Stage_No" Type="int" Nullable="false" />
+          <Property Name="DatabaseMap" Type="nvarchar" Nullable="false" MaxLength="200" />
+          <Property Name="StageDescription" Type="varchar" MaxLength="200" />
+        </EntityType>
         <EntityType Name="Department">
           <Key>
             <PropertyRef Name="Id" />
@@ -328,6 +348,30 @@
           <Property Name="Password" Type="varchar" MaxLength="20" />
           <Property Name="Shift" Type="varchar" MaxLength="15" />
         </EntityType>
+        <Association Name="FK_CapStageMapping_DepartmentId">
+          <End Role="Department" Type="TimeTrackerModel.Store.Department" Multiplicity="1" />
+          <End Role="CAPStageMapping" Type="TimeTrackerModel.Store.CAPStageMapping" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Department">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="CAPStageMapping">
+              <PropertyRef Name="DepartmentId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_CapStageMapping_JobType">
+          <End Role="JobType" Type="TimeTrackerModel.Store.JobType" Multiplicity="1" />
+          <End Role="CAPStageMapping" Type="TimeTrackerModel.Store.CAPStageMapping" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="JobType">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="CAPStageMapping">
+              <PropertyRef Name="JobTypeId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
         <Association Name="Fk_JobTracker_ApprovedBy">
           <End Role="Users" Type="TimeTrackerModel.Store.Users" Multiplicity="0..1" />
           <End Role="JobTracker" Type="TimeTrackerModel.Store.JobTracker" Multiplicity="*" />
@@ -685,6 +729,15 @@
             <End Role="T_Users" EntitySet="T_Users" />
             <End Role="UserRateSchedule" EntitySet="T_UserRateSchedule" />
           </AssociationSet>
+          <EntitySet Name="T_CAPStageMapping" EntityType="TimeTrackerModel.T_CAPStageMapping" />
+          <AssociationSet Name="FK_CapStageMapping_DepartmentId" Association="TimeTrackerModel.FK_CapStageMapping_DepartmentId">
+            <End Role="T_Department" EntitySet="T_Department" />
+            <End Role="CAPStageMapping" EntitySet="T_CAPStageMapping" />
+          </AssociationSet>
+          <AssociationSet Name="FK_CapStageMapping_JobType" Association="TimeTrackerModel.FK_CapStageMapping_JobType">
+            <End Role="T_JobType" EntitySet="T_JobType" />
+            <End Role="CAPStageMapping" EntitySet="T_CAPStageMapping" />
+          </AssociationSet>
         </EntityContainer>
         <EntityType Name="T_Department">
           <Key>
@@ -702,6 +755,7 @@
           <NavigationProperty Name="M_RoleDepartmentAccesses" Relationship="TimeTrackerModel.Fk_RoleDepartmentAccess_DepartmentId" FromRole="Department" ToRole="RoleDepartmentAccess" />
           <NavigationProperty Name="M_Users" Relationship="TimeTrackerModel.fk_Users_DepartmentId" FromRole="Department" ToRole="Users" />
           <NavigationProperty Name="M_JobTypeFlows" Relationship="TimeTrackerModel.Fk_JobTypeFlow_DepartmentId" FromRole="T_Department" ToRole="T_JobTypeFlow" />
+          <NavigationProperty Name="CAPStageMappings" Relationship="TimeTrackerModel.FK_CapStageMapping_DepartmentId" FromRole="T_Department" ToRole="CAPStageMapping" />
         </EntityType>
         <EntityType Name="T_JobTracker">
           <Key>
@@ -784,6 +838,7 @@
           <NavigationProperty Name="M_JobTypeDepartments" Relationship="TimeTrackerModel.FK_JobTypeDepartment_JobTypeId" FromRole="JobType" ToRole="JobTypeDepartment" />
           <NavigationProperty Name="M_JobTypeFlows" Relationship="TimeTrackerModel.Fk_JobTypeFlow_JobTypeId" FromRole="T_JobType" ToRole="JobTypeFlow" />
           <Property Type="Boolean" Name="IsDefaultBreak" />
+          <NavigationProperty Name="CAPStageMappings" Relationship="TimeTrackerModel.FK_CapStageMapping_JobType" FromRole="T_JobType" ToRole="CAPStageMapping" />
         </EntityType>
         <EntityType Name="T_JobTypeDepartment">
           <Key>
@@ -1201,6 +1256,43 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <EntityType Name="T_CAPStageMapping">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Type="Int32" Name="Id" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Type="Int32" Name="DepartmentId" Nullable="false" />
+          <Property Type="Int32" Name="JobTypeId" Nullable="false" />
+          <Property Type="Int32" Name="SD_Stage_No" Nullable="false" />
+          <Property Type="String" Name="StageDescription" MaxLength="200" FixedLength="false" Unicode="false" />
+          <NavigationProperty Name="M_Department" Relationship="TimeTrackerModel.FK_CapStageMapping_DepartmentId" FromRole="CAPStageMapping" ToRole="T_Department" />
+          <NavigationProperty Name="M_JobType" Relationship="TimeTrackerModel.FK_CapStageMapping_JobType" FromRole="CAPStageMapping" ToRole="T_JobType" />
+          <Property Type="String" Name="DatabaseMap" Nullable="false" MaxLength="200" FixedLength="false" Unicode="true" />
+        </EntityType>
+        <Association Name="FK_CapStageMapping_DepartmentId">
+          <End Type="TimeTrackerModel.T_Department" Role="T_Department" Multiplicity="1" />
+          <End Type="TimeTrackerModel.T_CAPStageMapping" Role="CAPStageMapping" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="T_Department">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="CAPStageMapping">
+              <PropertyRef Name="DepartmentId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_CapStageMapping_JobType">
+          <End Type="TimeTrackerModel.T_JobType" Role="T_JobType" Multiplicity="1" />
+          <End Type="TimeTrackerModel.T_CAPStageMapping" Role="CAPStageMapping" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="T_JobType">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="CAPStageMapping">
+              <PropertyRef Name="JobTypeId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
       </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
@@ -1440,6 +1532,18 @@
                 <ScalarProperty Name="EndTime" ColumnName="EndTime" />
                 <ScalarProperty Name="StartTime" ColumnName="StartTime" />
                 <ScalarProperty Name="UserId" ColumnName="UserId" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="T_CAPStageMapping">
+            <EntityTypeMapping TypeName="TimeTrackerModel.T_CAPStageMapping">
+              <MappingFragment StoreEntitySet="CAPStageMapping">
+                <ScalarProperty Name="DatabaseMap" ColumnName="DatabaseMap" />
+                <ScalarProperty Name="StageDescription" ColumnName="StageDescription" />
+                <ScalarProperty Name="SD_Stage_No" ColumnName="SD_Stage_No" />
+                <ScalarProperty Name="JobTypeId" ColumnName="JobTypeId" />
+                <ScalarProperty Name="DepartmentId" ColumnName="DepartmentId" />
                 <ScalarProperty Name="Id" ColumnName="Id" />
               </MappingFragment>
             </EntityTypeMapping>

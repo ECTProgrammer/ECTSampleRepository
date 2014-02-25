@@ -41,5 +41,6 @@ namespace TimeTracker
         public DbSet<T_JobTypeFlow> T_JobTypeFlow { get; set; }
         public DbSet<T_TimeClock> T_TimeClock { get; set; }
         public DbSet<T_UserRateSchedule> T_UserRateSchedule { get; set; }
+        public DbSet<T_CAPStageMapping> T_CAPStageMapping { get; set; }
     }
 }

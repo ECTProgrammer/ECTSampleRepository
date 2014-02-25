@@ -150,6 +150,8 @@ namespace TimeTracker
                 modalTxtBoxOTRate.Text = user.currentOTRate.ToString();
                 modalTxtBoxSpecialRate.Text = user.currentSpecialRate.ToString();
 
+                TimeSpan cutOfTime = user.GetMyCutOfTime();
+
                 modalChkBoxUpdateRate.Checked = false;
                 cpeSalaryRate.ClientState = "true";
                 ToggleReqField(false);

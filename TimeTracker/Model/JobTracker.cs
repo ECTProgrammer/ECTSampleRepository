@@ -1404,6 +1404,85 @@ namespace TimeTracker.Model
             return data;
         }
 
+        public List<JobTracker> GetJobTrackerListWithEndTimeAndNotRejected(int userid, DateTime selecteddate)
+        {
+            TimeTrackerEntities db = new TimeTrackerEntities();
+
+            var data = (from j in db.T_JobTracker
+                        where j.UserId == userid
+                        && j.ScheduleDate == selecteddate
+                        && j.Status != "Rejected"
+                        && j.EndTime != null
+                        orderby j.StartTime ascending
+                        select new JobTracker()
+                        {
+                            Id = j.Id,
+                            UserId = j.UserId,
+                            StartTime = j.StartTime,
+                            EndTime = j.EndTime,
+                            Description = j.Description,
+                            JobTypeId = j.JobTypeId,
+                            JobIdNumber = j.JobIdNumber,
+                            jobtype = j.M_JobType.Description,
+                            Remarks = j.Remarks,
+                            ApprovedBy = j.ApprovedBy,
+                            CreateDate = j.CreateDate,
+                            LastUpdateDate = j.LastUpdateDate,
+                            CreatedBy = j.CreatedBy,
+                            LastUpdatedBy = j.LastUpdatedBy,
+                            Status = j.Status,
+                            SupervisorRemarks = j.SupervisorRemarks,
+                            ActionRequest = j.ActionRequest,
+                            ScheduleDate = j.ScheduleDate,
+                            JobStatus = j.JobStatus,
+                            SWNo = j.SWNo,
+                            HWNo = j.HWNo,
+                            fullname = j.M_User.Firstname + " " + j.M_User.Lastname
+                        }).ToList();
+            db.Dispose();
+            return data;
+        }
+
+        public List<JobTracker> GetJobTrackerListWithEndTimeAndNotRejected(int userid, DateTime startTime,DateTime endTime)
+        {
+            TimeTrackerEntities db = new TimeTrackerEntities();
+
+            var data = (from j in db.T_JobTracker
+                        where j.UserId == userid
+                        && j.StartTime >= startTime
+                        && j.StartTime < endTime
+                        && j.Status != "Rejected"
+                        && j.EndTime != null
+                        orderby j.StartTime ascending
+                        select new JobTracker()
+                        {
+                            Id = j.Id,
+                            UserId = j.UserId,
+                            StartTime = j.StartTime,
+                            EndTime = j.EndTime,
+                            Description = j.Description,
+                            JobTypeId = j.JobTypeId,
+                            JobIdNumber = j.JobIdNumber,
+                            jobtype = j.M_JobType.Description,
+                            Remarks = j.Remarks,
+                            ApprovedBy = j.ApprovedBy,
+                            CreateDate = j.CreateDate,
+                            LastUpdateDate = j.LastUpdateDate,
+                            CreatedBy = j.CreatedBy,
+                            LastUpdatedBy = j.LastUpdatedBy,
+                            Status = j.Status,
+                            SupervisorRemarks = j.SupervisorRemarks,
+                            ActionRequest = j.ActionRequest,
+                            ScheduleDate = j.ScheduleDate,
+                            JobStatus = j.JobStatus,
+                            SWNo = j.SWNo,
+                            HWNo = j.HWNo,
+                            fullname = j.M_User.Firstname + " " + j.M_User.Lastname
+                        }).ToList();
+            db.Dispose();
+            return data;
+        }
+
         //private JobTracker GetCustomer(string jobid) 
         //{
         //    JobTracker jobTracker = new JobTracker();
@@ -1891,56 +1970,67 @@ namespace TimeTracker.Model
         {
             bool result = false;
 
-            TimeTrackerEntities db = new TimeTrackerEntities();
+            var data = GetJobTrackerListWithEndTimeAndNotRejected(userid, selecteddate);
 
-            var data = (from j in db.T_JobTracker
-                        where j.UserId == userid
-                        && j.ScheduleDate == selecteddate
-                        && j.Status != "Rejected"
-                        && j.EndTime != null
-                        orderby j.StartTime ascending
-                        select new JobTracker()
-                        {
-                            Id = j.Id,
-                            UserId = j.UserId,
-                            StartTime = j.StartTime,
-                            EndTime = j.EndTime,
-                            Description = j.Description,
-                            JobTypeId = j.JobTypeId,
-                            JobIdNumber = j.JobIdNumber,
-                            jobtype = j.M_JobType.Description,
-                            Remarks = j.Remarks,
-                            ApprovedBy = j.ApprovedBy,
-                            CreateDate = j.CreateDate,
-                            LastUpdateDate = j.LastUpdateDate,
-                            CreatedBy = j.CreatedBy,
-                            LastUpdatedBy = j.LastUpdatedBy,
-                            Status = j.Status,
-                            SupervisorRemarks = j.SupervisorRemarks,
-                            ActionRequest = j.ActionRequest,
-                            ScheduleDate = j.ScheduleDate,
-                            JobStatus = j.JobStatus,
-                            SWNo = j.SWNo,
-                            HWNo = j.HWNo,
-                            fullname = j.M_User.Firstname + " " + j.M_User.Lastname
-                        }).ToList();
-
-            db.Dispose();
-            DateTime sTime = new DateTime();
-            for (int i = 0; i < data.Count; i++) 
+            User user = new User();
+            user = user.GetUser(userid,selecteddate);
+            if (TimeSpan.Parse(user.startTime) > TimeSpan.Parse(user.endTime)) //for shifting hours check two time (12 midnight - cutofftime and cutooftime to 12 midnight)
             {
-                if (i == 0) 
+                int loop = 0;
+                TimeSpan cutOfTime = user.GetMyCutOfTime();
+                DateTime stime1 = new DateTime();
+                stime1 = DateTime.Parse(selecteddate.Year + "-" + selecteddate.Month + "-" + selecteddate.Day + " 00:00:00");
+                DateTime stime2 = new DateTime();
+                for (int i = 0; i < data.Count; i++) 
                 {
-                    sTime = Convert.ToDateTime(data[i].EndTime);
+                    if (Convert.ToDateTime(data[i].StartTime).TimeOfDay < cutOfTime)
+                    {
+                        if (stime1 != data[i].StartTime)
+                        {
+                            result = true;
+                            break;
+                        }
+                        else
+                        {
+                            stime1 = Convert.ToDateTime(data[i].EndTime);
+                        }
+                    }
+                    else 
+                    {
+                        if (loop == 0)
+                        {
+                            stime2 = Convert.ToDateTime(data[i].EndTime);
+                        }
+                        else if (stime2 != data[i].StartTime)
+                        {
+                            result = true;
+                            break;
+                        }
+                        else
+                        {
+                            stime2 = Convert.ToDateTime(data[i].EndTime);
+                        }
+                    }
                 }
-                else if (sTime != data[i].StartTime)
+            }
+            else
+            {
+                DateTime sTime = new DateTime();
+                for (int i = 0; i < data.Count; i++)
                 {
-                    result = true;
-                    break;
-                }
-                else 
-                {
-                    sTime = Convert.ToDateTime(data[i].EndTime);
+                    if (i == 0)
+                    {
+                        sTime = Convert.ToDateTime(data[i].EndTime);
+                    }
+                    else if (sTime != data[i].StartTime)
+                    {
+                        result = true;
+                        break;
+                    }
+                    else
+                    {
+                        sTime = Convert.ToDateTime(data[i].EndTime);
+                    }
                 }
             }
 
@@ -1951,63 +2041,75 @@ namespace TimeTracker.Model
         {
             bool result = false;
             User user = new User();
-            user = user.GetUser(userid);
+            user = user.GetUser(userid,selecteddate);
             if (user.EmployeeNumber != 0) 
             {
-                TimeClock timeclock = new TimeClock();
-                timeclock = timeclock.GetStartEndTime(Convert.ToInt32(user.EmployeeNumber),Convert.ToDateTime(selecteddate.ToString("dd MMM yyyy")+" 00:00:00"),Convert.ToDateTime(selecteddate.ToString("dd MMM yyyy")+" 23:59:59"));
-
-                if (timeclock != null)
+                if (TimeSpan.Parse(user.startTime) > TimeSpan.Parse(user.endTime)) //user with shifting hour 
                 {
-                    TimeTrackerEntities db = new TimeTrackerEntities();
-
-                    var data = (from j in db.T_JobTracker
-                                where j.UserId == userid
-                                && j.ScheduleDate == selecteddate
-                                && j.Status != "Rejected"
-                                && j.EndTime != null
-                                orderby j.StartTime ascending
-                                select new JobTracker()
-                                {
-                                    Id = j.Id,
-                                    UserId = j.UserId,
-                                    StartTime = j.StartTime,
-                                    EndTime = j.EndTime,
-                                    Description = j.Description,
-                                    JobTypeId = j.JobTypeId,
-                                    JobIdNumber = j.JobIdNumber,
-                                    jobtype = j.M_JobType.Description,
-                                    Remarks = j.Remarks,
-                                    ApprovedBy = j.ApprovedBy,
-                                    CreateDate = j.CreateDate,
-                                    LastUpdateDate = j.LastUpdateDate,
-                                    CreatedBy = j.CreatedBy,
-                                    LastUpdatedBy = j.LastUpdatedBy,
-                                    Status = j.Status,
-                                    SupervisorRemarks = j.SupervisorRemarks,
-                                    ActionRequest = j.ActionRequest,
-                                    ScheduleDate = j.ScheduleDate,
-                                    JobStatus = j.JobStatus,
-                                    SWNo = j.SWNo,
-                                    HWNo = j.HWNo,
-                                    fullname = j.M_User.Firstname + " " + j.M_User.Lastname
-                                }).ToList();
-
-                    db.Dispose();
-                    if (data.Count > 0)
+                    TimeClock timeclock1 = new TimeClock();
+                    TimeClock timeclock2 = new TimeClock();
+                    TimeSpan cutOfTime = user.GetMyCutOfTime();
+                    
+                    timeclock2 = timeclock2.GetStartEndTimeForShifting(Convert.ToInt32(user.EmployeeNumber), Convert.ToDateTime(selecteddate.AddDays(-1).ToString("yyyy-MM-dd") + " " + cutOfTime.ToString("hh\\:mm\\:ss")), Convert.ToDateTime(selecteddate.ToString("yyyy-MM-dd") + " " + cutOfTime.ToString("hh\\:mm\\:ss")), false);
+                    if (timeclock2 != null)
                     {
-                        TimeSetting timesetting = new TimeSetting();
-                        timesetting = timesetting.GetTimeSetting();
-                        //if (timeclock.starttime.AddMinutes(timesetting.Interval) < Convert.ToDateTime(data[0].StartTime))
-                        if (timeclock.starttime.AddMinutes(30) < Convert.ToDateTime(data[0].StartTime))
+                        var data = GetJobTrackerListWithEndTimeAndNotRejected(userid, Convert.ToDateTime(selecteddate.ToString("yyyy-MM-dd") + " 00:00:00"), Convert.ToDateTime(selecteddate.ToString("yyyy-MM-dd") + " " + cutOfTime.ToString("hh:mm:ss")));
+                        if (data.Count > 0)
+                        {
+                            if (timeclock2.starttime < Convert.ToDateTime(data[0].StartTime))
+                                result = true;
+                            if (timeclock1.endtime.AddMinutes(-30) > Convert.ToDateTime(data[data.Count - 1].EndTime))
+                                result = true;
+                        }
+                        else
+                        {
                             result = true;
-                        //if (timeclock.endtime.AddMinutes(-1 * timesetting.Interval) > Convert.ToDateTime(data[data.Count - 1].EndTime))
-                        if (timeclock.endtime.AddMinutes(-30) > Convert.ToDateTime(data[data.Count - 1].EndTime))
-                            result = true;
+                        }
                     }
-                    else 
+                    if (result == false)
                     {
-                        result = true;
+                        timeclock1 = timeclock1.GetStartEndTimeForShifting(Convert.ToInt32(user.EmployeeNumber), Convert.ToDateTime(selecteddate.ToString("yyyy-MM-dd") + " " + cutOfTime.ToString("hh\\:mm\\:ss")), Convert.ToDateTime(selecteddate.AddDays(1).ToString("yyyy-MM-dd") + " " + cutOfTime.ToString("hh\\:mm\\:ss")), true);
+                        if (timeclock1 != null)
+                        {
+                            var data = GetJobTrackerListWithEndTimeAndNotRejected(userid, Convert.ToDateTime(selecteddate.ToString("yyyy-MM-dd") + " " + cutOfTime.ToString("hh:mm:ss")), Convert.ToDateTime(selecteddate.AddDays(1).ToString("yyyy-MM-dd") + " 00:00:00"));
+                            if (data.Count > 0)
+                            {
+                                if (timeclock1.starttime.AddMinutes(30) < Convert.ToDateTime(data[0].StartTime))
+                                    result = true;
+                                if (timeclock1.endtime > Convert.ToDateTime(data[data.Count - 1].EndTime))
+                                    result = true;
+                            }
+                            else
+                            {
+                                result = true;
+                            }
+                        }
+                    }
+                    
+                }
+                else
+                {
+                    TimeClock timeclock = new TimeClock();
+                    timeclock = timeclock.GetStartEndTime(Convert.ToInt32(user.EmployeeNumber), Convert.ToDateTime(selecteddate.ToString("dd MMM yyyy") + " 00:00:00"), Convert.ToDateTime(selecteddate.ToString("dd MMM yyyy") + " 23:59:59"));
+
+                    if (timeclock != null)
+                    {
+                        var data = GetJobTrackerListWithEndTimeAndNotRejected(userid,selecteddate);
+                        if (data.Count > 0)
+                        {
+                            //TimeSetting timesetting = new TimeSetting();
+                            //timesetting = timesetting.GetTimeSetting();
+                            //if (timeclock.starttime.AddMinutes(timesetting.Interval) < Convert.ToDateTime(data[0].StartTime))
+                            if (timeclock.starttime.AddMinutes(30) < Convert.ToDateTime(data[0].StartTime))
+                                result = true;
+                            //if (timeclock.endtime.AddMinutes(-1 * timesetting.Interval) > Convert.ToDateTime(data[data.Count - 1].EndTime))
+                            if (timeclock.endtime.AddMinutes(-30) > Convert.ToDateTime(data[data.Count - 1].EndTime))
+                                result = true;
+                        }
+                        else
+                        {
+                            result = true;
+                        }
                     }
                 }
             }

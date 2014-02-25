@@ -88,12 +88,14 @@ namespace TimeTracker.Model
         //gets the UserScheduleRate Data base on the date provided for a specific user
         public UserRateSchedule GetUserScheduleRateByUserIdDate(int userid,DateTime date)
         {
+            DateTime datetomorrow = new DateTime();
+            datetomorrow = DateTime.Now.AddDays(1);
             TimeTrackerEntities db = new TimeTrackerEntities();
 
             var data = (from u in db.T_UserRateSchedule
                         where u.UserId == userid
                         && u.StartDate <= date
-                        && (u.EndDate == null ? DateTime.Now.AddDays(1) : u.EndDate) > date
+                        && (u.EndDate == null ? datetomorrow : u.EndDate) > date
                         select new UserRateSchedule()
                         {
                             Id = u.Id,
