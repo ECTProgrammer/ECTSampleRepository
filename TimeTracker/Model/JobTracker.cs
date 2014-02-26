@@ -554,7 +554,7 @@ namespace TimeTracker.Model
             }
             if (stringjobid.Trim() != "") 
             {
-                data = data.Where(d => (d.EvalNo == null ? "" : d.EvalNo).ToUpper().Contains(stringjobid.ToUpper().Trim()) || d.HWNo.Trim() == stringjobid.Trim() || d.SWNo.Trim() == stringjobid.Trim()).ToList();
+                data = data.Where(d => (d.EvalNo == null ? "" : d.EvalNo).ToUpper().Contains(stringjobid.ToUpper().Trim()) || (d.HWNo == null ? "" : d.HWNo.Trim()) == stringjobid.Trim() || (d.SWNo == null ? "" : d.SWNo.Trim()) == stringjobid.Trim()).ToList();
             }
 
             double totalTime = 0;
@@ -867,20 +867,16 @@ namespace TimeTracker.Model
             }
             if (jobid.Trim() != "") 
             {
-                data = data.Where(d => d.EvalNo.ToUpper().Contains(jobid.ToUpper().Trim()) || d.HWNo == jobid.Trim() || d.SWNo == jobid.Trim()).ToList();
+                data = data.Where(d => (d.EvalNo == null ? "" : d.EvalNo.ToUpper()).Contains(jobid.ToUpper().Trim()) || (d.HWNo == null ? "" : d.HWNo) == jobid.Trim() || (d.SWNo == null ? "" : d.SWNo) == jobid.Trim()).ToList();
             }
             if (customer.Trim() != "") 
             {
-                data = data.Where(d => d.Customer.ToUpper().Contains(customer.ToUpper().Trim())).ToList();
+                data = data.Where(d => (d.Customer == null ? "" : d.Customer).ToUpper().Contains(customer.ToUpper().Trim())).ToList();
             }
             if (computetime == true)
             {
                 foreach (JobTracker j in data)
                 {
-                    //if (j.JobIdNumber != null && j.JobIdNumber != "")
-                    //{
-                    //    GetCustomer(j);
-                    //}
 
                     if (j.EndTime != null)
                     {
@@ -2039,6 +2035,7 @@ namespace TimeTracker.Model
 
         private bool HasTimeClockGap(int userid, DateTime selecteddate) 
         {
+            //Checks if the user has a gap between his facetime time and the time key in, in jobtrack
             bool result = false;
             User user = new User();
             user = user.GetUser(userid,selecteddate);
@@ -2048,17 +2045,17 @@ namespace TimeTracker.Model
                 {
                     TimeClock timeclock1 = new TimeClock();
                     TimeClock timeclock2 = new TimeClock();
-                    TimeSpan cutOfTime = user.GetMyCutOfTime();
+                    TimeSpan cutOffTime = user.GetMyCutOfTime();
                     
-                    timeclock2 = timeclock2.GetStartEndTimeForShifting(Convert.ToInt32(user.EmployeeNumber), Convert.ToDateTime(selecteddate.AddDays(-1).ToString("yyyy-MM-dd") + " " + cutOfTime.ToString("hh\\:mm\\:ss")), Convert.ToDateTime(selecteddate.ToString("yyyy-MM-dd") + " " + cutOfTime.ToString("hh\\:mm\\:ss")), false);
+                    timeclock2 = timeclock2.GetStartEndTimeForShifting(Convert.ToInt32(user.EmployeeNumber), Convert.ToDateTime(selecteddate.AddDays(-1).ToString("yyyy-MM-dd") + " " + cutOffTime.ToString("hh\\:mm\\:ss")), Convert.ToDateTime(selecteddate.ToString("yyyy-MM-dd") + " " + cutOffTime.ToString("hh\\:mm\\:ss")), false);
                     if (timeclock2 != null)
                     {
-                        var data = GetJobTrackerListWithEndTimeAndNotRejected(userid, Convert.ToDateTime(selecteddate.ToString("yyyy-MM-dd") + " 00:00:00"), Convert.ToDateTime(selecteddate.ToString("yyyy-MM-dd") + " " + cutOfTime.ToString("hh:mm:ss")));
+                        var data = GetJobTrackerListWithEndTimeAndNotRejected(userid, Convert.ToDateTime(selecteddate.ToString("yyyy-MM-dd") + " 00:00:00"), Convert.ToDateTime(selecteddate.ToString("yyyy-MM-dd") + " " + cutOffTime.ToString("hh\\:mm\\:ss")));
                         if (data.Count > 0)
                         {
                             if (timeclock2.starttime < Convert.ToDateTime(data[0].StartTime))
                                 result = true;
-                            if (timeclock1.endtime.AddMinutes(-30) > Convert.ToDateTime(data[data.Count - 1].EndTime))
+                            if ((timeclock2.endtime.TimeOfDay < new TimeSpan(0,30,0) ? timeclock1.endtime : timeclock2.endtime.AddMinutes(-30)) > Convert.ToDateTime(data[data.Count - 1].EndTime))
                                 result = true;
                         }
                         else
@@ -2068,15 +2065,15 @@ namespace TimeTracker.Model
                     }
                     if (result == false)
                     {
-                        timeclock1 = timeclock1.GetStartEndTimeForShifting(Convert.ToInt32(user.EmployeeNumber), Convert.ToDateTime(selecteddate.ToString("yyyy-MM-dd") + " " + cutOfTime.ToString("hh\\:mm\\:ss")), Convert.ToDateTime(selecteddate.AddDays(1).ToString("yyyy-MM-dd") + " " + cutOfTime.ToString("hh\\:mm\\:ss")), true);
+                        timeclock1 = timeclock1.GetStartEndTimeForShifting(Convert.ToInt32(user.EmployeeNumber), Convert.ToDateTime(selecteddate.ToString("yyyy-MM-dd") + " " + cutOffTime.ToString("hh\\:mm\\:ss")), Convert.ToDateTime(selecteddate.AddDays(1).ToString("yyyy-MM-dd") + " " + cutOffTime.ToString("hh\\:mm\\:ss")), true);
                         if (timeclock1 != null)
                         {
-                            var data = GetJobTrackerListWithEndTimeAndNotRejected(userid, Convert.ToDateTime(selecteddate.ToString("yyyy-MM-dd") + " " + cutOfTime.ToString("hh:mm:ss")), Convert.ToDateTime(selecteddate.AddDays(1).ToString("yyyy-MM-dd") + " 00:00:00"));
+                            var data = GetJobTrackerListWithEndTimeAndNotRejected(userid, Convert.ToDateTime(selecteddate.ToString("yyyy-MM-dd") + " " + cutOffTime.ToString("hh\\:mm\\:ss")), Convert.ToDateTime(selecteddate.AddDays(1).ToString("yyyy-MM-dd") + " 00:00:00"));
                             if (data.Count > 0)
                             {
                                 if (timeclock1.starttime.AddMinutes(30) < Convert.ToDateTime(data[0].StartTime))
                                     result = true;
-                                if (timeclock1.endtime > Convert.ToDateTime(data[data.Count - 1].EndTime))
+                                if ((timeclock1.endtime.TimeOfDay < new TimeSpan(0, 30, 0) ? timeclock1.endtime : timeclock1.endtime.AddMinutes(-30)) > Convert.ToDateTime(data[data.Count - 1].EndTime))
                                     result = true;
                             }
                             else

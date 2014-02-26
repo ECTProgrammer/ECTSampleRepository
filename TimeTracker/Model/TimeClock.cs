@@ -127,10 +127,10 @@ namespace TimeTracker.Model
                         {
                             result.endtime = midnight;
                         }
-                        else 
-                        {
-                            result.endtime.AddMinutes(-30); //Subtract 30 min to allow 30 gap in checking
-                        }
+                        //else 
+                        //{
+                        //    result.endtime.AddMinutes(-30); //Subtract 30 min to allow 30 gap in checking
+                        //}
                     }
                 }
                 else
