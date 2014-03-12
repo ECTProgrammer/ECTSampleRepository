@@ -1027,7 +1027,7 @@ namespace TimeTracker
                     //make sure that there is no gap between time
                     for (int i = 0; i < availableTime.Count; i++)
                     {
-                        if (availableTime[i] >= cutOffTime)
+                        if (availableTime[i] >= cutOffTime) 
                         {
                             if (i < availableTime.Count - 1)
                             {

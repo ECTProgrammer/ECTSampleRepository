@@ -15,6 +15,12 @@ namespace TimeTracker.Model
         public string fullname { get; set; }
         public int? departmentid { get; set; }
         public string department { get; set; }
+        public string normalhours { get; set; }
+        public string othours { get; set; }
+        public double normalcost { get; set; }
+        public double otcost { get; set; }
+        public double normalmins { get; set; }
+        public double otmins { get; set; }
 
         //Get JobTracker by Jobtracker id (has the option to compute the time by providing true to computetime parameter)
         public JobTracker GetJobTracker(int jobtrackerid,bool computetime)
@@ -59,12 +65,9 @@ namespace TimeTracker.Model
             //}
             if (computetime == true)
             {
-                if (data.EndTime != null)
+                if (data != null)
                 {
-                    double time = Convert.ToDateTime(data.EndTime).Subtract(Convert.ToDateTime(data.StartTime)).TotalMinutes;
-                    double hr = Math.Truncate(time / 60);
-                    double min = time % 60;
-                    data.totalhours = hr == 0 && min == 0 ? "0 min" : (hr > 0 ? hr > 1 ? hr + " hrs" : hr + " hr" : "") + (hr > 0 && min > 0 ? ", " : "") + (min > 0 ? min > 1 ? min + " mins" : min + " min" : "");
+                    data.ComputeHours();
                 }
             }
 
@@ -120,12 +123,65 @@ namespace TimeTracker.Model
             //}
             if (computetime == true)
             {
+                User user = new User();
+                user = user.GetUser(Convert.ToInt32(data.UserId), Convert.ToDateTime(data.StartTime));
                 if (data.EndTime != null)
                 {
+                    TimeSpan stime = Convert.ToDateTime(data.StartTime).TimeOfDay;
+                    TimeSpan etime = Convert.ToDateTime(data.EndTime).TimeOfDay;
+                    double nmins = 0;
+                    double omins = 0;
+                    otcost = 0;
+                    normalcost = 0;
+
                     double time = Convert.ToDateTime(data.EndTime).Subtract(Convert.ToDateTime(data.StartTime)).TotalMinutes;
+                    if (user.shifting == false)
+                    {
+                        if (TimeSpan.Parse(user.endTime) <= stime) //entry is OT
+                        {
+                            omins = time;
+                        }
+                        else if ((etime == new TimeSpan(0, 0, 0) ? new TimeSpan(1, 0, 0, 0) : etime) > TimeSpan.Parse(user.endTime)) //entry is from normal time to OT
+                        {
+                            nmins = TimeSpan.Parse(user.endTime).Subtract(stime).TotalMinutes;
+                            omins = (etime == new TimeSpan(0, 0, 0) ? new TimeSpan(1, 0, 0, 0) : etime).Subtract(TimeSpan.Parse(user.endTime)).TotalMinutes;
+                        }
+                        else //entry is within normal time
+                        {
+                            nmins = time;
+                        }
+                    }
+                    else
+                    {
+                        TimeSpan cutoff = user.GetMyCutOfTime();
+                        if (stime >= cutoff)
+                        {
+                            nmins = time;
+                        }
+                        else
+                        {
+                            if (TimeSpan.Parse(user.endTime) <= stime) //entry is OT
+                            {
+                                omins = time;
+                            }
+                            else if ((etime == new TimeSpan(0, 0, 0) ? new TimeSpan(1, 0, 0, 0) : etime) > TimeSpan.Parse(user.endTime))
+                            {
+                                nmins = TimeSpan.Parse(user.endTime).Subtract(stime).TotalMinutes;
+                                omins = (etime == new TimeSpan(0, 0, 0) ? new TimeSpan(1, 0, 0, 0) : etime).Subtract(TimeSpan.Parse(user.endTime)).TotalMinutes;
+                            }
+                        }
+                    }
                     double hr = Math.Truncate(time / 60);
                     double min = time % 60;
                     data.totalhours = hr == 0 && min == 0 ? "0 min" : (hr > 0 ? hr > 1 ? hr + " hrs" : hr + " hr" : "") + (hr > 0 && min > 0 ? ", " : "") + (min > 0 ? min > 1 ? min + " mins" : min + " min" : "");
+
+                    hr = Math.Truncate(nmins / 60);
+                    min = nmins % 60;
+                    data.normalhours = hr == 0 && min == 0 ? "0 min" : (hr > 0 ? hr > 1 ? hr + " hrs" : hr + " hr" : "") + (hr > 0 && min > 0 ? ", " : "") + (min > 0 ? min > 1 ? min + " mins" : min + " min" : "");
+
+                    hr = Math.Truncate(omins / 60);
+                    min = omins % 60;
+                    data.othours = hr == 0 && min == 0 ? "0 min" : (hr > 0 ? hr > 1 ? hr + " hrs" : hr + " hr" : "") + (hr > 0 && min > 0 ? ", " : "") + (min > 0 ? min > 1 ? min + " mins" : min + " min" : "");
                 }
             }
 
@@ -216,19 +272,10 @@ namespace TimeTracker.Model
             {
                 foreach (JobTracker j in data)
                 {
-                    //if (j.JobIdNumber != null && j.JobIdNumber != "")
-                    //{
-                    //    GetCustomer(j);
-                    //}
-
-                    if (j.EndTime != null)
+                    if (j != null)
                     {
-                        double time = Convert.ToDateTime(j.EndTime).Subtract(Convert.ToDateTime(j.StartTime)).TotalMinutes;
-                        double hr = Math.Truncate(time / 60);
-                        double min = time % 60;
-                        j.totalhours = hr == 0 && min == 0 ? "0 min" : (hr > 0 ? hr > 1 ? hr + " hrs" : hr + " hr" : "") + (hr > 0 && min > 0 ? ", " : "") + (min > 0 ? min > 1 ? min + " mins" : min + " min" : "");
+                        j.ComputeHours();
                     }
-
                 }
             }
 
@@ -276,12 +323,105 @@ namespace TimeTracker.Model
             {
                 foreach (JobTracker j in data)
                 {
-                    if (j.EndTime != null)
+                    if (j != null)
                     {
-                        double time = Convert.ToDateTime(j.EndTime).Subtract(Convert.ToDateTime(j.StartTime)).TotalMinutes;
-                        double hr = Math.Truncate(time / 60);
-                        double min = time % 60;
-                        j.totalhours = hr == 0 && min == 0 ? "0 min" : (hr > 0 ? hr > 1 ? hr + " hrs" : hr + " hr" : "") + (hr > 0 && min > 0 ? ", " : "") + (min > 0 ? min > 1 ? min + " mins" : min + " min" : "");
+                        j.ComputeHours();
+                    }
+
+                }
+            }
+
+            return data;
+        }
+
+        //Get all jobtracker where JobTypeId, HW or SW SO is equal to user input and is either approve or for approval
+        public List<JobTracker> GetJobTrackerListWithJobTypeIdHWSO(int jobtypeid,string HWSO,string SWSO,bool computetime)
+        {
+            TimeTrackerEntities db = new TimeTrackerEntities();
+            List<JobTracker> data = new List<JobTracker>();
+            if (HWSO != null && HWSO != "")
+            {
+                data = (from j in db.T_JobTracker
+                            where j.JobIdNumber != ""
+                            && j.Status != "Rejected"
+                            && j.EndTime != null
+                            && j.JobTypeId == jobtypeid
+                            && j.HWNo == HWSO
+                            select new JobTracker()
+                            {
+                                Id = j.Id,
+                                UserId = j.UserId,
+                                StartTime = j.StartTime,
+                                EndTime = j.EndTime,
+                                Description = j.Description,
+                                JobTypeId = j.JobTypeId,
+                                JobIdNumber = j.JobIdNumber,
+                                jobtype = j.M_JobType.Description,
+                                Remarks = j.Remarks,
+                                ApprovedBy = j.ApprovedBy,
+                                CreateDate = j.CreateDate,
+                                LastUpdateDate = j.LastUpdateDate,
+                                CreatedBy = j.CreatedBy,
+                                LastUpdatedBy = j.LastUpdatedBy,
+                                Status = j.Status,
+                                SupervisorRemarks = j.SupervisorRemarks,
+                                ActionRequest = j.ActionRequest,
+                                ScheduleDate = j.ScheduleDate,
+                                SWNo = j.SWNo,
+                                HWNo = j.HWNo,
+                                JobStatus = j.JobStatus,
+                                fullname = j.M_User.Firstname + " " + j.M_User.Lastname,
+                                Customer = j.Customer,
+                                EvalNo = j.EvalNo
+                            }).ToList();
+            }
+            else if (SWSO != null && SWSO != "") 
+            {
+                data = (from j in db.T_JobTracker
+                        where j.JobIdNumber != ""
+                        && j.Status != "Rejected"
+                        && j.EndTime != null
+                        && j.JobTypeId == jobtypeid
+                        && j.SWNo == SWSO
+                        select new JobTracker()
+                        {
+                            Id = j.Id,
+                            UserId = j.UserId,
+                            StartTime = j.StartTime,
+                            EndTime = j.EndTime,
+                            Description = j.Description,
+                            JobTypeId = j.JobTypeId,
+                            JobIdNumber = j.JobIdNumber,
+                            jobtype = j.M_JobType.Description,
+                            Remarks = j.Remarks,
+                            ApprovedBy = j.ApprovedBy,
+                            CreateDate = j.CreateDate,
+                            LastUpdateDate = j.LastUpdateDate,
+                            CreatedBy = j.CreatedBy,
+                            LastUpdatedBy = j.LastUpdatedBy,
+                            Status = j.Status,
+                            SupervisorRemarks = j.SupervisorRemarks,
+                            ActionRequest = j.ActionRequest,
+                            ScheduleDate = j.ScheduleDate,
+                            SWNo = j.SWNo,
+                            HWNo = j.HWNo,
+                            JobStatus = j.JobStatus,
+                            fullname = j.M_User.Firstname + " " + j.M_User.Lastname,
+                            Customer = j.Customer,
+                            EvalNo = j.EvalNo
+                        }).ToList();
+            }
+
+            db.Dispose();
+
+            if (computetime == true)
+            {
+                foreach (JobTracker j in data)
+                {
+                    if (j != null)
+                    {
+                        j.ComputeHours();
+                        j.ComputeCost();
                     }
 
                 }
@@ -472,6 +612,37 @@ namespace TimeTracker.Model
                 result = data[curindex];
             }
             return result;
+        }
+
+        public List<JobTracker> GetUniqueComputedJobType(string HWSO, string SWSO) 
+        {
+            TimeTrackerEntities db = new TimeTrackerEntities();
+
+            List<JobTracker> data = new List<JobTracker>();
+
+            if (HWSO != null && HWSO != "")
+            {
+                data = (from j in db.T_JobTracker
+                        where j.HWNo == HWSO
+                        && j.M_JobType.ComputeTime == true
+                        select new JobTracker()
+                        {
+                            JobTypeId = j.JobTypeId,
+                            jobtype = j.M_JobType.Description
+                        }).Distinct().ToList();
+            }
+            else if(SWSO != null && SWSO != "")
+            {
+                data = (from j in db.T_JobTracker
+                        where j.SWNo == SWSO
+                        && j.M_JobType.ComputeTime == true
+                        select new JobTracker()
+                        {
+                            JobTypeId = j.JobTypeId,
+                            jobtype = j.M_JobType.Description
+                        }).Distinct().ToList();
+            }
+            return data;
         }
 
         public string GetTotalHours(int jobtypeid, DateTime startdate, DateTime enddate, string jobstatus,int departmentid = 0,string stringjobid="",string customer = "")
@@ -797,17 +968,9 @@ namespace TimeTracker.Model
             {
                 foreach (JobTracker j in data)
                 {
-                    //if (j.JobIdNumber != null && j.JobIdNumber != "")
-                    //{
-                    //    GetCustomer(j);
-                    //}
-
-                    if (j.EndTime != null)
+                    if (j != null)
                     {
-                        double time = Convert.ToDateTime(j.EndTime).Subtract(Convert.ToDateTime(j.StartTime)).TotalMinutes;
-                        double hr = Math.Truncate(time / 60);
-                        double min = time % 60;
-                        j.totalhours = hr == 0 && min == 0 ? "0 min" : (hr > 0 ? hr > 1 ? hr + " hrs" : hr + " hr" : "") + (hr > 0 && min > 0 ? ", " : "") + (min > 0 ? min > 1 ? min + " mins" : min + " min" : "");
+                        j.ComputeHours();
                     }
                 }
             }
@@ -878,12 +1041,9 @@ namespace TimeTracker.Model
                 foreach (JobTracker j in data)
                 {
 
-                    if (j.EndTime != null)
+                    if (j != null)
                     {
-                        double time = Convert.ToDateTime(j.EndTime).Subtract(Convert.ToDateTime(j.StartTime)).TotalMinutes;
-                        double hr = Math.Truncate(time / 60);
-                        double min = time % 60;
-                        j.totalhours = hr == 0 && min == 0 ? "0 min" : (hr > 0 ? hr > 1 ? hr + " hrs" : hr + " hr" : "") + (hr > 0 && min > 0 ? ", " : "") + (min > 0 ? min > 1 ? min + " mins" : min + " min" : "");
+                        j.ComputeHours();
                     }
                 }
             }
@@ -952,17 +1112,9 @@ namespace TimeTracker.Model
             {
                 foreach (JobTracker j in data)
                 {
-                    //if (j.JobIdNumber != null && j.JobIdNumber != "")
-                    //{
-                    //    GetCustomer(j);
-                    //}
-
-                    if (j.EndTime != null)
+                    if (j != null)
                     {
-                        double time = Convert.ToDateTime(j.EndTime).Subtract(Convert.ToDateTime(j.StartTime)).TotalMinutes;
-                        double hr = Math.Truncate(time / 60);
-                        double min = time % 60;
-                        j.totalhours = hr == 0 && min == 0 ? "0 min" : (hr > 0 ? hr > 1 ? hr + " hrs" : hr + " hr" : "") + (hr > 0 && min > 0 ? ", " : "") + (min > 0 ? min > 1 ? min + " mins" : min + " min" : "");
+                        j.ComputeHours();
                     }
                 }
             }
@@ -981,7 +1133,7 @@ namespace TimeTracker.Model
                         && j.StartTime <= edate) 
                         ||
                         ( j.EndTime >= sdate && j.EndTime <= edate))
-                        && j.Status == "Approved"
+                        && j.Status == "Approved" 
                          && j.JobIdNumber != ""
                         orderby j.StartTime ascending
                         select new JobTracker()
@@ -1004,6 +1156,54 @@ namespace TimeTracker.Model
                     data[i].EvalNo = jt.EvalNo;
                 }
                 else 
+                {
+                    data.RemoveAt(i);
+                    i--;
+                }
+            }
+            db.Dispose();
+            return data;
+        }
+
+        public List<JobTracker> GetDistinctProjectListIncludingForApproval(DateTime sdate, DateTime edate, string stringjobid = "")
+        {
+            TimeTrackerEntities db = new TimeTrackerEntities();
+
+            var data = (from j in db.T_JobTracker
+                        where (j.HWNo != ""
+                        || j.SWNo != "")
+                        &&
+                        ((j.StartTime >= sdate
+                        && j.StartTime <= edate)
+                        ||
+                        (j.EndTime >= sdate && j.EndTime <= edate))
+                        && (j.Status == "Approved" || j.Status == "For Approval")
+                        && j.JobIdNumber != ""
+                        && j.M_JobType.ComputeTime == true
+                        orderby j.StartTime ascending
+                        select new JobTracker()
+                        {
+                            SWNo = j.SWNo,
+                            HWNo = j.HWNo,
+                        }).Distinct().ToList();
+
+
+            for (int i = 0; i < data.Count; i++)
+            {
+                if ((data[i].HWNo != null && data[i].HWNo.ToString() != "") ||(data[i].SWNo != null && data[i].SWNo.ToString() != ""))
+                {
+                    //data[i].GetCustomer(data[i]);
+                    string hwno = data[i].HWNo;
+                    string swno = data[i].SWNo;
+                    var jt = db.T_JobTracker.FirstOrDefault(j => j.HWNo == hwno && j.SWNo == swno && j.EvalNo != "" && j.EvalNo != null);
+                    if (jt != null)
+                    {
+                        data[i].Customer = jt.Customer;
+                        data[i].Description = jt.Description;
+                        data[i].EvalNo = jt.EvalNo;
+                    }
+                }
+                else
                 {
                     data.RemoveAt(i);
                     i--;
@@ -1104,17 +1304,9 @@ namespace TimeTracker.Model
             {
                 foreach (JobTracker j in data)
                 {
-                    //if (j.JobIdNumber != null && j.JobIdNumber != "")
-                    //{
-                    //    GetCustomer(j);
-                    //}
-
-                    if (j.EndTime != null)
+                    if (j != null)
                     {
-                        double time = Convert.ToDateTime(j.EndTime).Subtract(Convert.ToDateTime(j.StartTime)).TotalMinutes;
-                        double hr = Math.Truncate(time / 60);
-                        double min = time % 60;
-                        j.totalhours = hr == 0 && min == 0 ? "0 min" : (hr > 0 ? hr > 1 ? hr + " hrs" : hr + " hr" : "") + (hr > 0 && min > 0 ? ", " : "") + (min > 0 ? min > 1 ? min + " mins" : min + " min" : "");
+                        j.ComputeHours();
                     }
                 }
             }
@@ -1165,16 +1357,9 @@ namespace TimeTracker.Model
             {
                 foreach (JobTracker j in data)
                 {
-                    //if (j.JobIdNumber != null)
-                    //{
-                    //    GetCustomer(j);
-                    //}
-                    if (j.EndTime != null)
+                    if (j != null)
                     {
-                        double time = Convert.ToDateTime(j.EndTime).Subtract(Convert.ToDateTime(j.StartTime)).TotalMinutes;
-                        double hr = Math.Truncate(time / 60);
-                        double min = time % 60;
-                        j.totalhours = hr == 0 && min == 0 ? "0 min" : (hr > 0 ? hr > 1 ? hr + " hrs" : hr + " hr" : "") + (hr > 0 && min > 0 ? ", " : "") + (min > 0 ? min > 1 ? min + " mins" : min + " min" : "");
+                        j.ComputeHours();
                     }
                 }
             }
@@ -1226,17 +1411,9 @@ namespace TimeTracker.Model
             {
                 foreach (JobTracker j in data)
                 {
-                    //if (j.JobIdNumber != null && j.JobIdNumber != "")
-                    //{
-                    //    GetCustomer(j);
-                    //}
-
-                    if (j.EndTime != null)
+                    if (j != null)
                     {
-                        double time = Convert.ToDateTime(j.EndTime).Subtract(Convert.ToDateTime(j.StartTime)).TotalMinutes;
-                        double hr = Math.Truncate(time / 60);
-                        double min = time % 60;
-                        j.totalhours = hr == 0 && min == 0 ? "0 min" : (hr > 0 ? hr > 1 ? hr + " hrs" : hr + " hr" : "") + (hr > 0 && min > 0 ? ", " : "") + (min > 0 ? min > 1 ? min + " mins" : min + " min" : "");
+                        j.ComputeHours();
                     }
                 }
             }
@@ -1381,17 +1558,9 @@ namespace TimeTracker.Model
             {
                 foreach (JobTracker j in data)
                 {
-                    //if (j.JobIdNumber != null && j.JobIdNumber != "")
-                    //{
-                    //    GetCustomer(j);
-                    //}
-
-                    if (j.EndTime != null)
+                    if (j != null)
                     {
-                        double time = Convert.ToDateTime(j.EndTime).Subtract(Convert.ToDateTime(j.StartTime)).TotalMinutes;
-                        double hr = Math.Truncate(time / 60);
-                        double min = time % 60;
-                        j.totalhours = hr == 0 && min == 0 ? "0 min" : (hr > 0 ? hr > 1 ? hr + " hrs" : hr + " hr" : "") + (hr > 0 && min > 0 ? ", " : "") + (min > 0 ? min > 1 ? min + " mins" : min + " min" : "");
+                        j.ComputeHours();
                     }
                 }
             }
@@ -2113,5 +2282,148 @@ namespace TimeTracker.Model
             return result;
         }
 
+        private void ComputeHours() 
+        {
+            User user = new User();
+            user = user.GetUser(Convert.ToInt32(UserId), Convert.ToDateTime(StartTime));
+            if (EndTime != null)
+            {
+                DateTime startdatetime = Convert.ToDateTime(StartTime);
+                TimeSpan stime = startdatetime.TimeOfDay;
+                TimeSpan etime = Convert.ToDateTime(EndTime).TimeOfDay;
+                int curday = (int)startdatetime.DayOfWeek;
+                Holiday holiday = new Holiday();
+
+                otcost = 0;
+                normalcost = 0;
+
+                double time = Convert.ToDateTime(EndTime).Subtract(Convert.ToDateTime(StartTime)).TotalMinutes;
+                if (user.shifting == false)
+                {
+
+                    if (TimeSpan.Parse(user.endTime) <= stime || holiday.IsHoliday(startdatetime.Date) || curday == user.currentOffDay || curday == user.currentSpecialOffDay || curday == user.currentOptOffDay1 || curday == user.currentOptOffDay2 || curday == user.currentOptOffDay3 || curday == user.currentOptOffDay4) //entry is OT
+                    {
+                        otmins = time;
+                    }
+                    else if ((etime == new TimeSpan(0, 0, 0) ? new TimeSpan(1, 0, 0, 0) : etime) > TimeSpan.Parse(user.endTime)) //entry is from normal time to OT
+                    {
+                        normalmins = TimeSpan.Parse(user.endTime).Subtract(stime).TotalMinutes;
+                        otmins = (etime == new TimeSpan(0, 0, 0) ? new TimeSpan(1, 0, 0, 0) : etime).Subtract(TimeSpan.Parse(user.endTime)).TotalMinutes;
+                    }
+                    else //entry is within normal time
+                    {
+                        normalmins = time;
+                    }
+                }
+                else
+                {
+                    TimeSpan cutoff = user.GetMyCutOfTime();
+                    if (stime >= cutoff)
+                    {
+                        if (holiday.IsHoliday(startdatetime.Date) || curday == user.currentOffDay || curday == user.currentSpecialOffDay || curday == user.currentOptOffDay1 || curday == user.currentOptOffDay2 || curday == user.currentOptOffDay3 || curday == user.currentOptOffDay4)
+                            otmins = time;
+                        else
+                            normalmins = time;
+                    }
+                    else
+                    {
+                        curday = (int)startdatetime.AddDays(-1).DayOfWeek;
+                        if (TimeSpan.Parse(user.endTime) <= stime || holiday.IsHoliday(startdatetime.AddDays(-1).Date) || curday == user.currentOffDay || curday == user.currentSpecialOffDay || curday == user.currentOptOffDay1 || curday == user.currentOptOffDay2 || curday == user.currentOptOffDay3 || curday == user.currentOptOffDay4) //entry is OT
+                        {
+                            otmins = time;
+                        }
+                        else if ((etime == new TimeSpan(0, 0, 0) ? new TimeSpan(1, 0, 0, 0) : etime) > TimeSpan.Parse(user.endTime))
+                        {
+                            normalmins = TimeSpan.Parse(user.endTime).Subtract(stime).TotalMinutes;
+                            otmins = (etime == new TimeSpan(0, 0, 0) ? new TimeSpan(1, 0, 0, 0) : etime).Subtract(TimeSpan.Parse(user.endTime)).TotalMinutes;
+                        }
+                    }
+                }
+                double hr = Math.Truncate(time / 60);
+                double min = time % 60;
+                totalhours = hr == 0 && min == 0 ? "0 min" : (hr > 0 ? hr > 1 ? hr + " hrs" : hr + " hr" : "") + (hr > 0 && min > 0 ? ", " : "") + (min > 0 ? min > 1 ? min + " mins" : min + " min" : "");
+
+                hr = Math.Truncate(normalmins / 60);
+                min = normalmins % 60;
+                normalhours = hr == 0 && min == 0 ? "0 min" : (hr > 0 ? hr > 1 ? hr + " hrs" : hr + " hr" : "") + (hr > 0 && min > 0 ? ", " : "") + (min > 0 ? min > 1 ? min + " mins" : min + " min" : "");
+
+                hr = Math.Truncate(otmins / 60);
+                min = otmins % 60;
+                othours = hr == 0 && min == 0 ? "0 min" : (hr > 0 ? hr > 1 ? hr + " hrs" : hr + " hr" : "") + (hr > 0 && min > 0 ? ", " : "") + (min > 0 ? min > 1 ? min + " mins" : min + " min" : "");
+            
+            }
+        }
+
+        private void ComputeCost() 
+        {
+            if (EndTime != null)
+            {
+                User user = new User();
+                user = user.GetUser(Convert.ToInt32(UserId), Convert.ToDateTime(StartTime));
+                Holiday holiday = new Holiday();
+                OTRateSetting otRateSetting = new OTRateSetting();
+                DateTime startdatetime = Convert.ToDateTime(StartTime);
+                int workingdays = holiday.GetWorkingDaysInMonth(user.Id, startdatetime);
+                double normalRatePerMin = Convert.ToDouble((user.currentSalary/workingdays) / user.minsWorkPerDay);
+                normalcost = normalmins * normalRatePerMin;
+                otRateSetting = otRateSetting.GetOTRateSettingByDate(startdatetime);
+
+                #region OT COMPUTATION
+                otcost = 0;
+                if (!user.noOTpay && otRateSetting != null)
+                {
+                    if (user.currentSalary >= otRateSetting.OTExemptedSalary) //User is Exempted from Salary
+                    {
+                        otcost = otmins * Convert.ToDouble((otRateSetting.ExemptedSalaryIncentive / 60));
+                    }
+                    else
+                    {
+                        if (user.shifting == false)
+                        {
+                            if (holiday.IsHoliday(startdatetime.Date) || user.isOfficeWorker && user.currentSpecialOffDay == (int)startdatetime.DayOfWeek)
+                            {
+                                otcost = otmins * (normalRatePerMin * otRateSetting.OTSpecialRate);
+                            }
+                            else
+                            {
+                                otcost = otmins * (normalRatePerMin * otRateSetting.OTNormalRate);
+                            }
+
+                        }
+                        else //For Shifting Hours
+                        {
+                            TimeSpan stime = startdatetime.TimeOfDay;
+                            TimeSpan etime = Convert.ToDateTime(EndTime).TimeOfDay;
+                            TimeSpan cutoff = user.GetMyCutOfTime();
+                            if (stime >= cutoff)
+                            {
+                                if (holiday.IsHoliday(startdatetime.Date) || user.isOfficeWorker && user.currentSpecialOffDay == (int)startdatetime.DayOfWeek)
+                                {
+                                    otcost = otmins * (normalRatePerMin * otRateSetting.OTSpecialRate);
+                                }
+                                else
+                                {
+                                    otcost = otmins * (normalRatePerMin * otRateSetting.OTNormalRate);
+                                }
+                            }
+                            else
+                            {
+                                if (holiday.IsHoliday(startdatetime.AddDays(-1).Date) || user.isOfficeWorker && user.currentSpecialOffDay == (int)startdatetime.AddDays(-1).DayOfWeek)
+                                {
+                                    otcost = otmins * (normalRatePerMin * otRateSetting.OTSpecialRate);
+                                }
+                                else
+                                {
+                                    otcost = otmins * (normalRatePerMin * otRateSetting.OTNormalRate);
+                                }
+                            }
+                        }
+                    }
+                    normalcost = Math.Round(normalcost, 2, MidpointRounding.AwayFromZero);
+                    otcost = Math.Round(otcost, 2, MidpointRounding.AwayFromZero);
+                }
+                #endregion
+            }
+        }
     }
 }

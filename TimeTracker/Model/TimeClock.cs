@@ -43,7 +43,7 @@ namespace TimeTracker.Model
                         where t.EmployeeNumber == employeenum
                         && t.ScanTime >= stime
                         && t.ScanTime <= etime
-                        orderby ScanTime ascending
+                        orderby t.ScanTime ascending
                         select new TimeClock()
                         {
                             Id = t.Id,
@@ -82,7 +82,7 @@ namespace TimeTracker.Model
                         where t.EmployeeNumber == employeenum
                         && t.ScanTime >= stime
                         && t.ScanTime <= etime
-                        orderby ScanTime ascending
+                        orderby t.ScanTime ascending
                         select new TimeClock()
                         {
                             Id = t.Id,
@@ -174,7 +174,7 @@ namespace TimeTracker.Model
                         where t.EmployeeNumber == user.EmployeeNumber
                         && t.ScanTime >= stime
                         && t.ScanTime <= etime
-                        orderby ScanTime ascending
+                        orderby t.ScanTime ascending
                         select new TimeClock()
                         {
                             Id = t.Id,

@@ -12,9 +12,18 @@ namespace TimeTracker.Model
         public string role { get; set; }
         public string startTime {get;set;}
         public string endTime {get;set;}
-        public double currentBaseRate { get; set; }
-        public double currentOTRate { get; set; }
-        public double currentSpecialRate { get; set; }
+        public decimal currentSalary { get; set; }
+        public int currentOffDay { get; set; }
+        public int currentSpecialOffDay { get; set; }
+        public int currentOptOffDay1 { get; set; }
+        public int currentOptOffDay2 { get; set; }
+        public int currentOptOffDay3 { get; set; }
+        public int currentOptOffDay4 { get; set; }
+        public bool noOTpay { get; set; }
+        public bool shifting { get; set; }
+        public int minsWorkPerDay {get;set;}
+        public int currentMinBreak { get; set; }
+        public bool isOfficeWorker { get; set; }
 
         //Gets User data base on userid
         public User GetUser(int userid)
@@ -46,9 +55,14 @@ namespace TimeTracker.Model
                             department = u.M_Department.Description,
                             EmployeeNumber = u.EmployeeNumber,
                             Shift = u.Shift,
-                            currentBaseRate = 0.00,
-                            currentOTRate = 0.00,
-                            currentSpecialRate = 0.00,
+                            currentSalary = 0,
+                            currentOffDay = 0,
+                            currentSpecialOffDay = 0,
+                            currentOptOffDay1 = 0,
+                            currentOptOffDay2 = 0,
+                            currentOptOffDay3 = 0,
+                            currentOptOffDay4 = 0,
+                            noOTpay = false,
                             startTime = "",
                             endTime = ""
                         }).FirstOrDefault();
@@ -92,11 +106,17 @@ namespace TimeTracker.Model
                             department = u.M_Department.Description,
                             EmployeeNumber = u.EmployeeNumber,
                             Shift = u.Shift,
-                            currentBaseRate = 0.00,
-                            currentOTRate = 0.00,
-                            currentSpecialRate = 0.00,
+                            currentSalary = 0,
+                            currentOffDay = 0,
+                            currentSpecialOffDay = 0,
+                            currentOptOffDay1 = 0,
+                            currentOptOffDay2 = 0,
+                            currentOptOffDay3 = 0,
+                            currentOptOffDay4 = 0,
+                            noOTpay = false,
                             startTime = "",
-                            endTime = ""
+                            endTime = "",
+                            shifting = false
                         }).FirstOrDefault();
 
             db.Dispose();
@@ -138,11 +158,17 @@ namespace TimeTracker.Model
                             department = u.M_Department.Description,
                             EmployeeNumber = u.EmployeeNumber,
                             Shift = u.Shift,
-                            currentBaseRate = 0.00,
-                            currentOTRate = 0.00,
-                            currentSpecialRate = 0.00,
+                            currentSalary = 0,
+                            currentOffDay = 0,
+                            currentSpecialOffDay = 0,
+                            currentOptOffDay1 = 0,
+                            currentOptOffDay2 = 0,
+                            currentOptOffDay3 = 0,
+                            currentOptOffDay4 = 0,
+                            noOTpay = false,
                             startTime = "",
-                            endTime = ""
+                            endTime = "",
+                            shifting = false
                         }).FirstOrDefault();
 
             db.Dispose();
@@ -185,11 +211,23 @@ namespace TimeTracker.Model
                             EmployeeNumber = u.EmployeeNumber,
                             Shift = u.Shift,
                             startTime = "",
-                            endTime = ""
+                            endTime = "",
+                            currentSalary = 0,
+                            currentOffDay = 0,
+                            currentSpecialOffDay = 0,
+                            currentOptOffDay1 = 0,
+                            currentOptOffDay2 = 0,
+                            currentOptOffDay3 = 0,
+                            currentOptOffDay4 = 0,
+                            noOTpay = false,
+                            shifting = false
                         }).FirstOrDefault();
 
             db.Dispose();
-            data.GetMyRate();
+            if (data != null)
+            {
+                data.GetMyRate();
+            }
             return  data;
         }
 
@@ -223,11 +261,17 @@ namespace TimeTracker.Model
                             department = u.M_Department.Description,
                             EmployeeNumber = u.EmployeeNumber,
                             Shift = u.Shift,
-                            currentBaseRate = 0.00,
-                            currentOTRate = 0.00,
-                            currentSpecialRate = 0.00,
+                            currentSalary = 0,
+                            currentOffDay = 0,
+                            currentSpecialOffDay = 0,
+                            currentOptOffDay1 = 0,
+                            currentOptOffDay2 = 0,
+                            currentOptOffDay3 = 0,
+                            currentOptOffDay4 = 0,
+                            noOTpay = false,
                             startTime = "",
-                            endTime = ""
+                            endTime = "",
+                            shifting = false
                         }).FirstOrDefault();
 
             db.Dispose();
@@ -270,11 +314,17 @@ namespace TimeTracker.Model
                             department = u.M_Department.Description,
                             EmployeeNumber = u.EmployeeNumber,
                             Shift = u.Shift,
-                            currentBaseRate = 0.00,
-                            currentOTRate = 0.00,
-                            currentSpecialRate = 0.00,
+                            currentSalary = 0,
+                            currentOffDay = 0,
+                            currentSpecialOffDay = 0,
+                            currentOptOffDay1 = 0,
+                            currentOptOffDay2 = 0,
+                            currentOptOffDay3 = 0,
+                            currentOptOffDay4 = 0,
+                            noOTpay = false,
                             startTime = "",
-                            endTime = ""
+                            endTime = "",
+                            shifting = false
                         }).FirstOrDefault();
 
             db.Dispose();
@@ -315,11 +365,17 @@ namespace TimeTracker.Model
                             department = u.M_Department.Description,
                             EmployeeNumber = u.EmployeeNumber,
                             Shift = u.Shift,
-                            currentBaseRate = 0.00,
-                            currentOTRate = 0.00,
-                            currentSpecialRate = 0.00,
+                            currentSalary = 0,
+                            currentOffDay = 0,
+                            currentSpecialOffDay = 0,
+                            currentOptOffDay1 = 0,
+                            currentOptOffDay2 = 0,
+                            currentOptOffDay3 = 0,
+                            currentOptOffDay4 = 0,
+                            noOTpay = false,
                             startTime = "",
-                            endTime = ""
+                            endTime = "",
+                            shifting = false
                         }).ToList();
 
             db.Dispose();
@@ -362,11 +418,17 @@ namespace TimeTracker.Model
                             department = u.M_Department.Description,
                             EmployeeNumber = u.EmployeeNumber,
                             Shift = u.Shift,
-                            currentBaseRate = 0.00,
-                            currentOTRate = 0.00,
-                            currentSpecialRate = 0.00,
+                            currentSalary = 0,
+                            currentOffDay = 0,
+                            currentSpecialOffDay = 0,
+                            currentOptOffDay1 = 0,
+                            currentOptOffDay2 = 0,
+                            currentOptOffDay3 = 0,
+                            currentOptOffDay4 = 0,
+                            noOTpay = false,
                             startTime = "",
-                            endTime = ""
+                            endTime = "",
+                            shifting = false
                         }).ToList();
 
             db.Dispose();
@@ -409,9 +471,14 @@ namespace TimeTracker.Model
                             department = u.M_Department.Description,
                             EmployeeNumber = u.EmployeeNumber,
                             Shift = u.Shift,
-                            currentBaseRate = 0.00,
-                            currentOTRate = 0.00,
-                            currentSpecialRate = 0.00,
+                            currentSalary = 0,
+                            currentOffDay = 0,
+                            currentSpecialOffDay = 0,
+                            currentOptOffDay1 = 0,
+                            currentOptOffDay2 = 0,
+                            currentOptOffDay3 = 0,
+                            currentOptOffDay4 = 0,
+                            noOTpay = false,
                         }).ToList();
 
             db.Dispose();
@@ -454,11 +521,17 @@ namespace TimeTracker.Model
                             department = u.M_Department.Description,
                             EmployeeNumber = u.EmployeeNumber,
                             Shift = u.Shift,
-                            currentBaseRate = 0.00,
-                            currentOTRate = 0.00,
-                            currentSpecialRate = 0.00,
+                            currentSalary = 0,
+                            currentOffDay = 0,
+                            currentSpecialOffDay = 0,
+                            currentOptOffDay1 = 0,
+                            currentOptOffDay2 = 0,
+                            currentOptOffDay3 = 0,
+                            currentOptOffDay4 = 0,
+                            noOTpay = false,
                             startTime = "",
-                            endTime = ""
+                            endTime = "",
+                            shifting = false
                         }).ToList();
 
             db.Dispose();
@@ -501,11 +574,17 @@ namespace TimeTracker.Model
                             role = u.M_Role.Description,
                             department = u.M_Department.Description,
                             EmployeeNumber = u.EmployeeNumber,
-                            currentBaseRate = 0.00,
-                            currentOTRate = 0.00,
-                            currentSpecialRate = 0.00,
+                            currentSalary = 0,
+                            currentOffDay = 0,
+                            currentSpecialOffDay = 0,
+                            currentOptOffDay1 = 0,
+                            currentOptOffDay2 = 0,
+                            currentOptOffDay3 = 0,
+                            currentOptOffDay4 = 0,
+                            noOTpay = false,
                             startTime = "",
-                            endTime = ""
+                            endTime = "",
+                            shifting = false
                         }).ToList();
 
             db.Dispose();
@@ -548,11 +627,17 @@ namespace TimeTracker.Model
                             department = u.M_Department.Description,
                             EmployeeNumber = u.EmployeeNumber,
                             Shift = u.Shift,
-                            currentBaseRate = 0.00,
-                            currentOTRate = 0.00,
-                            currentSpecialRate = 0.00,
+                            currentSalary = 0,
+                            currentOffDay = 0,
+                            currentSpecialOffDay = 0,
+                            currentOptOffDay1 = 0,
+                            currentOptOffDay2 = 0,
+                            currentOptOffDay3 = 0,
+                            currentOptOffDay4 = 0,
+                            noOTpay = false,
                             startTime = "",
-                            endTime = ""
+                            endTime = "",
+                            shifting = false
                         }).ToList();
 
             db.Dispose();
@@ -596,11 +681,17 @@ namespace TimeTracker.Model
                             department = u.M_Department.Description,
                             EmployeeNumber = u.EmployeeNumber,
                             Shift = u.Shift,
-                            currentBaseRate = 0.00,
-                            currentOTRate = 0.00,
-                            currentSpecialRate = 0.00,
+                            currentSalary = 0,
+                            currentOffDay = 0,
+                            currentSpecialOffDay = 0,
+                            currentOptOffDay1 = 0,
+                            currentOptOffDay2 = 0,
+                            currentOptOffDay3 = 0,
+                            currentOptOffDay4 = 0,
+                            noOTpay = false,
                             startTime = "",
-                            endTime = ""
+                            endTime = "",
+                            shifting = false
                         }).ToList();
 
             db.Dispose();
@@ -642,11 +733,17 @@ namespace TimeTracker.Model
                             department = u.M_Department.Description,
                             EmployeeNumber = u.EmployeeNumber,
                             Shift = u.Shift,
-                            currentBaseRate = 0.00,
-                            currentOTRate = 0.00,
-                            currentSpecialRate = 0.00,
+                            currentSalary = 0,
+                            currentOffDay = 0,
+                            currentSpecialOffDay = 0,
+                            currentOptOffDay1 = 0,
+                            currentOptOffDay2 = 0,
+                            currentOptOffDay3 = 0,
+                            currentOptOffDay4 = 0,
+                            noOTpay = false,
                             startTime = "",
-                            endTime = ""
+                            endTime = "",
+                            shifting = false
                         }).ToList();
 
             db.Dispose();
@@ -689,11 +786,17 @@ namespace TimeTracker.Model
                             department = u.M_Department.Description,
                             EmployeeNumber = u.EmployeeNumber,
                             Shift = u.Shift,
-                            currentBaseRate = 0.00,
-                            currentOTRate = 0.00,
-                            currentSpecialRate = 0.00,
+                            currentSalary = 0,
+                            currentOffDay = 0,
+                            currentSpecialOffDay = 0,
+                            currentOptOffDay1 = 0,
+                            currentOptOffDay2 = 0,
+                            currentOptOffDay3 = 0,
+                            currentOptOffDay4 = 0,
+                            noOTpay = false,
                             startTime = "",
-                            endTime = ""
+                            endTime = "",
+                            shifting = false
                         }).ToList();
 
             db.Dispose();
@@ -734,12 +837,18 @@ namespace TimeTracker.Model
                             role = u.M_Role.Description,
                             department = u.M_Department.Description,
                             EmployeeNumber = u.EmployeeNumber,
-                            currentBaseRate = 0.00,
-                            currentOTRate = 0.00,
-                            currentSpecialRate = 0.00,
+                            currentSalary = 0,
+                            currentOffDay = 0,
+                            currentSpecialOffDay = 0,
+                            currentOptOffDay1 = 0,
+                            currentOptOffDay2 = 0,
+                            currentOptOffDay3 = 0,
+                            currentOptOffDay4 = 0,
+                            noOTpay = false,
                             Shift = u.Shift,
                             startTime = "",
-                            endTime = ""
+                            endTime = "",
+                            shifting = false
                         }).ToList();
 
             db.Dispose();
@@ -781,11 +890,17 @@ namespace TimeTracker.Model
                             role = u.M_Role.Description,
                             department = u.M_Department.Description,
                             EmployeeNumber = u.EmployeeNumber,
-                            currentBaseRate = 0.00,
-                            currentOTRate = 0.00,
-                            currentSpecialRate = 0.00,
+                            currentSalary = 0,
+                            currentOffDay = 0,
+                            currentSpecialOffDay = 0,
+                            currentOptOffDay1 = 0,
+                            currentOptOffDay2 = 0,
+                            currentOptOffDay3 = 0,
+                            currentOptOffDay4 = 0,
+                            noOTpay = false,
                             startTime = "",
-                            endTime = ""
+                            endTime = "",
+                            shifting = false
                         }).ToList();
             db.Dispose();
             
@@ -915,17 +1030,40 @@ namespace TimeTracker.Model
             {
                 startTime = URS.StartTime == "" ? "08:00" : URS.StartTime;
                 endTime = URS.EndTime == "" ? "17:00" : URS.EndTime;
-                currentBaseRate = Convert.ToDouble(URS.BaseRate == null ? 0.00: URS.BaseRate);
-                currentOTRate = Convert.ToDouble(URS.OTRate == null ? 0.00: URS.OTRate);
-                currentSpecialRate = Convert.ToDouble(URS.SpecialRate == null ? 0.00: URS.SpecialRate);
+                currentSalary = URS.Salary;
+                currentOffDay = URS.OffDay;
+                currentSpecialOffDay = URS.SpecialOffDay;
+                currentOptOffDay1 = URS.OptionalOffDay1 == null ? 0 : Convert.ToInt32(URS.OptionalOffDay1);
+                currentOptOffDay2 = URS.OptionalOffDay2 == null ? 0 : Convert.ToInt32(URS.OptionalOffDay2);
+                currentOptOffDay3 = URS.OptionalOffDay3 == null ? 0 : Convert.ToInt32(URS.OptionalOffDay3);
+                currentOptOffDay4 = URS.OptionalOffDay4 == null ? 0 : Convert.ToInt32(URS.OptionalOffDay4);
+                noOTpay = URS.NoOTPay;
+                currentMinBreak = URS.MinsBreak == null ? 0 : Convert.ToInt32(URS.MinsBreak);
+                isOfficeWorker = URS.IsOfficeWorker == null ? false : Convert.ToBoolean(URS.IsOfficeWorker);
             }
             else
             {
                 startTime = "08:00";
                 endTime = "17:00";
-                currentBaseRate = 0;
-                currentOTRate = 0;
-                currentSpecialRate = 0;
+                currentSalary = 0;
+                currentOffDay = 0;
+                currentSpecialOffDay = 0;
+                currentOptOffDay1 = 0;
+                currentOptOffDay2 = 0;
+                currentOptOffDay3 = 0;
+                currentOptOffDay4 = 0;
+                noOTpay = false;
+                currentMinBreak = 0;
+                isOfficeWorker = false;
+            }
+
+            if (TimeSpan.Parse(startTime) > TimeSpan.Parse(endTime))
+            {
+                shifting = true;
+            }
+            else 
+            {
+                shifting = false;
             }
         }
 
@@ -938,18 +1076,52 @@ namespace TimeTracker.Model
             {
                 startTime = URS.StartTime == "" ? "08:00" : URS.StartTime;
                 endTime = URS.EndTime == "" ? "17:00" : URS.EndTime;
-                currentBaseRate = Convert.ToDouble(URS.BaseRate == null ? 0 : URS.BaseRate);
-                currentOTRate = Convert.ToDouble(URS.OTRate == null ? 0 : URS.OTRate);
-                currentSpecialRate = Convert.ToDouble(URS.SpecialRate == null ? 0 : URS.SpecialRate);
+                currentSalary = URS.Salary;
+                currentOffDay = URS.OffDay;
+                currentSpecialOffDay = URS.SpecialOffDay;
+                currentOptOffDay1 = URS.OptionalOffDay1 == null ? 0 : Convert.ToInt32(URS.OptionalOffDay1);
+                currentOptOffDay2 = URS.OptionalOffDay2 == null ? 0 : Convert.ToInt32(URS.OptionalOffDay2);
+                currentOptOffDay3 = URS.OptionalOffDay3 == null ? 0 : Convert.ToInt32(URS.OptionalOffDay3);
+                currentOptOffDay4 = URS.OptionalOffDay4 == null ? 0 : Convert.ToInt32(URS.OptionalOffDay4);
+                noOTpay = URS.NoOTPay;
+                currentMinBreak = URS.MinsBreak == null ? 0 : Convert.ToInt32(URS.MinsBreak);
+                isOfficeWorker = URS.IsOfficeWorker == null ? false : Convert.ToBoolean(URS.IsOfficeWorker);
             }
             else 
             {
                 startTime = "08:00";
                 endTime = "17:00";
-                currentBaseRate = 0;
-                currentOTRate = 0;
-                currentSpecialRate = 0;
+                currentSalary = 0;
+                currentOffDay = 0;
+                currentSpecialOffDay = 0;
+                currentOptOffDay1 = 0;
+                currentOptOffDay2 = 0;
+                currentOptOffDay3 = 0;
+                currentOptOffDay4 = 0;
+                noOTpay = false;
+                currentMinBreak = 0;
+                isOfficeWorker = false;
             }
+            if (TimeSpan.Parse(startTime) > TimeSpan.Parse(endTime))
+            {
+                shifting = true;
+            }
+            else
+            {
+                shifting = false;
+            }
+            TimeSpan stime = TimeSpan.Parse(startTime == "" ? "08:00" : startTime);
+            TimeSpan etime = TimeSpan.Parse(endTime == "" ? "17:00" : endTime);
+            if (stime > etime)
+            {
+                minsWorkPerDay = (int)Math.Floor(new TimeSpan(1,0,0,0).TotalMinutes - stime.TotalMinutes);
+                minsWorkPerDay += (int)Math.Floor(etime.TotalMinutes);
+            }
+            else 
+            {
+                minsWorkPerDay = (int)Math.Floor(etime.TotalMinutes - stime.TotalMinutes);
+            }
+            minsWorkPerDay -= currentMinBreak;
         }
 
         public TimeSpan GetMyCutOfTime() 

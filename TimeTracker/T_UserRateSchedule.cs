@@ -20,10 +20,17 @@ namespace TimeTracker
         public string EndTime { get; set; }
         public System.DateTime StartDate { get; set; }
         public Nullable<System.DateTime> EndDate { get; set; }
-        public Nullable<double> BaseRate { get; set; }
-        public Nullable<double> OTRate { get; set; }
-        public Nullable<double> SpecialRate { get; set; }
-        public Nullable<bool> IsCurrentRate { get; set; }
+        public decimal Salary { get; set; }
+        public int OffDay { get; set; }
+        public int SpecialOffDay { get; set; }
+        public bool NoOTPay { get; set; }
+        public bool IsCurrentRate { get; set; }
+        public Nullable<int> MinsBreak { get; set; }
+        public Nullable<bool> IsOfficeWorker { get; set; }
+        public Nullable<int> OptionalOffDay1 { get; set; }
+        public Nullable<int> OptionalOffDay2 { get; set; }
+        public Nullable<int> OptionalOffDay3 { get; set; }
+        public Nullable<int> OptionalOffDay4 { get; set; }
     
         public virtual T_Users M_User { get; set; }
     }

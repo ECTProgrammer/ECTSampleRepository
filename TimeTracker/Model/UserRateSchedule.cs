@@ -22,10 +22,17 @@ namespace TimeTracker.Model
                             EndTime = u.EndTime,
                             StartDate = u.StartDate,
                             EndDate = u.EndDate,
-                            BaseRate = u.BaseRate,
-                            OTRate = u.OTRate,
-                            SpecialRate = u.SpecialRate,
-                            IsCurrentRate = u.IsCurrentRate
+                            Salary = u.Salary,
+                            IsCurrentRate = u.IsCurrentRate,
+                            OffDay = u.OffDay,
+                            SpecialOffDay = u.SpecialOffDay,
+                            NoOTPay = u.NoOTPay,
+                            MinsBreak = u.MinsBreak,
+                            IsOfficeWorker = u.IsOfficeWorker,
+                            OptionalOffDay1 = u.OptionalOffDay1,
+                            OptionalOffDay2 = u.OptionalOffDay2,
+                            OptionalOffDay3 = u.OptionalOffDay3,
+                            OptionalOffDay4 = u.OptionalOffDay4
                         }).FirstOrDefault();
 
             db.Dispose();
@@ -48,10 +55,17 @@ namespace TimeTracker.Model
                             EndTime = u.EndTime,
                             StartDate = u.StartDate,
                             EndDate = u.EndDate,
-                            BaseRate = u.BaseRate,
-                            OTRate = u.OTRate,
-                            SpecialRate = u.SpecialRate,
-                            IsCurrentRate = u.IsCurrentRate
+                            Salary = u.Salary,
+                            IsCurrentRate = u.IsCurrentRate,
+                            OffDay = u.OffDay,
+                            SpecialOffDay = u.SpecialOffDay,
+                            NoOTPay = u.NoOTPay,
+                            MinsBreak = u.MinsBreak,
+                            IsOfficeWorker = u.IsOfficeWorker,
+                            OptionalOffDay1 = u.OptionalOffDay1,
+                            OptionalOffDay2 = u.OptionalOffDay2,
+                            OptionalOffDay3 = u.OptionalOffDay3,
+                            OptionalOffDay4 = u.OptionalOffDay4
                         }).ToList();
 
             db.Dispose();
@@ -74,10 +88,17 @@ namespace TimeTracker.Model
                             EndTime = u.EndTime,
                             StartDate = u.StartDate,
                             EndDate = u.EndDate,
-                            BaseRate = u.BaseRate,
-                            OTRate = u.OTRate,
-                            SpecialRate = u.SpecialRate,
-                            IsCurrentRate = u.IsCurrentRate
+                            Salary = u.Salary,
+                            IsCurrentRate = u.IsCurrentRate,
+                            OffDay = u.OffDay,
+                            SpecialOffDay = u.SpecialOffDay,
+                            NoOTPay = u.NoOTPay,
+                            MinsBreak = u.MinsBreak,
+                            IsOfficeWorker = u.IsOfficeWorker,
+                            OptionalOffDay1 = u.OptionalOffDay1,
+                            OptionalOffDay2 = u.OptionalOffDay2,
+                            OptionalOffDay3 = u.OptionalOffDay3,
+                            OptionalOffDay4 = u.OptionalOffDay4
                         }).ToList();
 
             db.Dispose();
@@ -104,10 +125,17 @@ namespace TimeTracker.Model
                             EndTime = u.EndTime,
                             StartDate = u.StartDate,
                             EndDate = u.EndDate,
-                            BaseRate = u.BaseRate,
-                            OTRate = u.OTRate,
-                            SpecialRate = u.SpecialRate,
-                            IsCurrentRate = u.IsCurrentRate
+                            Salary = u.Salary,
+                            IsCurrentRate = u.IsCurrentRate,
+                            OffDay = u.OffDay,
+                            SpecialOffDay = u.SpecialOffDay,
+                            NoOTPay = u.NoOTPay,
+                            MinsBreak = u.MinsBreak,
+                            IsOfficeWorker = u.IsOfficeWorker,
+                            OptionalOffDay1 = u.OptionalOffDay1,
+                            OptionalOffDay2 = u.OptionalOffDay2,
+                            OptionalOffDay3 = u.OptionalOffDay3,
+                            OptionalOffDay4 = u.OptionalOffDay4
                         }).FirstOrDefault();
 
             db.Dispose();
@@ -131,10 +159,17 @@ namespace TimeTracker.Model
                             EndTime = u.EndTime,
                             StartDate = u.StartDate,
                             EndDate = u.EndDate,
-                            BaseRate = u.BaseRate,
-                            OTRate = u.OTRate,
-                            SpecialRate = u.SpecialRate,
-                            IsCurrentRate = u.IsCurrentRate
+                            Salary = u.Salary,
+                            IsCurrentRate = u.IsCurrentRate,
+                            OffDay = u.OffDay,
+                            SpecialOffDay = u.SpecialOffDay,
+                            NoOTPay = u.NoOTPay,
+                            MinsBreak = u.MinsBreak,
+                            IsOfficeWorker = u.IsOfficeWorker,
+                            OptionalOffDay1 = u.OptionalOffDay1,
+                            OptionalOffDay2 = u.OptionalOffDay2,
+                            OptionalOffDay3 = u.OptionalOffDay3,
+                            OptionalOffDay4 = u.OptionalOffDay4
                         }).FirstOrDefault();
 
             db.Dispose();
@@ -158,10 +193,17 @@ namespace TimeTracker.Model
                             EndTime = u.EndTime,
                             StartDate = u.StartDate,
                             EndDate = u.EndDate,
-                            BaseRate = u.BaseRate,
-                            OTRate = u.OTRate,
-                            SpecialRate = u.SpecialRate,
-                            IsCurrentRate = u.IsCurrentRate
+                            Salary = u.Salary,
+                            IsCurrentRate = u.IsCurrentRate,
+                            OffDay = u.OffDay,
+                            SpecialOffDay = u.SpecialOffDay,
+                            NoOTPay = u.NoOTPay,
+                            MinsBreak = u.MinsBreak,
+                            IsOfficeWorker = u.IsOfficeWorker,
+                            OptionalOffDay1 = u.OptionalOffDay1,
+                            OptionalOffDay2 = u.OptionalOffDay2,
+                            OptionalOffDay3 = u.OptionalOffDay3,
+                            OptionalOffDay4 = u.OptionalOffDay4
                         }).FirstOrDefault();
 
             db.Dispose();
@@ -233,10 +275,17 @@ namespace TimeTracker.Model
             t_userRateSchedule.EndTime = userRateSchedule.EndTime;
             t_userRateSchedule.StartDate = userRateSchedule.StartDate;
             t_userRateSchedule.EndDate = userRateSchedule.EndDate;
-            t_userRateSchedule.BaseRate = userRateSchedule.BaseRate;
-            t_userRateSchedule.OTRate = userRateSchedule.OTRate;
-            t_userRateSchedule.SpecialRate = userRateSchedule.SpecialRate;
+            t_userRateSchedule.Salary = userRateSchedule.Salary;
             t_userRateSchedule.IsCurrentRate = userRateSchedule.IsCurrentRate;
+            t_userRateSchedule.OffDay = userRateSchedule.OffDay;
+            t_userRateSchedule.SpecialOffDay = userRateSchedule.SpecialOffDay;
+            t_userRateSchedule.NoOTPay = userRateSchedule.NoOTPay;
+            t_userRateSchedule.MinsBreak = userRateSchedule.MinsBreak;
+            t_userRateSchedule.IsOfficeWorker = userRateSchedule.IsOfficeWorker;
+            t_userRateSchedule.OptionalOffDay1 = userRateSchedule.OptionalOffDay1;
+            t_userRateSchedule.OptionalOffDay2 = userRateSchedule.OptionalOffDay2;
+            t_userRateSchedule.OptionalOffDay3 = userRateSchedule.OptionalOffDay3;
+            t_userRateSchedule.OptionalOffDay4 = userRateSchedule.OptionalOffDay4;
         }
 
     }

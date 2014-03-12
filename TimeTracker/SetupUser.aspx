@@ -46,9 +46,6 @@
 					        <asp:BoundField HeaderText="Phone" DataField="Phone" ReadOnly="false"></asp:BoundField>
 					        <asp:BoundField HeaderText="Mobile" DataField="Mobile"></asp:BoundField>
 					        <asp:BoundField HeaderText="Fax" DataField="Fax"></asp:BoundField>
-                            <asp:BoundField HeaderText="Base Rate" DataField="currentBaseRate" />
-                            <asp:BoundField HeaderText="OT Rate" DataField="currentOTRate" />
-                            <asp:BoundField HeaderText="Special Rate" DataField="currentSpecialRate" />
 				        </Columns>
 			        </asp:GridView>
 			        </div>
@@ -91,10 +88,10 @@
                             <asp:RegularExpressionValidator ID="modalRegValPassword" runat="server" ValidationGroup="modal" CssClass="validation" ControlToValidate="modalTxtBoxPassword" Text="Minimum 3 characters." ValidationExpression=".{3}.*"></asp:RegularExpressionValidator></td></tr>
                         <tr><td>Department</td><td>:</td><td><asp:DropDownList ID="modalDropDownDepartment" runat="server" CssClass="dropDownList1"></asp:DropDownList></td></tr>
                         <tr><td>Role</td><td>:</td><td><asp:DropDownList ID="modalDropDownRole" runat="server" CssClass="dropDownList1"></asp:DropDownList></td></tr>
-                        <tr><td>Shift</td><td>:</td><td><asp:RadioButtonList ID="modalRadBtnListShift" runat="server" RepeatDirection="Horizontal">
+                       <%-- <tr><td>Shift</td><td>:</td><td><asp:RadioButtonList ID="modalRadBtnListShift" runat="server" RepeatDirection="Horizontal">
                             <asp:ListItem Text="AM" Value="AM"/>
                             <asp:ListItem Text="PM" Value="PM"/>
-                                                        </asp:RadioButtonList></td></tr>
+                                                        </asp:RadioButtonList></td></tr>--%>
                         <tr><td>Email</td><td>:</td><td><asp:TextBox ID="modalTxtBoxEmail" runat="server" ValidationGroup="modal" CssClass="textBox" TextMode="Email"></asp:TextBox></td></tr>
                         <tr><td>Phone</td><td>:</td><td><asp:TextBox ID="modalTxtBoxPhone" runat="server" ValidationGroup="modal" CssClass="textBox"></asp:TextBox></td></tr>
                         <tr><td>Mobile</td><td>:</td><td><asp:TextBox ID="modalTxtBoxMobile" runat="server" ValidationGroup="modal" CssClass="textBox"></asp:TextBox></td></tr>
@@ -114,15 +111,16 @@
                                                 <asp:RequiredFieldValidator ID="modalReqEndTime" runat="server" ValidationGroup="modal" CssClass="validation" ControlToValidate="modalTxtBoxEndTime" Text="*"></asp:RequiredFieldValidator>
                                                 <asp:RegularExpressionValidator ID="modalRegValEndTime" runat="server" ValidationGroup="modal" CssClass="validation" ControlToValidate="modalTxtBoxEndTime" Text="Invalid Value" ValidationExpression="([0-1][0-9]:[0-5][0-9])|(2[0-3]:[0-5][0-9])"></asp:RegularExpressionValidator>
                                                                              (00:00-23:59)</td></tr>
-                                            <tr><td>Base Rate</td><td>:</td><td><asp:TextBox ID="modalTxtBoxBaseRate" runat="server" ValidationGroup="modal" CssClass="textBox"></asp:TextBox>
-                                                <asp:RequiredFieldValidator ID="modalReqBaseRate" runat="server" ValidationGroup="modal" CssClass="validation" ControlToValidate="modalTxtBoxBaseRate" Text="*"></asp:RequiredFieldValidator>
-                                                <asp:RegularExpressionValidator ID="modalRegValBaseRate" runat="server" ValidationGroup="modal" CssClass="validation" ControlToValidate="modalTxtBoxBaseRate" Text="Invalid Value" ValidationExpression="^\d*\.?\d*$"></asp:RegularExpressionValidator></td></tr>
-                                            <tr><td>Over Time Rate</td><td>:</td><td><asp:TextBox ID="modalTxtBoxOTRate" runat="server" ValidationGroup="modal" CssClass="textBox"></asp:TextBox>
-                                                <asp:RequiredFieldValidator ID="modalReqOTRate" runat="server" CssClass="validation" ValidationGroup="modal" ControlToValidate="modalTxtBoxOTRate" Text="*"></asp:RequiredFieldValidator>
-                                                <asp:RegularExpressionValidator ID="modalRegValOTRate" runat="server" ValidationGroup="modal" CssClass="validation" ControlToValidate="modalTxtBoxOTRate" Text="Invalid Value" ValidationExpression="^\d*\.?\d*$"></asp:RegularExpressionValidator></td></tr>
-                                            <tr><td>Special Rate</td><td>:</td><td><asp:TextBox ID="modalTxtBoxSpecialRate" runat="server" ValidationGroup="modal" CssClass="textBox"></asp:TextBox>
-                                                <asp:RequiredFieldValidator ID="modalReqSpecialRate" runat="server" CssClass="validation" ValidationGroup="modal" ControlToValidate="modalTxtBoxSpecialRate" Text="*"></asp:RequiredFieldValidator>
-                                                <asp:RegularExpressionValidator ID="modalRegValSpecialRate" runat="server" ValidationGroup="modalUserlink" CssClass="validation" ControlToValidate="modalTxtBoxSpecialRate" Text="Invalid Value" ValidationExpression="^\d*\.?\d*$"></asp:RegularExpressionValidator></td></tr>
+                                            <tr><td>Monthly Salary</td><td>:</td><td><asp:TextBox ID="modalTxtBoxSalary" runat="server" ValidationGroup="modal" CssClass="textBox"></asp:TextBox>
+                                                <asp:RequiredFieldValidator ID="modalReqSalary" runat="server" ValidationGroup="modal" CssClass="validation" ControlToValidate="modalTxtBoxSalary" Text="*"></asp:RequiredFieldValidator>
+                                                <asp:RegularExpressionValidator ID="modalRegValSalary" runat="server" ValidationGroup="modal" CssClass="validation" ControlToValidate="modalTxtBoxSalary" Text="Invalid Value" ValidationExpression="^\d*\.?\d*$"></asp:RegularExpressionValidator></td></tr>
+                                            <tr><td>Break Time in Mins</td><td>:</td><td><asp:TextBox ID="modalTxtBoxBreakTimeMin" runat="server" ValidationGroup="modal" CssClass="textBox"></asp:TextBox>
+                                                <asp:RequiredFieldValidator ID="modalReqBreakTimeMin" runat="server" ValidationGroup="modal" CssClass="validation" ControlToValidate="modalTxtBoxBreakTimeMin" Text="*"></asp:RequiredFieldValidator>
+                                                <asp:RegularExpressionValidator ID="modalRegValBreakTimeMin" runat="server" ValidationGroup="modal" CssClass="validation" ControlToValidate="modalTxtBoxBreakTimeMin" Text="Invalid Value" ValidationExpression="^\d*$"></asp:RegularExpressionValidator></td></tr>
+                                            <tr><td>Off Day</td><td>:</td><td><asp:DropDownList ID="modalDropDownOffDay" ValidationGroup="modal" runat="server" CssClass="dropDownList1"></asp:DropDownList></td></tr>
+                                            <tr><td>Special Off Day</td><td>:</td><td><asp:DropDownList ID="modalDropDownSpecialOffDay" ValidationGroup="modal" runat="server" CssClass="dropDownList1"></asp:DropDownList></td></tr>
+                                            <tr><td>No Overtime Pay</td><td>:</td><td><asp:CheckBox ID="modalChckBoxNoOTPay" ValidationGroup="modal" runat="server" /></td></tr>
+                                            <tr><td>Is Office Worker</td><td>:</td><td><asp:CheckBox ID="modalChckBoxOfficeWorker" ValidationGroup="modal" runat="server" /></td></tr>
                                         </table>
                                             </asp:Panel></td></tr>
                         <tr>

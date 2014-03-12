@@ -48,7 +48,22 @@
     <Reference Include="HtmlAgilityPack">
       <HintPath>..\packages\HtmlAgilityPack.1.4.6\lib\Net45\HtmlAgilityPack.dll</HintPath>
     </Reference>
+    <Reference Include="ICSharpCode.SharpZipLib">
+      <HintPath>..\packages\NPOI\dotnet4\ICSharpCode.SharpZipLib.dll</HintPath>
+    </Reference>
     <Reference Include="Microsoft.CSharp" />
+    <Reference Include="NPOI">
+      <HintPath>..\packages\NPOI\dotnet4\NPOI.dll</HintPath>
+    </Reference>
+    <Reference Include="NPOI.OOXML">
+      <HintPath>..\packages\NPOI\dotnet4\NPOI.OOXML.dll</HintPath>
+    </Reference>
+    <Reference Include="NPOI.OpenXml4Net">
+      <HintPath>..\packages\NPOI\dotnet4\NPOI.OpenXml4Net.dll</HintPath>
+    </Reference>
+    <Reference Include="NPOI.OpenXmlFormats">
+      <HintPath>..\packages\NPOI\dotnet4\NPOI.OpenXmlFormats.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Data" />
     <Reference Include="System.Data.Entity" />
@@ -241,6 +256,9 @@
     <Content Include="JobTrack.aspx" />
     <Content Include="Login.aspx" />
     <Content Include="logo.ico" />
+    <Content Include="Report.aspx" />
+    <Content Include="ReportCostBurden.aspx" />
+    <Content Include="ReportLaborCost.aspx" />
     <Content Include="SettingSyncEval.aspx" />
     <Content Include="SettingTime.aspx" />
     <Content Include="packages.config" />
@@ -389,6 +407,7 @@
     <Compile Include="Model\CAPStageMapping.cs" />
     <Compile Include="Model\Converter.cs" />
     <Compile Include="Model\Department.cs" />
+    <Compile Include="Model\Holiday.cs" />
     <Compile Include="Model\JobFlow.cs" />
     <Compile Include="Model\JobTracker.cs" />
     <Compile Include="Model\JobTrackerHistory.cs" />
@@ -396,10 +415,32 @@
     <Compile Include="Model\JobTypeDepartment.cs" />
     <Compile Include="Model\JobTypeFlow.cs" />
     <Compile Include="Model\Module.cs" />
+    <Compile Include="Model\OTRateSetting.cs" />
     <Compile Include="Model\RoleDepartmentAccess.cs" />
     <Compile Include="Model\Roles.cs" />
     <Compile Include="Model\RolesModuleAccess.cs" />
     <Compile Include="Model\UserRateSchedule.cs" />
+    <Compile Include="Report.aspx.cs">
+      <DependentUpon>Report.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Report.aspx.designer.cs">
+      <DependentUpon>Report.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="ReportCostBurden.aspx.cs">
+      <DependentUpon>ReportCostBurden.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="ReportCostBurden.aspx.designer.cs">
+      <DependentUpon>ReportCostBurden.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="ReportLaborCost.aspx.cs">
+      <DependentUpon>ReportLaborCost.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="ReportLaborCost.aspx.designer.cs">
+      <DependentUpon>ReportLaborCost.aspx</DependentUpon>
+    </Compile>
     <Compile Include="SettingSyncEval.aspx.cs">
       <DependentUpon>SettingSyncEval.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
@@ -538,6 +579,9 @@
     <Compile Include="T_Department.cs">
       <DependentUpon>TimeTrackerModel.tt</DependentUpon>
     </Compile>
+    <Compile Include="T_Holiday.cs">
+      <DependentUpon>TimeTrackerModel.tt</DependentUpon>
+    </Compile>
     <Compile Include="T_JobFlow.cs">
       <DependentUpon>TimeTrackerModel.tt</DependentUpon>
     </Compile>
@@ -557,6 +601,9 @@
       <DependentUpon>TimeTrackerModel.tt</DependentUpon>
     </Compile>
     <Compile Include="T_Modules.cs">
+      <DependentUpon>TimeTrackerModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="T_OTRateSetting.cs">
       <DependentUpon>TimeTrackerModel.tt</DependentUpon>
     </Compile>
     <Compile Include="T_RoleDepartmentAccess.cs">

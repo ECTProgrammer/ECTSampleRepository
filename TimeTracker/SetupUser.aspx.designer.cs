@@ -292,15 +292,6 @@ namespace TimeTracker {
         protected global::System.Web.UI.WebControls.DropDownList modalDropDownRole;
         
         /// <summary>
-        /// modalRadBtnListShift control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.RadioButtonList modalRadBtnListShift;
-        
-        /// <summary>
         /// modalTxtBoxEmail control.
         /// </summary>
         /// <remarks>
@@ -418,85 +409,94 @@ namespace TimeTracker {
         protected global::System.Web.UI.WebControls.RegularExpressionValidator modalRegValEndTime;
         
         /// <summary>
-        /// modalTxtBoxBaseRate control.
+        /// modalTxtBoxSalary control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.TextBox modalTxtBoxBaseRate;
+        protected global::System.Web.UI.WebControls.TextBox modalTxtBoxSalary;
         
         /// <summary>
-        /// modalReqBaseRate control.
+        /// modalReqSalary control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.RequiredFieldValidator modalReqBaseRate;
+        protected global::System.Web.UI.WebControls.RequiredFieldValidator modalReqSalary;
         
         /// <summary>
-        /// modalRegValBaseRate control.
+        /// modalRegValSalary control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.RegularExpressionValidator modalRegValBaseRate;
+        protected global::System.Web.UI.WebControls.RegularExpressionValidator modalRegValSalary;
         
         /// <summary>
-        /// modalTxtBoxOTRate control.
+        /// modalTxtBoxBreakTimeMin control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.TextBox modalTxtBoxOTRate;
+        protected global::System.Web.UI.WebControls.TextBox modalTxtBoxBreakTimeMin;
         
         /// <summary>
-        /// modalReqOTRate control.
+        /// modalReqBreakTimeMin control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.RequiredFieldValidator modalReqOTRate;
+        protected global::System.Web.UI.WebControls.RequiredFieldValidator modalReqBreakTimeMin;
         
         /// <summary>
-        /// modalRegValOTRate control.
+        /// modalRegValBreakTimeMin control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.RegularExpressionValidator modalRegValOTRate;
+        protected global::System.Web.UI.WebControls.RegularExpressionValidator modalRegValBreakTimeMin;
         
         /// <summary>
-        /// modalTxtBoxSpecialRate control.
+        /// modalDropDownOffDay control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.TextBox modalTxtBoxSpecialRate;
+        protected global::System.Web.UI.WebControls.DropDownList modalDropDownOffDay;
         
         /// <summary>
-        /// modalReqSpecialRate control.
+        /// modalDropDownSpecialOffDay control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.RequiredFieldValidator modalReqSpecialRate;
+        protected global::System.Web.UI.WebControls.DropDownList modalDropDownSpecialOffDay;
         
         /// <summary>
-        /// modalRegValSpecialRate control.
+        /// modalChckBoxNoOTPay control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.RegularExpressionValidator modalRegValSpecialRate;
+        protected global::System.Web.UI.WebControls.CheckBox modalChckBoxNoOTPay;
+        
+        /// <summary>
+        /// modalChckBoxOfficeWorker control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.CheckBox modalChckBoxOfficeWorker;
         
         /// <summary>
         /// modalBtnSubmit control.
