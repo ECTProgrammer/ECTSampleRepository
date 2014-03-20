@@ -414,8 +414,10 @@
     <Compile Include="Model\JobType.cs" />
     <Compile Include="Model\JobTypeDepartment.cs" />
     <Compile Include="Model\JobTypeFlow.cs" />
+    <Compile Include="Model\MaterialCost.cs" />
     <Compile Include="Model\Module.cs" />
     <Compile Include="Model\OTRateSetting.cs" />
+    <Compile Include="Model\OutsideService.cs" />
     <Compile Include="Model\RoleDepartmentAccess.cs" />
     <Compile Include="Model\Roles.cs" />
     <Compile Include="Model\RolesModuleAccess.cs" />

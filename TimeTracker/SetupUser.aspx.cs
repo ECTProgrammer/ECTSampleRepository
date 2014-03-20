@@ -312,29 +312,29 @@ namespace TimeTracker
         #region COMMAND
         protected void modalBtnSubmit_Command(object sender, CommandEventArgs e)
         {
-            if (modalChkBoxUpdateRate.Checked == true) //Checks if starttime and endtime is in correct format
-            { 
-                TimeSpan starttime = new TimeSpan();
-                TimeSpan endtime = new TimeSpan();
-                if (TimeSpan.TryParse(modalTxtBoxStartTime.Text, out starttime))
-                {
+            //if (modalChkBoxUpdateRate.Checked == true) //Checks if starttime and endtime is in correct format
+            //{ 
+            //    TimeSpan starttime = new TimeSpan();
+            //    TimeSpan endtime = new TimeSpan();
+            //    if (TimeSpan.TryParse(modalTxtBoxStartTime.Text, out starttime))
+            //    {
                     
-                }
-                else 
-                {
-                    modalLabelError.Text = "Start Time not in valid format.";
-                    modalLabelError.Visible = true;
-                }
-                if (TimeSpan.TryParse(modalTxtBoxEndTime.Text, out endtime))
-                {
+            //    }
+            //    else 
+            //    {
+            //        modalLabelError.Text = "Start Time not in valid format.";
+            //        modalLabelError.Visible = true;
+            //    }
+            //    if (TimeSpan.TryParse(modalTxtBoxEndTime.Text, out endtime))
+            //    {
 
-                }
-                else
-                {
-                    modalLabelError.Text = "End Time not in valid format.";
-                    modalLabelError.Visible = true;
-                }
-            }
+            //    }
+            //    else
+            //    {
+            //        modalLabelError.Text = "End Time not in valid format.";
+            //        modalLabelError.Visible = true;
+            //    }
+            //}
             if (modalLabelError.Visible == true)
                 this.programmaticModalPopup.Show();
             else 
@@ -390,7 +390,7 @@ namespace TimeTracker
                     else 
                     {
                         userRateSchedule = new UserRateSchedule();
-                        List<UserRateSchedule> userRateScheduleList = userRateSchedule.GetCurrentUserScheduleRatesByUserId(user.Id);
+                        UserRateSchedule prevUserRateSchedule = userRateSchedule.GetPreviousUserScheduleRateByUserIdLastUpdateDate(user.Id, DateTime.Today);
                         userRateSchedule.StartTime = modalTxtBoxStartTime.Text.Trim();
                         userRateSchedule.EndTime = modalTxtBoxEndTime.Text.Trim(); 
                         userRateSchedule.UserId = user.Id;
@@ -403,15 +403,12 @@ namespace TimeTracker
                         userRateSchedule.StartDate = DateTime.Today;
                         userRateSchedule.IsCurrentRate = true;
 
-                        foreach (UserRateSchedule u in userRateScheduleList) 
+                        if (prevUserRateSchedule != null)
                         {
-                            if (u.EndDate == null) 
-                            {
+                            prevUserRateSchedule.EndDate = Convert.ToDateTime(DateTime.Today.AddDays(-1).ToString("dd MMM yyyy") + " 23:59:59");
 
-                                u.EndDate = Convert.ToDateTime(DateTime.Today.AddDays(-1).ToString("dd MMM yyyy")+" 23:59:59");
-                            }
-                            u.IsCurrentRate = false;
-                            u.Update(u);
+                            prevUserRateSchedule.IsCurrentRate = false;
+                            prevUserRateSchedule.Update(prevUserRateSchedule);
                         }
 
                         userRateSchedule.Insert(userRateSchedule);

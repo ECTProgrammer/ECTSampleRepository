@@ -42,15 +42,15 @@ namespace TimeTracker
                 calendarExtenderTo.SelectedDate = DateTime.Today;
                 calendarExtenderTo.StartDate = DateTime.Today;
                 calendarExtenderTo.EndDate = DateTime.Today;
-                //if (Session["LaborCostReport"] == null)
-                //{
-                //    btnDownload.Visible = false;
-                //    lblReadyForDownload.Visible = false;
-                //}
-                //else
-                //{
-                //    lblReadyForDownload.Text = "Report Ready For Download : " + (string)Session["LaborCostReportName"];
-                //}
+                if (Session["LaborCostReport"] == null)
+                {
+                    btnDownload.Visible = false;
+                    lblReadyForDownload.Visible = false;
+                }
+                else
+                {
+                    lblReadyForDownload.Text = "Report Ready For Download : " + (string)Session["LaborCostReportName"];
+                }
             }
         }
 
@@ -78,7 +78,7 @@ namespace TimeTracker
         {
             Session["LaborCostReport"] = null;
             Session["LaborCostReportName"] = null;
-            //isFinish = false;
+            isFinish = false;
             //ThreadStart ts = new ThreadStart(NewTread);
             //Thread th = new Thread(ts);
             //th.Start();
@@ -89,21 +89,21 @@ namespace TimeTracker
             IWorkbook workbook = GenerateHeader();
             GenerateReport(workbook);
 
-            using (var ms = new MemoryStream())
-            {
-                workbook.Write(ms);
+            //using (var ms = new MemoryStream())
+            //{
+            //    workbook.Write(ms);
 
-                Response.Clear();
-                Response.ContentType = "Application/vnd.openxmlformats-officedocument.spreadsheetml.sheet";
-                Response.AppendHeader("Content-Disposition", "inline;filename=" + lblReadyForDownload.Text.Trim().Replace("Report Ready For Download : ", ""));
-                Response.BinaryWrite(ms.ToArray());
-                Response.End();
-            }
-            //Session["LaborCostReport"] = workbook;
-            //Session["LaborCostReportName"] = "LaborCostReport" + DateTime.Now.ToString("yyyyMMMdd") + ".xlsx";
-            //lblReadyForDownload.Text = "Report Ready For Download : " + (string)Session["LaborCostReportName"];
-            //lblReadyForDownload.Visible = true;
-            //btnDownload.Visible = true;
+            //    Response.Clear();
+            //    Response.ContentType = "Application/vnd.openxmlformats-officedocument.spreadsheetml.sheet";
+            //    Response.AppendHeader("Content-Disposition", "inline;filename=" + lblReadyForDownload.Text.Trim().Replace("Report Ready For Download : ", ""));
+            //    Response.BinaryWrite(ms.ToArray());
+            //    Response.End();
+            //}
+            Session["LaborCostReport"] = workbook;
+            Session["LaborCostReportName"] = "LaborCostReport" + DateTime.Now.ToString("yyyyMMMdd") + ".xlsx";
+            lblReadyForDownload.Text = "Report Ready For Download : " + (string)Session["LaborCostReportName"];
+            lblReadyForDownload.Visible = true;
+            btnDownload.Visible = true;
 
             //Response.Redirect("ReportLaborCost.aspx");
             //hiddenButton_Click(hiddenButton, new EventArgs());
@@ -124,10 +124,20 @@ namespace TimeTracker
                     Response.ContentType = "Application/vnd.openxmlformats-officedocument.spreadsheetml.sheet";
                     Response.AppendHeader("Content-Disposition", "inline;filename="+lblReadyForDownload.Text.Trim().Replace("Report Ready For Download : ",""));
                     Response.BinaryWrite(ms.ToArray());
+                    
+
+                    Session["LaborCostReport"] = null;
+                    Session["LaborCostReportName"] = null;
+                    btnDownload.Visible = false;
+                    lblReadyForDownload.Visible = false;
+                    //Response.Redirect("ReportLaborCost.aspx");
                     Response.End();
                 }
-                //Session["LaborCostReport"] = null;
+                
             }
+            btnDownload.Visible = false;
+            lblReadyForDownload.Visible = false;
+            
         }
         private void NewTread() 
         {
@@ -171,25 +181,32 @@ namespace TimeTracker
             List<JobTracker> projectList = jobtracker.GetDistinctProjectListIncludingForApproval(Convert.ToDateTime(txtBoxFrom.Text+ " 00:00:00"), Convert.ToDateTime(txtBoxTo.Text+" 23:59:59"));
             int currentrow = 1;
 
-            ICellStyle fontBoldNoBorder = CreateSheetStyle(workbook, false, false, false, false, true, false, false, false);
+            IDataFormat format = workbook.CreateDataFormat();
+            ICellStyle fontBoldNoBorder = CreateSheetStyle(workbook, false, false, false, false, true, false, false, false,false);
             ICellStyle fontBoldAllBorder = CreateSheetStyle(workbook, true, true, true, true, true, false, false, false);
+            ICellStyle fontCurrencyBoldRigthBottom = CreateSheetStyle(workbook, false, false, true, true, true, false, false, false);
+            fontCurrencyBoldRigthBottom.DataFormat = format.GetFormat("$#,##0.00_);[Red]($#,##0.00);\"-\"");
+            ICellStyle fontBoldTopBottom = CreateSheetStyle(workbook, false, true, false, true, true, false, false, false);
+            fontCurrencyBoldRigthBottom.Alignment = HorizontalAlignment.Center;
+            fontCurrencyBoldRigthBottom.VerticalAlignment = VerticalAlignment.Center;
             ICellStyle fontCurrencyBoldAllBorder = CreateSheetStyle(workbook, true, true, true, true, true, false, false, false);
             fontBoldAllBorder.Alignment = HorizontalAlignment.Center;
-            fontBoldAllBorder.VerticalAlignment = VerticalAlignment.Center;
-            ICellStyle fontNormalBorderLeftRight = CreateSheetStyle(workbook, true, false, true, false, false, false, false, false);
-            ICellStyle fontNormalBorderLeftRightBottom = CreateSheetStyle(workbook, false, true, true, false, false, false, false, false);
-            ICellStyle fontCurrencyBorderLeftRight = CreateSheetStyle(workbook, true, false, true, false, false, false, false, false);
-            ICellStyle fontCurrencyBorderLeftRightBottom = CreateSheetStyle(workbook, false, true, true, false, false, false, false, false);
-            fontNormalBorderLeftRightBottom.BorderTop = NPOI.SS.UserModel.BorderStyle.None;
-            fontNormalBorderLeftRightBottom.BorderBottom = NPOI.SS.UserModel.BorderStyle.Thin;
-            fontNormalBorderLeftRightBottom.BorderLeft = NPOI.SS.UserModel.BorderStyle.Thin;
-            fontCurrencyBorderLeftRightBottom.BorderTop = NPOI.SS.UserModel.BorderStyle.None;
-            fontCurrencyBorderLeftRightBottom.BorderBottom = NPOI.SS.UserModel.BorderStyle.Thin;
-            fontCurrencyBorderLeftRightBottom.BorderLeft = NPOI.SS.UserModel.BorderStyle.Thin;
-            IDataFormat format = workbook.CreateDataFormat();
-            fontCurrencyBorderLeftRight.DataFormat = format.GetFormat("$#,##0.00_);[Red]($#,##0.00);\"-\"");
-            fontCurrencyBorderLeftRightBottom.DataFormat = format.GetFormat("$#,##0.00_);[Red]($#,##0.00);\"-\"");
             fontCurrencyBoldAllBorder.DataFormat = format.GetFormat("$#,##0.00_);[Red]($#,##0.00);\"-\"");
+            ICellStyle fontNormalBorderLeftRight = CreateSheetStyle(workbook, true, false, true, false, false, false, false, false);
+            fontBoldAllBorder.VerticalAlignment = VerticalAlignment.Center;
+            ICellStyle fontNormalBorderLeftRightBottom = CreateSheetStyle(workbook, true, false, true,true, false, false, false, false);
+            ICellStyle fontCurrencyBorderLeftRight = CreateSheetStyle(workbook, true, false, true, false, false, false, false, false);
+            fontCurrencyBorderLeftRight.DataFormat = format.GetFormat("$#,##0.00_);[Red]($#,##0.00);\"-\"");
+            ICellStyle fontCurrencyBorderLeftRightBottom = CreateSheetStyle(workbook, true, false, true, true, false, false, false, false);
+            fontCurrencyBorderLeftRightBottom.DataFormat = format.GetFormat("$#,##0.00_);[Red]($#,##0.00);\"-\"");
+            //fontNormalBorderLeftRightBottom.BorderTop = NPOI.SS.UserModel.BorderStyle.None;
+            //fontNormalBorderLeftRightBottom.BorderBottom = NPOI.SS.UserModel.BorderStyle.Thin;
+            //fontNormalBorderLeftRightBottom.BorderLeft = NPOI.SS.UserModel.BorderStyle.Thin;
+            //fontCurrencyBorderLeftRightBottom.BorderTop = NPOI.SS.UserModel.BorderStyle.None;
+            //fontCurrencyBorderLeftRightBottom.BorderBottom = NPOI.SS.UserModel.BorderStyle.Thin;
+            //fontCurrencyBorderLeftRightBottom.BorderLeft = NPOI.SS.UserModel.BorderStyle.Thin;
+            
+            //fontCurrencyBoldRigthBottom.BorderLeft = NPOI.SS.UserModel.BorderStyle.None;
 
             ISheet sheetReport = workbook.GetSheet("Report");
             foreach (JobTracker project in projectList) 
@@ -293,11 +310,20 @@ namespace TimeTracker
 
                 #region Data
                 List<JobTracker> uniqueJobType = jobtracker.GetUniqueComputedJobType(project.HWNo == null ? "" : project.HWNo.Trim(), project.HWNo == null ? "" : project.SWNo.Trim());
+                
+                #region DETAIL Page
                 ISheet detailSheet = workbook.CreateSheet(jobheader.Replace(":",""));
                 int detailRowCount = 0;
                 IRow detailRow = detailSheet.CreateRow(detailRowCount++);
-                string[] detailHeader = { "Name", "Job Task", "Start Time", "End Time","Date", "Remarks","Status", "Normal Time","Overtime", "Normal Time Cost","Overtime Cost" };
-                for (int i = 0; i < 11; i++) 
+                detailRow.CreateCell(0).SetCellValue(jobheader);
+                detailRow.GetCell(0).CellStyle = fontBoldNoBorder;
+                detailRowCount++;
+                detailRow = detailSheet.CreateRow(detailRowCount++);
+                detailRow.CreateCell(0).SetCellValue("Labor Cost");
+                detailRow.GetCell(0).CellStyle = fontBoldNoBorder;
+                detailRow = detailSheet.CreateRow(detailRowCount++);
+                string[] detailHeader = { "Department","Name", "Job Task", "Start Time", "End Time","Date", "Remarks","Status", "Normal Time","Overtime", "Normal Time Cost","Overtime Cost" };
+                for (int i = 0; i < 12; i++)
                 {
                     ICell detailCell = detailRow.CreateCell(i);
                     detailCell.CellStyle = fontBoldAllBorder;
@@ -317,7 +343,7 @@ namespace TimeTracker
                     {
                         cell.CellStyle = fontNormalBorderLeftRightBottom;
                     }
-                    List<JobTracker> data = jobtracker.GetJobTrackerListWithJobTypeIdHWSO(Convert.ToInt32(uniqueJobType[i].JobTypeId), project.HWNo == null ? "" : project.HWNo.Trim(), project.HWNo == null ? "" : project.SWNo.Trim(), true);
+                    List<JobTracker> data = jobtracker.GetJobTrackerListWithJobTypeIdHWSO(Convert.ToInt32(uniqueJobType[i].JobTypeId), project.HWNo == null ? "" : project.HWNo.Trim(), project.SWNo == null ? "" : project.SWNo.Trim(), true);
                     double ntApproved = 0;
                     double ntForApproval = 0;
                     double otApproved = 0;
@@ -344,48 +370,51 @@ namespace TimeTracker
                             ntForApprovalCost += data[x].normalcost;
                             otForApprovalCost += data[x].otcost;
                         }
-                        for (int y = 0; y < 11; y++)
+                        for (int y = 0; y < 12; y++)
                         {
                             ICell detailCell = detailRow.CreateCell(y);
                             if (y == 0)
-                                detailCell.SetCellValue(data[x].fullname);
+                                detailCell.SetCellValue(data[x].department);
                             else if (y == 1)
-                                detailCell.SetCellValue(data[x].jobtype);
+                                detailCell.SetCellValue(data[x].fullname);
                             else if (y == 2)
-                                detailCell.SetCellValue(Convert.ToDateTime(data[x].StartTime).ToString("hh:mm tt"));
+                                detailCell.SetCellValue(data[x].jobtype);
                             else if (y == 3)
-                                detailCell.SetCellValue(Convert.ToDateTime(data[x].EndTime).ToString("hh:mm tt"));
+                                detailCell.SetCellValue(Convert.ToDateTime(data[x].StartTime).ToString("hh:mm tt"));
                             else if (y == 4)
-                                detailCell.SetCellValue(Convert.ToDateTime(data[x].ScheduleDate).ToString("dd-MMM-yyyy"));
+                                detailCell.SetCellValue(Convert.ToDateTime(data[x].EndTime).ToString("hh:mm tt"));
                             else if (y == 5)
-                                detailCell.SetCellValue(data[x].Remarks);
+                                detailCell.SetCellValue(Convert.ToDateTime(data[x].ScheduleDate).ToString("dd-MMM-yyyy"));
                             else if (y == 6)
-                                detailCell.SetCellValue(data[x].Status);
+                                detailCell.SetCellValue(data[x].Remarks);
                             else if (y == 7)
-                                detailCell.SetCellValue(data[x].normalhours.Trim() == "0 min" ? "-" : data[x].normalhours);
+                                detailCell.SetCellValue(data[x].Status);
                             else if (y == 8)
-                                detailCell.SetCellValue(data[x].othours.Trim() == "0 min" ? "-" : data[x].othours);
+                                detailCell.SetCellValue(data[x].normalhours.Trim() == "0 min" ? "-" : data[x].normalhours);
                             else if (y == 9)
-                                detailCell.SetCellValue(data[x].normalcost);
+                                detailCell.SetCellValue(data[x].othours.Trim() == "0 min" ? "-" : data[x].othours);
                             else if (y == 10)
+                                detailCell.SetCellValue(data[x].normalcost);
+                            else if (y == 11)
                                 detailCell.SetCellValue(data[x].otcost);
 
                             if (x == data.Count - 1 && i == uniqueJobType.Count -1)
                             {
-                                if (y < 9)
+                                if (y < 10)
                                     detailCell.CellStyle = fontNormalBorderLeftRightBottom;
                                 else
                                     detailCell.CellStyle = fontCurrencyBorderLeftRightBottom;
                             }
                             else
                             {
-                                if (y < 9)
+                                if (y < 10)
                                     detailCell.CellStyle = fontNormalBorderLeftRight;
                                 else
                                     detailCell.CellStyle = fontCurrencyBorderLeftRight;
                             }
                         }
                     }
+                #endregion
 
                     #region GETTING THE TIME
                     //Running Time
@@ -449,7 +478,8 @@ namespace TimeTracker
                 }
                 #endregion
 
-                #region TOTAL
+               
+                #region TOTAL, MATERIAL COST, OUTSIDE SERVICE 
 
                 string projNTApproved = GenerateTimeConsumed(runningNTApproved);
                 string projNTForApproval = GenerateTimeConsumed(runningNTForApproval);
@@ -458,26 +488,218 @@ namespace TimeTracker
                 string projTotalTime = GenerateTimeConsumed(runningNTApproved + runningNTForApproval + runningOTApproved + runningOTForApproval);
                 string projNTTotal = GenerateTimeConsumed(runningNTApproved + runningNTForApproval);
                 string projOTTotal = GenerateTimeConsumed(runningOTApproved + runningOTForApproval);
+                
                 #region DETAIL TOTAL
                 detailRow = detailSheet.CreateRow(detailRowCount++);
-                for (int y = 0; y < 11; y++)
+                for (int y = 0; y < 12; y++)
                 {
                     ICell detailCell = detailRow.CreateCell(y);
                     if (y == 0)
                         detailCell.SetCellValue("TOTAL");
-                    else if (y == 7)
-                        detailCell.SetCellValue(projNTTotal.Trim() == "0 min" ? "-" : projNTTotal.Trim());
                     else if (y == 8)
-                        detailCell.SetCellValue(projOTTotal.Trim() == "0 min" ? "-" : projOTTotal.Trim());
+                        detailCell.SetCellValue(projNTTotal.Trim() == "0 min" ? "-" : projNTTotal.Trim());
                     else if (y == 9)
-                        detailCell.SetCellValue(runningNTApprovedCost + runningNTForApprovalCost);
+                        detailCell.SetCellValue(projOTTotal.Trim() == "0 min" ? "-" : projOTTotal.Trim());
                     else if (y == 10)
+                        detailCell.SetCellValue(runningNTApprovedCost + runningNTForApprovalCost);
+                    else if (y == 11)
                         detailCell.SetCellValue(runningOTApprovedCost + runningOTForApprovalCost);
-                    if (y < 9)
+                    if (y < 10)
                         detailCell.CellStyle = fontBoldAllBorder;
                     else
                         detailCell.CellStyle = fontCurrencyBoldAllBorder;
                 }
+                #endregion
+
+                #region MATERIAL COST
+                MaterialCost materialCost = new MaterialCost();
+                List<MaterialCost> projMaterialCost = new List<MaterialCost>();
+                projMaterialCost = materialCost.GetMaterialCost(project.HWNo == null ? "" : project.HWNo.Trim() == "" ? "" : project.HWNo, project.SWNo == null ? "" : project.SWNo.Trim() == "" ? "" : project.SWNo, project.EvalNo == null ? "" : project.EvalNo.Trim() == "" ? "" : project.EvalNo);
+                double totalmaterialBookedCost = 0;
+                double totalmaterialActualCost = 0;
+                if (projMaterialCost.Count > 0) 
+                {
+                    detailRowCount++; //Blank Row
+                    #region HEADER
+                    detailRow = detailSheet.CreateRow(detailRowCount++);
+                    detailRow.CreateCell(0).SetCellValue("Material Cost");
+                    detailRow.GetCell(0).CellStyle = fontBoldNoBorder;
+                    string[] materialHeader = { "Item", "Description", "Part Number", "Booked Quantity", "Booked Unit Cost", "Booked Extended Cost", "Actual Quantity", "Actual Unit Cost", "Actual Extended Cost","Cost Overrun (Underrun)" };
+                    detailRow = detailSheet.CreateRow(detailRowCount++);
+                    for (int i = 0; i < 10; i++) 
+                    {
+                        ICell detailCell = detailRow.CreateCell(i);
+                        detailCell.CellStyle = fontBoldAllBorder;
+                        detailCell.SetCellValue(materialHeader[i]);
+                    }
+                    #endregion
+
+                    #region DETAIL
+                    for (int i = 0; i < projMaterialCost.Count; i++)
+                    {
+                        detailRow = detailSheet.CreateRow(detailRowCount++);
+                        double bookcost = projMaterialCost[i].BookedQuantity * projMaterialCost[i].BookedUnitCost;
+                        double actualcost = projMaterialCost[i].ActualUnitCost * projMaterialCost[i].ActualQuantity;
+                        for (int y = 0; y < 10; y++)
+                        {
+                            ICell detailCell = detailRow.CreateCell(y);
+                            if (y == 0)
+                                detailCell.SetCellValue(i + 1);
+                            else if (y == 1)
+                                detailCell.SetCellValue(projMaterialCost[i].PartDescription);
+                            else if (y == 2)
+                                detailCell.SetCellValue(projMaterialCost[i].PartNo);
+                            else if (y == 3)
+                                detailCell.SetCellValue(projMaterialCost[i].BookedQuantity);
+                            else if (y == 4)
+                                detailCell.SetCellValue(projMaterialCost[i].BookedUnitCost);
+                            else if (y == 5)
+                                detailCell.SetCellValue(bookcost);
+                            else if (y == 6)
+                                detailCell.SetCellValue(projMaterialCost[i].ActualQuantity);
+                            else if (y == 7)
+                                detailCell.SetCellValue(projMaterialCost[i].ActualUnitCost);
+                            else if (y == 8)
+                                detailCell.SetCellValue(actualcost);
+                            else if (y == 9)
+                                detailCell.SetCellValue(actualcost - bookcost);
+                            if (i < projMaterialCost.Count - 1)
+                            {
+                                if (y < 4 || y == 6)
+                                    detailCell.CellStyle = fontNormalBorderLeftRight;
+                                else
+                                    detailCell.CellStyle = fontCurrencyBorderLeftRight;
+                            }
+                            else
+                            {
+                                if (y < 4 || y == 6)
+                                    detailCell.CellStyle = fontNormalBorderLeftRightBottom;
+                                else
+                                    detailCell.CellStyle = fontCurrencyBorderLeftRightBottom;
+                            }
+                        }
+                        totalmaterialBookedCost += bookcost;
+                        totalmaterialActualCost += actualcost;
+                    }
+                    #endregion
+
+                    #region TOTAL
+                    detailRow = detailSheet.CreateRow(detailRowCount++);
+                    for (int y = 0; y < 10; y++)
+                    {
+                        ICell detailCell = detailRow.CreateCell(y);
+                        if (y == 0)
+                            detailCell.SetCellValue("TOTAL");
+                        else if (y == 5)
+                            detailCell.SetCellValue(totalmaterialBookedCost);
+                        else if (y == 8)
+                            detailCell.SetCellValue(totalmaterialActualCost);
+                        else if (y == 9)
+                            detailCell.SetCellValue(totalmaterialActualCost - totalmaterialBookedCost);
+                        if (y == 5 || y == 8 || y == 9)
+                            detailCell.CellStyle = fontCurrencyBoldAllBorder;
+                        else
+                            detailCell.CellStyle = fontBoldAllBorder;
+                    }
+                    #endregion
+                }
+                #endregion
+
+                #region OUTSIDE SERVICE
+                OutsideService outsideServiceCost = new OutsideService();
+                List<OutsideService> projOutServCost = new List<OutsideService>();
+                projOutServCost = outsideServiceCost.GetOutsideServiceCost(project.HWNo == null ? "" : project.HWNo.Trim() == "" ? "" : project.HWNo, project.SWNo == null ? "" : project.SWNo.Trim() == "" ? "" : project.SWNo, project.EvalNo == null ? "" : project.EvalNo.Trim() == "" ? "" : project.EvalNo);
+                double totalOutServBookedCost = 0;
+                double totalOutServActualCost = 0;
+                if (projOutServCost.Count > 0)
+                {
+                    detailRowCount++; //Blank Row
+                    #region HEADER
+                    detailRow = detailSheet.CreateRow(detailRowCount++);
+                    detailRow.CreateCell(0).SetCellValue("Outside Service Cost");
+                    detailRow.GetCell(0).CellStyle = fontBoldNoBorder;
+                    string[] outsideServiceHeader = { "Item","Type", "Description", "Vendor", "Booked Quantity", "Booked Unit Cost", "Booked Extended Cost", "Actual Quantity", "Actual Unit Cost", "Actual Extended Cost", "Cost Overrun (Underrun)" };
+                    detailRow = detailSheet.CreateRow(detailRowCount++);
+                    for (int i = 0; i < 11; i++)
+                    {
+                        ICell detailCell = detailRow.CreateCell(i);
+                        detailCell.CellStyle = fontBoldAllBorder;
+                        detailCell.SetCellValue(outsideServiceHeader[i]);
+                    }
+                    #endregion
+
+                    #region DETAIL
+                    for (int i = 0; i < projOutServCost.Count; i++)
+                    {
+                        detailRow = detailSheet.CreateRow(detailRowCount++);
+                        double bookcost = projOutServCost[i].BookedQuantity * projOutServCost[i].BookedUnitCost;
+                        double actualcost = projOutServCost[i].ActualUnitCost * projOutServCost[i].ActualQuantity;
+                        for (int y = 0; y < 11; y++)
+                        {
+                            ICell detailCell = detailRow.CreateCell(y);
+                            if (y == 0)
+                                detailCell.SetCellValue(i + 1);
+                            else if (y == 1)
+                                detailCell.SetCellValue(projOutServCost[i].PartType);
+                            else if (y == 2)
+                                detailCell.SetCellValue(projOutServCost[i].PartDescription);
+                            else if (y == 3)
+                                detailCell.SetCellValue(projOutServCost[i].Vendor);
+                            else if (y == 4)
+                                detailCell.SetCellValue(projOutServCost[i].BookedQuantity);
+                            else if (y == 5)
+                                detailCell.SetCellValue(projOutServCost[i].BookedUnitCost);
+                            else if (y == 6)
+                                detailCell.SetCellValue(bookcost);
+                            else if (y == 7)
+                                detailCell.SetCellValue(projOutServCost[i].ActualQuantity);
+                            else if (y == 8)
+                                detailCell.SetCellValue(projOutServCost[i].ActualUnitCost);
+                            else if (y == 9)
+                                detailCell.SetCellValue(actualcost);
+                            else if (y == 10)
+                                detailCell.SetCellValue(actualcost - bookcost);
+                            if (i < projMaterialCost.Count - 1)
+                            {
+                                if (y < 5 || y == 7)
+                                    detailCell.CellStyle = fontNormalBorderLeftRight;
+                                else
+                                    detailCell.CellStyle = fontCurrencyBorderLeftRight;
+                            }
+                            else
+                            {
+                                if (y < 5 || y == 7)
+                                    detailCell.CellStyle = fontNormalBorderLeftRightBottom;
+                                else
+                                    detailCell.CellStyle = fontCurrencyBorderLeftRightBottom;
+                            }
+                        }
+                        totalOutServBookedCost += bookcost;
+                        totalOutServActualCost += actualcost;
+                    }
+                    #endregion
+
+                    #region TOTAL
+                    detailRow = detailSheet.CreateRow(detailRowCount++);
+                    for (int y = 0; y < 11; y++)
+                    {
+                        ICell detailCell = detailRow.CreateCell(y);
+                        if (y == 0)
+                            detailCell.SetCellValue("TOTAL");
+                        else if (y == 6)
+                            detailCell.SetCellValue(totalOutServBookedCost);
+                        else if (y == 9)
+                            detailCell.SetCellValue(totalOutServActualCost);
+                        else if (y == 10)
+                            detailCell.SetCellValue(totalOutServActualCost - totalOutServBookedCost);
+                        if (y == 6 || y == 9 || y == 10)
+                            detailCell.CellStyle = fontCurrencyBoldAllBorder;
+                        else
+                            detailCell.CellStyle = fontBoldAllBorder;
+                    }
+                    #endregion
+                }
+
                 #endregion
 
                 row = sheetReport.CreateRow(++currentrow);
@@ -485,7 +707,7 @@ namespace TimeTracker
                 {
                     cell = row.CreateCell(j);
                     if (j == 0)
-                        cell.SetCellValue("TOTAL");
+                        cell.SetCellValue("Total Labor Cost");
                     else if (j == 1)
                         cell.SetCellValue(projNTApproved.Trim() == "0 min" ? "-" : projNTApproved.Trim());
                     else if (j == 2)
@@ -511,6 +733,60 @@ namespace TimeTracker
                     else
                         cell.CellStyle = fontCurrencyBoldAllBorder;
                 }
+                row = sheetReport.CreateRow(++currentrow);
+                row.CreateCell(0).SetCellValue("Material Cost");
+                row.GetCell(0).CellStyle = fontBoldAllBorder;
+                for (int j = 1; j < 11; j++)
+                { 
+                    cell = row.CreateCell(j);
+                    if (j == 1)
+                        cell.SetCellValue("Booked Cost:");
+                    else if (j == 2)
+                        cell.SetCellValue(totalmaterialBookedCost);
+                    else if (j == 4)
+                        cell.SetCellValue("Actual Cost:");
+                    else if (j == 5)
+                        cell.SetCellValue(totalmaterialActualCost);
+                    else if (j == 7)
+                        cell.SetCellValue("Cost Overrun (Underrun)");
+                    else if (j == 8)
+                        cell.SetCellValue(totalmaterialActualCost - totalmaterialBookedCost);
+                    if (j == 1 || j == 4 || j == 7)
+                        cell.CellStyle = fontBoldTopBottom;
+                    else
+                        cell.CellStyle = fontCurrencyBoldRigthBottom;
+                }
+                sheetReport.AddMergedRegion(new CellRangeAddress(currentrow, currentrow, 2, 3));
+                sheetReport.AddMergedRegion(new CellRangeAddress(currentrow, currentrow, 5, 6));
+                sheetReport.AddMergedRegion(new CellRangeAddress(currentrow, currentrow, 8, 10));
+
+                row = sheetReport.CreateRow(++currentrow);
+                row.CreateCell(0).SetCellValue("Outside Service Cost");
+                row.GetCell(0).CellStyle = fontBoldAllBorder;
+                for (int j = 1; j < 11; j++)
+                {
+                    cell = row.CreateCell(j);
+                    if (j == 1)
+                        cell.SetCellValue("Booked Cost:");
+                    else if (j == 2)
+                        cell.SetCellValue(totalOutServBookedCost);
+                    else if (j == 4)
+                        cell.SetCellValue("Actual Cost:");
+                    else if (j == 5)
+                        cell.SetCellValue(totalOutServActualCost);
+                    else if (j == 7)
+                        cell.SetCellValue("Cost Overrun (Underrun)");
+                    else if (j == 8)
+                        cell.SetCellValue(totalOutServActualCost - totalOutServBookedCost);
+                    if (j == 1 || j == 4 || j == 7)
+                        cell.CellStyle = fontBoldTopBottom;
+                    else
+                        cell.CellStyle = fontCurrencyBoldRigthBottom;
+                }
+                sheetReport.AddMergedRegion(new CellRangeAddress(currentrow, currentrow, 2, 3));
+                sheetReport.AddMergedRegion(new CellRangeAddress(currentrow, currentrow, 5, 6));
+                sheetReport.AddMergedRegion(new CellRangeAddress(currentrow, currentrow, 8, 10));
+
                 #endregion
 
             }
@@ -518,7 +794,7 @@ namespace TimeTracker
 
         #region Style Create
 
-        private ICellStyle CreateSheetStyle(IWorkbook workbook, bool BorderLeft, bool BorderTop, bool BorderRight, bool BorderBottom, bool IsFontBold, bool IsFontItalize, bool IsFontUnderline, bool IsFontStrikeOut)
+        private ICellStyle CreateSheetStyle(IWorkbook workbook, bool BorderLeft, bool BorderTop, bool BorderRight, bool BorderBottom, bool IsFontBold, bool IsFontItalize, bool IsFontUnderline, bool IsFontStrikeOut,bool applyColor = true)
         {
             IFont newfont = workbook.CreateFont();
             if(IsFontBold)
@@ -527,7 +803,6 @@ namespace TimeTracker
             newfont.IsStrikeout = IsFontStrikeOut;
             if(IsFontUnderline)
                 newfont.Underline = FontUnderlineType.Single;
-
             ICellStyle newstyle = workbook.CreateCellStyle();
             newstyle.SetFont(newfont);
 
@@ -547,12 +822,15 @@ namespace TimeTracker
                 newstyle.BorderBottom = NPOI.SS.UserModel.BorderStyle.Thin;
             else
                 newstyle.BorderBottom = NPOI.SS.UserModel.BorderStyle.None;
-
-            newstyle.FillForegroundColor = NPOI.HSSF.Util.HSSFColor.LightYellow.Index;
-            newstyle.FillPattern = FillPattern.SolidForeground;
+            if (applyColor == true)
+            {
+                newstyle.FillForegroundColor = NPOI.HSSF.Util.HSSFColor.LightYellow.Index;
+                newstyle.FillPattern = FillPattern.SolidForeground;
+            }
             return newstyle;
         }
         #endregion
+
 
 
         #endregion

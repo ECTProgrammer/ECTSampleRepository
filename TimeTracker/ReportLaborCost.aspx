@@ -5,7 +5,7 @@
 </asp:Content>
 <asp:Content ID="Content3" ContentPlaceHolderID="MainContent" runat="server">
     <asp:UpdatePanel ID="UpdatePanelMain" UpdateMode="Conditional" runat="server"> 
-        <Triggers><asp:PostBackTrigger ControlID="btnGenerate" /></Triggers> 
+        <Triggers><asp:PostBackTrigger ControlID="btnDownload" /></Triggers> 
         <ContentTemplate>
             <asp:UpdateProgress ID="UpdateProgress1" runat="server" AssociatedUpdatePanelID="UpdatePanelMain" DynamicLayout="true">
                 <ProgressTemplate>

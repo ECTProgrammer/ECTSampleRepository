@@ -31,6 +31,11 @@ namespace TimeTracker
         public Nullable<int> OptionalOffDay2 { get; set; }
         public Nullable<int> OptionalOffDay3 { get; set; }
         public Nullable<int> OptionalOffDay4 { get; set; }
+        public Nullable<System.DateTime> CreatedDate { get; set; }
+        public Nullable<System.DateTime> LastUpdatedDate { get; set; }
+        public Nullable<bool> UsePattern { get; set; }
+        public string OffPattern { get; set; }
+        public Nullable<System.DateTime> PatternStartDate { get; set; }
     
         public virtual T_Users M_User { get; set; }
     }

@@ -354,6 +354,11 @@
           <Property Name="OptionalOffDay2" Type="int" />
           <Property Name="OptionalOffDay3" Type="int" />
           <Property Name="OptionalOffDay4" Type="int" />
+          <Property Name="CreatedDate" Type="datetime" />
+          <Property Name="LastUpdatedDate" Type="datetime" />
+          <Property Name="UsePattern" Type="bit" />
+          <Property Name="OffPattern" Type="varchar" MaxLength="100" />
+          <Property Name="PatternStartDate" Type="datetime" />
         </EntityType>
         <EntityType Name="Users">
           <Key>
@@ -1328,6 +1333,11 @@
           <Property Type="Int32" Name="OptionalOffDay2" />
           <Property Type="Int32" Name="OptionalOffDay3" />
           <Property Type="Int32" Name="OptionalOffDay4" />
+          <Property Type="DateTime" Name="CreatedDate" Precision="3" />
+          <Property Type="DateTime" Name="LastUpdatedDate" Precision="3" />
+          <Property Type="Boolean" Name="UsePattern" />
+          <Property Type="String" Name="OffPattern" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Type="DateTime" Name="PatternStartDate" Precision="3" />
         </EntityType>
         <Association Name="FK_UserRateSchedule_UserId">
           <End Type="TimeTrackerModel.T_Users" Role="T_Users" Multiplicity="1" />
@@ -1605,6 +1615,11 @@
           <EntitySetMapping Name="T_UserRateSchedule">
             <EntityTypeMapping TypeName="TimeTrackerModel.T_UserRateSchedule">
               <MappingFragment StoreEntitySet="UserRateSchedule">
+                <ScalarProperty Name="PatternStartDate" ColumnName="PatternStartDate" />
+                <ScalarProperty Name="OffPattern" ColumnName="OffPattern" />
+                <ScalarProperty Name="UsePattern" ColumnName="UsePattern" />
+                <ScalarProperty Name="LastUpdatedDate" ColumnName="LastUpdatedDate" />
+                <ScalarProperty Name="CreatedDate" ColumnName="CreatedDate" />
                 <ScalarProperty Name="OptionalOffDay4" ColumnName="OptionalOffDay4" />
                 <ScalarProperty Name="OptionalOffDay3" ColumnName="OptionalOffDay3" />
                 <ScalarProperty Name="OptionalOffDay2" ColumnName="OptionalOffDay2" />

@@ -19,12 +19,16 @@ namespace TimeTracker.Model
         public int currentOptOffDay2 { get; set; }
         public int currentOptOffDay3 { get; set; }
         public int currentOptOffDay4 { get; set; }
+        public DateTime currentRateStartDate { get; set; }
+        public DateTime currentRateCreateDate { get; set; }
         public bool noOTpay { get; set; }
         public bool shifting { get; set; }
         public int minsWorkPerDay {get;set;}
         public int currentMinBreak { get; set; }
         public bool isOfficeWorker { get; set; }
-
+        public bool usePattern { get; set; }
+        public string offPattern { get; set; }
+        public DateTime patternStartDate { get; set; }
         //Gets User data base on userid
         public User GetUser(int userid)
         {
@@ -64,7 +68,9 @@ namespace TimeTracker.Model
                             currentOptOffDay4 = 0,
                             noOTpay = false,
                             startTime = "",
-                            endTime = ""
+                            endTime = "",
+                            currentRateStartDate = DateTime.Today,
+                            currentRateCreateDate = DateTime.Today
                         }).FirstOrDefault();
 
             db.Dispose();
@@ -116,7 +122,9 @@ namespace TimeTracker.Model
                             noOTpay = false,
                             startTime = "",
                             endTime = "",
-                            shifting = false
+                            shifting = false,
+                            currentRateStartDate = DateTime.Today,
+                            currentRateCreateDate = DateTime.Today
                         }).FirstOrDefault();
 
             db.Dispose();
@@ -168,7 +176,9 @@ namespace TimeTracker.Model
                             noOTpay = false,
                             startTime = "",
                             endTime = "",
-                            shifting = false
+                            shifting = false,
+                            currentRateStartDate = DateTime.Today,
+                            currentRateCreateDate = DateTime.Today
                         }).FirstOrDefault();
 
             db.Dispose();
@@ -220,7 +230,9 @@ namespace TimeTracker.Model
                             currentOptOffDay3 = 0,
                             currentOptOffDay4 = 0,
                             noOTpay = false,
-                            shifting = false
+                            shifting = false,
+                            currentRateStartDate = DateTime.Today,
+                            currentRateCreateDate = DateTime.Today
                         }).FirstOrDefault();
 
             db.Dispose();
@@ -271,7 +283,9 @@ namespace TimeTracker.Model
                             noOTpay = false,
                             startTime = "",
                             endTime = "",
-                            shifting = false
+                            shifting = false,
+                            currentRateStartDate = DateTime.Today,
+                            currentRateCreateDate = DateTime.Today
                         }).FirstOrDefault();
 
             db.Dispose();
@@ -324,7 +338,9 @@ namespace TimeTracker.Model
                             noOTpay = false,
                             startTime = "",
                             endTime = "",
-                            shifting = false
+                            shifting = false,
+                            currentRateStartDate = DateTime.Today,
+                            currentRateCreateDate = DateTime.Today
                         }).FirstOrDefault();
 
             db.Dispose();
@@ -375,7 +391,9 @@ namespace TimeTracker.Model
                             noOTpay = false,
                             startTime = "",
                             endTime = "",
-                            shifting = false
+                            shifting = false,
+                            currentRateStartDate = DateTime.Today,
+                            currentRateCreateDate = DateTime.Today
                         }).ToList();
 
             db.Dispose();
@@ -428,7 +446,9 @@ namespace TimeTracker.Model
                             noOTpay = false,
                             startTime = "",
                             endTime = "",
-                            shifting = false
+                            shifting = false,
+                            currentRateStartDate = DateTime.Today,
+                            currentRateCreateDate = DateTime.Today
                         }).ToList();
 
             db.Dispose();
@@ -479,6 +499,8 @@ namespace TimeTracker.Model
                             currentOptOffDay3 = 0,
                             currentOptOffDay4 = 0,
                             noOTpay = false,
+                            currentRateStartDate = DateTime.Today,
+                            currentRateCreateDate = DateTime.Today
                         }).ToList();
 
             db.Dispose();
@@ -531,7 +553,9 @@ namespace TimeTracker.Model
                             noOTpay = false,
                             startTime = "",
                             endTime = "",
-                            shifting = false
+                            shifting = false,
+                            currentRateStartDate = DateTime.Today,
+                            currentRateCreateDate = DateTime.Today
                         }).ToList();
 
             db.Dispose();
@@ -584,7 +608,9 @@ namespace TimeTracker.Model
                             noOTpay = false,
                             startTime = "",
                             endTime = "",
-                            shifting = false
+                            shifting = false,
+                            currentRateStartDate = DateTime.Today,
+                            currentRateCreateDate = DateTime.Today
                         }).ToList();
 
             db.Dispose();
@@ -637,7 +663,9 @@ namespace TimeTracker.Model
                             noOTpay = false,
                             startTime = "",
                             endTime = "",
-                            shifting = false
+                            shifting = false,
+                            currentRateStartDate = DateTime.Today,
+                            currentRateCreateDate = DateTime.Today
                         }).ToList();
 
             db.Dispose();
@@ -691,7 +719,9 @@ namespace TimeTracker.Model
                             noOTpay = false,
                             startTime = "",
                             endTime = "",
-                            shifting = false
+                            shifting = false,
+                            currentRateStartDate = DateTime.Today,
+                            currentRateCreateDate = DateTime.Today
                         }).ToList();
 
             db.Dispose();
@@ -743,7 +773,9 @@ namespace TimeTracker.Model
                             noOTpay = false,
                             startTime = "",
                             endTime = "",
-                            shifting = false
+                            shifting = false,
+                            currentRateStartDate = DateTime.Today,
+                            currentRateCreateDate = DateTime.Today
                         }).ToList();
 
             db.Dispose();
@@ -796,7 +828,9 @@ namespace TimeTracker.Model
                             noOTpay = false,
                             startTime = "",
                             endTime = "",
-                            shifting = false
+                            shifting = false,
+                            currentRateStartDate = DateTime.Today,
+                            currentRateCreateDate = DateTime.Today
                         }).ToList();
 
             db.Dispose();
@@ -848,7 +882,9 @@ namespace TimeTracker.Model
                             Shift = u.Shift,
                             startTime = "",
                             endTime = "",
-                            shifting = false
+                            shifting = false,
+                            currentRateStartDate = DateTime.Today,
+                            currentRateCreateDate = DateTime.Today
                         }).ToList();
 
             db.Dispose();
@@ -900,7 +936,9 @@ namespace TimeTracker.Model
                             noOTpay = false,
                             startTime = "",
                             endTime = "",
-                            shifting = false
+                            shifting = false,
+                            currentRateStartDate = DateTime.Today,
+                            currentRateCreateDate = DateTime.Today
                         }).ToList();
             db.Dispose();
             
@@ -1025,7 +1063,7 @@ namespace TimeTracker.Model
         {
             UserRateSchedule URS = new UserRateSchedule();
 
-            URS = URS.GetUserScheduleRateCurrentRate(Id);
+            URS = URS.GetCurrentUserScheduleRateByUserId(Id);
             if (URS != null) 
             {
                 startTime = URS.StartTime == "" ? "08:00" : URS.StartTime;
@@ -1040,6 +1078,11 @@ namespace TimeTracker.Model
                 noOTpay = URS.NoOTPay;
                 currentMinBreak = URS.MinsBreak == null ? 0 : Convert.ToInt32(URS.MinsBreak);
                 isOfficeWorker = URS.IsOfficeWorker == null ? false : Convert.ToBoolean(URS.IsOfficeWorker);
+                currentRateStartDate = URS.StartDate;
+                currentRateCreateDate = URS.CreatedDate == null ? DateTime.Today: Convert.ToDateTime(URS.CreatedDate);
+                usePattern = URS.UsePattern == null ? false : Convert.ToBoolean(URS.UsePattern);
+                offPattern = URS.OffPattern == null ? "" : URS.OffPattern.Trim();
+                patternStartDate = URS.PatternStartDate == null ? DateTime.Today : Convert.ToDateTime(URS.PatternStartDate);
             }
             else
             {
@@ -1055,6 +1098,11 @@ namespace TimeTracker.Model
                 noOTpay = false;
                 currentMinBreak = 0;
                 isOfficeWorker = false;
+                currentRateStartDate = DateTime.Today;
+                currentRateCreateDate = DateTime.Today;
+                usePattern = false;
+                offPattern = "";
+                patternStartDate = DateTime.Today;
             }
 
             if (TimeSpan.Parse(startTime) > TimeSpan.Parse(endTime))
@@ -1086,6 +1134,11 @@ namespace TimeTracker.Model
                 noOTpay = URS.NoOTPay;
                 currentMinBreak = URS.MinsBreak == null ? 0 : Convert.ToInt32(URS.MinsBreak);
                 isOfficeWorker = URS.IsOfficeWorker == null ? false : Convert.ToBoolean(URS.IsOfficeWorker);
+                currentRateStartDate = URS.StartDate;
+                currentRateCreateDate = URS.CreatedDate == null ? DateTime.Today : Convert.ToDateTime(URS.CreatedDate);
+                usePattern = URS.UsePattern == null ? false : Convert.ToBoolean(URS.UsePattern);
+                offPattern = URS.OffPattern == null ? "" : URS.OffPattern.Trim();
+                patternStartDate = URS.PatternStartDate == null ? DateTime.Today : Convert.ToDateTime(URS.PatternStartDate);
             }
             else 
             {
@@ -1101,6 +1154,11 @@ namespace TimeTracker.Model
                 noOTpay = false;
                 currentMinBreak = 0;
                 isOfficeWorker = false;
+                currentRateStartDate = DateTime.Today;
+                currentRateCreateDate = DateTime.Today;
+                usePattern = false;
+                offPattern = "";
+                patternStartDate = DateTime.Today;
             }
             if (TimeSpan.Parse(startTime) > TimeSpan.Parse(endTime))
             {

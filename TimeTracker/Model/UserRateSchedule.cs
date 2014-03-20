@@ -32,7 +32,12 @@ namespace TimeTracker.Model
                             OptionalOffDay1 = u.OptionalOffDay1,
                             OptionalOffDay2 = u.OptionalOffDay2,
                             OptionalOffDay3 = u.OptionalOffDay3,
-                            OptionalOffDay4 = u.OptionalOffDay4
+                            OptionalOffDay4 = u.OptionalOffDay4,
+                            CreatedDate = u.CreatedDate,
+                            LastUpdatedDate = u.LastUpdatedDate,
+                            UsePattern = u.UsePattern,
+                            OffPattern = u.OffPattern,
+                            PatternStartDate = u.PatternStartDate
                         }).FirstOrDefault();
 
             db.Dispose();
@@ -65,40 +70,12 @@ namespace TimeTracker.Model
                             OptionalOffDay1 = u.OptionalOffDay1,
                             OptionalOffDay2 = u.OptionalOffDay2,
                             OptionalOffDay3 = u.OptionalOffDay3,
-                            OptionalOffDay4 = u.OptionalOffDay4
-                        }).ToList();
-
-            db.Dispose();
-
-            return data;
-        }
-
-        //get all UserScheduleRates data for a specific user where IsCurrentRate is set to true
-        public List<UserRateSchedule> GetCurrentUserScheduleRatesByUserId(int userid)
-        {
-            TimeTrackerEntities db = new TimeTrackerEntities();
-
-            var data = (from u in db.T_UserRateSchedule
-                        where u.UserId == userid
-                        select new UserRateSchedule()
-                        {
-                            Id = u.Id,
-                            UserId = u.UserId,
-                            StartTime = u.StartTime,
-                            EndTime = u.EndTime,
-                            StartDate = u.StartDate,
-                            EndDate = u.EndDate,
-                            Salary = u.Salary,
-                            IsCurrentRate = u.IsCurrentRate,
-                            OffDay = u.OffDay,
-                            SpecialOffDay = u.SpecialOffDay,
-                            NoOTPay = u.NoOTPay,
-                            MinsBreak = u.MinsBreak,
-                            IsOfficeWorker = u.IsOfficeWorker,
-                            OptionalOffDay1 = u.OptionalOffDay1,
-                            OptionalOffDay2 = u.OptionalOffDay2,
-                            OptionalOffDay3 = u.OptionalOffDay3,
-                            OptionalOffDay4 = u.OptionalOffDay4
+                            OptionalOffDay4 = u.OptionalOffDay4,
+                            CreatedDate = u.CreatedDate,
+                            LastUpdatedDate = u.LastUpdatedDate,
+                            UsePattern = u.UsePattern,
+                            OffPattern = u.OffPattern,
+                            PatternStartDate = u.PatternStartDate
                         }).ToList();
 
             db.Dispose();
@@ -135,7 +112,12 @@ namespace TimeTracker.Model
                             OptionalOffDay1 = u.OptionalOffDay1,
                             OptionalOffDay2 = u.OptionalOffDay2,
                             OptionalOffDay3 = u.OptionalOffDay3,
-                            OptionalOffDay4 = u.OptionalOffDay4
+                            OptionalOffDay4 = u.OptionalOffDay4,
+                            CreatedDate = u.CreatedDate,
+                            LastUpdatedDate = u.LastUpdatedDate,
+                            UsePattern = u.UsePattern,
+                            OffPattern = u.OffPattern,
+                            PatternStartDate = u.PatternStartDate
                         }).FirstOrDefault();
 
             db.Dispose();
@@ -144,7 +126,7 @@ namespace TimeTracker.Model
         }
 
         //Get specific users current rate
-        public UserRateSchedule GetUserScheduleRateCurrentRate(int userid)
+        public UserRateSchedule GetCurrentUserScheduleRateByUserId(int userid)
         {
             TimeTrackerEntities db = new TimeTrackerEntities();
 
@@ -169,7 +151,12 @@ namespace TimeTracker.Model
                             OptionalOffDay1 = u.OptionalOffDay1,
                             OptionalOffDay2 = u.OptionalOffDay2,
                             OptionalOffDay3 = u.OptionalOffDay3,
-                            OptionalOffDay4 = u.OptionalOffDay4
+                            OptionalOffDay4 = u.OptionalOffDay4,
+                            CreatedDate = u.CreatedDate,
+                            LastUpdatedDate = u.LastUpdatedDate,
+                            UsePattern = u.UsePattern,
+                            OffPattern = u.OffPattern,
+                            PatternStartDate = u.PatternStartDate
                         }).FirstOrDefault();
 
             db.Dispose();
@@ -203,7 +190,90 @@ namespace TimeTracker.Model
                             OptionalOffDay1 = u.OptionalOffDay1,
                             OptionalOffDay2 = u.OptionalOffDay2,
                             OptionalOffDay3 = u.OptionalOffDay3,
-                            OptionalOffDay4 = u.OptionalOffDay4
+                            OptionalOffDay4 = u.OptionalOffDay4,
+                            CreatedDate = u.CreatedDate,
+                            LastUpdatedDate = u.LastUpdatedDate,
+                            UsePattern = u.UsePattern,
+                            OffPattern = u.OffPattern,
+                            PatternStartDate = u.PatternStartDate
+                        }).FirstOrDefault();
+
+            db.Dispose();
+
+            return data;
+        }
+
+        public UserRateSchedule GetUserScheduleRateByUserIdCreateDate(int userid, DateTime createddate)
+        {
+            TimeTrackerEntities db = new TimeTrackerEntities();
+
+            var data = (from u in db.T_UserRateSchedule
+                        where u.UserId == userid
+                        && u.CreatedDate == createddate
+                        select new UserRateSchedule()
+                        {
+                            Id = u.Id,
+                            UserId = u.UserId,
+                            StartTime = u.StartTime,
+                            EndTime = u.EndTime,
+                            StartDate = u.StartDate,
+                            EndDate = u.EndDate,
+                            Salary = u.Salary,
+                            IsCurrentRate = u.IsCurrentRate,
+                            OffDay = u.OffDay,
+                            SpecialOffDay = u.SpecialOffDay,
+                            NoOTPay = u.NoOTPay,
+                            MinsBreak = u.MinsBreak,
+                            IsOfficeWorker = u.IsOfficeWorker,
+                            OptionalOffDay1 = u.OptionalOffDay1,
+                            OptionalOffDay2 = u.OptionalOffDay2,
+                            OptionalOffDay3 = u.OptionalOffDay3,
+                            OptionalOffDay4 = u.OptionalOffDay4,
+                            CreatedDate = u.CreatedDate,
+                            LastUpdatedDate = u.LastUpdatedDate,
+                            UsePattern = u.UsePattern,
+                            OffPattern = u.OffPattern,
+                            PatternStartDate = u.PatternStartDate
+                        }).FirstOrDefault();
+
+            db.Dispose();
+
+            return data;
+        }
+
+        public UserRateSchedule GetPreviousUserScheduleRateByUserIdLastUpdateDate(int userid, DateTime lastupdatedate)
+        {
+            TimeTrackerEntities db = new TimeTrackerEntities();
+
+            var data = (from u in db.T_UserRateSchedule
+                        where u.UserId == userid
+                        && u.LastUpdatedDate  <= lastupdatedate
+                        && u.CreatedDate < lastupdatedate
+                        orderby u.LastUpdatedDate descending,u.CreatedDate descending
+                        select new UserRateSchedule()
+                        {
+                            Id = u.Id,
+                            UserId = u.UserId,
+                            StartTime = u.StartTime,
+                            EndTime = u.EndTime,
+                            StartDate = u.StartDate,
+                            EndDate = u.EndDate,
+                            Salary = u.Salary,
+                            IsCurrentRate = u.IsCurrentRate,
+                            OffDay = u.OffDay,
+                            SpecialOffDay = u.SpecialOffDay,
+                            NoOTPay = u.NoOTPay,
+                            MinsBreak = u.MinsBreak,
+                            IsOfficeWorker = u.IsOfficeWorker,
+                            OptionalOffDay1 = u.OptionalOffDay1,
+                            OptionalOffDay2 = u.OptionalOffDay2,
+                            OptionalOffDay3 = u.OptionalOffDay3,
+                            OptionalOffDay4 = u.OptionalOffDay4,
+                            CreatedDate = u.CreatedDate,
+                            LastUpdatedDate = u.LastUpdatedDate,
+                            UsePattern = u.UsePattern,
+                            OffPattern = u.OffPattern,
+                            PatternStartDate = u.PatternStartDate
                         }).FirstOrDefault();
 
             db.Dispose();
@@ -286,6 +356,11 @@ namespace TimeTracker.Model
             t_userRateSchedule.OptionalOffDay2 = userRateSchedule.OptionalOffDay2;
             t_userRateSchedule.OptionalOffDay3 = userRateSchedule.OptionalOffDay3;
             t_userRateSchedule.OptionalOffDay4 = userRateSchedule.OptionalOffDay4;
+            t_userRateSchedule.CreatedDate = userRateSchedule.CreatedDate;
+            t_userRateSchedule.LastUpdatedDate = userRateSchedule.LastUpdatedDate;
+            t_userRateSchedule.UsePattern = userRateSchedule.UsePattern;
+            t_userRateSchedule.OffPattern = userRateSchedule.OffPattern;
+            t_userRateSchedule.PatternStartDate = userRateSchedule.PatternStartDate;
         }
 
     }

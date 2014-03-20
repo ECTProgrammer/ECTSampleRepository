@@ -372,7 +372,8 @@ namespace TimeTracker.Model
                                 JobStatus = j.JobStatus,
                                 fullname = j.M_User.Firstname + " " + j.M_User.Lastname,
                                 Customer = j.Customer,
-                                EvalNo = j.EvalNo
+                                EvalNo = j.EvalNo,
+                                department = j.M_User.M_Department.Description
                             }).ToList();
             }
             else if (SWSO != null && SWSO != "") 
@@ -408,7 +409,8 @@ namespace TimeTracker.Model
                             JobStatus = j.JobStatus,
                             fullname = j.M_User.Firstname + " " + j.M_User.Lastname,
                             Customer = j.Customer,
-                            EvalNo = j.EvalNo
+                            EvalNo = j.EvalNo,
+                            department = j.M_User.M_Department.Description
                         }).ToList();
             }
 
@@ -2300,42 +2302,119 @@ namespace TimeTracker.Model
                 double time = Convert.ToDateTime(EndTime).Subtract(Convert.ToDateTime(StartTime)).TotalMinutes;
                 if (user.shifting == false)
                 {
-
-                    if (TimeSpan.Parse(user.endTime) <= stime || holiday.IsHoliday(startdatetime.Date) || curday == user.currentOffDay || curday == user.currentSpecialOffDay || curday == user.currentOptOffDay1 || curday == user.currentOptOffDay2 || curday == user.currentOptOffDay3 || curday == user.currentOptOffDay4) //entry is OT
+                    if (user.usePattern == true)
                     {
-                        otmins = time;
+                        string[] pattern = user.offPattern.Split(',');
+                        int patterndays = 0;
+                        List<bool> isOffdays = new List<bool>();
+                        for (int i = 0; i < pattern.Length; i++)
+                        {
+                            patterndays += Convert.ToInt32(pattern[i]);
+                            for (int j = 0; j < Convert.ToInt32(pattern[i]); j++)
+                            {
+                                if (i % 2 == 0)
+                                    isOffdays.Add(true);
+                                else
+                                    isOffdays.Add(false);
+                            }
+                        }
+                        int offdayindex = 0;
+                        offdayindex = Convert.ToInt32(Math.Floor((startdatetime.Date - user.patternStartDate.Date).TotalDays)) % patterndays;
+                        if (TimeSpan.Parse(user.endTime) <= stime || holiday.IsHoliday(startdatetime.Date) || isOffdays[offdayindex] == true) //entry is OT
+                        {
+                            otmins = time;
+                        }
+                        else if ((etime == new TimeSpan(0, 0, 0) ? new TimeSpan(1, 0, 0, 0) : etime) > TimeSpan.Parse(user.endTime)) //entry is from normal time to OT
+                        {
+                            normalmins = TimeSpan.Parse(user.endTime).Subtract(stime).TotalMinutes;
+                            otmins = (etime == new TimeSpan(0, 0, 0) ? new TimeSpan(1, 0, 0, 0) : etime).Subtract(TimeSpan.Parse(user.endTime)).TotalMinutes;
+                        }
+                        else //entry is within normal time
+                        {
+                            normalmins = time;
+                        }
                     }
-                    else if ((etime == new TimeSpan(0, 0, 0) ? new TimeSpan(1, 0, 0, 0) : etime) > TimeSpan.Parse(user.endTime)) //entry is from normal time to OT
+                    else
                     {
-                        normalmins = TimeSpan.Parse(user.endTime).Subtract(stime).TotalMinutes;
-                        otmins = (etime == new TimeSpan(0, 0, 0) ? new TimeSpan(1, 0, 0, 0) : etime).Subtract(TimeSpan.Parse(user.endTime)).TotalMinutes;
-                    }
-                    else //entry is within normal time
-                    {
-                        normalmins = time;
+                        if (TimeSpan.Parse(user.endTime) <= stime || holiday.IsHoliday(startdatetime.Date) || curday == user.currentOffDay || curday == user.currentSpecialOffDay || curday == user.currentOptOffDay1 || curday == user.currentOptOffDay2 || curday == user.currentOptOffDay3 || curday == user.currentOptOffDay4) //entry is OT
+                        {
+                            otmins = time;
+                        }
+                        else if ((etime == new TimeSpan(0, 0, 0) ? new TimeSpan(1, 0, 0, 0) : etime) > TimeSpan.Parse(user.endTime)) //entry is from normal time to OT
+                        {
+                            normalmins = TimeSpan.Parse(user.endTime).Subtract(stime).TotalMinutes;
+                            otmins = (etime == new TimeSpan(0, 0, 0) ? new TimeSpan(1, 0, 0, 0) : etime).Subtract(TimeSpan.Parse(user.endTime)).TotalMinutes;
+                        }
+                        else //entry is within normal time
+                        {
+                            normalmins = time;
+                        }
                     }
                 }
                 else
                 {
                     TimeSpan cutoff = user.GetMyCutOfTime();
-                    if (stime >= cutoff)
+                    if (user.usePattern == true)
                     {
-                        if (holiday.IsHoliday(startdatetime.Date) || curday == user.currentOffDay || curday == user.currentSpecialOffDay || curday == user.currentOptOffDay1 || curday == user.currentOptOffDay2 || curday == user.currentOptOffDay3 || curday == user.currentOptOffDay4)
-                            otmins = time;
-                        else
-                            normalmins = time;
+                        string[] pattern = user.offPattern.Split(',');
+                        int patterndays = 0;
+                        List<bool> isOffdays = new List<bool>();
+                        for (int i = 0; i < pattern.Length; i++)
+                        {
+                            patterndays += Convert.ToInt32(pattern[i]);
+                            for (int j = 0; j < Convert.ToInt32(pattern[i]); j++)
+                            {
+                                if (i % 2 == 0)
+                                    isOffdays.Add(true);
+                                else
+                                    isOffdays.Add(false);
+                            }
+                        }
+                        int offdayindex = 0;
+
+                        if (stime >= cutoff)
+                        {
+                            offdayindex = Convert.ToInt32(Math.Floor((startdatetime.Date - user.patternStartDate.Date).TotalDays)) % patterndays;
+                            if (holiday.IsHoliday(startdatetime.Date) || isOffdays[offdayindex] == true)
+                                otmins = time;
+                            else
+                                normalmins = time;
+                        }
+                        else 
+                        {
+                            offdayindex = Convert.ToInt32(Math.Floor((startdatetime.AddDays(-1).Date - user.patternStartDate.Date).TotalDays)) % patterndays;
+                            if (TimeSpan.Parse(user.endTime) <= stime || holiday.IsHoliday(startdatetime.AddDays(-1).Date) || isOffdays[offdayindex] == true)
+                            {
+                                otmins = time;
+                            }
+                            else if ((etime == new TimeSpan(0, 0, 0) ? new TimeSpan(1, 0, 0, 0) : etime) > TimeSpan.Parse(user.endTime))
+                            {
+                                normalmins = TimeSpan.Parse(user.endTime).Subtract(stime).TotalMinutes;
+                                otmins = (etime == new TimeSpan(0, 0, 0) ? new TimeSpan(1, 0, 0, 0) : etime).Subtract(TimeSpan.Parse(user.endTime)).TotalMinutes;
+                            }
+                        }
                     }
                     else
                     {
-                        curday = (int)startdatetime.AddDays(-1).DayOfWeek;
-                        if (TimeSpan.Parse(user.endTime) <= stime || holiday.IsHoliday(startdatetime.AddDays(-1).Date) || curday == user.currentOffDay || curday == user.currentSpecialOffDay || curday == user.currentOptOffDay1 || curday == user.currentOptOffDay2 || curday == user.currentOptOffDay3 || curday == user.currentOptOffDay4) //entry is OT
+                        if (stime >= cutoff)
                         {
-                            otmins = time;
+                            if (holiday.IsHoliday(startdatetime.Date) || curday == user.currentOffDay || curday == user.currentSpecialOffDay || curday == user.currentOptOffDay1 || curday == user.currentOptOffDay2 || curday == user.currentOptOffDay3 || curday == user.currentOptOffDay4)
+                                otmins = time;
+                            else
+                                normalmins = time;
                         }
-                        else if ((etime == new TimeSpan(0, 0, 0) ? new TimeSpan(1, 0, 0, 0) : etime) > TimeSpan.Parse(user.endTime))
+                        else
                         {
-                            normalmins = TimeSpan.Parse(user.endTime).Subtract(stime).TotalMinutes;
-                            otmins = (etime == new TimeSpan(0, 0, 0) ? new TimeSpan(1, 0, 0, 0) : etime).Subtract(TimeSpan.Parse(user.endTime)).TotalMinutes;
+                            curday = (int)startdatetime.AddDays(-1).DayOfWeek;
+                            if (TimeSpan.Parse(user.endTime) <= stime || holiday.IsHoliday(startdatetime.AddDays(-1).Date) || curday == user.currentOffDay || curday == user.currentSpecialOffDay || curday == user.currentOptOffDay1 || curday == user.currentOptOffDay2 || curday == user.currentOptOffDay3 || curday == user.currentOptOffDay4) //entry is OT
+                            {
+                                otmins = time;
+                            }
+                            else if ((etime == new TimeSpan(0, 0, 0) ? new TimeSpan(1, 0, 0, 0) : etime) > TimeSpan.Parse(user.endTime))
+                            {
+                                normalmins = TimeSpan.Parse(user.endTime).Subtract(stime).TotalMinutes;
+                                otmins = (etime == new TimeSpan(0, 0, 0) ? new TimeSpan(1, 0, 0, 0) : etime).Subtract(TimeSpan.Parse(user.endTime)).TotalMinutes;
+                            }
                         }
                     }
                 }
@@ -2363,8 +2442,13 @@ namespace TimeTracker.Model
                 Holiday holiday = new Holiday();
                 OTRateSetting otRateSetting = new OTRateSetting();
                 DateTime startdatetime = Convert.ToDateTime(StartTime);
-                int workingdays = holiday.GetWorkingDaysInMonth(user.Id, startdatetime);
-                double normalRatePerMin = Convert.ToDouble((user.currentSalary/workingdays) / user.minsWorkPerDay);
+                //int workingdays = holiday.GetWorkingDaysInMonth(user.Id, startdatetime);
+                double normalRatePerMin = 0;
+                //double normalRatePerMin = Convert.ToDouble((user.currentSalary/workingdays) / user.minsWorkPerDay);
+                if (user.minsWorkPerDay < 490)
+                    normalRatePerMin = Convert.ToDouble((user.currentSalary * 12) / (2080 * 60));
+                else
+                    normalRatePerMin = Convert.ToDouble((user.currentSalary * 12) / (2184 * 60));
                 normalcost = normalmins * normalRatePerMin;
                 otRateSetting = otRateSetting.GetOTRateSettingByDate(startdatetime);
 
@@ -2380,22 +2464,18 @@ namespace TimeTracker.Model
                     {
                         if (user.shifting == false)
                         {
-                            if (holiday.IsHoliday(startdatetime.Date) || user.isOfficeWorker && user.currentSpecialOffDay == (int)startdatetime.DayOfWeek)
+                            if (user.usePattern == true)
                             {
-                                otcost = otmins * (normalRatePerMin * otRateSetting.OTSpecialRate);
+                                if (holiday.IsHoliday(startdatetime.Date))
+                                {
+                                    otcost = otmins * (normalRatePerMin * otRateSetting.OTSpecialRate);
+                                }
+                                else
+                                {
+                                    otcost = otmins * (normalRatePerMin * otRateSetting.OTNormalRate);
+                                }
                             }
                             else
-                            {
-                                otcost = otmins * (normalRatePerMin * otRateSetting.OTNormalRate);
-                            }
-
-                        }
-                        else //For Shifting Hours
-                        {
-                            TimeSpan stime = startdatetime.TimeOfDay;
-                            TimeSpan etime = Convert.ToDateTime(EndTime).TimeOfDay;
-                            TimeSpan cutoff = user.GetMyCutOfTime();
-                            if (stime >= cutoff)
                             {
                                 if (holiday.IsHoliday(startdatetime.Date) || user.isOfficeWorker && user.currentSpecialOffDay == (int)startdatetime.DayOfWeek)
                                 {
@@ -2406,15 +2486,65 @@ namespace TimeTracker.Model
                                     otcost = otmins * (normalRatePerMin * otRateSetting.OTNormalRate);
                                 }
                             }
+                        }
+                        else //For Shifting Hours
+                        {
+                            TimeSpan stime = startdatetime.TimeOfDay;
+                            TimeSpan etime = Convert.ToDateTime(EndTime).TimeOfDay;
+                            TimeSpan cutoff = user.GetMyCutOfTime();
+
+                            if (user.usePattern == true)
+                            {
+                                if (user.offPattern.Trim() != "") 
+                                {
+                                    
+                                    if (stime >= cutoff)
+                                    {
+                                        if (holiday.IsHoliday(startdatetime.Date))
+                                        {
+                                            otcost = otmins * (normalRatePerMin * otRateSetting.OTSpecialRate);
+                                        }
+                                        else
+                                        {
+                                            otcost = otmins * (normalRatePerMin * otRateSetting.OTNormalRate);
+                                        }
+                                    }
+                                    else
+                                    {
+                                        if (holiday.IsHoliday(startdatetime.AddDays(-1).Date))
+                                        {
+                                            otcost = otmins * (normalRatePerMin * otRateSetting.OTSpecialRate);
+                                        }
+                                        else
+                                        {
+                                            otcost = otmins * (normalRatePerMin * otRateSetting.OTNormalRate);
+                                        }
+                                    }
+                                }
+                            }
                             else
                             {
-                                if (holiday.IsHoliday(startdatetime.AddDays(-1).Date) || user.isOfficeWorker && user.currentSpecialOffDay == (int)startdatetime.AddDays(-1).DayOfWeek)
+                                if (stime >= cutoff)
                                 {
-                                    otcost = otmins * (normalRatePerMin * otRateSetting.OTSpecialRate);
+                                    if (holiday.IsHoliday(startdatetime.Date) || (user.isOfficeWorker && user.currentSpecialOffDay == (int)startdatetime.DayOfWeek))
+                                    {
+                                        otcost = otmins * (normalRatePerMin * otRateSetting.OTSpecialRate);
+                                    }
+                                    else
+                                    {
+                                        otcost = otmins * (normalRatePerMin * otRateSetting.OTNormalRate);
+                                    }
                                 }
                                 else
                                 {
-                                    otcost = otmins * (normalRatePerMin * otRateSetting.OTNormalRate);
+                                    if (holiday.IsHoliday(startdatetime.AddDays(-1).Date) || user.isOfficeWorker && user.currentSpecialOffDay == (int)startdatetime.AddDays(-1).DayOfWeek)
+                                    {
+                                        otcost = otmins * (normalRatePerMin * otRateSetting.OTSpecialRate);
+                                    }
+                                    else
+                                    {
+                                        otcost = otmins * (normalRatePerMin * otRateSetting.OTNormalRate);
+                                    }
                                 }
                             }
                         }
