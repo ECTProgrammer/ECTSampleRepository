@@ -343,7 +343,6 @@
           <Property Name="EndTime" Type="varchar" Nullable="false" MaxLength="5" />
           <Property Name="StartDate" Type="datetime" Nullable="false" />
           <Property Name="EndDate" Type="datetime" />
-          <Property Name="Salary" Type="decimal" Nullable="false" Scale="2" />
           <Property Name="OffDay" Type="int" Nullable="false" />
           <Property Name="SpecialOffDay" Type="int" Nullable="false" />
           <Property Name="NoOTPay" Type="bit" Nullable="false" />
@@ -359,6 +358,7 @@
           <Property Name="UsePattern" Type="bit" />
           <Property Name="OffPattern" Type="varchar" MaxLength="100" />
           <Property Name="PatternStartDate" Type="datetime" />
+          <Property Name="MonthlySalary" Type="varchar" MaxLength="200" />
         </EntityType>
         <EntityType Name="Users">
           <Key>
@@ -1321,7 +1321,6 @@
           <Property Type="String" Name="EndTime" Nullable="false" MaxLength="5" FixedLength="false" Unicode="false" />
           <Property Type="DateTime" Name="StartDate" Nullable="false" Precision="3" />
           <Property Type="DateTime" Name="EndDate" Precision="3" />
-          <Property Type="Decimal" Name="Salary" Nullable="false" Precision="18" Scale="2" />
           <Property Type="Int32" Name="OffDay" Nullable="false" />
           <Property Type="Int32" Name="SpecialOffDay" Nullable="false" />
           <Property Type="Boolean" Name="NoOTPay" Nullable="false" />
@@ -1338,6 +1337,7 @@
           <Property Type="Boolean" Name="UsePattern" />
           <Property Type="String" Name="OffPattern" MaxLength="100" FixedLength="false" Unicode="false" />
           <Property Type="DateTime" Name="PatternStartDate" Precision="3" />
+          <Property Type="String" Name="MonthlySalary" MaxLength="200" FixedLength="false" Unicode="false" />
         </EntityType>
         <Association Name="FK_UserRateSchedule_UserId">
           <End Type="TimeTrackerModel.T_Users" Role="T_Users" Multiplicity="1" />
@@ -1615,6 +1615,7 @@
           <EntitySetMapping Name="T_UserRateSchedule">
             <EntityTypeMapping TypeName="TimeTrackerModel.T_UserRateSchedule">
               <MappingFragment StoreEntitySet="UserRateSchedule">
+                <ScalarProperty Name="MonthlySalary" ColumnName="MonthlySalary" />
                 <ScalarProperty Name="PatternStartDate" ColumnName="PatternStartDate" />
                 <ScalarProperty Name="OffPattern" ColumnName="OffPattern" />
                 <ScalarProperty Name="UsePattern" ColumnName="UsePattern" />
@@ -1630,7 +1631,6 @@
                 <ScalarProperty Name="NoOTPay" ColumnName="NoOTPay" />
                 <ScalarProperty Name="SpecialOffDay" ColumnName="SpecialOffDay" />
                 <ScalarProperty Name="OffDay" ColumnName="OffDay" />
-                <ScalarProperty Name="Salary" ColumnName="Salary" />
                 <ScalarProperty Name="EndDate" ColumnName="EndDate" />
                 <ScalarProperty Name="StartDate" ColumnName="StartDate" />
                 <ScalarProperty Name="EndTime" ColumnName="EndTime" />

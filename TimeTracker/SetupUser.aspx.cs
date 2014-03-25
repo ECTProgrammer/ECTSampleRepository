@@ -379,7 +379,6 @@ namespace TimeTracker
                     {
                         userRateSchedule.StartTime = modalTxtBoxStartTime.Text.Trim(); 
                         userRateSchedule.EndTime = modalTxtBoxEndTime.Text.Trim(); 
-                        userRateSchedule.Salary = Convert.ToDecimal(modalTxtBoxSalary.Text);
                         userRateSchedule.OffDay = Convert.ToInt32(modalDropDownOffDay.SelectedItem.Value);
                         userRateSchedule.SpecialOffDay = Convert.ToInt32(modalDropDownSpecialOffDay.SelectedItem.Value);
                         userRateSchedule.NoOTPay = modalChckBoxNoOTPay.Checked;
@@ -394,7 +393,6 @@ namespace TimeTracker
                         userRateSchedule.StartTime = modalTxtBoxStartTime.Text.Trim();
                         userRateSchedule.EndTime = modalTxtBoxEndTime.Text.Trim(); 
                         userRateSchedule.UserId = user.Id;
-                        userRateSchedule.Salary = Convert.ToDecimal(modalTxtBoxSalary.Text);
                         userRateSchedule.OffDay = Convert.ToInt32(modalDropDownOffDay.SelectedItem.Value);
                         userRateSchedule.SpecialOffDay = Convert.ToInt32(modalDropDownSpecialOffDay.SelectedItem.Value);
                         userRateSchedule.NoOTPay = modalChckBoxNoOTPay.Checked;

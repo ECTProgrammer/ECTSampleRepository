@@ -1068,7 +1068,7 @@ namespace TimeTracker.Model
             {
                 startTime = URS.StartTime == "" ? "08:00" : URS.StartTime;
                 endTime = URS.EndTime == "" ? "17:00" : URS.EndTime;
-                currentSalary = URS.Salary;
+                currentSalary = URS.GetMySalary();
                 currentOffDay = URS.OffDay;
                 currentSpecialOffDay = URS.SpecialOffDay;
                 currentOptOffDay1 = URS.OptionalOffDay1 == null ? 0 : Convert.ToInt32(URS.OptionalOffDay1);
@@ -1124,7 +1124,7 @@ namespace TimeTracker.Model
             {
                 startTime = URS.StartTime == "" ? "08:00" : URS.StartTime;
                 endTime = URS.EndTime == "" ? "17:00" : URS.EndTime;
-                currentSalary = URS.Salary;
+                currentSalary = URS.GetMySalary();
                 currentOffDay = URS.OffDay;
                 currentSpecialOffDay = URS.SpecialOffDay;
                 currentOptOffDay1 = URS.OptionalOffDay1 == null ? 0 : Convert.ToInt32(URS.OptionalOffDay1);

@@ -203,7 +203,7 @@ namespace TimeTracker
                 {
                     userRateSchedule.StartTime = modalTxtBoxStartTime.Text.Trim();
                     userRateSchedule.EndTime = modalTxtBoxEndTime.Text.Trim();
-                    userRateSchedule.Salary = Convert.ToDecimal(modalTxtBoxSalary.Text);
+                    userRateSchedule.MonthlySalary = userRateSchedule.EncryptSalary(modalTxtBoxSalary.Text.Trim());
                     userRateSchedule.OffDay = Convert.ToInt32(modalDropDownOffDay.SelectedItem.Value);
                     userRateSchedule.SpecialOffDay = Convert.ToInt32(modalDropDownSpecialOffDay.SelectedItem.Value);
                     userRateSchedule.OptionalOffDay1 = Convert.ToInt32(modalDropDownOptionalOffDay1.SelectedItem.Value);
@@ -227,7 +227,7 @@ namespace TimeTracker
                     userRateSchedule.StartTime = modalTxtBoxStartTime.Text.Trim();
                     userRateSchedule.EndTime = modalTxtBoxEndTime.Text.Trim();
                     userRateSchedule.UserId = user.Id;
-                    userRateSchedule.Salary = Convert.ToDecimal(modalTxtBoxSalary.Text);
+                    userRateSchedule.MonthlySalary = userRateSchedule.EncryptSalary(modalTxtBoxSalary.Text.Trim());
                     userRateSchedule.OffDay = Convert.ToInt32(modalDropDownOffDay.SelectedItem.Value);
                     userRateSchedule.SpecialOffDay = Convert.ToInt32(modalDropDownSpecialOffDay.SelectedItem.Value);
                     userRateSchedule.OptionalOffDay1 = Convert.ToInt32(modalDropDownOptionalOffDay1.SelectedItem.Value);

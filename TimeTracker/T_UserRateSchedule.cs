@@ -20,7 +20,6 @@ namespace TimeTracker
         public string EndTime { get; set; }
         public System.DateTime StartDate { get; set; }
         public Nullable<System.DateTime> EndDate { get; set; }
-        public decimal Salary { get; set; }
         public int OffDay { get; set; }
         public int SpecialOffDay { get; set; }
         public bool NoOTPay { get; set; }
@@ -36,6 +35,7 @@ namespace TimeTracker
         public Nullable<bool> UsePattern { get; set; }
         public string OffPattern { get; set; }
         public Nullable<System.DateTime> PatternStartDate { get; set; }
+        public string MonthlySalary { get; set; }
     
         public virtual T_Users M_User { get; set; }
     }

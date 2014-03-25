@@ -2,12 +2,19 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
+using System.Security.Cryptography;
+using System.Text;
+using System.IO;
 
 namespace TimeTracker.Model
 {
     public class UserRateSchedule : T_UserRateSchedule
     {
         //gets UserRateSchedule by Id
+        static readonly string PasswordHash = "s@$sw0rD";
+        static readonly string SaltKey = "R@&suT02";
+        static readonly string VIKey = "@23B84lt23Hs9dG2";
+
         public UserRateSchedule GetUserScheduleRate(int id)
         {
             TimeTrackerEntities db = new TimeTrackerEntities();
@@ -22,7 +29,6 @@ namespace TimeTracker.Model
                             EndTime = u.EndTime,
                             StartDate = u.StartDate,
                             EndDate = u.EndDate,
-                            Salary = u.Salary,
                             IsCurrentRate = u.IsCurrentRate,
                             OffDay = u.OffDay,
                             SpecialOffDay = u.SpecialOffDay,
@@ -37,7 +43,8 @@ namespace TimeTracker.Model
                             LastUpdatedDate = u.LastUpdatedDate,
                             UsePattern = u.UsePattern,
                             OffPattern = u.OffPattern,
-                            PatternStartDate = u.PatternStartDate
+                            PatternStartDate = u.PatternStartDate,
+                            MonthlySalary = u.MonthlySalary
                         }).FirstOrDefault();
 
             db.Dispose();
@@ -60,7 +67,6 @@ namespace TimeTracker.Model
                             EndTime = u.EndTime,
                             StartDate = u.StartDate,
                             EndDate = u.EndDate,
-                            Salary = u.Salary,
                             IsCurrentRate = u.IsCurrentRate,
                             OffDay = u.OffDay,
                             SpecialOffDay = u.SpecialOffDay,
@@ -75,7 +81,8 @@ namespace TimeTracker.Model
                             LastUpdatedDate = u.LastUpdatedDate,
                             UsePattern = u.UsePattern,
                             OffPattern = u.OffPattern,
-                            PatternStartDate = u.PatternStartDate
+                            PatternStartDate = u.PatternStartDate,
+                            MonthlySalary = u.MonthlySalary
                         }).ToList();
 
             db.Dispose();
@@ -102,7 +109,6 @@ namespace TimeTracker.Model
                             EndTime = u.EndTime,
                             StartDate = u.StartDate,
                             EndDate = u.EndDate,
-                            Salary = u.Salary,
                             IsCurrentRate = u.IsCurrentRate,
                             OffDay = u.OffDay,
                             SpecialOffDay = u.SpecialOffDay,
@@ -117,7 +123,8 @@ namespace TimeTracker.Model
                             LastUpdatedDate = u.LastUpdatedDate,
                             UsePattern = u.UsePattern,
                             OffPattern = u.OffPattern,
-                            PatternStartDate = u.PatternStartDate
+                            PatternStartDate = u.PatternStartDate,
+                            MonthlySalary = u.MonthlySalary
                         }).FirstOrDefault();
 
             db.Dispose();
@@ -141,7 +148,6 @@ namespace TimeTracker.Model
                             EndTime = u.EndTime,
                             StartDate = u.StartDate,
                             EndDate = u.EndDate,
-                            Salary = u.Salary,
                             IsCurrentRate = u.IsCurrentRate,
                             OffDay = u.OffDay,
                             SpecialOffDay = u.SpecialOffDay,
@@ -156,7 +162,8 @@ namespace TimeTracker.Model
                             LastUpdatedDate = u.LastUpdatedDate,
                             UsePattern = u.UsePattern,
                             OffPattern = u.OffPattern,
-                            PatternStartDate = u.PatternStartDate
+                            PatternStartDate = u.PatternStartDate,
+                            MonthlySalary = u.MonthlySalary
                         }).FirstOrDefault();
 
             db.Dispose();
@@ -180,7 +187,6 @@ namespace TimeTracker.Model
                             EndTime = u.EndTime,
                             StartDate = u.StartDate,
                             EndDate = u.EndDate,
-                            Salary = u.Salary,
                             IsCurrentRate = u.IsCurrentRate,
                             OffDay = u.OffDay,
                             SpecialOffDay = u.SpecialOffDay,
@@ -195,7 +201,8 @@ namespace TimeTracker.Model
                             LastUpdatedDate = u.LastUpdatedDate,
                             UsePattern = u.UsePattern,
                             OffPattern = u.OffPattern,
-                            PatternStartDate = u.PatternStartDate
+                            PatternStartDate = u.PatternStartDate,
+                            MonthlySalary = u.MonthlySalary
                         }).FirstOrDefault();
 
             db.Dispose();
@@ -218,7 +225,6 @@ namespace TimeTracker.Model
                             EndTime = u.EndTime,
                             StartDate = u.StartDate,
                             EndDate = u.EndDate,
-                            Salary = u.Salary,
                             IsCurrentRate = u.IsCurrentRate,
                             OffDay = u.OffDay,
                             SpecialOffDay = u.SpecialOffDay,
@@ -233,7 +239,8 @@ namespace TimeTracker.Model
                             LastUpdatedDate = u.LastUpdatedDate,
                             UsePattern = u.UsePattern,
                             OffPattern = u.OffPattern,
-                            PatternStartDate = u.PatternStartDate
+                            PatternStartDate = u.PatternStartDate,
+                            MonthlySalary = u.MonthlySalary
                         }).FirstOrDefault();
 
             db.Dispose();
@@ -258,7 +265,6 @@ namespace TimeTracker.Model
                             EndTime = u.EndTime,
                             StartDate = u.StartDate,
                             EndDate = u.EndDate,
-                            Salary = u.Salary,
                             IsCurrentRate = u.IsCurrentRate,
                             OffDay = u.OffDay,
                             SpecialOffDay = u.SpecialOffDay,
@@ -273,11 +279,32 @@ namespace TimeTracker.Model
                             LastUpdatedDate = u.LastUpdatedDate,
                             UsePattern = u.UsePattern,
                             OffPattern = u.OffPattern,
-                            PatternStartDate = u.PatternStartDate
+                            PatternStartDate = u.PatternStartDate,
+                            MonthlySalary = u.MonthlySalary
                         }).FirstOrDefault();
 
             db.Dispose();
 
+            return data;
+        }
+
+        public string EncryptSalary(string salaryInText) 
+        {
+            string data = "";
+            if (salaryInText.Trim() != "") 
+            {
+                data = Encrypt(salaryInText);
+            }
+            return data;
+        }
+
+        public decimal GetMySalary() 
+        {
+            decimal data = 0;
+            if (MonthlySalary != null && MonthlySalary.Trim() != "") 
+            {
+                data = Convert.ToDecimal(DecryptSalary(MonthlySalary));
+            }
             return data;
         }
 
@@ -345,7 +372,7 @@ namespace TimeTracker.Model
             t_userRateSchedule.EndTime = userRateSchedule.EndTime;
             t_userRateSchedule.StartDate = userRateSchedule.StartDate;
             t_userRateSchedule.EndDate = userRateSchedule.EndDate;
-            t_userRateSchedule.Salary = userRateSchedule.Salary;
+            t_userRateSchedule.MonthlySalary = userRateSchedule.MonthlySalary;
             t_userRateSchedule.IsCurrentRate = userRateSchedule.IsCurrentRate;
             t_userRateSchedule.OffDay = userRateSchedule.OffDay;
             t_userRateSchedule.SpecialOffDay = userRateSchedule.SpecialOffDay;
@@ -361,6 +388,47 @@ namespace TimeTracker.Model
             t_userRateSchedule.UsePattern = userRateSchedule.UsePattern;
             t_userRateSchedule.OffPattern = userRateSchedule.OffPattern;
             t_userRateSchedule.PatternStartDate = userRateSchedule.PatternStartDate;
+        }
+
+        private static string Encrypt(string plainText)
+        {
+            byte[] plainTextBytes = Encoding.UTF8.GetBytes(plainText);
+
+            byte[] keyBytes = new Rfc2898DeriveBytes(PasswordHash, Encoding.ASCII.GetBytes(SaltKey)).GetBytes(256 / 8);
+            var symmetricKey = new RijndaelManaged() { Mode = CipherMode.CBC, Padding = PaddingMode.Zeros };
+            var encryptor = symmetricKey.CreateEncryptor(keyBytes, Encoding.ASCII.GetBytes(VIKey));
+
+            byte[] cipherTextBytes;
+
+            using (var memoryStream = new MemoryStream())
+            {
+                using (var cryptoStream = new CryptoStream(memoryStream, encryptor, CryptoStreamMode.Write))
+                {
+                    cryptoStream.Write(plainTextBytes, 0, plainTextBytes.Length);
+                    cryptoStream.FlushFinalBlock();
+                    cipherTextBytes = memoryStream.ToArray();
+                    cryptoStream.Close();
+                }
+                memoryStream.Close();
+            }
+            return Convert.ToBase64String(cipherTextBytes);
+        }
+
+        public static string DecryptSalary(string encryptedText)
+        {
+            byte[] cipherTextBytes = Convert.FromBase64String(encryptedText);
+            byte[] keyBytes = new Rfc2898DeriveBytes(PasswordHash, Encoding.ASCII.GetBytes(SaltKey)).GetBytes(256 / 8);
+            var symmetricKey = new RijndaelManaged() { Mode = CipherMode.CBC, Padding = PaddingMode.None };
+
+            var decryptor = symmetricKey.CreateDecryptor(keyBytes, Encoding.ASCII.GetBytes(VIKey));
+            var memoryStream = new MemoryStream(cipherTextBytes);
+            var cryptoStream = new CryptoStream(memoryStream, decryptor, CryptoStreamMode.Read);
+            byte[] plainTextBytes = new byte[cipherTextBytes.Length];
+
+            int decryptedByteCount = cryptoStream.Read(plainTextBytes, 0, plainTextBytes.Length);
+            memoryStream.Close();
+            cryptoStream.Close();
+            return Encoding.UTF8.GetString(plainTextBytes, 0, decryptedByteCount).TrimEnd("\0".ToCharArray());
         }
 
     }
