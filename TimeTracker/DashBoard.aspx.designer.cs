@@ -58,6 +58,15 @@ namespace TimeTracker {
         protected global::AjaxControlToolkit.TabPanel tabPanelLeft1;
         
         /// <summary>
+        /// gridLeftChkBoxSelectAll control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.CheckBox gridLeftChkBoxSelectAll;
+        
+        /// <summary>
         /// gridViewLeftPanel1 control.
         /// </summary>
         /// <remarks>
@@ -65,6 +74,24 @@ namespace TimeTracker {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.GridView gridViewLeftPanel1;
+        
+        /// <summary>
+        /// gridLeftBtnAcceptAll control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Button gridLeftBtnAcceptAll;
+        
+        /// <summary>
+        /// gridLeftBtnRejectAll control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Button gridLeftBtnRejectAll;
         
         /// <summary>
         /// tabPanelLeft2 control.

@@ -333,7 +333,7 @@ namespace TimeTracker
             User user = new User();
             user = user.GetUser(userid);
             Module module = new Module();
-            module = module.GetModule("SetupUser.aspx");
+            module = module.GetModule("SetupSupervisorMapping.aspx");
             myAccessRights = myAccessRights.GetRolesModuleAccess(Convert.ToInt32(user.RoleId), module.Id);
         }
         #endregion

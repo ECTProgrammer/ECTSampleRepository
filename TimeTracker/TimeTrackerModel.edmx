@@ -6,7 +6,9 @@
     <edmx:StorageModels>
     <Schema Namespace="TimeTrackerModel.Store" Alias="Self" Provider="System.Data.SqlClient" ProviderManifestToken="2008" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
         <EntityContainer Name="TimeTrackerModelStoreContainer">
+          <EntitySet Name="CAPStageMapping" EntityType="TimeTrackerModel.Store.CAPStageMapping" store:Type="Tables" Schema="dbo" />
           <EntitySet Name="Department" EntityType="TimeTrackerModel.Store.Department" store:Type="Tables" Schema="dbo" />
+          <EntitySet Name="Holiday" EntityType="TimeTrackerModel.Store.Holiday" store:Type="Tables" Schema="dbo" />
           <EntitySet Name="JobFlow" EntityType="TimeTrackerModel.Store.JobFlow" store:Type="Tables" Schema="dbo" />
           <EntitySet Name="JobTracker" EntityType="TimeTrackerModel.Store.JobTracker" store:Type="Tables" Schema="dbo" />
           <EntitySet Name="JobTrackerHistory" EntityType="TimeTrackerModel.Store.JobTrackerHistory" store:Type="Tables" Schema="dbo" />
@@ -14,13 +16,23 @@
           <EntitySet Name="JobTypeDepartment" EntityType="TimeTrackerModel.Store.JobTypeDepartment" store:Type="Tables" Schema="dbo" />
           <EntitySet Name="JobTypeFlow" EntityType="TimeTrackerModel.Store.JobTypeFlow" store:Type="Tables" Schema="dbo" />
           <EntitySet Name="Modules" EntityType="TimeTrackerModel.Store.Modules" store:Type="Tables" Schema="dbo" />
+          <EntitySet Name="OTRateSetting" EntityType="TimeTrackerModel.Store.OTRateSetting" store:Type="Tables" Schema="dbo" />
           <EntitySet Name="RoleDepartmentAccess" EntityType="TimeTrackerModel.Store.RoleDepartmentAccess" store:Type="Tables" Schema="dbo" />
           <EntitySet Name="Roles" EntityType="TimeTrackerModel.Store.Roles" store:Type="Tables" Schema="dbo" />
           <EntitySet Name="RolesModuleAccess" EntityType="TimeTrackerModel.Store.RolesModuleAccess" store:Type="Tables" Schema="dbo" />
           <EntitySet Name="SupervisorMapping" EntityType="TimeTrackerModel.Store.SupervisorMapping" store:Type="Tables" Schema="dbo" />
           <EntitySet Name="TimeClock" EntityType="TimeTrackerModel.Store.TimeClock" store:Type="Tables" Schema="dbo" />
           <EntitySet Name="TimeSetting" EntityType="TimeTrackerModel.Store.TimeSetting" store:Type="Tables" Schema="dbo" />
+          <EntitySet Name="UserRateSchedule" EntityType="TimeTrackerModel.Store.UserRateSchedule" store:Type="Tables" Schema="dbo" />
           <EntitySet Name="Users" EntityType="TimeTrackerModel.Store.Users" store:Type="Tables" Schema="dbo" />
+          <AssociationSet Name="FK_CapStageMapping_DepartmentId" Association="TimeTrackerModel.Store.FK_CapStageMapping_DepartmentId">
+            <End Role="Department" EntitySet="Department" />
+            <End Role="CAPStageMapping" EntitySet="CAPStageMapping" />
+          </AssociationSet>
+          <AssociationSet Name="FK_CapStageMapping_JobType" Association="TimeTrackerModel.Store.FK_CapStageMapping_JobType">
+            <End Role="JobType" EntitySet="JobType" />
+            <End Role="CAPStageMapping" EntitySet="CAPStageMapping" />
+          </AssociationSet>
           <AssociationSet Name="Fk_JobTracker_ApprovedBy" Association="TimeTrackerModel.Store.Fk_JobTracker_ApprovedBy">
             <End Role="Users" EntitySet="Users" />
             <End Role="JobTracker" EntitySet="JobTracker" />
@@ -93,6 +105,10 @@
             <End Role="Users" EntitySet="Users" />
             <End Role="TimeSetting" EntitySet="TimeSetting" />
           </AssociationSet>
+          <AssociationSet Name="FK_UserRateSchedule_UserId" Association="TimeTrackerModel.Store.FK_UserRateSchedule_UserId">
+            <End Role="Users" EntitySet="Users" />
+            <End Role="UserRateSchedule" EntitySet="UserRateSchedule" />
+          </AssociationSet>
           <AssociationSet Name="fk_Users_DepartmentId" Association="TimeTrackerModel.Store.fk_Users_DepartmentId">
             <End Role="Department" EntitySet="Department" />
             <End Role="Users" EntitySet="Users" />
@@ -102,6 +118,17 @@
             <End Role="Users" EntitySet="Users" />
           </AssociationSet>
         </EntityContainer>
+        <EntityType Name="CAPStageMapping">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" Nullable="false" StoreGeneratedPattern="Identity" />
+          <Property Name="DepartmentId" Type="int" Nullable="false" />
+          <Property Name="JobTypeId" Type="int" Nullable="false" />
+          <Property Name="SD_Stage_No" Type="int" Nullable="false" />
+          <Property Name="DatabaseMap" Type="nvarchar" Nullable="false" MaxLength="200" />
+          <Property Name="StageDescription" Type="varchar" MaxLength="200" />
+        </EntityType>
         <EntityType Name="Department">
           <Key>
             <PropertyRef Name="Id" />
@@ -114,6 +141,15 @@
           <Property Name="LastUpdatedBy" Type="int" />
           <Property Name="Position" Type="int" />
           <Property Name="Acronym" Type="varchar" MaxLength="15" />
+        </EntityType>
+        <EntityType Name="Holiday">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" Nullable="false" StoreGeneratedPattern="Identity" />
+          <Property Name="HolidayYear" Type="int" Nullable="false" />
+          <Property Name="HolidayDate" Type="datetime" Nullable="false" />
+          <Property Name="Description" Type="varchar(max)" />
         </EntityType>
         <EntityType Name="JobFlow">
           <Key>
@@ -225,6 +261,18 @@
           <Property Name="ModuleType" Type="varchar" MaxLength="50" />
           <Property Name="ArrangementOrder" Type="int" />
         </EntityType>
+        <EntityType Name="OTRateSetting">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" Nullable="false" StoreGeneratedPattern="Identity" />
+          <Property Name="OTExemptedSalary" Type="decimal" Nullable="false" Scale="2" />
+          <Property Name="ExemptedSalaryIncentive" Type="decimal" Nullable="false" Scale="2" />
+          <Property Name="OTNormalRate" Type="float" Nullable="false" />
+          <Property Name="OTSpecialRate" Type="float" Nullable="false" />
+          <Property Name="StartDate" Type="datetime" Nullable="false" />
+          <Property Name="EndDate" Type="datetime" />
+        </EntityType>
         <EntityType Name="RoleDepartmentAccess">
           <Key>
             <PropertyRef Name="Id" />
@@ -285,6 +333,33 @@
           <Property Name="LastUpdatedBy" Type="int" Nullable="false" />
           <Property Name="LastUpdateDate" Type="datetime" Nullable="false" />
         </EntityType>
+        <EntityType Name="UserRateSchedule">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" Nullable="false" StoreGeneratedPattern="Identity" />
+          <Property Name="UserId" Type="int" Nullable="false" />
+          <Property Name="StartTime" Type="varchar" Nullable="false" MaxLength="5" />
+          <Property Name="EndTime" Type="varchar" Nullable="false" MaxLength="5" />
+          <Property Name="StartDate" Type="datetime" Nullable="false" />
+          <Property Name="EndDate" Type="datetime" />
+          <Property Name="OffDay" Type="int" Nullable="false" />
+          <Property Name="SpecialOffDay" Type="int" Nullable="false" />
+          <Property Name="NoOTPay" Type="bit" Nullable="false" />
+          <Property Name="IsCurrentRate" Type="bit" Nullable="false" />
+          <Property Name="MinsBreak" Type="int" />
+          <Property Name="IsOfficeWorker" Type="bit" />
+          <Property Name="OptionalOffDay1" Type="int" />
+          <Property Name="OptionalOffDay2" Type="int" />
+          <Property Name="OptionalOffDay3" Type="int" />
+          <Property Name="OptionalOffDay4" Type="int" />
+          <Property Name="CreatedDate" Type="datetime" />
+          <Property Name="LastUpdatedDate" Type="datetime" />
+          <Property Name="UsePattern" Type="bit" />
+          <Property Name="OffPattern" Type="varchar" MaxLength="100" />
+          <Property Name="PatternStartDate" Type="datetime" />
+          <Property Name="MonthlySalary" Type="varchar" MaxLength="200" />
+        </EntityType>
         <EntityType Name="Users">
           <Key>
             <PropertyRef Name="Id" />
@@ -308,6 +383,30 @@
           <Property Name="Password" Type="varchar" MaxLength="20" />
           <Property Name="Shift" Type="varchar" MaxLength="15" />
         </EntityType>
+        <Association Name="FK_CapStageMapping_DepartmentId">
+          <End Role="Department" Type="TimeTrackerModel.Store.Department" Multiplicity="1" />
+          <End Role="CAPStageMapping" Type="TimeTrackerModel.Store.CAPStageMapping" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Department">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="CAPStageMapping">
+              <PropertyRef Name="DepartmentId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_CapStageMapping_JobType">
+          <End Role="JobType" Type="TimeTrackerModel.Store.JobType" Multiplicity="1" />
+          <End Role="CAPStageMapping" Type="TimeTrackerModel.Store.CAPStageMapping" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="JobType">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="CAPStageMapping">
+              <PropertyRef Name="JobTypeId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
         <Association Name="Fk_JobTracker_ApprovedBy">
           <End Role="Users" Type="TimeTrackerModel.Store.Users" Multiplicity="0..1" />
           <End Role="JobTracker" Type="TimeTrackerModel.Store.JobTracker" Multiplicity="*" />
@@ -524,6 +623,18 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <Association Name="FK_UserRateSchedule_UserId">
+          <End Role="Users" Type="TimeTrackerModel.Store.Users" Multiplicity="1" />
+          <End Role="UserRateSchedule" Type="TimeTrackerModel.Store.UserRateSchedule" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Users">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="UserRateSchedule">
+              <PropertyRef Name="UserId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
         <Association Name="fk_Users_DepartmentId">
           <End Role="Department" Type="TimeTrackerModel.Store.Department" Multiplicity="0..1" />
           <End Role="Users" Type="TimeTrackerModel.Store.Users" Multiplicity="*" />
@@ -648,6 +759,22 @@
             <End Role="T_JobTypeFlow" EntitySet="T_JobTypeFlow" />
           </AssociationSet>
           <EntitySet Name="T_TimeClock" EntityType="TimeTrackerModel.T_TimeClock" />
+          <EntitySet Name="T_CAPStageMapping" EntityType="TimeTrackerModel.T_CAPStageMapping" />
+          <AssociationSet Name="FK_CapStageMapping_DepartmentId" Association="TimeTrackerModel.FK_CapStageMapping_DepartmentId">
+            <End Role="T_Department" EntitySet="T_Department" />
+            <End Role="CAPStageMapping" EntitySet="T_CAPStageMapping" />
+          </AssociationSet>
+          <AssociationSet Name="FK_CapStageMapping_JobType" Association="TimeTrackerModel.FK_CapStageMapping_JobType">
+            <End Role="T_JobType" EntitySet="T_JobType" />
+            <End Role="CAPStageMapping" EntitySet="T_CAPStageMapping" />
+          </AssociationSet>
+          <EntitySet Name="T_Holiday" EntityType="TimeTrackerModel.T_Holiday" />
+          <EntitySet Name="T_UserRateSchedule" EntityType="TimeTrackerModel.T_UserRateSchedule" />
+          <AssociationSet Name="FK_UserRateSchedule_UserId" Association="TimeTrackerModel.FK_UserRateSchedule_UserId">
+            <End Role="T_Users" EntitySet="T_Users" />
+            <End Role="UserRateSchedule" EntitySet="T_UserRateSchedule" />
+          </AssociationSet>
+          <EntitySet Name="T_OTRateSetting" EntityType="TimeTrackerModel.T_OTRateSetting" />
         </EntityContainer>
         <EntityType Name="T_Department">
           <Key>
@@ -665,6 +792,7 @@
           <NavigationProperty Name="M_RoleDepartmentAccesses" Relationship="TimeTrackerModel.Fk_RoleDepartmentAccess_DepartmentId" FromRole="Department" ToRole="RoleDepartmentAccess" />
           <NavigationProperty Name="M_Users" Relationship="TimeTrackerModel.fk_Users_DepartmentId" FromRole="Department" ToRole="Users" />
           <NavigationProperty Name="M_JobTypeFlows" Relationship="TimeTrackerModel.Fk_JobTypeFlow_DepartmentId" FromRole="T_Department" ToRole="T_JobTypeFlow" />
+          <NavigationProperty Name="CAPStageMappings" Relationship="TimeTrackerModel.FK_CapStageMapping_DepartmentId" FromRole="T_Department" ToRole="CAPStageMapping" />
         </EntityType>
         <EntityType Name="T_JobTracker">
           <Key>
@@ -747,6 +875,7 @@
           <NavigationProperty Name="M_JobTypeDepartments" Relationship="TimeTrackerModel.FK_JobTypeDepartment_JobTypeId" FromRole="JobType" ToRole="JobTypeDepartment" />
           <NavigationProperty Name="M_JobTypeFlows" Relationship="TimeTrackerModel.Fk_JobTypeFlow_JobTypeId" FromRole="T_JobType" ToRole="JobTypeFlow" />
           <Property Type="Boolean" Name="IsDefaultBreak" />
+          <NavigationProperty Name="CAPStageMappings" Relationship="TimeTrackerModel.FK_CapStageMapping_JobType" FromRole="T_JobType" ToRole="CAPStageMapping" />
         </EntityType>
         <EntityType Name="T_JobTypeDepartment">
           <Key>
@@ -861,6 +990,7 @@
           <NavigationProperty Name="M_SupervisorMappingUsers" Relationship="TimeTrackerModel.Fk_SupervisorMapping_UserId" FromRole="Users" ToRole="SupervisorMapping" />
           <NavigationProperty Name="M_TimeSettings" Relationship="TimeTrackerModel.FK_TimeSetting_LastUpdatedBy" FromRole="Users" ToRole="TimeSetting" />
           <Property Type="String" Name="Shift" MaxLength="15" FixedLength="false" Unicode="false" />
+          <NavigationProperty Name="UserRateSchedules" Relationship="TimeTrackerModel.FK_UserRateSchedule_UserId" FromRole="T_Users" ToRole="UserRateSchedule" />
         </EntityType>
         <Association Name="FK_JobTypeDepartment_DepartmentId">
           <End Role="Department" Type="TimeTrackerModel.T_Department" Multiplicity="1" />
@@ -1135,6 +1265,104 @@
           <Property Type="DateTime" Name="CreateDate" Nullable="false" Precision="3" />
           <Property Type="String" Name="Filename" MaxLength="150" FixedLength="false" Unicode="false" />
         </EntityType>
+        <EntityType Name="T_CAPStageMapping">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Type="Int32" Name="Id" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Type="Int32" Name="DepartmentId" Nullable="false" />
+          <Property Type="Int32" Name="JobTypeId" Nullable="false" />
+          <Property Type="Int32" Name="SD_Stage_No" Nullable="false" />
+          <Property Type="String" Name="StageDescription" MaxLength="200" FixedLength="false" Unicode="false" />
+          <NavigationProperty Name="M_Department" Relationship="TimeTrackerModel.FK_CapStageMapping_DepartmentId" FromRole="CAPStageMapping" ToRole="T_Department" />
+          <NavigationProperty Name="M_JobType" Relationship="TimeTrackerModel.FK_CapStageMapping_JobType" FromRole="CAPStageMapping" ToRole="T_JobType" />
+          <Property Type="String" Name="DatabaseMap" Nullable="false" MaxLength="200" FixedLength="false" Unicode="true" />
+        </EntityType>
+        <Association Name="FK_CapStageMapping_DepartmentId">
+          <End Type="TimeTrackerModel.T_Department" Role="T_Department" Multiplicity="1" />
+          <End Type="TimeTrackerModel.T_CAPStageMapping" Role="CAPStageMapping" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="T_Department">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="CAPStageMapping">
+              <PropertyRef Name="DepartmentId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_CapStageMapping_JobType">
+          <End Type="TimeTrackerModel.T_JobType" Role="T_JobType" Multiplicity="1" />
+          <End Type="TimeTrackerModel.T_CAPStageMapping" Role="CAPStageMapping" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="T_JobType">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="CAPStageMapping">
+              <PropertyRef Name="JobTypeId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityType Name="T_Holiday">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Type="Int32" Name="Id" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Type="Int32" Name="HolidayYear" Nullable="false" />
+          <Property Type="DateTime" Name="HolidayDate" Nullable="false" Precision="3" />
+          <Property Type="String" Name="Description" MaxLength="Max" FixedLength="false" Unicode="false" />
+        </EntityType>
+        <EntityType Name="T_UserRateSchedule">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Type="Int32" Name="Id" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Type="Int32" Name="UserId" Nullable="false" />
+          <Property Type="String" Name="StartTime" Nullable="false" MaxLength="5" FixedLength="false" Unicode="false" />
+          <Property Type="String" Name="EndTime" Nullable="false" MaxLength="5" FixedLength="false" Unicode="false" />
+          <Property Type="DateTime" Name="StartDate" Nullable="false" Precision="3" />
+          <Property Type="DateTime" Name="EndDate" Precision="3" />
+          <Property Type="Int32" Name="OffDay" Nullable="false" />
+          <Property Type="Int32" Name="SpecialOffDay" Nullable="false" />
+          <Property Type="Boolean" Name="NoOTPay" Nullable="false" />
+          <Property Type="Boolean" Name="IsCurrentRate" Nullable="false" />
+          <NavigationProperty Name="M_User" Relationship="TimeTrackerModel.FK_UserRateSchedule_UserId" FromRole="UserRateSchedule" ToRole="T_Users" />
+          <Property Type="Int32" Name="MinsBreak" />
+          <Property Type="Boolean" Name="IsOfficeWorker" />
+          <Property Type="Int32" Name="OptionalOffDay1" />
+          <Property Type="Int32" Name="OptionalOffDay2" />
+          <Property Type="Int32" Name="OptionalOffDay3" />
+          <Property Type="Int32" Name="OptionalOffDay4" />
+          <Property Type="DateTime" Name="CreatedDate" Precision="3" />
+          <Property Type="DateTime" Name="LastUpdatedDate" Precision="3" />
+          <Property Type="Boolean" Name="UsePattern" />
+          <Property Type="String" Name="OffPattern" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Type="DateTime" Name="PatternStartDate" Precision="3" />
+          <Property Type="String" Name="MonthlySalary" MaxLength="200" FixedLength="false" Unicode="false" />
+        </EntityType>
+        <Association Name="FK_UserRateSchedule_UserId">
+          <End Type="TimeTrackerModel.T_Users" Role="T_Users" Multiplicity="1" />
+          <End Type="TimeTrackerModel.T_UserRateSchedule" Role="UserRateSchedule" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="T_Users">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="UserRateSchedule">
+              <PropertyRef Name="UserId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityType Name="T_OTRateSetting">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Type="Int32" Name="Id" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Type="Decimal" Name="OTExemptedSalary" Nullable="false" Precision="18" Scale="2" />
+          <Property Type="Decimal" Name="ExemptedSalaryIncentive" Nullable="false" Precision="18" Scale="2" />
+          <Property Type="Double" Name="OTNormalRate" Nullable="false" />
+          <Property Type="Double" Name="OTSpecialRate" Nullable="false" />
+          <Property Type="DateTime" Name="StartDate" Nullable="false" Precision="3" />
+          <Property Type="DateTime" Name="EndDate" Precision="3" />
+        </EntityType>
       </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
@@ -1358,6 +1586,69 @@
                 <ScalarProperty Name="CreateDate" ColumnName="CreateDate" />
                 <ScalarProperty Name="ScanTime" ColumnName="ScanTime" />
                 <ScalarProperty Name="EmployeeNumber" ColumnName="EmployeeNumber" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="T_CAPStageMapping">
+            <EntityTypeMapping TypeName="TimeTrackerModel.T_CAPStageMapping">
+              <MappingFragment StoreEntitySet="CAPStageMapping">
+                <ScalarProperty Name="DatabaseMap" ColumnName="DatabaseMap" />
+                <ScalarProperty Name="StageDescription" ColumnName="StageDescription" />
+                <ScalarProperty Name="SD_Stage_No" ColumnName="SD_Stage_No" />
+                <ScalarProperty Name="JobTypeId" ColumnName="JobTypeId" />
+                <ScalarProperty Name="DepartmentId" ColumnName="DepartmentId" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="T_Holiday">
+            <EntityTypeMapping TypeName="TimeTrackerModel.T_Holiday">
+              <MappingFragment StoreEntitySet="Holiday">
+                <ScalarProperty Name="Description" ColumnName="Description" />
+                <ScalarProperty Name="HolidayDate" ColumnName="HolidayDate" />
+                <ScalarProperty Name="HolidayYear" ColumnName="HolidayYear" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="T_UserRateSchedule">
+            <EntityTypeMapping TypeName="TimeTrackerModel.T_UserRateSchedule">
+              <MappingFragment StoreEntitySet="UserRateSchedule">
+                <ScalarProperty Name="MonthlySalary" ColumnName="MonthlySalary" />
+                <ScalarProperty Name="PatternStartDate" ColumnName="PatternStartDate" />
+                <ScalarProperty Name="OffPattern" ColumnName="OffPattern" />
+                <ScalarProperty Name="UsePattern" ColumnName="UsePattern" />
+                <ScalarProperty Name="LastUpdatedDate" ColumnName="LastUpdatedDate" />
+                <ScalarProperty Name="CreatedDate" ColumnName="CreatedDate" />
+                <ScalarProperty Name="OptionalOffDay4" ColumnName="OptionalOffDay4" />
+                <ScalarProperty Name="OptionalOffDay3" ColumnName="OptionalOffDay3" />
+                <ScalarProperty Name="OptionalOffDay2" ColumnName="OptionalOffDay2" />
+                <ScalarProperty Name="OptionalOffDay1" ColumnName="OptionalOffDay1" />
+                <ScalarProperty Name="IsOfficeWorker" ColumnName="IsOfficeWorker" />
+                <ScalarProperty Name="MinsBreak" ColumnName="MinsBreak" />
+                <ScalarProperty Name="IsCurrentRate" ColumnName="IsCurrentRate" />
+                <ScalarProperty Name="NoOTPay" ColumnName="NoOTPay" />
+                <ScalarProperty Name="SpecialOffDay" ColumnName="SpecialOffDay" />
+                <ScalarProperty Name="OffDay" ColumnName="OffDay" />
+                <ScalarProperty Name="EndDate" ColumnName="EndDate" />
+                <ScalarProperty Name="StartDate" ColumnName="StartDate" />
+                <ScalarProperty Name="EndTime" ColumnName="EndTime" />
+                <ScalarProperty Name="StartTime" ColumnName="StartTime" />
+                <ScalarProperty Name="UserId" ColumnName="UserId" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="T_OTRateSetting">
+            <EntityTypeMapping TypeName="TimeTrackerModel.T_OTRateSetting">
+              <MappingFragment StoreEntitySet="OTRateSetting">
+                <ScalarProperty Name="EndDate" ColumnName="EndDate" />
+                <ScalarProperty Name="StartDate" ColumnName="StartDate" />
+                <ScalarProperty Name="OTSpecialRate" ColumnName="OTSpecialRate" />
+                <ScalarProperty Name="OTNormalRate" ColumnName="OTNormalRate" />
+                <ScalarProperty Name="ExemptedSalaryIncentive" ColumnName="ExemptedSalaryIncentive" />
+                <ScalarProperty Name="OTExemptedSalary" ColumnName="OTExemptedSalary" />
                 <ScalarProperty Name="Id" ColumnName="Id" />
               </MappingFragment>
             </EntityTypeMapping>

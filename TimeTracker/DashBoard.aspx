@@ -6,7 +6,7 @@
 <asp:Content ID="Content2" ContentPlaceHolderID="FeaturedContent" runat="server">
 </asp:Content>
 <asp:Content ID="Content3" ContentPlaceHolderID="MainContent" runat="server">
-    <div style="height:70%; width:50%; min-height:300px; float:left;"> 
+    <div style="height:70%; width:65%; min-height:300px; float:left;"> 
     <asp:UpdatePanel ID="UpdatePanelLeft" runat="server">   
        <ContentTemplate>
        <asp:Panel ID="panelLeftHeader" runat="server" CssClass="modalHeader" Width="98%">Waiting for Approval</asp:Panel>
@@ -15,7 +15,8 @@
                 <ajaxToolKit:TabPanel ID="tabPanelLeft1" runat="server" HeaderText="Waiting for your Approval">
                     <ContentTemplate>
                         <asp:Panel runat="server" ScrollBars="Auto" Height="300px">
-                            <asp:GridView ID="gridViewLeftPanel1" runat="server" AutoGenerateColumns="False" CssClass="gridView" GridLines="None" ShowHeaderWhenEmpty="True" OnRowCommand="gridViewLeftPanel1_RowCommand">
+                            <table><tr><td style="text-align:left"><asp:CheckBox ID="gridLeftChkBoxSelectAll" runat="server" Text=" Select All" AutoPostBack="true" OnCheckedChanged="gridLeftChkBoxSelectAll_Changed"/></td></tr>
+                            <tr><td><asp:GridView ID="gridViewLeftPanel1" runat="server" AutoGenerateColumns="False" CssClass="gridView" GridLines="None" ShowHeaderWhenEmpty="True" OnRowCommand="gridViewLeftPanel1_RowCommand">
                                 <EmptyDataTemplate>
                                     No Data Found.
                                 </EmptyDataTemplate>
@@ -23,6 +24,11 @@
                                     <asp:TemplateField Visible ="false">
                                         <ItemTemplate>
                                             <asp:Label ID="gridLeftlblJobTrackId" runat="server" Text='<%#Eval("Id")%>' Visible="false"></asp:Label>
+                                        </ItemTemplate>
+                                    </asp:TemplateField>
+                                    <asp:TemplateField>
+                                        <ItemTemplate>
+                                            <asp:CheckBox ID="gridLeftChkBoxSelect" runat="server" />
                                         </ItemTemplate>
                                     </asp:TemplateField>
                                     <asp:BoundField HeaderText="Requested By" DataField="fullname"/>
@@ -42,7 +48,13 @@
                                         </ItemTemplate>
                                     </asp:TemplateField>
                                 </Columns>
-                            </asp:GridView>
+                            </asp:GridView></td></tr>
+                                <tr><td style="text-align:center"><asp:Button ID="gridLeftBtnAcceptAll" runat="server" CssClass="buttongreen" Text="Accept" OnClick="gridLeftBtnAcceptAll_Click" />
+                                    <asp:Button ID="gridLeftBtnRejectAll" runat="server" CssClass="buttonred" Text="Reject"  OnClientClick="if(!confirm('Are you sure you want to reject all selected request?')) return false;" OnClick="gridLeftBtnRejectAll_Click"/>
+                                    </td>
+
+                                </tr>
+                                </table>
                         </asp:Panel>
                     </ContentTemplate>
                 </ajaxToolKit:TabPanel>
@@ -56,7 +68,6 @@
                                 </EmptyDataTemplate>
                                 <Columns>
                                     <asp:BoundField DataField="Id" Visible="false" />
-                                    <asp:BoundField HeaderText="Supervisor" DataField="fullname"/>
                                     <asp:BoundField HeaderText="Action Request" DataField="ActionRequest" />
                                     <asp:BoundField HeaderText="Job Date" DataField="ScheduleDate" DataFormatString="{0:dd-MMM-yy}" />
                                     <asp:BoundField HeaderText="Start Time" DataField="StartTime" DataFormatString="{0:t}" ReadOnly="true"></asp:BoundField>
@@ -97,7 +108,7 @@
        </ContentTemplate>
     </asp:UpdatePanel>
     </div>
-    <div style="height:70%; min-height:300px; width:49.999%; float:right;">
+    <div style="height:70%; min-height:300px; width:35%; float:right;">
         <asp:UpdatePanel ID="UpdatePanelRight" runat="server">   
        <ContentTemplate>
        <asp:Panel ID="panelRightHeader" runat="server" CssClass="modalAlertHeader" Width="98%">Graph</asp:Panel>
@@ -171,7 +182,7 @@
                                     <asp:BoundField HeaderText="Description of Work" DataField="jobtype" ReadOnly="true"></asp:BoundField>
                                     <asp:BoundField HeaderText="JobId" DataField="JobIdNumber" ReadOnly="true"></asp:BoundField>
                                     <asp:BoundField HeaderText="Customer" DataField="customer" ReadOnly="true"></asp:BoundField>
-                                    <asp:BoundField HeaderText="Hours in Words" DataField="totalhours" ReadOnly="true"></asp:BoundField>
+                                    <asp:BoundField HeaderText="Time Consumed" DataField="totalhours" ReadOnly="true"></asp:BoundField>
                                     <asp:BoundField HeaderText="Remarks" DataField="Remarks" ReadOnly="true"></asp:BoundField>
                                     <asp:BoundField HeaderText="Task Status" DataField="JobStatus" ReadOnly="true"></asp:BoundField>
                                     <asp:BoundField HeaderText="Entry Status" DataField="Status" ReadOnly="true"></asp:BoundField>
@@ -204,7 +215,7 @@
 
              <asp:Panel ID="panelModalBottom" runat="server" stye="display:none">
                  <asp:Panel ID="panelModalHeaderBottom" runat="server" CssClass="modalHeader"><asp:Label ID="labelmodalBottom" runat="server"></asp:Label></asp:Panel>
-                 <asp:Panel ID="panelModalContentBottom" runat="server" CssClass="modal">
+                 <asp:Panel ID="panelModalContentBottom" runat="server" CssClass="modal" ScrollBars="Auto" style ="max-height:500px">
                      <table>
                          <tr><td>
                             <asp:GridView ID="gridViewModalBottom" runat="server" AutoGenerateColumns="false" CssClass="gridView" GridLines="None" ShowHeaderWhenEmpty="true">
@@ -253,7 +264,7 @@
                 BackgroundCssClass="modalBackground"
                 CancelControlID="btnDoneBottom"
                 DropShadow="false"
-                PopupDragHandleControlID="panelModalHeaderBottom"
+                PopupDragHandleControlID="panelModalBottom"
                 RepositionMode="RepositionOnWindowResize" >    
             </ajaxToolKit:ModalPopupExtender> 
 

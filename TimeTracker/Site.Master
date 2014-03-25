@@ -49,7 +49,7 @@
                     </asp:Panel>
                     <asp:Panel ID="Report" runat="server" CssClass="navlistli" BackColor="#000793">
                         <span class="navlistspan">
-                            <asp:HyperLink ID="hyperlinkAbout" runat="server" NavigateUrl="~/About.aspx" Text="Report" ToolTip="Report"></asp:HyperLink>
+                            <asp:HyperLink ID="hyperlinkAbout" runat="server" NavigateUrl="~/Report.aspx" Text="Report" ToolTip="Report"></asp:HyperLink>
                         </span>
                     </asp:Panel>
                 </asp:Panel>

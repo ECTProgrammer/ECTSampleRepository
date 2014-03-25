@@ -40,6 +40,13 @@
         <AssociationConnector Association="TimeTrackerModel.Fk_JobTypeFlow_JobTypeId" />
         <AssociationConnector Association="TimeTrackerModel.Fk_JobTypeFlow_DepartmentId" />
         <EntityTypeShape EntityType="TimeTrackerModel.T_TimeClock" Width="1.5" PointX="0.5" PointY="9.875" />
+        <EntityTypeShape EntityType="TimeTrackerModel.T_CAPStageMapping" Width="1.5" PointX="3.625" PointY="11.375" />
+        <AssociationConnector Association="TimeTrackerModel.FK_CapStageMapping_DepartmentId" />
+        <AssociationConnector Association="TimeTrackerModel.FK_CapStageMapping_JobType" />
+        <EntityTypeShape EntityType="TimeTrackerModel.T_Holiday" Width="1.5" PointX="8.5" PointY="11.75" />
+        <EntityTypeShape EntityType="TimeTrackerModel.T_UserRateSchedule" Width="1.5" PointX="5.75" PointY="11.5" />
+        <AssociationConnector Association="TimeTrackerModel.FK_UserRateSchedule_UserId" />
+        <EntityTypeShape EntityType="TimeTrackerModel.T_OTRateSetting" Width="1.5" PointX="10.75" PointY="11.5" />
       </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>

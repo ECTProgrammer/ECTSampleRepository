@@ -32,8 +32,11 @@ namespace TimeTracker
                 txtBoxBottomToDate.Text = DateTime.Now.ToString("dd MMM yyyy");
 
                 if (!isSupervisor())
+                {
+                    gridLeftChkBoxSelectAll.Checked = false;
                     tabPanelLeft1.Visible = false;
-                InitializeGridViewLeftPanel1();
+                }
+                InitializeGridViewLeftPanel1(new List<string>());
                 InitializeGridViewLeftPanel2();
                 InitializeGridViewLeftPanel3();
                 InitializeBottomDropDownDepartment();
@@ -46,7 +49,7 @@ namespace TimeTracker
         #region PANEL LEFT
 
         #region INITIALIZED
-        protected void InitializeGridViewLeftPanel1()
+        protected void InitializeGridViewLeftPanel1(List<string> selectedjobtrack)
         {
             int userid = Convert.ToInt32(Session["UserId"]);
             JobTracker jobTracker = new JobTracker();
@@ -55,9 +58,27 @@ namespace TimeTracker
             Converter model = new Converter();
 
             DataTable table = model.ConvertToDataTable(data);
-
             gridViewLeftPanel1.DataSource = table;
             gridViewLeftPanel1.DataBind();
+
+            if (selectedjobtrack.Count > 0) 
+            {
+                for (int i = 0; i < selectedjobtrack.Count; i++)
+                {
+                    foreach (GridViewRow row in gridViewLeftPanel1.Rows)
+                    {
+                        string jobtrackId = ((Label)row.FindControl("gridLeftlblJobTrackId")).Text.Trim();
+                        if (selectedjobtrack[i] == jobtrackId)
+                        {
+                            CheckBox cb = (CheckBox)row.FindControl("gridLeftChkBoxSelect");
+                            cb.Checked = true;
+                            selectedjobtrack.RemoveAt(i);
+                            --i;
+                            break;
+                        }
+                    }
+                }
+            }
         }
 
         protected void InitializeGridViewLeftPanel2()
@@ -90,6 +111,7 @@ namespace TimeTracker
         #endregion
 
         #region COMMAND
+
         protected void gridViewLeftPanel1_RowCommand(object sender, GridViewCommandEventArgs e) 
         {
             int userid = Convert.ToInt32(Session["UserId"]);
@@ -119,7 +141,8 @@ namespace TimeTracker
                     jtHist = jtHist.ConvertToHistory(jobtracker);
                 }
                 jtHist.Insert(jtHist);
-                InitializeGridViewLeftPanel1();
+                List<string> selectedJobtrackerId = GetGridViewLeftPanel1SelectedJobIds();
+                InitializeGridViewLeftPanel1(selectedJobtrackerId);
                 InitializeGridViewLeftPanel2();
                 InitializeGridViewLeftPanel3();
             }
@@ -129,6 +152,7 @@ namespace TimeTracker
                 modalBottomLabelError.Visible = false;
                 modalBottomLabelError.Text = "";
                 modalBtnConfirm.CommandArgument = jobtracker.Id.ToString();
+                modalBtnConfirm.CommandName = "Reject";
                 modalTxtBoxRemarks.Text = "";
                 programmaticModalPopup.Show();
                 //jobtracker.Update(data[index]);
@@ -150,22 +174,49 @@ namespace TimeTracker
             }
             if (counter > 2)
             {
-                JobTracker jobtracker = new JobTracker();
-                JobTrackerHistory jtHist = new JobTrackerHistory();
-                int id = Convert.ToInt32(e.CommandArgument);
                 int userid = Convert.ToInt32(Session["UserId"]);
-                jobtracker = jobtracker.GetJobTracker(id,false);
-                jobtracker.ApprovedBy = userid;
-                jobtracker.LastUpdatedBy = userid;
-                jobtracker.LastUpdateDate = DateTime.Now;
-                jobtracker.SupervisorRemarks = modalTxtBoxRemarks.Text;
-                jobtracker.Status = "Rejected";
-                jobtracker.Update(jobtracker);
+                if (e.CommandName == "RejectAll")
+                {
+                    foreach (GridViewRow row in gridViewLeftPanel1.Rows)
+                    {
+                        CheckBox cb = (CheckBox)row.FindControl("gridLeftChkBoxSelect");
+                        if (cb.Checked)
+                        {
+                            JobTracker jobtracker = new JobTracker();
+                            JobTrackerHistory jtHist = new JobTrackerHistory();
+                            Label jobtrackId = (Label)row.FindControl("gridLeftlblJobTrackId");
+                            jobtracker = jobtracker.GetJobTracker(Convert.ToInt32(jobtrackId.Text), false);
+                            jobtracker.ApprovedBy = userid;
+                            jobtracker.LastUpdatedBy = userid;
+                            jobtracker.LastUpdateDate = DateTime.Now;
+                            jobtracker.SupervisorRemarks = modalTxtBoxRemarks.Text;
+                            jobtracker.Status = "Rejected";
+                            jobtracker.Update(jobtracker);
+                            jtHist = jtHist.ConvertToHistory(jobtracker);
+                            jtHist.Insert(jtHist);
+                        }
+                    }
+                    gridLeftChkBoxSelectAll.Checked = false;
+                    InitializeGridViewLeftPanel1(new List<string>());
+                }
+                else 
+                {
+                    JobTracker jobtracker = new JobTracker();
+                    JobTrackerHistory jtHist = new JobTrackerHistory();
+                    int id = Convert.ToInt32(e.CommandArgument);
+                    jobtracker = jobtracker.GetJobTracker(id, false);
+                    jobtracker.ApprovedBy = userid;
+                    jobtracker.LastUpdatedBy = userid;
+                    jobtracker.LastUpdateDate = DateTime.Now;
+                    jobtracker.SupervisorRemarks = modalTxtBoxRemarks.Text;
+                    jobtracker.Status = "Rejected";
+                    jobtracker.Update(jobtracker);
 
-                jtHist = jtHist.ConvertToHistory(jobtracker);
-                jtHist.Insert(jtHist);
-
-                InitializeGridViewLeftPanel1();
+                    jtHist = jtHist.ConvertToHistory(jobtracker);
+                    jtHist.Insert(jtHist);
+                    List<string> selectedJobtrackerId = GetGridViewLeftPanel1SelectedJobIds();
+                    InitializeGridViewLeftPanel1(selectedJobtrackerId);
+                }
                 InitializeGridViewLeftPanel2();
                 InitializeGridViewLeftPanel3();
             }
@@ -176,11 +227,80 @@ namespace TimeTracker
                 programmaticModalPopup.Show();
             }
         }
+
+        protected void gridLeftChkBoxSelectAll_Changed(object sender, EventArgs e) 
+        {
+            foreach (GridViewRow row in gridViewLeftPanel1.Rows) 
+            {
+                CheckBox cb = (CheckBox)row.FindControl("gridLeftChkBoxSelect");
+                cb.Checked = gridLeftChkBoxSelectAll.Checked;
+            }
+        }
+
+        protected void gridLeftBtnAcceptAll_Click(object sender, EventArgs e) 
+        {
+            foreach (GridViewRow row in gridViewLeftPanel1.Rows)
+            {
+                CheckBox cb = (CheckBox)row.FindControl("gridLeftChkBoxSelect");
+                if (cb.Checked)
+                {
+                    int userid = Convert.ToInt32(Session["UserId"]);
+                    JobTracker jobtracker = new JobTracker();
+                    JobTrackerHistory jtHist = new JobTrackerHistory();
+                    //var data = jobtracker.GetRequestNeededApproval(userid);
+                    Label jobtrackId = (Label)row.FindControl("gridLeftlblJobTrackId");
+                    jobtracker = jobtracker.GetJobTracker(Convert.ToInt32(jobtrackId.Text), false);
+
+                    if (jobtracker.ActionRequest == "Delete")
+                    {
+                        jobtracker.Status = "Approved";
+                        jtHist = jtHist.ConvertToHistory(jobtracker);
+                        jobtracker.Delete(jobtracker.Id);
+                    }
+                    else
+                    {
+                        jobtracker.Status = "Approved";
+                        jobtracker.Update(jobtracker);
+                        jtHist = jtHist.ConvertToHistory(jobtracker);
+                    }
+                    jtHist.Insert(jtHist);
+                }
+            }
+            gridLeftChkBoxSelectAll.Checked = false;
+            InitializeGridViewLeftPanel1(new List<string>());
+            InitializeGridViewLeftPanel2();
+            InitializeGridViewLeftPanel3();
+        }
+
+        protected void gridLeftBtnRejectAll_Click(object sender, EventArgs e) 
+        {
+            modalBottomLabelError.Visible = false;
+            modalBottomLabelError.Text = "";
+            modalBtnConfirm.CommandName = "RejectAll";
+            modalTxtBoxRemarks.Text = "";
+            programmaticModalPopup.Show();
+        }
+
+        private List<string> GetGridViewLeftPanel1SelectedJobIds() 
+        {
+            List<string> selectedJobtrackerId = new List<string>();
+            foreach (GridViewRow row in gridViewLeftPanel1.Rows)
+            {
+                CheckBox cb = (CheckBox)row.FindControl("gridLeftChkBoxSelect");
+                if (cb.Checked)
+                {
+                    selectedJobtrackerId.Add(((Label)row.FindControl("gridLeftlblJobTrackId")).Text.Trim());
+                }
+            }
+            return selectedJobtrackerId;
+        }
         #endregion
 
         #endregion
 
         #region PANEL BOTTOM
+
+        #region Initialize
         protected void InitializeBottomDropDownDepartment() 
         {
             ddlBottomDepartment.Enabled = true;
@@ -349,7 +469,9 @@ namespace TimeTracker
                 }
             }
         }
+        #endregion
 
+        #region COMMAND
         protected void txtBoxBottomFromDate_Changed(object sender, EventArgs e)
         {
             DateTime sdate = Convert.ToDateTime(txtBoxBottomFromDate.Text);
@@ -426,7 +548,7 @@ namespace TimeTracker
                 programmaticModalPopupBottom.Show();
             }
         }
-
+        #endregion
         #endregion
 
         protected bool isValidUser()

@@ -102,7 +102,20 @@ namespace TimeTracker
             InitializeModalDropDownDepartment();
             InitializeModalDropDownRole();
             InitializeModalDropDownStatus();
-            InitializeModalRadBtnShift();
+            //InitializeModalRadBtnShift();
+
+            modalTxtBoxStartTime.Text = "08:00";
+            modalTxtBoxEndTime.Text = "05:00";
+            modalTxtBoxSalary.Text = "0.00";
+            modalTxtBoxBreakTimeMin.Text = "0";
+            InitializeModalDropDownOffDay();
+            InitializeModalDropDownSpecialOffDay();
+            modalChckBoxNoOTPay.Checked = false;
+            modalChkBoxUpdateRate.Checked = false;
+            modalChckBoxOfficeWorker.Checked = false;
+            cpeSalaryRate.ClientState = "true";
+            ToggleReqField(false);
+
             this.programmaticModalPopup.Show();
         }
 
@@ -132,7 +145,24 @@ namespace TimeTracker
                 modalTxtBoxMobile.Text = user.Mobile;
                 modalTxtBoxEmail.Text = user.Email;
                 modalTxtBoxFax.Text = user.Fax;
-                InitializeModalRadBtnShift(user.Shift);
+                //InitializeModalRadBtnShift(user.Shift);
+
+                modalTxtBoxStartTime.Text = user.startTime;
+                modalTxtBoxEndTime.Text = user.endTime;
+                modalTxtBoxSalary.Text = user.currentSalary.ToString();
+                modalTxtBoxBreakTimeMin.Text = user.currentMinBreak.ToString();
+
+                InitializeModalDropDownOffDay(user.currentOffDay.ToString());
+                InitializeModalDropDownSpecialOffDay(user.currentSpecialOffDay.ToString());
+                modalChckBoxNoOTPay.Checked = user.noOTpay;
+                modalChckBoxOfficeWorker.Checked =  user.isOfficeWorker;
+
+                TimeSpan cutOfTime = user.GetMyCutOfTime();
+
+                modalChkBoxUpdateRate.Checked = false;
+                cpeSalaryRate.ClientState = "true";
+                ToggleReqField(false);
+
                 this.programmaticModalPopup.Show();
             }
         }
@@ -211,21 +241,100 @@ namespace TimeTracker
             }
         }
 
-        private void InitializeModalRadBtnShift(string value = "AM") 
+        protected void InitializeModalDropDownOffDay(string value = "") 
         {
-            for (int i = 0; i < modalRadBtnListShift.Items.Count; i++) 
+            Dictionary<string, string> days = new Dictionary<string, string>();
+            days.Add("0", "No Off Day");
+            days.Add("1", "Monday");
+            days.Add("2", "Tuesday");
+            days.Add("3", "Wednesday");
+            days.Add("4", "Thursday");
+            days.Add("5", "Friday");
+            days.Add("6", "Saturday");
+            days.Add("7", "Sunday");
+            modalDropDownOffDay.DataSource = days;
+            modalDropDownOffDay.DataTextField = "Value";
+            modalDropDownOffDay.DataValueField = "Key";
+            modalDropDownOffDay.DataBind();
+            if (value.Trim() != "") 
             {
-                if (modalRadBtnListShift.Items[i].Value.Trim() == value)
-                    modalRadBtnListShift.Items[i].Selected = true;
-                else
-                    modalRadBtnListShift.Items[i].Selected = false;
+                foreach (ListItem item in modalDropDownOffDay.Items) 
+                {
+                    if (item.Value.Trim() == value.Trim()) 
+                    {
+                        item.Selected = true;
+                        break;
+                    }
+                }
             }
         }
+
+        protected void InitializeModalDropDownSpecialOffDay(string value = "")
+        {
+            Dictionary<string, string> days = new Dictionary<string, string>();
+            days.Add("0", "No Special Off Day");
+            days.Add("1", "Monday");
+            days.Add("2", "Tuesday");
+            days.Add("3", "Wednesday");
+            days.Add("4", "Thursday");
+            days.Add("5", "Friday");
+            days.Add("6", "Saturday");
+            days.Add("7", "Sunday");
+            modalDropDownSpecialOffDay.DataSource = days;
+            modalDropDownSpecialOffDay.DataTextField = "Value";
+            modalDropDownSpecialOffDay.DataValueField = "Key";
+            modalDropDownSpecialOffDay.DataBind();
+            if (value.Trim() != "")
+            {
+                foreach (ListItem item in modalDropDownSpecialOffDay.Items)
+                {
+                    if (item.Value.Trim() == value.Trim())
+                    {
+                        item.Selected = true;
+                        break;
+                    }
+                }
+            }
+        }
+
+        //private void InitializeModalRadBtnShift(string value = "AM") 
+        //{
+        //    for (int i = 0; i < modalRadBtnListShift.Items.Count; i++) 
+        //    {
+        //        if (modalRadBtnListShift.Items[i].Value.Trim() == value)
+        //            modalRadBtnListShift.Items[i].Selected = true;
+        //        else
+        //            modalRadBtnListShift.Items[i].Selected = false;
+        //    }
+        //}
         #endregion
 
         #region COMMAND
         protected void modalBtnSubmit_Command(object sender, CommandEventArgs e)
         {
+            //if (modalChkBoxUpdateRate.Checked == true) //Checks if starttime and endtime is in correct format
+            //{ 
+            //    TimeSpan starttime = new TimeSpan();
+            //    TimeSpan endtime = new TimeSpan();
+            //    if (TimeSpan.TryParse(modalTxtBoxStartTime.Text, out starttime))
+            //    {
+                    
+            //    }
+            //    else 
+            //    {
+            //        modalLabelError.Text = "Start Time not in valid format.";
+            //        modalLabelError.Visible = true;
+            //    }
+            //    if (TimeSpan.TryParse(modalTxtBoxEndTime.Text, out endtime))
+            //    {
+
+            //    }
+            //    else
+            //    {
+            //        modalLabelError.Text = "End Time not in valid format.";
+            //        modalLabelError.Visible = true;
+            //    }
+            //}
             if (modalLabelError.Visible == true)
                 this.programmaticModalPopup.Show();
             else 
@@ -250,16 +359,58 @@ namespace TimeTracker
                 user.LastUpdateDate = DateTime.Now;
                 user.EmployeeNumber = Convert.ToInt32(modalTxtBoxEmployeeNo.Text);
                 user.Status = modalDropDownStatus.SelectedItem.Value;
-                user.Shift = modalRadBtnListShift.SelectedItem.Value.Trim();
+                //user.Shift = modalRadBtnListShift.SelectedItem.Value.Trim();
                 if (e.CommandArgument.ToString().Trim() == "Add") 
                 {
                     user.CreateDate = DateTime.Now;
                     user.CreatedBy = userid;
                     user.Insert(user);
+                    user = user.GetLastInsertedUser(); //assign newly created user to variable user
                 }
                 else if (e.CommandArgument.ToString().Trim() == "Update") 
                 {
                     user.Update(user);
+                }
+                if (modalChkBoxUpdateRate.Checked == true) //User intends to update salary rate
+                {
+                    UserRateSchedule userRateSchedule = new UserRateSchedule();
+                    userRateSchedule = userRateSchedule.GetUserScheduleRateByUserIdStartDate(user.Id, DateTime.Today); //Checks if there is already a schedule date with the same start date
+                    if (userRateSchedule != null)
+                    {
+                        userRateSchedule.StartTime = modalTxtBoxStartTime.Text.Trim(); 
+                        userRateSchedule.EndTime = modalTxtBoxEndTime.Text.Trim(); 
+                        userRateSchedule.OffDay = Convert.ToInt32(modalDropDownOffDay.SelectedItem.Value);
+                        userRateSchedule.SpecialOffDay = Convert.ToInt32(modalDropDownSpecialOffDay.SelectedItem.Value);
+                        userRateSchedule.NoOTPay = modalChckBoxNoOTPay.Checked;
+                        userRateSchedule.Update(userRateSchedule);
+                        userRateSchedule.IsOfficeWorker = modalChckBoxOfficeWorker.Checked;
+                        userRateSchedule.MinsBreak = Convert.ToInt32(modalTxtBoxBreakTimeMin.Text);
+                    }
+                    else 
+                    {
+                        userRateSchedule = new UserRateSchedule();
+                        UserRateSchedule prevUserRateSchedule = userRateSchedule.GetPreviousUserScheduleRateByUserIdLastUpdateDate(user.Id, DateTime.Today);
+                        userRateSchedule.StartTime = modalTxtBoxStartTime.Text.Trim();
+                        userRateSchedule.EndTime = modalTxtBoxEndTime.Text.Trim(); 
+                        userRateSchedule.UserId = user.Id;
+                        userRateSchedule.OffDay = Convert.ToInt32(modalDropDownOffDay.SelectedItem.Value);
+                        userRateSchedule.SpecialOffDay = Convert.ToInt32(modalDropDownSpecialOffDay.SelectedItem.Value);
+                        userRateSchedule.NoOTPay = modalChckBoxNoOTPay.Checked;
+                        userRateSchedule.IsOfficeWorker = modalChckBoxOfficeWorker.Checked;
+                        userRateSchedule.MinsBreak = Convert.ToInt32(modalTxtBoxBreakTimeMin.Text);
+                        userRateSchedule.StartDate = DateTime.Today;
+                        userRateSchedule.IsCurrentRate = true;
+
+                        if (prevUserRateSchedule != null)
+                        {
+                            prevUserRateSchedule.EndDate = Convert.ToDateTime(DateTime.Today.AddDays(-1).ToString("dd MMM yyyy") + " 23:59:59");
+
+                            prevUserRateSchedule.IsCurrentRate = false;
+                            prevUserRateSchedule.Update(prevUserRateSchedule);
+                        }
+
+                        userRateSchedule.Insert(userRateSchedule);
+                    }
                 }
                 InitializeGridUser();
                 this.programmaticModalPopup.Hide();
@@ -285,6 +436,21 @@ namespace TimeTracker
             {
                 modalLabelError.Text = "";
                 modalLabelError.Visible = false;
+            }
+            this.programmaticModalPopup.Show();
+        }
+
+        protected void modalChkBoxUpdateRate_Changed(object sender, EventArgs e)
+        {
+            if (modalChkBoxUpdateRate.Checked == true)
+            {
+                ToggleReqField(true);
+                cpeSalaryRate.ClientState = "false";
+            }
+            else
+            {
+                ToggleReqField(false);
+                cpeSalaryRate.ClientState = "true";
             }
             this.programmaticModalPopup.Show();
         }
@@ -355,6 +521,18 @@ namespace TimeTracker
             Module module = new Module();
             module = module.GetModule("SetupUser.aspx");
             myAccessRights = myAccessRights.GetRolesModuleAccess(Convert.ToInt32(user.RoleId), module.Id);
+        }
+
+        private void ToggleReqField(bool value)
+        {
+            modalReqStartTime.Enabled = value;
+            modalRegValStartTime.Enabled = value;
+            modalReqEndTime.Enabled = value;
+            modalRegValEndTime.Enabled = value;
+            modalReqSalary.Enabled = value;
+            modalRegValSalary.Enabled = value;
+            modalReqBreakTimeMin.Enabled = value;
+            modalRegValBreakTimeMin.Enabled = value;
         }
         #endregion
     }

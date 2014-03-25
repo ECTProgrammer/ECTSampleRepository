@@ -23,7 +23,7 @@ namespace TimeTracker
             if (!IsPostBack)
             {
                 InitializeRepeater();
-                this.programmaticModalPopup.Show();
+                //this.programmaticModalPopup.Show();
             }
         }
 

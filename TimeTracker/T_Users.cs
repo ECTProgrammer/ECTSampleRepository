@@ -23,6 +23,7 @@ namespace TimeTracker
             this.M_SupervisorMappingSupervisors = new HashSet<T_SupervisorMapping>();
             this.M_SupervisorMappingUsers = new HashSet<T_SupervisorMapping>();
             this.M_TimeSettings = new HashSet<T_TimeSetting>();
+            this.UserRateSchedules = new HashSet<T_UserRateSchedule>();
         }
     
         public int Id { get; set; }
@@ -53,5 +54,6 @@ namespace TimeTracker
         public virtual ICollection<T_SupervisorMapping> M_SupervisorMappingSupervisors { get; set; }
         public virtual ICollection<T_SupervisorMapping> M_SupervisorMappingUsers { get; set; }
         public virtual ICollection<T_TimeSetting> M_TimeSettings { get; set; }
+        public virtual ICollection<T_UserRateSchedule> UserRateSchedules { get; set; }
     }
 }

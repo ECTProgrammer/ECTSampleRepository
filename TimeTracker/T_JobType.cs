@@ -20,6 +20,7 @@ namespace TimeTracker
             this.M_JobTrackerHistories = new HashSet<T_JobTrackerHistory>();
             this.M_JobTypeDepartments = new HashSet<T_JobTypeDepartment>();
             this.M_JobTypeFlows = new HashSet<T_JobTypeFlow>();
+            this.CAPStageMappings = new HashSet<T_CAPStageMapping>();
         }
     
         public int Id { get; set; }
@@ -39,5 +40,6 @@ namespace TimeTracker
         public virtual ICollection<T_JobTrackerHistory> M_JobTrackerHistories { get; set; }
         public virtual ICollection<T_JobTypeDepartment> M_JobTypeDepartments { get; set; }
         public virtual ICollection<T_JobTypeFlow> M_JobTypeFlows { get; set; }
+        public virtual ICollection<T_CAPStageMapping> CAPStageMappings { get; set; }
     }
 }
